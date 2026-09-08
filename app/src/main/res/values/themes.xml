@@ -1,0 +1,15 @@
+<resources>
+    <style name="Theme.AegisFocus" parent="android:Theme.Material.NoActionBar">
+        <item name="android:statusBarColor">#0B0F17</item>
+        <item name="android:navigationBarColor">#0B0F17</item>
+        <item name="android:windowBackground">#0B0F17</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:windowLightNavigationBar">false</item>
+    </style>
+
+    <style name="Theme.AegisFocus.Intervention" parent="Theme.AegisFocus">
+        <item name="android:windowIsTranslucent">false</item>
+        <item name="android:windowBackground">#0B0F17</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation.Dialog</item>
+    </style>
+</resources>

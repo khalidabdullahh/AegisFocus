@@ -1,0 +1,23 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- Background Circle -->
+    <path
+        android:fillColor="#0B0F17"
+        android:pathData="M54,4A50,50 0,1 0,54 104A50,50 0,1 0,54 4Z" />
+    <!-- Outer Shield Outline -->
+    <path
+        android:fillColor="#00000000"
+        android:strokeColor="#00E5FF"
+        android:strokeWidth="3.5"
+        android:pathData="M54,22L28,34V54C28,70 39,84.5 54,88C69,84.5 80,70 80,54V34L54,22Z" />
+    <!-- Inner Radiant Core / Focus Glyph -->
+    <path
+        android:fillColor="#10B981"
+        android:pathData="M54,34L40,41V53C40,63.5 46,72.5 54,75C62,72.5 68,63.5 68,53V41L54,34Z" />
+    <path
+        android:fillColor="#F8FAFC"
+        android:pathData="M54,44A8,8 0,1 0,54 60A8,8 0,1 0,54 44Z" />
+</vector>
