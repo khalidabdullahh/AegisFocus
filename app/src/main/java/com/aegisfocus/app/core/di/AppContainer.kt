@@ -8,18 +8,24 @@ import com.aegisfocus.app.data.repository.ProfileRepositoryImpl
 import com.aegisfocus.app.data.repository.ScheduleRepositoryImpl
 import com.aegisfocus.app.data.repository.SettingsRepositoryImpl
 import com.aegisfocus.app.data.repository.UsageStatsRepositoryImpl
+import com.aegisfocus.app.domain.analytics.DisciplineScoreCalculator
+import com.aegisfocus.app.domain.mindfulness.AdaptiveFrictionController
+import com.aegisfocus.app.domain.mindfulness.MindfulnessEngine
+import com.aegisfocus.app.domain.motivation.XpManager
 import com.aegisfocus.app.domain.repository.AppDiscoveryRepository
 import com.aegisfocus.app.domain.repository.FocusSessionRepository
 import com.aegisfocus.app.domain.repository.ProfileRepository
 import com.aegisfocus.app.domain.repository.ScheduleRepository
 import com.aegisfocus.app.domain.repository.SettingsRepository
 import com.aegisfocus.app.domain.repository.UsageStatsRepository
+import com.aegisfocus.app.domain.subscription.EntitlementManager
 import com.aegisfocus.app.domain.usecase.EmergencyExitUseCase
 import com.aegisfocus.app.domain.usecase.EndFocusSessionUseCase
 import com.aegisfocus.app.domain.usecase.EvaluateScheduleTriggerUseCase
 import com.aegisfocus.app.domain.usecase.GetUsageAnalyticsUseCase
 import com.aegisfocus.app.domain.usecase.RestoreActiveSessionUseCase
 import com.aegisfocus.app.domain.usecase.StartFocusSessionUseCase
+import com.aegisfocus.app.domain.usecase.StrictModeCommitUseCase
 import com.aegisfocus.app.engine.BlockInterventionController
 import com.aegisfocus.app.engine.BlockedAppMatcher
 import com.aegisfocus.app.engine.BlockingRuleRepository
@@ -29,8 +35,10 @@ import com.aegisfocus.app.engine.SessionPersistenceManager
 
 class AppContainer(private val context: Context) {
 
-    // Database & DAOs
+    // ─── Database & DAOs ────────────────────────────────────────────────────
     val database: AegisDatabase by lazy { AegisDatabase.getInstance(context) }
+
+    // v1 DAOs
     val focusSessionDao by lazy { database.focusSessionDao() }
     val focusProfileDao by lazy { database.focusProfileDao() }
     val scheduleDao by lazy { database.scheduleDao() }
@@ -38,7 +46,14 @@ class AppContainer(private val context: Context) {
     val usageSnapshotDao by lazy { database.usageSnapshotDao() }
     val emergencyExitDao by lazy { database.emergencyExitDao() }
 
-    // Repositories
+    // v2 DAOs
+    val focusEventDao by lazy { database.focusEventDao() }
+    val dailyGoalDao by lazy { database.dailyGoalDao() }
+    val userXpDao by lazy { database.userXpDao() }
+    val subscriptionDao by lazy { database.subscriptionDao() }
+    val websiteRuleDao by lazy { database.websiteRuleDao() }
+
+    // ─── Repositories ────────────────────────────────────────────────────────
     val focusSessionRepository: FocusSessionRepository by lazy {
         FocusSessionRepositoryImpl(focusSessionDao, emergencyExitDao)
     }
@@ -58,7 +73,22 @@ class AppContainer(private val context: Context) {
         SettingsRepositoryImpl(context)
     }
 
-    // UseCases
+    // ─── Domain Engines (v2) ─────────────────────────────────────────────────
+    val entitlementManager by lazy { EntitlementManager(subscriptionDao) }
+
+    val adaptiveFrictionController by lazy { AdaptiveFrictionController() }
+
+    val mindfulnessEngine by lazy {
+        MindfulnessEngine(focusEventDao, adaptiveFrictionController)
+    }
+
+    val disciplineScoreCalculator by lazy {
+        DisciplineScoreCalculator(focusEventDao, dailyGoalDao, userXpDao)
+    }
+
+    val xpManager by lazy { XpManager(userXpDao) }
+
+    // ─── Use Cases ───────────────────────────────────────────────────────────
     val startFocusSessionUseCase by lazy {
         StartFocusSessionUseCase(focusSessionRepository, appDiscoveryRepository)
     }
@@ -77,8 +107,11 @@ class AppContainer(private val context: Context) {
     val evaluateScheduleTriggerUseCase by lazy {
         EvaluateScheduleTriggerUseCase(scheduleRepository)
     }
+    val strictModeCommitUseCase by lazy {
+        StrictModeCommitUseCase(entitlementManager)
+    }
 
-    // Engine Components
+    // ─── Engine Components ───────────────────────────────────────────────────
     val blockedAppMatcher by lazy { BlockedAppMatcher() }
     val blockingRuleRepository by lazy { BlockingRuleRepository(blockedAppMatcher) }
     val blockInterventionController by lazy {

@@ -1,0 +1,328 @@
+package com.aegisfocus.app.presentation.paywall
+
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Star
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.aegisfocus.app.core.components.AegisPrimaryButton
+import com.aegisfocus.app.core.theme.AlertStrict
+import com.aegisfocus.app.core.theme.CyanAccent
+import com.aegisfocus.app.core.theme.DeepSurface
+import com.aegisfocus.app.core.theme.ElevatedSurface
+import com.aegisfocus.app.core.theme.EmeraldFocus
+import com.aegisfocus.app.core.theme.ObsidianBg
+import com.aegisfocus.app.core.theme.SubtleBorder
+import com.aegisfocus.app.core.theme.TextMuted
+import com.aegisfocus.app.core.theme.TextPrimary
+import com.aegisfocus.app.core.theme.TextSecondary
+import com.aegisfocus.app.domain.subscription.SubscriptionPlan
+
+@Composable
+fun PaywallScreen(
+    viewModel: PaywallViewModel,
+    onDismiss: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val uiState by viewModel.uiState.collectAsState()
+
+    if (uiState.purchaseSucceeded) {
+        PurchaseSuccessScreen(onDone = onDismiss)
+        return
+    }
+
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .background(ObsidianBg)
+            .verticalScroll(rememberScrollState())
+            .padding(bottom = 32.dp)
+    ) {
+        // Top bar
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 8.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = "Upgrade to Pro",
+                color = TextPrimary,
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold
+            )
+            IconButton(onClick = onDismiss) {
+                Icon(Icons.Default.Close, contentDescription = "Close", tint = TextMuted)
+            }
+        }
+
+        // Hero badge
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 24.dp)
+                .clip(RoundedCornerShape(16.dp))
+                .background(
+                    Brush.horizontalGradient(
+                        listOf(Color(0xFF1A1F3A), Color(0xFF0D1B2A))
+                    )
+                )
+                .border(1.dp, CyanAccent.copy(alpha = 0.4f), RoundedCornerShape(16.dp))
+                .padding(24.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Icon(
+                    Icons.Default.Star, contentDescription = null,
+                    tint = CyanAccent, modifier = Modifier.size(40.dp)
+                )
+                Spacer(Modifier.height(12.dp))
+                Text(
+                    text = "Unlock Full Discipline",
+                    color = TextPrimary,
+                    fontSize = 22.sp,
+                    fontWeight = FontWeight.ExtraBold,
+                    textAlign = TextAlign.Center
+                )
+                Spacer(Modifier.height(4.dp))
+                Text(
+                    text = "No dark patterns. No tricks. Cancel anytime.",
+                    color = TextSecondary,
+                    fontSize = 13.sp,
+                    textAlign = TextAlign.Center
+                )
+            }
+        }
+
+        Spacer(Modifier.height(24.dp))
+
+        // Feature comparison
+        FeatureComparisonTable()
+
+        Spacer(Modifier.height(24.dp))
+
+        // Plan selection
+        Text(
+            text = "Choose your plan",
+            color = TextPrimary,
+            fontWeight = FontWeight.SemiBold,
+            fontSize = 16.sp,
+            modifier = Modifier.padding(horizontal = 20.dp)
+        )
+        Spacer(Modifier.height(12.dp))
+
+        PaywallOption.values().forEach { option ->
+            PlanOptionCard(
+                option = option,
+                isSelected = uiState.selectedOption == option,
+                onClick = { viewModel.selectOption(option) }
+            )
+            Spacer(Modifier.height(8.dp))
+        }
+
+        Spacer(Modifier.height(20.dp))
+
+        // CTA
+        Box(Modifier.padding(horizontal = 20.dp).fillMaxWidth()) {
+            if (uiState.isLoading) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    CircularProgressIndicator(color = CyanAccent)
+                }
+            } else {
+                AegisPrimaryButton(
+                    text = "Continue with ${uiState.selectedOption.label} — ${uiState.selectedOption.price}",
+                    onClick = { viewModel.purchaseSelected() },
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
+        }
+
+        uiState.errorMessage?.let { msg ->
+            Spacer(Modifier.height(8.dp))
+            Text(
+                text = msg,
+                color = AlertStrict,
+                fontSize = 13.sp,
+                modifier = Modifier.padding(horizontal = 20.dp)
+            )
+        }
+
+        Spacer(Modifier.height(12.dp))
+        Text(
+            text = "Restore Purchases",
+            color = TextMuted,
+            fontSize = 13.sp,
+            modifier = Modifier
+                .align(Alignment.CenterHorizontally)
+                .clickable { viewModel.restorePurchases() }
+                .padding(8.dp)
+        )
+
+        // Legal footer
+        Spacer(Modifier.height(8.dp))
+        Text(
+            text = "Subscription auto-renews unless cancelled 24h before renewal. No hidden fees.",
+            color = TextMuted,
+            fontSize = 11.sp,
+            textAlign = TextAlign.Center,
+            modifier = Modifier.padding(horizontal = 24.dp).fillMaxWidth()
+        )
+    }
+}
+
+@Composable
+private fun FeatureComparisonTable() {
+    val features = listOf(
+        Triple("Core app blocking", true, true),
+        Triple("Focus sessions", true, true),
+        Triple("Schedules (basic)", true, true),
+        Triple("Strict Mode (up to 3h)", true, true),
+        Triple("Mindful pause", true, true),
+        Triple("Discipline Score & Streak", true, true),
+        Triple("Unlimited Strict Mode", false, true),
+        Triple("Advanced schedules", false, true),
+        Triple("Unlimited profiles", false, true),
+        Triple("Website blocking", false, true),
+        Triple("Notification shield", false, true),
+        Triple("Adaptive friction", false, true),
+        Triple("Deep analytics", false, true),
+    )
+
+    Card(
+        modifier = Modifier.padding(horizontal = 20.dp).fillMaxWidth(),
+        colors = CardDefaults.cardColors(containerColor = DeepSurface),
+        shape = RoundedCornerShape(12.dp)
+    ) {
+        Column(Modifier.padding(16.dp)) {
+            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                Text("Feature", color = TextMuted, fontSize = 12.sp, modifier = Modifier.weight(1f))
+                Text("Free", color = TextSecondary, fontSize = 12.sp, fontWeight = FontWeight.SemiBold, modifier = Modifier.width(40.dp), textAlign = TextAlign.Center)
+                Text("Pro", color = CyanAccent, fontSize = 12.sp, fontWeight = FontWeight.Bold, modifier = Modifier.width(40.dp), textAlign = TextAlign.Center)
+            }
+            Spacer(Modifier.height(8.dp))
+            features.forEach { (name, free, pro) ->
+                Row(
+                    Modifier.fillMaxWidth().padding(vertical = 4.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(name, color = TextPrimary, fontSize = 13.sp, modifier = Modifier.weight(1f))
+                    Icon(
+                        if (free) Icons.Default.Check else Icons.Default.Close,
+                        contentDescription = null,
+                        tint = if (free) EmeraldFocus else TextMuted.copy(alpha = 0.4f),
+                        modifier = Modifier.size(16.dp).width(40.dp)
+                    )
+                    Icon(
+                        Icons.Default.Check,
+                        contentDescription = null,
+                        tint = if (pro) CyanAccent else TextMuted.copy(alpha = 0.4f),
+                        modifier = Modifier.size(16.dp).width(40.dp)
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun PlanOptionCard(
+    option: PaywallOption,
+    isSelected: Boolean,
+    onClick: () -> Unit
+) {
+    val borderColor = if (isSelected) CyanAccent else SubtleBorder
+    val bgColor = if (isSelected) CyanAccent.copy(alpha = 0.08f) else ElevatedSurface
+
+    Card(
+        modifier = Modifier
+            .padding(horizontal = 20.dp)
+            .fillMaxWidth()
+            .clickable { onClick() }
+            .border(BorderStroke(if (isSelected) 2.dp else 1.dp, borderColor), RoundedCornerShape(12.dp)),
+        colors = CardDefaults.cardColors(containerColor = bgColor),
+        shape = RoundedCornerShape(12.dp)
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth().padding(16.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Column {
+                Text(option.label, color = TextPrimary, fontWeight = FontWeight.SemiBold, fontSize = 15.sp)
+                Text(option.perMonth, color = TextMuted, fontSize = 12.sp)
+            }
+            Column(horizontalAlignment = Alignment.End) {
+                Text(option.price, color = if (isSelected) CyanAccent else TextPrimary, fontWeight = FontWeight.Bold, fontSize = 18.sp)
+                if (option == PaywallOption.YEARLY) {
+                    Text("BEST VALUE", color = EmeraldFocus, fontSize = 10.sp, fontWeight = FontWeight.Bold)
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun PurchaseSuccessScreen(onDone: () -> Unit) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(ObsidianBg)
+            .padding(32.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Icon(Icons.Default.Star, contentDescription = null, tint = CyanAccent, modifier = Modifier.size(72.dp))
+        Spacer(Modifier.height(24.dp))
+        Text("Welcome to Pro!", color = TextPrimary, fontSize = 28.sp, fontWeight = FontWeight.ExtraBold)
+        Spacer(Modifier.height(8.dp))
+        Text(
+            "Unlimited Strict Mode, website blocking, adaptive friction,\nand deep analytics are now unlocked.",
+            color = TextSecondary,
+            fontSize = 15.sp,
+            textAlign = TextAlign.Center
+        )
+        Spacer(Modifier.height(40.dp))
+        AegisPrimaryButton(text = "Start Focusing", onClick = onDone, modifier = Modifier.fillMaxWidth())
+    }
+}

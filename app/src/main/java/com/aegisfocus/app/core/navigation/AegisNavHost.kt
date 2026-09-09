@@ -42,6 +42,8 @@ import com.aegisfocus.app.presentation.settings.SettingsScreen
 import com.aegisfocus.app.presentation.settings.SettingsViewModel
 import com.aegisfocus.app.presentation.stats.StatsScreen
 import com.aegisfocus.app.presentation.stats.StatsViewModel
+import com.aegisfocus.app.presentation.paywall.PaywallScreen
+import com.aegisfocus.app.presentation.paywall.PaywallViewModel
 
 @Composable
 fun AegisNavHost(
@@ -53,7 +55,8 @@ fun AegisNavHost(
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
-    val showBottomBar = currentRoute != Screen.Onboarding.route
+    val showBottomBar = currentRoute != Screen.Onboarding.route &&
+            currentRoute != Screen.Paywall.route
 
     Scaffold(
         modifier = modifier.fillMaxSize(),
@@ -134,7 +137,13 @@ fun AegisNavHost(
 
             composable(Screen.Home.route) {
                 val vm = androidx.lifecycle.viewmodel.compose.viewModel {
-                    HomeViewModel(container.focusSessionManager, container.usageStatsRepository)
+                    HomeViewModel(
+                        focusSessionManager = container.focusSessionManager,
+                        usageStatsRepository = container.usageStatsRepository,
+                        disciplineScoreCalculator = container.disciplineScoreCalculator,
+                        xpManager = container.xpManager,
+                        entitlementManager = container.entitlementManager
+                    )
                 }
                 HomeScreen(
                     viewModel = vm,
@@ -146,6 +155,9 @@ fun AegisNavHost(
                             launchSingleTop = true
                             restoreState = true
                         }
+                    },
+                    onNavigateToPaywall = {
+                        navController.navigate(Screen.Paywall.route)
                     }
                 )
             }
@@ -198,6 +210,16 @@ fun AegisNavHost(
                     )
                 }
                 SettingsScreen(viewModel = vm)
+            }
+
+            composable(Screen.Paywall.route) {
+                val vm = androidx.lifecycle.viewmodel.compose.viewModel {
+                    PaywallViewModel(container.entitlementManager)
+                }
+                PaywallScreen(
+                    viewModel = vm,
+                    onDismiss = { navController.popBackStack() }
+                )
             }
         }
     }

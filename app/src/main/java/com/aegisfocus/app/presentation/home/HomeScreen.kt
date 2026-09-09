@@ -59,6 +59,7 @@ import com.aegisfocus.app.domain.model.SessionMode
 fun HomeScreen(
     viewModel: HomeViewModel,
     onNavigateToFocus: () -> Unit,
+    onNavigateToPaywall: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -117,7 +118,81 @@ fun HomeScreen(
             }
         }
 
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(20.dp))
+
+        // ─── Discipline Score + XP Row ────────────────────────────────────────
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            // Discipline Score card
+            Surface(
+                modifier = Modifier.weight(1f),
+                shape = RoundedCornerShape(16.dp),
+                color = ElevatedSurface,
+                border = BorderStroke(1.dp, SubtleBorder)
+            ) {
+                Column(Modifier.padding(14.dp)) {
+                    Text("Discipline Score", color = TextMuted, fontSize = 11.sp, fontWeight = FontWeight.SemiBold, letterSpacing = 0.5.sp)
+                    Spacer(Modifier.height(4.dp))
+                    Text(
+                        text = "${uiState.disciplineScore}",
+                        color = when {
+                            uiState.disciplineScore >= 85 -> EmeraldFocus
+                            uiState.disciplineScore >= 60 -> CyanAccent
+                            else -> AlertStrict
+                        },
+                        fontSize = 32.sp,
+                        fontWeight = FontWeight.ExtraBold
+                    )
+                    Text("/100", color = TextMuted, fontSize = 12.sp)
+                }
+            }
+            // XP + Level card
+            Surface(
+                modifier = Modifier.weight(1f),
+                shape = RoundedCornerShape(16.dp),
+                color = ElevatedSurface,
+                border = BorderStroke(1.dp, SubtleBorder)
+            ) {
+                Column(Modifier.padding(14.dp)) {
+                    Text("Level", color = TextMuted, fontSize = 11.sp, fontWeight = FontWeight.SemiBold, letterSpacing = 0.5.sp)
+                    Spacer(Modifier.height(4.dp))
+                    Text(
+                        text = "${uiState.currentLevel.emoji} ${uiState.currentLevel.displayName}",
+                        color = TextPrimary,
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Spacer(Modifier.height(2.dp))
+                    Text("${uiState.currentXp} XP  •  🔥 ${uiState.currentStreak}d streak", color = TextSecondary, fontSize = 12.sp)
+                }
+            }
+        }
+
+        // Pro upgrade nudge (only for Free users)
+        if (!uiState.isPro) {
+            Spacer(Modifier.height(10.dp))
+            Surface(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable { onNavigateToPaywall() },
+                shape = RoundedCornerShape(12.dp),
+                color = CyanAccent.copy(alpha = 0.08f),
+                border = BorderStroke(1.dp, CyanAccent.copy(alpha = 0.3f))
+            ) {
+                Row(
+                    Modifier.padding(horizontal = 16.dp, vertical = 10.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text("⚡ Unlock Pro — Unlimited Strict Mode + Website Blocking", color = CyanAccent, fontSize = 12.sp, fontWeight = FontWeight.SemiBold, modifier = Modifier.weight(1f))
+                    Icon(Icons.Default.ChevronRight, contentDescription = null, tint = CyanAccent, modifier = Modifier.size(16.dp))
+                }
+            }
+        }
+
+        Spacer(modifier = Modifier.height(20.dp))
 
         // Hero Active Session or Primary CTA
         if (activeSession != null) {
