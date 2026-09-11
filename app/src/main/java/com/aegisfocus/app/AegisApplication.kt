@@ -1,3 +1,11 @@
+/*
+ * ==============================================================================
+ * Project: ASR / Aegis-Focus
+ * File: AegisApplication.kt
+ * Description: Main Android Application class initializing DI container,
+ *              notification channels, and background periodic WorkManager tasks.
+ * ==============================================================================
+ */
 package com.aegisfocus.app
 
 import android.app.Application
