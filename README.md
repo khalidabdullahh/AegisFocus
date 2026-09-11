@@ -1,7 +1,11 @@
 # ASAR — Turn Time Into Progress
 
 <p align="center">
-  <img src="assets/asar_be_productive_brand.png" alt="ASAR — Be Productive" width="260" />
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="assets/asar_logo_dark.png">
+    <source media="(prefers-color-scheme: light)" srcset="assets/asar_logo_light.png">
+    <img alt="ASAR — Be Productive" src="assets/asar_logo_dark.png" width="280">
+  </picture>
 </p>
 
 <p align="center">
