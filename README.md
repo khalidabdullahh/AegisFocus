@@ -1,8 +1,4 @@
-# ASAR — Turn Time Into Progress
-
-<p align="center">
-  <img src="assets/asar_navbar_brand.png" alt="ASAR Logo" width="220" />
-</p>
+# ASAR — Be Productive
 
 <p align="center">
   <b>Turn Time Into Progress · Be Productive</b><br>
