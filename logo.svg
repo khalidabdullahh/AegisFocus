@@ -1,40 +1,41 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 240" fill="none">
-    <!-- Background (optional dark canvas) -->
-    <rect width="400" height="240" rx="16" fill="#0A0D14"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 280" fill="none">
+    <!-- Background Canvas -->
+    <rect width="500" height="280" rx="16" fill="#0A0D14"/>
 
-    <!-- Stylized Monogram Mark: Sharp Stem, Dynamic Angles, Curved Horizon Arc -->
-    <g transform="translate(140, 30)">
-        <!-- K Left Vertical Stem -->
-        <path d="M12 10 L12 85" stroke="#F8FAFC" stroke-width="5" stroke-linecap="round"/>
+    <!-- ASR Interlocking Geometric Monogram Mark -->
+    <g transform="translate(135, 30)">
+        <!-- 'A' Left Leg & Apex -->
+        <path d="M15 90 L50 15 L85 90" stroke="#F8FAFC" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <!-- 'A' Crossbar (styled) -->
+        <path d="M30 62 L70 62" stroke="#F8FAFC" stroke-width="4.5" stroke-linecap="round"/>
 
-        <!-- K Upper Diagonal Branch -->
-        <path d="M52 12 L14 48" stroke="#F8FAFC" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+        <!-- 'S' Geometric Central Spine (interlocking with A and R) -->
+        <path d="M125 22 C95 15, 80 32, 105 48 C130 62, 115 85, 85 85" stroke="#F8FAFC" stroke-width="5.5" stroke-linecap="round" fill="none"/>
 
-        <!-- K Lower Diagonal / A Left Diagonal connecting -->
-        <path d="M22 42 L56 85" stroke="#F8FAFC" stroke-width="4.5" stroke-linecap="round"/>
+        <!-- 'R' Right Stem, Loop and Leg -->
+        <path d="M145 18 L145 90" stroke="#F8FAFC" stroke-width="5.5" stroke-linecap="round"/>
+        <path d="M145 18 H180 C198 18, 198 52, 180 52 H145" stroke="#F8FAFC" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        <path d="M168 52 L198 90" stroke="#F8FAFC" stroke-width="5.5" stroke-linecap="round"/>
 
-        <!-- A Peak and Right Leg -->
-        <path d="M52 12 L78 85" stroke="#F8FAFC" stroke-width="5" stroke-linecap="round"/>
-
-        <!-- Iconic Dynamic Sweeping Curve Arc (Inspired by the Reference Monogram) -->
-        <path d="M8 82 Q 45 42, 85 70" stroke="#38BDF8" stroke-width="4.5" stroke-linecap="round" fill="none"/>
+        <!-- Signature Dynamic Horizon Swoosh Arc (Inspired by Reference Image) -->
+        <path d="M5 86 Q 105 38, 220 74" stroke="#38BDF8" stroke-width="5" stroke-linecap="round" fill="none"/>
     </g>
 
-    <!-- Subtitle: KHALID ABDULLAH with wide tracking -->
-    <text x="200" y="170" 
+    <!-- Primary Typography: A S R -->
+    <text x="250" y="195" 
+          text-anchor="middle" 
+          font-family="'Inter', -apple-system, sans-serif" 
+          font-weight="800" 
+          font-size="22" 
+          letter-spacing="14" 
+          fill="#F8FAFC">A S R</text>
+
+    <!-- Tagline: TURN TIME INTO PROGRESS -->
+    <text x="250" y="228" 
           text-anchor="middle" 
           font-family="'Inter', -apple-system, sans-serif" 
           font-weight="600" 
-          font-size="14" 
-          letter-spacing="9" 
-          fill="#F8FAFC">KHALID ABDULLAH</text>
-
-    <!-- Tagline: TURN TIME INTO PROGRESS -->
-    <text x="200" y="195" 
-          text-anchor="middle" 
-          font-family="'Inter', -apple-system, sans-serif" 
-          font-weight="500" 
           font-size="9" 
-          letter-spacing="4" 
-          fill="#94A3B8">ASR · TURN TIME INTO PROGRESS</text>
+          letter-spacing="6" 
+          fill="#38BDF8">TURN TIME INTO PROGRESS</text>
 </svg>
