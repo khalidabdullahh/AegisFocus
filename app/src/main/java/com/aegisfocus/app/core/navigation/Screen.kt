@@ -64,6 +64,7 @@ sealed class Screen(
     )
 
     object Paywall : Screen("paywall", "Paywall", Icons.Filled.Security, Icons.Outlined.Security)
+    object Auth : Screen("auth", "Account", Icons.Filled.Security, Icons.Outlined.Security)
 }
 
 val BottomNavScreens = listOf(

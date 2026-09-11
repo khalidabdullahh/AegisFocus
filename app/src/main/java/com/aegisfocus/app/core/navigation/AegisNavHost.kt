@@ -1,3 +1,12 @@
+/*
+ * ==============================================================================
+ * 📌 প্রজেক্ট: ASR / Aegis-Focus
+ * 📄 ফাইল: AegisNavHost.kt
+ * 🎯 উদ্দেশ্য: জেটপ্যাক কম্পোজ (Jetpack Compose) নেভিগেশন গ্রাফ ও বটম নেভিগেশন বার।
+ * 💡 ভূমিকা: হোম (Home), ফোকাস (Focus), অ্যাপস ব্লকার (Apps), স্ট্যাটস (Stats) ও সেটিংসের 
+ *            মধ্যে স্ক্রিন ট্রানজিশন এবং রুট হ্যান্ডলিং নিয়ন্ত্রণ করে।
+ * ==============================================================================
+ */
 package com.aegisfocus.app.core.navigation
 
 import androidx.compose.foundation.BorderStroke
@@ -45,6 +54,12 @@ import com.aegisfocus.app.presentation.stats.StatsViewModel
 import com.aegisfocus.app.presentation.paywall.PaywallScreen
 import com.aegisfocus.app.presentation.paywall.PaywallViewModel
 
+/**
+ * -----------------------------------------------------------------------------
+ * 📌 কম্পোজেবল: AegisNavHost
+ * 🎯 উদ্দেশ্য: অ্যাপ্লিকেশনের মূল ফ্রেম এবং সমস্ত স্ক্রিনের নেভিগেশন রাউটিং ডিফাইন করে।
+ * -----------------------------------------------------------------------------
+ */
 @Composable
 fun AegisNavHost(
     navController: NavHostController,
@@ -52,9 +67,11 @@ fun AegisNavHost(
     startDestination: String,
     modifier: Modifier = Modifier
 ) {
+    // বর্তমান একটিভ রুটের পাথ ট্র্যাক করা
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
+    // অনবোর্ডিং বা পে-ওয়াল স্ক্রিনে বটম বার হাইড রাখা
     val showBottomBar = currentRoute != Screen.Onboarding.route &&
             currentRoute != Screen.Paywall.route
 
@@ -213,7 +230,11 @@ fun AegisNavHost(
                         scheduleRepository = container.scheduleRepository
                     )
                 }
-                SettingsScreen(viewModel = vm)
+                SettingsScreen(
+                    viewModel = vm,
+                    onNavigateToAuth = { navController.navigate(Screen.Auth.route) },
+                    onNavigateToPaywall = { navController.navigate(Screen.Paywall.route) }
+                )
             }
 
             composable(Screen.Paywall.route) {
@@ -226,6 +247,18 @@ fun AegisNavHost(
                 PaywallScreen(
                     viewModel = vm,
                     onDismiss = { navController.popBackStack() }
+                )
+            }
+
+            composable(Screen.Auth.route) {
+                val vm = androidx.lifecycle.viewmodel.compose.viewModel {
+                    com.aegisfocus.app.presentation.auth.AuthViewModel(
+                        authService = container.supabaseAuthService
+                    )
+                }
+                com.aegisfocus.app.presentation.auth.AuthScreen(
+                    viewModel = vm,
+                    onNavigateBack = { navController.popBackStack() }
                 )
             }
         }

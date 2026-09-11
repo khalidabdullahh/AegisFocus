@@ -1,3 +1,11 @@
+/*
+ * ==============================================================================
+ * 📌 প্রজেক্ট: ASR / Aegis-Focus
+ * 📄 ফাইল: TimeUtils.kt
+ * 🎯 উদ্দেশ্য: সময় ও তারিখ ফরম্যাটিং ইউটিলিটি ক্লাস।
+ * 💡 ভূমিকা: ফোকাস সেশনের টাইমার, ঘণ্টার হিসাব ও তারিখকে ব্যবহারকারীর জন্য আকর্ষণীয়ভাবে প্রদর্শন করে।
+ * ==============================================================================
+ */
 package com.aegisfocus.app.core.common
 
 import java.text.SimpleDateFormat
@@ -8,13 +16,25 @@ import java.util.concurrent.TimeUnit
 
 object TimeUtils {
 
+    /**
+     * -------------------------------------------------------------------------
+     * 📌 ফাংশন: formatRemainingMillis
+     * 🎯 উদ্দেশ্য: অবশিষ্ট মিলিসেকেন্ডকে টাইমার ফরম্যাটে (HH:MM:SS অথবা MM:SS) রূপান্তর।
+     * 📥 ইনপুট: millis (অবশিষ্ট সময় মিলিসেকেন্ডে)
+     * 📤 আউটপুট: "25:00" বা "01:15:30" স্ট্রিং
+     * -------------------------------------------------------------------------
+     */
     fun formatRemainingMillis(millis: Long): String {
+        // ১. সময় শেষ বা নেগেটিভ হলে ডিফল্ট ০ দেখাচ্ছে
         if (millis <= 0) return "00:00"
+        
+        // ২. মিলিসেকেন্ডকে মোট সেকেন্ড, ঘণ্টা ও মিনিটে ভাগ করা
         val totalSeconds = (millis + 999) / 1000
         val hours = totalSeconds / 3600
         val minutes = (totalSeconds % 3600) / 60
         val seconds = totalSeconds % 60
 
+        // ৩. এক ঘণ্টার বেশি হলে ঘণ্টা সহ ফরম্যাট করে, অন্যথায় শুধু মিনিট:সেকেন্ড
         return if (hours > 0) {
             String.format(Locale.getDefault(), "%02d:%02d:%02d", hours, minutes, seconds)
         } else {
@@ -22,6 +42,12 @@ object TimeUtils {
         }
     }
 
+    /**
+     * -------------------------------------------------------------------------
+     * 📌 ফাংশন: formatMinutesHuman
+     * 🎯 উদ্দেশ্য: মোট মিনিটকে মানুষের পড়ার উপযোগী "২h ৩০m" ফরম্যাটে প্রদর্শন।
+     * -------------------------------------------------------------------------
+     */
     fun formatMinutesHuman(totalMinutes: Int): String {
         val hours = totalMinutes / 60
         val minutes = totalMinutes % 60

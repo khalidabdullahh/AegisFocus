@@ -68,6 +68,8 @@ import com.aegisfocus.app.domain.model.Schedule
 @Composable
 fun SettingsScreen(
     viewModel: SettingsViewModel,
+    onNavigateToAuth: () -> Unit = {},
+    onNavigateToPaywall: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -95,12 +97,47 @@ fun SettingsScreen(
             letterSpacing = (-0.5).sp
         )
         Text(
-            text = "Permissions, routines, and discipline rules.",
+            text = "Permissions, cloud sync, and discipline rules.",
             fontSize = 13.sp,
             color = TextSecondary
         )
 
-        Spacer(modifier = Modifier.height(20.dp))
+        Spacer(modifier = Modifier.height(18.dp))
+
+        // Account & Cloud Sync Card
+        Surface(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable { onNavigateToAuth() },
+            shape = RoundedCornerShape(16.dp),
+            color = DeepSurface,
+            border = BorderStroke(1.dp, CyanAccent.copy(alpha = 0.3f))
+        ) {
+            Row(
+                modifier = Modifier.padding(16.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                    Box(
+                        modifier = Modifier
+                            .size(40.dp)
+                            .clip(RoundedCornerShape(10.dp))
+                            .background(CyanAccent.copy(alpha = 0.15f)),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(Icons.Default.Security, contentDescription = null, tint = CyanAccent, modifier = Modifier.size(22.dp))
+                    }
+                    Column {
+                        Text("Account & Cloud Backup", color = TextPrimary, fontWeight = FontWeight.Bold, fontSize = 15.sp)
+                        Text("Sign in with Supabase to sync focus stats", color = TextSecondary, fontSize = 12.sp)
+                    }
+                }
+                Text("Manage", color = CyanAccent, fontWeight = FontWeight.Bold, fontSize = 13.sp)
+            }
+        }
+
+        Spacer(modifier = Modifier.height(24.dp))
 
         // System Permissions Section
         SectionHeader(

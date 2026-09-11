@@ -76,6 +76,8 @@ class AppContainer(private val context: Context) {
     // ─── Domain Engines (v2) ─────────────────────────────────────────────────
     val entitlementManager by lazy { EntitlementManager(subscriptionDao) }
     val playBillingManager by lazy { com.aegisfocus.app.data.billing.PlayBillingManager(context, entitlementManager) }
+    val supabaseAuthService by lazy { com.aegisfocus.app.data.remote.SupabaseAuthService(context) }
+    val supabaseSyncService by lazy { com.aegisfocus.app.data.remote.SupabaseSyncService(supabaseAuthService, userXpDao, subscriptionDao) }
 
     val adaptiveFrictionController by lazy { AdaptiveFrictionController() }
 
