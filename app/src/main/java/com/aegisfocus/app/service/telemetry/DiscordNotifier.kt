@@ -16,92 +16,94 @@ import java.util.Date
 import java.util.Locale
 
 /**
- * Dispatches real-time Discord webhook notifications when:
- * 1. App is opened/launched (App Launch / Session Start telemetry)
- * 2. Pro license is activated or payment is confirmed
+ * Dispatches real-time Discord webhook notifications exclusively for:
+ * 1. User Account Creation / Sign-In (Auth Events)
+ * 2. Pro License Purchases / Payment Confirmations (Revenue Events)
  */
 object DiscordNotifier {
 
     private const val TAG = "DiscordNotifier"
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
-    // Developer can set their Discord Webhook URL here or via environment/config
+    // Discord Webhook URL for #aegis-focus
     @Volatile
-    var webhookUrl: String = "https://discord.com/api/webhooks/1349377473068925000/YOUR_WEBHOOK_TOKEN"
-
-    fun setCustomWebhook(url: String) {
-        webhookUrl = url
-    }
+    var webhookUrl: String = "https://discord.com/api/webhooks/1547850672987447326/5ac4mp72Zb479k18tQe8LnCyXpQBjekjX8R2w-Bc7sT9njpAwm40x8K5p4wULjDBWvcS"
 
     /**
-     * Notify when the app is launched or user initiates an active focus session.
+     * Notify when a user registers or logs into their account.
+     * @param eventType "Account Created" or "User Login"
      */
-    fun notifyAppLaunch(context: Context, eventType: String = "App Opened") {
+    fun notifyUserAuth(eventType: String, email: String, username: String? = null) {
         scope.launch {
             try {
-                if (webhookUrl.isBlank() || webhookUrl.contains("YOUR_WEBHOOK_TOKEN")) {
-                    Log.d(TAG, "Discord webhook URL is default/unconfigured. Skipping post.")
-                    return@launch
-                }
+                if (webhookUrl.isBlank()) return@launch
 
                 val now = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(Date())
                 val deviceModel = "${Build.MANUFACTURER.uppercase()} ${Build.MODEL}"
                 val androidVersion = "Android ${Build.VERSION.RELEASE} (API ${Build.VERSION.SDK_INT})"
 
+                val isNewAccount = eventType.contains("Create", ignoreCase = true) || eventType.contains("Register", ignoreCase = true)
+                val embedColor = if (isNewAccount) 0x10B981 else 0x38BDF8 // Green for new user, Cyan for login
+
                 val embed = JSONObject().apply {
-                    put("title", "📱 ASR — $eventType")
-                    put("description", "A user has active engagement in the ASR Discipline app.")
-                    put("color", 0x38BDF8) // Cyan color
+                    put("title", if (isNewAccount) "🎉 New User Registered!" else "👤 User Logged In")
+                    put("description", "User authenticated in ASR Focus app.")
+                    put("color", embedColor)
                     put("fields", JSONArray().apply {
+                        put(JSONObject().put("name", "Email", true).put("value", email, true))
+                        username?.let {
+                            put(JSONObject().put("name", "Username", true).put("value", it, true))
+                        }
+                        put(JSONObject().put("name", "Auth Event", true).put("value", eventType, true))
                         put(JSONObject().put("name", "Device", true).put("value", deviceModel, true))
                         put(JSONObject().put("name", "OS Version", true).put("value", androidVersion, true))
                         put(JSONObject().put("name", "Timestamp", true).put("value", now, true))
                     })
-                    put("footer", JSONObject().put("text", "ASR Local-First Engine"))
+                    put("footer", JSONObject().put("text", "ASR Auth & User Activity"))
                 }
 
                 val payload = JSONObject().apply {
-                    put("username", "ASR Discipline Bot")
+                    put("username", "ASR User Monitor")
                     put("embeds", JSONArray().put(embed))
                 }
 
                 sendHttpPost(webhookUrl, payload.toString())
             } catch (e: Exception) {
-                Log.w(TAG, "Failed to send Discord launch webhook: ${e.message}")
+                Log.w(TAG, "Failed to send Discord auth webhook: ${e.message}")
             }
         }
     }
 
     /**
-     * Notify when a user unlocks Pro via Google Play or Web License Key.
+     * Notify when a user makes a payment or unlocks Pro via license key.
      */
-    fun notifyProPurchase(planName: String, method: String, licenseKey: String? = null) {
+    fun notifyProPurchase(planName: String, method: String, licenseKey: String? = null, amount: String? = null) {
         scope.launch {
             try {
-                if (webhookUrl.isBlank() || webhookUrl.contains("YOUR_WEBHOOK_TOKEN")) {
-                    Log.d(TAG, "Discord webhook URL is unconfigured. Skipping payment notification.")
-                    return@launch
-                }
+                if (webhookUrl.isBlank()) return@launch
 
                 val now = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(Date())
 
                 val embed = JSONObject().apply {
-                    put("title", "💎 NEW PRO ACTIVATION / PAYMENT!")
-                    put("description", "A customer has successfully activated **ASR Pro**.")
-                    put("color", 0x10B981) // Emerald Green
+                    put("title", "💎 NEW PRO ACTIVATION / PAYMENT CONFIRMED!")
+                    put("description", "A customer has successfully purchased or activated **ASR Pro**.")
+                    put("color", 0xF59E0B) // Amber/Gold color
                     put("fields", JSONArray().apply {
                         put(JSONObject().put("name", "Plan Tier", true).put("value", planName, true))
                         put(JSONObject().put("name", "Payment Method", true).put("value", method, true))
+                        amount?.let {
+                            put(JSONObject().put("name", "Amount", true).put("value", it, true))
+                        }
                         licenseKey?.let {
                             put(JSONObject().put("name", "License Key", true).put("value", it, true))
                         }
                         put(JSONObject().put("name", "Timestamp", true).put("value", now, true))
                     })
-                    put("footer", JSONObject().put("text", "ASR Turn Time Into Progress"))
+                    put("footer", JSONObject().put("text", "ASR Turn Time Into Progress — Revenue"))
                 }
 
                 val payload = JSONObject().apply {
-                    put("username", "ASR Revenue & Sales")
+                    put("username", "ASR Revenue Bot")
                     put("embeds", JSONArray().put(embed))
                 }
 

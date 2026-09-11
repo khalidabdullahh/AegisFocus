@@ -22,9 +22,6 @@ class MainActivity : ComponentActivity() {
         val app = application as AegisApplication
         val container = app.container
 
-        // Dispatch optional launch notification to Discord
-        com.aegisfocus.app.service.telemetry.DiscordNotifier.notifyAppLaunch(this)
-
         val isOnboardingDone = container.settingsRepository.isOnboardingCompleted()
         val startDestination = if (isOnboardingDone) Screen.Home.route else Screen.Onboarding.route
 
