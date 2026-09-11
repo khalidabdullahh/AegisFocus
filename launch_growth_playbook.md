@@ -49,7 +49,7 @@ I'd love to hear your feedback on what features you want next!
 
 ### Launch Day Checklist:
 1. **Launch Day**: Tuesday or Wednesday at **12:01 AM PST** (San Francisco time).
-2. **Name**: `ASR — Turn Time Into Progress`
+2. **Name**: `ASAR — Turn Time Into Progress`
 3. **Tagline**: `The unbypassable focus & digital discipline app for Android`
 4. **Thumbnail**: Our official confirmed `assets/asr_monogram_glyph.jpg` (White Edition glyph).
 5. **Gallery**:

@@ -1,6 +1,6 @@
 <resources>
-    <string name="app_name">ASR</string>
-    <string name="accessibility_service_description">ASR uses accessibility events exclusively to detect when blocked distracting apps are opened during your active focus sessions and assist your digital discipline.</string>
+    <string name="app_name">ASAR</string>
+    <string name="accessibility_service_description">ASAR uses accessibility events exclusively to detect when blocked distracting apps are opened during your active focus sessions and assist your digital discipline.</string>
     <string name="notification_channel_timer_name">Active Focus Sessions</string>
     <string name="notification_channel_timer_desc">Shows persistent countdown timers and status during active focus sessions.</string>
     <string name="notification_channel_reminders_name">Focus Schedules &amp; Reminders</string>

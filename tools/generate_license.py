@@ -29,7 +29,7 @@ def generate_key(tier: str, label: str = None) -> str:
         payload = "".join(random.choices(string.ascii_uppercase + string.digits, k=4))
     
     checksum = compute_checksum(tier, payload)
-    return f"ASR-{tier}-{payload}-{checksum}"
+    return f"ASAR-{tier}-{payload}-{checksum}"
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Generate ASR License Keys")

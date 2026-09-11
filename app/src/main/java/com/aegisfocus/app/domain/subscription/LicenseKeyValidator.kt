@@ -30,8 +30,8 @@ object LicenseKeyValidator {
         }
 
         val parts = cleanKey.split("-")
-        if (parts.size != 4 || parts[0] != "ASR") {
-            return ValidationResult(isValid = false, message = "Invalid key format. Expected: ASR-XXXX-XXXX-XXXX")
+        if (parts.size != 4 || (parts[0] != "ASAR" && parts[0] != "ASR")) {
+            return ValidationResult(isValid = false, message = "Invalid key format. Expected: ASAR-XXXX-XXXX-XXXX")
         }
 
         val tier = parts[1]

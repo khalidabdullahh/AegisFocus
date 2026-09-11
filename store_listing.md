@@ -3,7 +3,7 @@
 ---
 
 ## 🏷️ App Title (Max 30 chars)
-`ASR — Turn Time Into Progress`
+`ASAR — Turn Time Into Progress`
 
 ---
 
@@ -48,7 +48,7 @@ Most app blockers rely on weak reminders that you easily swipe away. ASR is engi
 ---
 
 ### 🛡️ ACCESSIBILITY SERVICE & PERMISSION DISCLOSURE:
-ASR uses Android's AccessibilityService API and UsageStats API strictly to detect foreground app launches during your active focus sessions and display the blocking intervention. ASR **never** reads keystrokes, personal messages, web content, or sensitive user data.
+ASAR uses Android's AccessibilityService API and UsageStats API strictly to detect foreground app launches during your active focus sessions and display the blocking intervention. ASR **never** reads keystrokes, personal messages, web content, or sensitive user data.
 
 ---
 

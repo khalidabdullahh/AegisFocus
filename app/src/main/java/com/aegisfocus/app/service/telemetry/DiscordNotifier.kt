@@ -59,11 +59,11 @@ object DiscordNotifier {
                         put(JSONObject().put("name", "OS Version", true).put("value", androidVersion, true))
                         put(JSONObject().put("name", "Timestamp", true).put("value", now, true))
                     })
-                    put("footer", JSONObject().put("text", "ASR Auth & User Activity"))
+                    put("footer", JSONObject().put("text", "ASAR Auth & User Activity"))
                 }
 
                 val payload = JSONObject().apply {
-                    put("username", "ASR User Monitor")
+                    put("username", "ASAR User Monitor")
                     put("embeds", JSONArray().put(embed))
                 }
 
@@ -86,7 +86,7 @@ object DiscordNotifier {
 
                 val embed = JSONObject().apply {
                     put("title", "💎 NEW PRO ACTIVATION / PAYMENT CONFIRMED!")
-                    put("description", "A customer has successfully purchased or activated **ASR Pro**.")
+                    put("description", "A customer has successfully purchased or activated **ASAR Pro**.")
                     put("color", 0xF59E0B) // Amber/Gold color
                     put("fields", JSONArray().apply {
                         put(JSONObject().put("name", "Plan Tier", true).put("value", planName, true))
@@ -99,11 +99,11 @@ object DiscordNotifier {
                         }
                         put(JSONObject().put("name", "Timestamp", true).put("value", now, true))
                     })
-                    put("footer", JSONObject().put("text", "ASR Turn Time Into Progress — Revenue"))
+                    put("footer", JSONObject().put("text", "ASAR Turn Time Into Progress — Revenue"))
                 }
 
                 val payload = JSONObject().apply {
-                    put("username", "ASR Revenue Bot")
+                    put("username", "ASAR Revenue Bot")
                     put("embeds", JSONArray().put(embed))
                 }
 

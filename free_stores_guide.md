@@ -13,7 +13,7 @@ How to publish ASR for **100% FREE** without paying Google's $25 fee on major al
 1. Go to [https://developers.uptodown.com](https://developers.uptodown.com) and create a free developer account.
 2. Click **Add New App** -> Choose **Upload APK**.
 3. Fill in the listing details:
-   - **App Title**: `ASR — Turn Time Into Progress`
+   - **App Title**: `ASAR — Turn Time Into Progress`
    - **Package Name**: `com.aegisfocus.app`
    - **Category**: `Productivity / Tools`
    - **Short Description**: `Protect your attention. Block distracting apps. Build unbreakable focus.`

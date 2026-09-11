@@ -19,7 +19,7 @@ class ExportDataUseCase(
 ) {
     suspend fun exportToJsonString(): String = withContext(Dispatchers.IO) {
         val root = JSONObject()
-        root.put("app", "ASR — Turn Time Into Progress")
+        root.put("app", "ASAR — Turn Time Into Progress")
         root.put("version", "1.0.0")
         root.put("exportedAtEpochMs", System.currentTimeMillis())
 
