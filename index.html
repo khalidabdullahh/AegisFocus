@@ -1,848 +1,1378 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>bProductive (Aegis Focus) — Interactive Mobile Simulation</title>
-    <!-- Tailwind CSS CDN -->
+
+    <!-- ── ASR Identity ──────────────────────────────────────────── -->
+    <title>ASR — Turn Time Into Progress</title>
+    <meta name="description" content="ASR is a focus and digital discipline system that helps you protect your attention, control distracting apps, and turn focused time into meaningful progress.">
+    <meta name="keywords" content="focus app, productivity, distraction blocker, deep work, strict mode, screen time, digital discipline">
+    <meta name="author" content="ASR">
+    <meta name="theme-color" content="#0A0D14">
+
+    <!-- ── Open Graph ──────────────────────────────────────────────── -->
+    <meta property="og:title" content="ASR — Turn Time Into Progress">
+    <meta property="og:description" content="Protect your attention. Control distracting apps. Build real discipline. ASR is a local-first focus system for Android.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://khalidabdullahh.github.io/ASR-TurnTimeIntoProgress/">
+    <meta property="og:image" content="https://khalidabdullahh.github.io/ASR-TurnTimeIntoProgress/og.png">
+
+    <!-- ── Twitter / X Card ────────────────────────────────────────── -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="ASR — Turn Time Into Progress">
+    <meta name="twitter:description" content="Protect your attention. Control distracting apps. Build real discipline.">
+
+    <!-- ── Favicon (inline SVG data URI) ──────────────────────────── -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%230A0D14'/><text x='50%25' y='55%25' dominant-baseline='middle' text-anchor='middle' font-family='system-ui,sans-serif' font-weight='700' font-size='18' fill='%2338BDF8'>A</text></svg>">
+
+    <!-- ── Google Fonts: Inter ─────────────────────────────────────── -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <!-- ── Tailwind CSS ────────────────────────────────────────────── -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
             darkMode: 'class',
             theme: {
                 extend: {
+                    fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] },
                     colors: {
-                        obsidian: '#0B0F17',
-                        deepSurface: '#131B2B',
-                        elevatedSurface: '#1C2538',
-                        subtleBorder: '#243048',
-                        cyanAccent: '#00E5FF',
-                        emeraldFocus: '#10B981',
-                        alertStrict: '#EF4444',
-                        textPrimary: '#F8FAFC',
-                        textSecondary: '#94A3B8',
-                        textMuted: '#64748B'
+                        asr: {
+                            bg:       '#0A0D14',
+                            surface:  '#111827',
+                            elevated: '#1A2235',
+                            border:   '#1E2D45',
+                            sky:      '#38BDF8',
+                            emerald:  '#10B981',
+                            red:      '#F87171',
+                            text:     '#F8FAFC',
+                            muted:    '#94A3B8',
+                            faint:    '#64748B',
+                        }
                     }
                 }
             }
         }
     </script>
-    <!-- Lucide Icons -->
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <!-- Alpine.js for lightweight state reactivity -->
-    <script defer src="https://unpkg.com/alpinejs@3.13.3/dist/cdn.min.js"></script>
-    <style>
-        /* Custom scrollbars */
-        ::-webkit-scrollbar { width: 4px; height: 4px; }
-        ::-webkit-scrollbar-track { background: #0B0F17; }
-        ::-webkit-scrollbar-thumb { background: #243048; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #00E5FF; }
 
-        .glow-cyan { box-shadow: 0 0 25px rgba(0, 229, 255, 0.15); }
-        .glow-strict { box-shadow: 0 0 25px rgba(239, 68, 68, 0.2); }
+    <!-- ── Lucide Icons ────────────────────────────────────────────── -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- ── Alpine.js ───────────────────────────────────────────────── -->
+    <script defer src="https://unpkg.com/alpinejs@3.13.3/dist/cdn.min.js"></script>
+
+    <style>
+        /* Scrollbars */
+        ::-webkit-scrollbar { width: 4px; height: 4px; }
+        ::-webkit-scrollbar-track { background: #0A0D14; }
+        ::-webkit-scrollbar-thumb { background: #1E2D45; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #38BDF8; }
+
+        /* Ring timer animation */
         .progress-ring-circle {
             transition: stroke-dashoffset 0.35s;
             transform: rotate(-90deg);
             transform-origin: 50% 50%;
         }
+
+        /* Glows */
+        .glow-sky  { box-shadow: 0 0 30px rgba(56, 189, 248, 0.12); }
+        .glow-red  { box-shadow: 0 0 30px rgba(248, 113, 113, 0.18); }
+
+        /* Gradient text */
+        .text-gradient {
+            background: linear-gradient(135deg, #38BDF8 0%, #818CF8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Toast */
+        @keyframes slideUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to   { transform: translateY(0);    opacity: 1; }
+        }
+        .toast-enter { animation: slideUp 0.3s ease forwards; }
+
+        /* Subtle grid background on hero */
+        .hero-grid {
+            background-image:
+                linear-gradient(rgba(56,189,248,0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(56,189,248,0.03) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+
+        /* Section fade-in on scroll */
+        .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.6s ease, transform 0.6s ease; }
+        .reveal.visible { opacity: 1; transform: translateY(0); }
+
+        /* Hide Alpine cloak */
+        [x-cloak] { display: none !important; }
     </style>
 </head>
-<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col items-center justify-center p-2 sm:p-6 font-sans select-none"
-      x-data="aegisApp()" x-init="initApp()">
 
-    <!-- Top Action Bar for Web Preview -->
-    <header class="w-full max-w-md mb-3 flex items-center justify-between px-2 text-xs">
-        <div class="flex items-center gap-2">
-            <span class="inline-block w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
-            <span class="font-semibold text-slate-300">bProductive Web Simulation</span>
-        </div>
-        <div class="flex items-center gap-2">
-            <button @click="simulateOpenBlockedApp()" 
-                    class="bg-alertStrict/20 hover:bg-alertStrict/30 text-alertStrict border border-alertStrict/40 px-2.5 py-1 rounded-md text-xs font-medium transition flex items-center gap-1">
-                <i data-lucide="shield-alert" class="w-3.5 h-3.5"></i>
-                Simulate Blocked App
-            </button>
-        </div>
-    </header>
+<!-- ═══════════════════════════════════════════════════════════════════
+     ASR — Turn Time Into Progress
+     Single-file: Marketing landing page + Interactive app simulator
+════════════════════════════════════════════════════════════════════ -->
+<body class="bg-asr-bg text-asr-text font-sans antialiased"
+      x-data="asrApp()"
+      x-init="initApp()">
 
-    <!-- Mobile Device Shell Frame -->
-    <main class="w-full max-w-sm sm:max-w-[400px] h-[820px] max-h-[92vh] bg-obsidian border-4 border-slate-800 rounded-[44px] shadow-2xl overflow-hidden flex flex-col relative glow-cyan">
-        
-        <!-- Phone Notch & Status Bar -->
-        <div class="h-10 bg-obsidian px-6 pt-2 flex items-center justify-between text-xs text-slate-400 font-medium z-20 shrink-0">
-            <span x-text="currentTimeStr">09:41</span>
-            <!-- Notch Pill -->
-            <div class="w-24 h-4 bg-slate-900 rounded-full flex items-center justify-center">
-                <div class="w-2.5 h-2.5 rounded-full bg-slate-950 mr-2"></div>
-                <div class="w-1.5 h-1.5 rounded-full bg-cyan-950"></div>
-            </div>
-            <div class="flex items-center gap-1.5">
-                <i data-lucide="wifi" class="w-3.5 h-3.5 text-slate-300"></i>
-                <i data-lucide="battery-medium" class="w-4 h-4 text-slate-300"></i>
-            </div>
-        </div>
+<!-- ══════════════════════════════════════════════════════════════════
+     NAVIGATION
+════════════════════════════════════════════════════════════════════ -->
+<header class="fixed top-0 left-0 right-0 z-50 border-b border-asr-border/60 backdrop-blur-xl bg-asr-bg/80">
+    <div class="max-w-6xl mx-auto px-5 sm:px-8 h-14 flex items-center justify-between">
 
-        <!-- Main Screen Content Area (Scrollable) -->
-        <div class="flex-1 overflow-y-auto px-5 pb-20 pt-2 relative">
+        <!-- Logo -->
+        <a href="#" class="flex items-center gap-2.5 group">
+            <!-- ASR Mark -->
+            <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect width="28" height="28" rx="7" fill="#0F172A"/>
+                <path d="M9 20L14 8L19 20" stroke="#38BDF8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M10.5 16.5H17.5" stroke="#38BDF8" stroke-width="1.5" stroke-linecap="round"/>
+                <circle cx="14" cy="14" r="12" stroke="#1E2D45" stroke-width="1" fill="none"/>
+            </svg>
+            <span class="font-bold text-lg text-asr-text tracking-tight">ASR</span>
+        </a>
 
-            <!-- TAB 1: HOME DASHBOARD -->
-            <section x-show="currentTab === 'home'" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 translate-y-2">
-                <!-- Header -->
-                <div class="flex items-center justify-between mt-2">
-                    <div>
-                        <p class="text-[10px] uppercase tracking-widest font-bold text-cyanAccent" x-text="todayDateStr"></p>
-                        <h1 class="text-2xl font-bold text-textPrimary tracking-tight" x-text="greeting"></h1>
-                    </div>
-                    <div class="w-10 h-10 rounded-full bg-elevatedSurface border border-subtleBorder flex items-center justify-center">
-                        <i data-lucide="shield" class="w-5 h-5 text-cyanAccent"></i>
-                    </div>
-                </div>
-
-                <!-- Active Session Hero Card or Start Button -->
-                <div class="mt-5">
-                    <template x-if="isSessionActive">
-                        <div @click="currentTab = 'focus'" class="cursor-pointer bg-elevatedSurface border-2 rounded-2xl p-4 transition-all"
-                             :class="activeMode === 'STRICT' ? 'border-alertStrict glow-strict' : 'border-cyanAccent glow-cyan'">
-                            <div class="flex items-center justify-between text-xs">
-                                <div class="flex items-center gap-2 font-bold tracking-wider"
-                                     :class="activeMode === 'STRICT' ? 'text-alertStrict' : 'text-cyanAccent'">
-                                    <span class="w-2 h-2 rounded-full animate-ping" :class="activeMode === 'STRICT' ? 'bg-alertStrict' : 'bg-cyanAccent'"></span>
-                                    FOCUS SESSION ACTIVE
-                                </div>
-                                <span class="bg-deepSurface border border-subtleBorder px-2 py-0.5 rounded text-[10px] font-bold text-textPrimary" x-text="activeMode"></span>
-                            </div>
-                            <div class="mt-3 text-3xl font-extrabold text-textPrimary tracking-tight" x-text="formatTime(remainingSeconds)"></div>
-                            <p class="text-xs text-textSecondary mt-1" x-text="sessionGoal + ' • ' + selectedApps.length + ' apps blocked'"></p>
-                            <div class="mt-3 text-right text-xs font-semibold text-cyanAccent flex items-center justify-end gap-1">
-                                View Active Timer <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
-                            </div>
-                        </div>
-                    </template>
-
-                    <template x-if="!isSessionActive">
-                        <button @click="currentTab = 'focus'" class="w-full h-14 bg-cyanAccent hover:bg-cyanAccent/90 active:scale-[0.98] text-obsidian font-bold text-base tracking-wide rounded-2xl transition-all shadow-lg flex items-center justify-center gap-2">
-                            <i data-lucide="play" class="w-5 h-5 fill-current"></i>
-                            START FOCUS SESSION
-                        </button>
-                    </template>
-                </div>
-
-                <!-- Discipline Snapshot Grid -->
-                <div class="mt-6">
-                    <h2 class="text-sm font-bold text-textPrimary tracking-wide mb-3">Discipline Snapshot</h2>
-                    <div class="grid grid-cols-2 gap-3">
-                        <div class="bg-deepSurface border border-subtleBorder rounded-2xl p-3.5">
-                            <div class="flex justify-between items-center text-textSecondary">
-                                <span class="text-[10px] font-bold tracking-wider">FOCUS TIME</span>
-                                <i data-lucide="hourglass" class="w-4 h-4 text-emeraldFocus"></i>
-                            </div>
-                            <div class="text-xl font-bold text-textPrimary mt-2" x-text="focusTimeToday"></div>
-                            <div class="text-[10px] text-textMuted mt-0.5" x-text="sessionsCompletedCount + ' completed today'"></div>
-                        </div>
-                        <div class="bg-deepSurface border border-subtleBorder rounded-2xl p-3.5">
-                            <div class="flex justify-between items-center text-textSecondary">
-                                <span class="text-[10px] font-bold tracking-wider">SCREEN TIME</span>
-                                <i data-lucide="smartphone" class="w-4 h-4 text-cyanAccent"></i>
-                            </div>
-                            <div class="text-xl font-bold text-textPrimary mt-2" x-text="screenTimeToday"></div>
-                            <div class="text-[10px] text-textMuted mt-0.5">Total phone usage</div>
-                        </div>
-                        <div class="bg-deepSurface border border-subtleBorder rounded-2xl p-3.5">
-                            <div class="flex justify-between items-center text-textSecondary">
-                                <span class="text-[10px] font-bold tracking-wider">PRODUCTIVITY</span>
-                                <i data-lucide="sparkles" class="w-4 h-4 text-cyanAccent"></i>
-                            </div>
-                            <div class="text-xl font-bold text-textPrimary mt-2" x-text="productivityScore + '%'"></div>
-                            <div class="text-[10px] text-textMuted mt-0.5">Discipline index</div>
-                        </div>
-                        <div class="bg-deepSurface border border-subtleBorder rounded-2xl p-3.5">
-                            <div class="flex justify-between items-center text-textSecondary">
-                                <span class="text-[10px] font-bold tracking-wider">STREAK</span>
-                                <i data-lucide="zap" class="w-4 h-4 text-emeraldFocus"></i>
-                            </div>
-                            <div class="text-xl font-bold text-textPrimary mt-2" x-text="streakDays + ' days'"></div>
-                            <div class="text-[10px] text-textMuted mt-0.5">Active habit streak</div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Quick Focus Presets -->
-                <template x-if="!isSessionActive">
-                    <div class="mt-6">
-                        <h2 class="text-sm font-bold text-textPrimary tracking-wide mb-3">Quick Launch</h2>
-                        <div class="grid grid-cols-3 gap-2.5">
-                            <button @click="startQuickSession(25, 'NORMAL')" class="bg-deepSurface hover:bg-elevatedSurface border border-subtleBorder rounded-xl p-3 text-center transition">
-                                <span class="text-lg font-bold text-cyanAccent">25m</span>
-                                <span class="block text-[10px] text-textSecondary mt-0.5">Pomodoro</span>
-                            </button>
-                            <button @click="startQuickSession(50, 'STRICT')" class="bg-deepSurface hover:bg-elevatedSurface border border-subtleBorder rounded-xl p-3 text-center transition">
-                                <span class="text-lg font-bold text-cyanAccent">50m</span>
-                                <span class="block text-[10px] text-textSecondary mt-0.5">Deep Work</span>
-                            </button>
-                            <button @click="startQuickSession(90, 'STRICT')" class="bg-deepSurface hover:bg-elevatedSurface border border-subtleBorder rounded-xl p-3 text-center transition">
-                                <span class="text-lg font-bold text-cyanAccent">90m</span>
-                                <span class="block text-[10px] text-textSecondary mt-0.5">Immersion</span>
-                            </button>
-                        </div>
-                    </div>
-                </template>
-            </section>
-
-            <!-- TAB 2: FOCUS (CONFIG OR ACTIVE) -->
-            <section x-show="currentTab === 'focus'" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 translate-y-2">
-                
-                <!-- IF SESSION IS ACTIVE: SHOW LIVE COUNTDOWN -->
-                <template x-if="isSessionActive">
-                    <div class="flex flex-col items-center pt-3 text-center">
-                        <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold tracking-wider"
-                             :class="activeMode === 'STRICT' ? 'bg-alertStrict/15 border border-alertStrict/40 text-alertStrict' : 'bg-cyanAccent/15 border border-cyanAccent/40 text-cyanAccent'">
-                            <i :data-lucide="activeMode === 'STRICT' ? 'lock' : 'shield'" class="w-3.5 h-3.5"></i>
-                            <span x-text="activeMode === 'STRICT' ? 'STRICT DISCIPLINE ACTIVE' : 'FOCUS IN PROGRESS'"></span>
-                        </div>
-
-                        <h2 class="text-xl font-bold text-textPrimary mt-3" x-text="sessionGoal"></h2>
-
-                        <!-- Circular Progress Ring Timer -->
-                        <div class="relative w-56 h-56 mt-6 flex items-center justify-center">
-                            <svg class="w-full h-full transform -rotate-90">
-                                <circle cx="112" cy="112" r="94" stroke="#131B2B" stroke-width="12" fill="transparent"></circle>
-                                <circle cx="112" cy="112" r="94" 
-                                        :stroke="activeMode === 'STRICT' ? '#EF4444' : '#00E5FF'" 
-                                        stroke-width="12" 
-                                        stroke-linecap="round"
-                                        stroke-dasharray="590.6"
-                                        :stroke-dashoffset="590.6 * (1 - (remainingSeconds / (durationMinutes * 60)))"
-                                        fill="transparent"
-                                        class="progress-ring-circle"></circle>
-                            </svg>
-                            <div class="absolute flex flex-col items-center">
-                                <span class="text-4xl font-extrabold text-textPrimary tracking-tight" x-text="formatTime(remainingSeconds)"></span>
-                                <span class="text-[11px] font-semibold text-textSecondary uppercase tracking-widest mt-1">Remaining</span>
-                            </div>
-                        </div>
-
-                        <!-- Blocked Apps Carousel -->
-                        <div class="w-full bg-deepSurface border border-subtleBorder rounded-2xl p-3.5 mt-6 text-left">
-                            <div class="flex items-center justify-between text-xs mb-2">
-                                <span class="font-bold text-textPrimary flex items-center gap-1.5">
-                                    <i data-lucide="shield-ban" class="w-3.5 h-3.5 text-alertStrict"></i>
-                                    Shielded Applications
-                                </span>
-                                <span class="text-cyanAccent font-semibold" x-text="selectedApps.length + ' apps blocked'"></span>
-                            </div>
-                            <div class="flex gap-1.5 overflow-x-auto pb-1">
-                                <template x-for="app in selectedApps" :key="app">
-                                    <span class="bg-elevatedSurface border border-subtleBorder px-2.5 py-1 rounded-lg text-xs text-textSecondary shrink-0" x-text="app"></span>
-                                </template>
-                            </div>
-                        </div>
-
-                        <!-- Exit Controls -->
-                        <div class="w-full mt-6 space-y-2">
-                            <template x-if="activeMode === 'STRICT'">
-                                <div>
-                                    <div class="bg-deepSurface border border-subtleBorder rounded-xl p-3 text-left flex items-center gap-2.5 text-xs text-textMuted mb-3">
-                                        <i data-lucide="lock" class="w-4 h-4 shrink-0"></i>
-                                        <span>Rules are immutable until completion to protect your attention.</span>
-                                    </div>
-                                    <button @click="openEmergencyModal()" class="w-full h-11 bg-transparent hover:bg-alertStrict/10 border border-alertStrict/50 text-alertStrict font-semibold rounded-xl text-xs transition">
-                                        Emergency Exit (With Friction)
-                                    </button>
-                                </div>
-                            </template>
-
-                            <template x-if="activeMode === 'NORMAL'">
-                                <button @click="cancelSession()" class="w-full h-11 bg-transparent hover:bg-elevatedSurface border border-subtleBorder text-textSecondary font-semibold rounded-xl text-xs transition">
-                                    End Session Early
-                                </button>
-                            </template>
-                        </div>
-                    </div>
-                </template>
-
-                <!-- IF SESSION IS IDLE: SHOW CONFIGURATION -->
-                <template x-if="!isSessionActive">
-                    <div>
-                        <h1 class="text-2xl font-bold text-textPrimary tracking-tight">Configure Session</h1>
-                        <p class="text-xs text-textSecondary mt-0.5">Deliberate focus, undisturbed mind.</p>
-
-                        <!-- Goal Input -->
-                        <div class="mt-4">
-                            <label class="text-xs text-textSecondary font-medium">Session Goal</label>
-                            <input type="text" x-model="sessionGoal" class="w-full bg-deepSurface border border-subtleBorder rounded-xl px-3.5 py-2.5 text-sm text-textPrimary focus:outline-none focus:border-cyanAccent mt-1">
-                        </div>
-
-                        <!-- Profile Chips -->
-                        <div class="mt-5">
-                            <label class="text-xs text-textSecondary font-medium">Focus Profiles</label>
-                            <div class="grid grid-cols-2 gap-2 mt-1.5">
-                                <template x-for="p in profiles" :key="p.name">
-                                    <div @click="applyProfile(p)" class="cursor-pointer border rounded-xl p-2.5 transition flex items-center justify-between"
-                                         :class="sessionGoal === p.name ? 'bg-elevatedSurface border-cyanAccent' : 'bg-deepSurface border-subtleBorder'">
-                                        <div>
-                                            <div class="text-xs font-bold text-textPrimary" x-text="p.name"></div>
-                                            <div class="text-[10px] text-textSecondary mt-0.5" x-text="p.duration + ' min • ' + p.mode"></div>
-                                        </div>
-                                        <i data-lucide="bookmark" class="w-3.5 h-3.5" :class="sessionGoal === p.name ? 'text-cyanAccent' : 'text-textMuted'"></i>
-                                    </div>
-                                </template>
-                            </div>
-                        </div>
-
-                        <!-- Duration Presets -->
-                        <div class="mt-5">
-                            <label class="text-xs text-textSecondary font-medium">Duration</label>
-                            <div class="grid grid-cols-3 gap-2 mt-1.5">
-                                <button @click="durationMinutes = 25" class="py-2.5 rounded-xl border text-sm font-bold transition"
-                                        :class="durationMinutes === 25 ? 'bg-elevatedSurface border-cyanAccent text-cyanAccent' : 'bg-deepSurface border-subtleBorder text-textPrimary'">
-                                    25m
-                                </button>
-                                <button @click="durationMinutes = 50" class="py-2.5 rounded-xl border text-sm font-bold transition"
-                                        :class="durationMinutes === 50 ? 'bg-elevatedSurface border-cyanAccent text-cyanAccent' : 'bg-deepSurface border-subtleBorder text-textPrimary'">
-                                    50m
-                                </button>
-                                <button @click="durationMinutes = 90" class="py-2.5 rounded-xl border text-sm font-bold transition"
-                                        :class="durationMinutes === 90 ? 'bg-elevatedSurface border-cyanAccent text-cyanAccent' : 'bg-deepSurface border-subtleBorder text-textPrimary'">
-                                    90m
-                                </button>
-                            </div>
-
-                            <!-- Custom Duration Stepper -->
-                            <div class="bg-deepSurface border border-subtleBorder rounded-xl p-2.5 mt-2 flex items-center justify-between text-xs">
-                                <span class="text-textSecondary">Custom Duration:</span>
-                                <div class="flex items-center gap-3">
-                                    <button @click="if(durationMinutes > 5) durationMinutes -= 5" class="w-7 h-7 bg-elevatedSurface rounded-lg text-cyanAccent font-bold">-</button>
-                                    <span class="font-bold text-textPrimary" x-text="durationMinutes + ' min'"></span>
-                                    <button @click="durationMinutes += 5" class="w-7 h-7 bg-elevatedSurface rounded-lg text-cyanAccent font-bold">+</button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Mode Selector (Normal vs Strict) -->
-                        <div class="mt-5">
-                            <label class="text-xs text-textSecondary font-medium">Discipline Mode</label>
-                            <div class="grid grid-cols-2 gap-2 mt-1.5">
-                                <div @click="activeMode = 'NORMAL'" class="cursor-pointer border rounded-xl p-3 transition"
-                                     :class="activeMode === 'NORMAL' ? 'bg-elevatedSurface border-cyanAccent' : 'bg-deepSurface border-subtleBorder'">
-                                    <div class="flex items-center gap-1.5 text-xs font-bold" :class="activeMode === 'NORMAL' ? 'text-cyanAccent' : 'text-textPrimary'">
-                                        <i data-lucide="shield" class="w-4 h-4"></i>
-                                        Normal Mode
-                                    </div>
-                                    <p class="text-[10px] text-textMuted mt-1">Flexible discipline</p>
-                                </div>
-                                <div @click="activeMode = 'STRICT'" class="cursor-pointer border rounded-xl p-3 transition"
-                                     :class="activeMode === 'STRICT' ? 'bg-elevatedSurface border-alertStrict' : 'bg-deepSurface border-subtleBorder'">
-                                    <div class="flex items-center gap-1.5 text-xs font-bold" :class="activeMode === 'STRICT' ? 'text-alertStrict' : 'text-textPrimary'">
-                                        <i data-lucide="lock" class="w-4 h-4"></i>
-                                        Strict Mode
-                                    </div>
-                                    <p class="text-[10px] text-textMuted mt-1">Immutable lock</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Shielded Apps Preview Link -->
-                        <div @click="currentTab = 'apps'" class="cursor-pointer bg-deepSurface border border-subtleBorder rounded-xl p-3.5 mt-5 flex items-center justify-between">
-                            <div class="flex items-center gap-2.5">
-                                <i data-lucide="layout-grid" class="w-4 h-4 text-cyanAccent"></i>
-                                <div>
-                                    <div class="text-xs font-bold text-textPrimary">Shielded Apps</div>
-                                    <div class="text-[10px] text-textSecondary" x-text="selectedApps.length + ' apps will be blocked'"></div>
-                                </div>
-                            </div>
-                            <i data-lucide="chevron-right" class="w-4 h-4 text-textSecondary"></i>
-                        </div>
-
-                        <!-- Start Button -->
-                        <button @click="startSession()" class="w-full h-13 bg-cyanAccent hover:bg-cyanAccent/90 active:scale-[0.98] text-obsidian font-bold text-sm tracking-wide rounded-2xl transition mt-6 py-3.5 shadow-lg">
-                            START FOCUS SESSION
-                        </button>
-                    </div>
-                </template>
-            </section>
-
-            <!-- TAB 3: SHIELDED APPS -->
-            <section x-show="currentTab === 'apps'" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 translate-y-2">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <h1 class="text-2xl font-bold text-textPrimary tracking-tight">Shielded Apps</h1>
-                        <p class="text-xs text-textSecondary" x-text="selectedApps.length + ' apps configured for blocking'"></p>
-                    </div>
-                </div>
-
-                <!-- Strict Mode Locked Warning if Active -->
-                <template x-if="isSessionActive && activeMode === 'STRICT'">
-                    <div class="bg-alertStrict/15 border border-alertStrict/40 rounded-xl p-2.5 text-xs text-alertStrict flex items-center gap-2 mt-3">
-                        <i data-lucide="lock" class="w-4 h-4 shrink-0"></i>
-                        <span>Strict Mode Active: App rules are locked.</span>
-                    </div>
-                </template>
-
-                <!-- Search Input -->
-                <div class="mt-3 relative">
-                    <i data-lucide="search" class="w-4 h-4 text-textMuted absolute left-3 top-3"></i>
-                    <input type="text" x-model="appSearchQuery" placeholder="Search applications..." 
-                           class="w-full bg-deepSurface border border-subtleBorder rounded-xl pl-9 pr-3.5 py-2 text-xs text-textPrimary focus:outline-none focus:border-cyanAccent">
-                </div>
-
-                <!-- Category Chips -->
-                <div class="flex gap-1.5 overflow-x-auto py-2.5 mt-1 text-xs">
-                    <button @click="selectedCategory = 'ALL'" class="px-2.5 py-1 rounded-lg border text-[11px] shrink-0"
-                            :class="selectedCategory === 'ALL' ? 'bg-elevatedSurface border-cyanAccent text-cyanAccent font-bold' : 'bg-deepSurface border-subtleBorder text-textSecondary'">
-                        All
-                    </button>
-                    <button @click="selectedCategory = 'SOCIAL'" class="px-2.5 py-1 rounded-lg border text-[11px] shrink-0"
-                            :class="selectedCategory === 'SOCIAL' ? 'bg-elevatedSurface border-cyanAccent text-cyanAccent font-bold' : 'bg-deepSurface border-subtleBorder text-textSecondary'">
-                        Social
-                    </button>
-                    <button @click="selectedCategory = 'ENTERTAINMENT'" class="px-2.5 py-1 rounded-lg border text-[11px] shrink-0"
-                            :class="selectedCategory === 'ENTERTAINMENT' ? 'bg-elevatedSurface border-cyanAccent text-cyanAccent font-bold' : 'bg-deepSurface border-subtleBorder text-textSecondary'">
-                        Entertainment
-                    </button>
-                    <button @click="selectedCategory = 'GAMES'" class="px-2.5 py-1 rounded-lg border text-[11px] shrink-0"
-                            :class="selectedCategory === 'GAMES' ? 'bg-elevatedSurface border-cyanAccent text-cyanAccent font-bold' : 'bg-deepSurface border-subtleBorder text-textSecondary'">
-                        Games
-                    </button>
-                </div>
-
-                <!-- Apps List -->
-                <div class="space-y-2 mt-1">
-                    <template x-for="app in filteredApps" :key="app.pkg">
-                        <div @click="toggleApp(app.name)" 
-                             class="bg-deepSurface border border-subtleBorder hover:border-cyanAccent/50 rounded-xl p-3 flex items-center justify-between cursor-pointer transition"
-                             :class="isAppSelected(app.name) ? 'bg-elevatedSurface border-cyanAccent/40' : ''">
-                            <div class="flex items-center gap-3">
-                                <div class="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center text-sm font-bold text-cyanAccent" x-text="app.name.charAt(0)"></div>
-                                <div>
-                                    <div class="text-xs font-bold text-textPrimary" x-text="app.name"></div>
-                                    <div class="text-[10px] text-textMuted" x-text="app.category + ' • ' + app.pkg"></div>
-                                </div>
-                            </div>
-                            <input type="checkbox" :checked="isAppSelected(app.name)" class="w-4 h-4 rounded text-cyanAccent bg-slate-900 border-slate-700">
-                        </div>
-                    </template>
-                </div>
-            </section>
-
-            <!-- TAB 4: STATS & ANALYTICS -->
-            <section x-show="currentTab === 'stats'" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 translate-y-2">
-                <h1 class="text-2xl font-bold text-textPrimary tracking-tight">Discipline Stats</h1>
-                <p class="text-xs text-textSecondary">Local, private behavioral tracking.</p>
-
-                <!-- 7-Day Comparison Bar Chart -->
-                <div class="bg-deepSurface border border-subtleBorder rounded-2xl p-4 mt-4">
-                    <h2 class="text-xs font-bold text-textPrimary mb-3">7-Day Discipline Pattern</h2>
-                    <div class="flex items-end justify-between h-28 pt-2">
-                        <template x-for="d in weeklyData" :key="d.day">
-                            <div class="flex flex-col items-center gap-1.5 flex-1">
-                                <div class="w-full flex justify-center items-end gap-1 h-20">
-                                    <div class="w-2 rounded-t bg-emeraldFocus transition-all" :style="'height: ' + (d.focus / 120 * 100) + '%'"></div>
-                                    <div class="w-2 rounded-t bg-cyanAccent/30 transition-all" :style="'height: ' + (d.screen / 240 * 100) + '%'"></div>
-                                </div>
-                                <span class="text-[10px] text-textSecondary font-semibold" x-text="d.day"></span>
-                            </div>
-                        </template>
-                    </div>
-                    <!-- Legend -->
-                    <div class="flex justify-center gap-4 text-[10px] text-textSecondary mt-3 border-t border-subtleBorder pt-2">
-                        <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-emeraldFocus"></span> Focus Time</span>
-                        <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-cyanAccent/40"></span> Screen Time</span>
-                    </div>
-                </div>
-
-                <!-- Most Distracting Applications -->
-                <div class="bg-deepSurface border border-subtleBorder rounded-2xl p-4 mt-4">
-                    <h2 class="text-xs font-bold text-textPrimary mb-3">Top Distractions Today</h2>
-                    <div class="space-y-3">
-                        <template x-for="d in topDistractions" :key="d.name">
-                            <div>
-                                <div class="flex justify-between text-xs mb-1">
-                                    <span class="font-semibold text-textPrimary" x-text="d.name"></span>
-                                    <span class="text-alertStrict font-bold text-[11px]" x-text="d.time"></span>
-                                </div>
-                                <div class="w-full bg-slate-900 rounded-full h-1.5 overflow-hidden">
-                                    <div class="bg-alertStrict h-full rounded-full" :style="'width: ' + d.percent + '%'"></div>
-                                </div>
-                            </div>
-                        </template>
-                    </div>
-                </div>
-            </section>
-
-            <!-- TAB 5: SETTINGS & GUARDRAILS -->
-            <section x-show="currentTab === 'settings'" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 translate-y-2">
-                <h1 class="text-2xl font-bold text-textPrimary tracking-tight">Settings & Guardrails</h1>
-                <p class="text-xs text-textSecondary">Permissions, routines, and rules.</p>
-
-                <!-- Android Permissions Status Cards -->
-                <div class="mt-4 space-y-2">
-                    <h2 class="text-xs font-bold text-textPrimary mb-1">Android Permissions</h2>
-                    
-                    <div class="bg-deepSurface border border-subtleBorder rounded-xl p-3 flex items-center justify-between text-xs">
-                        <div class="flex items-center gap-2.5">
-                            <i data-lucide="bar-chart-2" class="w-4 h-4 text-cyanAccent"></i>
-                            <div>
-                                <div class="font-bold text-textPrimary">Usage Access</div>
-                                <div class="text-[10px] text-textSecondary">Screen time & stats</div>
-                            </div>
-                        </div>
-                        <span class="bg-emeraldFocus/15 text-emeraldFocus text-[10px] font-bold px-2 py-0.5 rounded">GRANTED</span>
-                    </div>
-
-                    <div class="bg-deepSurface border border-subtleBorder rounded-xl p-3 flex items-center justify-between text-xs">
-                        <div class="flex items-center gap-2.5">
-                            <i data-lucide="activity" class="w-4 h-4 text-cyanAccent"></i>
-                            <div>
-                                <div class="font-bold text-textPrimary">Accessibility Blocker</div>
-                                <div class="text-[10px] text-textSecondary">Instant app shield</div>
-                            </div>
-                        </div>
-                        <span class="bg-emeraldFocus/15 text-emeraldFocus text-[10px] font-bold px-2 py-0.5 rounded">ACTIVE</span>
-                    </div>
-
-                    <div class="bg-deepSurface border border-subtleBorder rounded-xl p-3 flex items-center justify-between text-xs">
-                        <div class="flex items-center gap-2.5">
-                            <i data-lucide="bell" class="w-4 h-4 text-cyanAccent"></i>
-                            <div>
-                                <div class="font-bold text-textPrimary">Notifications</div>
-                                <div class="text-[10px] text-textSecondary">Active timer notice</div>
-                            </div>
-                        </div>
-                        <span class="bg-emeraldFocus/15 text-emeraldFocus text-[10px] font-bold px-2 py-0.5 rounded">ALLOWED</span>
-                    </div>
-                </div>
-
-                <!-- Discipline Preferences -->
-                <div class="bg-deepSurface border border-subtleBorder rounded-2xl p-4 mt-5 space-y-4">
-                    <h2 class="text-xs font-bold text-textPrimary mb-1">Strict Mode Preferences</h2>
-                    
-                    <div class="flex items-center justify-between text-xs">
-                        <div>
-                            <div class="font-semibold text-textPrimary">Emergency Exit Delay</div>
-                            <div class="text-[10px] text-textSecondary">Mindful pause cooldown</div>
-                        </div>
-                        <select x-model="emergencyCooldown" class="bg-elevatedSurface border border-subtleBorder rounded px-2 py-1 text-xs text-cyanAccent font-bold">
-                            <option value="5">5 seconds</option>
-                            <option value="10">10 seconds</option>
-                            <option value="15">15 seconds</option>
-                        </select>
-                    </div>
-
-                    <div class="flex items-center justify-between text-xs border-t border-subtleBorder pt-3">
-                        <div>
-                            <div class="font-semibold text-textPrimary">Require Mindful Phrase</div>
-                            <div class="text-[10px] text-textSecondary">Requires typing to exit</div>
-                        </div>
-                        <input type="checkbox" checked class="w-4 h-4 text-cyanAccent">
-                    </div>
-                </div>
-
-                <!-- 100% Local Privacy Guarantee -->
-                <div class="bg-deepSurface border border-emeraldFocus/30 rounded-2xl p-3.5 mt-5 flex items-start gap-3">
-                    <i data-lucide="shield-check" class="w-5 h-5 text-emeraldFocus shrink-0"></i>
-                    <div>
-                        <div class="text-xs font-bold text-textPrimary">100% On-Device Privacy</div>
-                        <p class="text-[10px] text-textSecondary mt-0.5 leading-relaxed">
-                            bProductive runs strictly on-device using local SQLite Room database. No servers, no tracking, zero cloud data leaks.
-                        </p>
-                    </div>
-                </div>
-            </section>
-        </div>
-
-        <!-- Bottom Navigation Bar -->
-        <nav class="h-16 bg-deepSurface border-t border-subtleBorder px-2 flex items-center justify-around z-20 shrink-0">
-            <button @click="currentTab = 'home'" class="flex flex-col items-center gap-1 transition"
-                    :class="currentTab === 'home' ? 'text-cyanAccent' : 'text-textMuted hover:text-textSecondary'">
-                <i data-lucide="shield" class="w-5 h-5"></i>
-                <span class="text-[10px] font-medium">Home</span>
-            </button>
-
-            <button @click="currentTab = 'focus'" class="flex flex-col items-center gap-1 transition"
-                    :class="currentTab === 'focus' ? 'text-cyanAccent' : 'text-textMuted hover:text-textSecondary'">
-                <i data-lucide="hourglass" class="w-5 h-5"></i>
-                <span class="text-[10px] font-medium">Focus</span>
-            </button>
-
-            <button @click="currentTab = 'apps'" class="flex flex-col items-center gap-1 transition"
-                    :class="currentTab === 'apps' ? 'text-cyanAccent' : 'text-textMuted hover:text-textSecondary'">
-                <i data-lucide="layout-grid" class="w-5 h-5"></i>
-                <span class="text-[10px] font-medium">Apps</span>
-            </button>
-
-            <button @click="currentTab = 'stats'" class="flex flex-col items-center gap-1 transition"
-                    :class="currentTab === 'stats' ? 'text-cyanAccent' : 'text-textMuted hover:text-textSecondary'">
-                <i data-lucide="bar-chart-2" class="w-5 h-5"></i>
-                <span class="text-[10px] font-medium">Stats</span>
-            </button>
-
-            <button @click="currentTab = 'settings'" class="flex flex-col items-center gap-1 transition"
-                    :class="currentTab === 'settings' ? 'text-cyanAccent' : 'text-textMuted hover:text-textSecondary'">
-                <i data-lucide="settings" class="w-5 h-5"></i>
-                <span class="text-[10px] font-medium">Settings</span>
-            </button>
+        <!-- Nav Links (desktop) -->
+        <nav class="hidden md:flex items-center gap-7 text-sm font-medium text-asr-muted">
+            <a href="#features" class="hover:text-asr-text transition">Features</a>
+            <a href="#pillars" class="hover:text-asr-text transition">Philosophy</a>
+            <a href="#simulator" class="hover:text-asr-text transition">Preview</a>
+            <a href="#pricing" class="hover:text-asr-text transition">Pricing</a>
         </nav>
 
-        <!-- CALM SHIELD INTERVENTION OVERLAY (Simulating when blocked app is opened) -->
-        <div x-show="showInterventionOverlay" x-cloak 
-             class="absolute inset-0 bg-obsidian z-50 p-6 flex flex-col items-center justify-between text-center"
-             x-transition:enter="transition ease-out duration-200"
-             x-transition:enter-start="opacity-0 scale-95"
-             x-transition:enter-end="opacity-100 scale-100">
-            
-            <div class="mt-8 flex flex-col items-center">
-                <div class="w-20 h-20 rounded-full bg-elevatedSurface border-2 border-alertStrict flex items-center justify-center">
-                    <i data-lucide="shield-ban" class="w-10 h-10 text-alertStrict"></i>
+        <!-- CTA -->
+        <a href="#simulator"
+           class="bg-asr-sky/10 hover:bg-asr-sky/20 border border-asr-sky/30 text-asr-sky text-sm font-semibold px-4 py-1.5 rounded-lg transition">
+            Try Demo
+        </a>
+    </div>
+</header>
+
+
+<!-- ══════════════════════════════════════════════════════════════════
+     HERO
+════════════════════════════════════════════════════════════════════ -->
+<section class="hero-grid min-h-screen flex flex-col items-center justify-center pt-14 px-5 text-center relative overflow-hidden">
+
+    <!-- Radial glow accent -->
+    <div class="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-asr-sky/5 blur-3xl pointer-events-none"></div>
+
+    <div class="relative max-w-3xl mx-auto">
+
+        <!-- Badge -->
+        <div class="inline-flex items-center gap-2 bg-asr-surface border border-asr-border text-xs font-semibold text-asr-muted px-3.5 py-1.5 rounded-full mb-8">
+            <span class="w-1.5 h-1.5 rounded-full bg-asr-emerald animate-pulse"></span>
+            Now available for Android · 100% on-device
+        </div>
+
+        <!-- Headline -->
+        <h1 class="text-5xl sm:text-6xl md:text-7xl font-black tracking-tight leading-[1.05]">
+            Turn Time Into
+            <span class="text-gradient block mt-1">Progress.</span>
+        </h1>
+
+        <!-- Sub-copy -->
+        <p class="mt-6 text-base sm:text-lg text-asr-muted max-w-xl mx-auto leading-relaxed">
+            ASR helps you protect your attention, control distracting apps, and build the discipline to do the work that actually matters.
+        </p>
+
+        <!-- CTAs -->
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-3 mt-10">
+            <a href="#simulator"
+               class="w-full sm:w-auto bg-asr-sky hover:bg-asr-sky/90 text-asr-bg font-bold text-sm px-7 py-3.5 rounded-xl transition shadow-lg shadow-asr-sky/20 flex items-center justify-center gap-2">
+                <i data-lucide="play" class="w-4 h-4 fill-current"></i>
+                Try Interactive Demo
+            </a>
+            <a href="https://github.com/khalidabdullahh/ASR-TurnTimeIntoProgress"
+               target="_blank"
+               class="w-full sm:w-auto bg-asr-surface hover:bg-asr-elevated border border-asr-border text-asr-text font-semibold text-sm px-7 py-3.5 rounded-xl transition flex items-center justify-center gap-2">
+                <i data-lucide="github" class="w-4 h-4"></i>
+                View on GitHub
+            </a>
+        </div>
+
+        <!-- Social proof micro stats -->
+        <div class="flex items-center justify-center gap-8 mt-12 text-xs text-asr-faint">
+            <div class="flex flex-col items-center gap-1">
+                <span class="text-xl font-bold text-asr-text">100%</span>
+                <span>On-Device</span>
+            </div>
+            <div class="w-px h-8 bg-asr-border"></div>
+            <div class="flex flex-col items-center gap-1">
+                <span class="text-xl font-bold text-asr-text">0</span>
+                <span>Cloud servers</span>
+            </div>
+            <div class="w-px h-8 bg-asr-border"></div>
+            <div class="flex flex-col items-center gap-1">
+                <span class="text-xl font-bold text-asr-text">Free</span>
+                <span>Core features</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scroll hint -->
+    <div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 text-asr-faint text-xs animate-bounce">
+        <i data-lucide="chevron-down" class="w-4 h-4"></i>
+    </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════════════════════════════
+     PROBLEM STATEMENT
+════════════════════════════════════════════════════════════════════ -->
+<section class="py-24 px-5 max-w-4xl mx-auto text-center reveal" id="problem">
+    <p class="text-asr-faint text-xs font-bold tracking-widest uppercase mb-4">The Problem</p>
+    <h2 class="text-3xl sm:text-4xl font-bold text-asr-text leading-tight">
+        Your phone is designed to<br class="hidden sm:block"> steal your attention.
+    </h2>
+    <p class="mt-5 text-asr-muted text-base max-w-2xl mx-auto leading-relaxed">
+        Every notification, every feed, every autoplay video is engineered to pull you away from what matters. The average person unlocks their phone over 150 times a day. Most of that time disappears into nothing.
+    </p>
+
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-12 text-left">
+        <div class="bg-asr-surface border border-asr-border rounded-2xl p-5">
+            <div class="text-3xl font-black text-asr-red">4.2h</div>
+            <div class="text-sm font-semibold text-asr-text mt-1">Average daily screen time</div>
+            <div class="text-xs text-asr-faint mt-1">Most of it unintentional</div>
+        </div>
+        <div class="bg-asr-surface border border-asr-border rounded-2xl p-5">
+            <div class="text-3xl font-black text-asr-red">23m</div>
+            <div class="text-sm font-semibold text-asr-text mt-1">To regain focus after interruption</div>
+            <div class="text-xs text-asr-faint mt-1">University of California study</div>
+        </div>
+        <div class="bg-asr-surface border border-asr-border rounded-2xl p-5">
+            <div class="text-3xl font-black text-asr-red">150+</div>
+            <div class="text-sm font-semibold text-asr-text mt-1">Daily phone unlocks</div>
+            <div class="text-xs text-asr-faint mt-1">Most triggered by habit, not intent</div>
+        </div>
+    </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════════════════════════════
+     SOLUTION STATEMENT
+════════════════════════════════════════════════════════════════════ -->
+<section class="py-16 px-5 max-w-3xl mx-auto text-center reveal">
+    <p class="text-asr-faint text-xs font-bold tracking-widest uppercase mb-4">The ASR Answer</p>
+    <h2 class="text-3xl sm:text-4xl font-bold text-asr-text">
+        A system that protects your attention<br class="hidden sm:block"> so your time goes where you choose.
+    </h2>
+    <p class="mt-5 text-asr-muted text-base max-w-2xl mx-auto leading-relaxed">
+        ASR is not about doing more. It's about doing what matters — with full attention, without distraction, in the time you have.
+    </p>
+</section>
+
+
+<!-- ══════════════════════════════════════════════════════════════════
+     FEATURES
+════════════════════════════════════════════════════════════════════ -->
+<section id="features" class="py-20 px-5 max-w-6xl mx-auto reveal">
+    <div class="text-center mb-14">
+        <p class="text-asr-faint text-xs font-bold tracking-widest uppercase mb-3">Features</p>
+        <h2 class="text-3xl sm:text-4xl font-bold text-asr-text">Everything you need to stay focused.</h2>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+
+        <!-- Focus Sessions -->
+        <div class="bg-asr-surface border border-asr-border rounded-2xl p-6 hover:border-asr-sky/40 transition group">
+            <div class="w-10 h-10 bg-asr-sky/10 rounded-xl flex items-center justify-center mb-4 group-hover:bg-asr-sky/20 transition">
+                <i data-lucide="hourglass" class="w-5 h-5 text-asr-sky"></i>
+            </div>
+            <h3 class="font-bold text-asr-text">Focus Sessions</h3>
+            <p class="text-asr-muted text-sm mt-2 leading-relaxed">Set a clear intention, choose your duration, and commit. Circular countdown timer tracks every second.</p>
+        </div>
+
+        <!-- App Blocking -->
+        <div class="bg-asr-surface border border-asr-border rounded-2xl p-6 hover:border-asr-sky/40 transition group">
+            <div class="w-10 h-10 bg-asr-sky/10 rounded-xl flex items-center justify-center mb-4 group-hover:bg-asr-sky/20 transition">
+                <i data-lucide="shield-ban" class="w-5 h-5 text-asr-sky"></i>
+            </div>
+            <h3 class="font-bold text-asr-text">Real App Blocking</h3>
+            <p class="text-asr-muted text-sm mt-2 leading-relaxed">Uses Android's Accessibility API to detect and block distracting apps the moment they open. No workarounds.</p>
+        </div>
+
+        <!-- Strict Mode -->
+        <div class="bg-asr-surface border border-asr-border rounded-2xl p-6 hover:border-asr-red/40 transition group">
+            <div class="w-10 h-10 bg-asr-red/10 rounded-xl flex items-center justify-center mb-4 group-hover:bg-asr-red/20 transition">
+                <i data-lucide="lock" class="w-5 h-5 text-asr-red"></i>
+            </div>
+            <h3 class="font-bold text-asr-text">Strict Mode</h3>
+            <p class="text-asr-muted text-sm mt-2 leading-relaxed">Commit to immutable rules. During Strict Mode, blocked apps and session parameters cannot be changed. Free: up to 3h.</p>
+        </div>
+
+        <!-- Mindful Pause -->
+        <div class="bg-asr-surface border border-asr-border rounded-2xl p-6 hover:border-asr-sky/40 transition group">
+            <div class="w-10 h-10 bg-asr-sky/10 rounded-xl flex items-center justify-center mb-4 group-hover:bg-asr-sky/20 transition">
+                <i data-lucide="brain" class="w-5 h-5 text-asr-sky"></i>
+            </div>
+            <h3 class="font-bold text-asr-text">Mindful Pause</h3>
+            <p class="text-asr-muted text-sm mt-2 leading-relaxed">Before a blocked app opens, a 5-second breathing moment appears. A prompt asks: why are you opening this?</p>
+        </div>
+
+        <!-- Discipline Score -->
+        <div class="bg-asr-surface border border-asr-border rounded-2xl p-6 hover:border-asr-emerald/40 transition group">
+            <div class="w-10 h-10 bg-asr-emerald/10 rounded-xl flex items-center justify-center mb-4 group-hover:bg-asr-emerald/20 transition">
+                <i data-lucide="sparkles" class="w-5 h-5 text-asr-emerald"></i>
+            </div>
+            <h3 class="font-bold text-asr-text">Discipline Score</h3>
+            <p class="text-asr-muted text-sm mt-2 leading-relaxed">A transparent 10–100 score built from your actual behavior: sessions, streaks, block attempts, and exits. No hidden math.</p>
+        </div>
+
+        <!-- Local-First Privacy -->
+        <div class="bg-asr-surface border border-asr-border rounded-2xl p-6 hover:border-asr-emerald/40 transition group">
+            <div class="w-10 h-10 bg-asr-emerald/10 rounded-xl flex items-center justify-center mb-4 group-hover:bg-asr-emerald/20 transition">
+                <i data-lucide="shield-check" class="w-5 h-5 text-asr-emerald"></i>
+            </div>
+            <h3 class="font-bold text-asr-text">100% On-Device Privacy</h3>
+            <p class="text-asr-muted text-sm mt-2 leading-relaxed">No servers. No cloud. No account required. All your data lives in a local SQLite database on your phone — and nowhere else.</p>
+        </div>
+
+    </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════════════════════════════
+     FOUR PILLARS
+════════════════════════════════════════════════════════════════════ -->
+<section id="pillars" class="py-24 px-5 bg-asr-surface border-y border-asr-border reveal">
+    <div class="max-w-6xl mx-auto">
+        <div class="text-center mb-14">
+            <p class="text-asr-faint text-xs font-bold tracking-widest uppercase mb-3">ASR Philosophy</p>
+            <h2 class="text-3xl sm:text-4xl font-bold text-asr-text">Built on four principles.</h2>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            <div class="text-center p-6">
+                <div class="text-4xl font-black text-asr-sky/30 mb-3">01</div>
+                <h3 class="font-bold text-asr-text text-lg">Time</h3>
+                <p class="text-asr-muted text-sm mt-2 leading-relaxed">Your time is finite. Every moment spent without intention is gone. ASR helps you know where your time goes.</p>
+            </div>
+            <div class="text-center p-6">
+                <div class="text-4xl font-black text-asr-sky/30 mb-3">02</div>
+                <h3 class="font-bold text-asr-text text-lg">Focus</h3>
+                <p class="text-asr-muted text-sm mt-2 leading-relaxed">Attention is your most valuable resource. Distraction is the enemy. ASR builds a wall between you and what steals your focus.</p>
+            </div>
+            <div class="text-center p-6">
+                <div class="text-4xl font-black text-asr-sky/30 mb-3">03</div>
+                <h3 class="font-bold text-asr-text text-lg">Discipline</h3>
+                <p class="text-asr-muted text-sm mt-2 leading-relaxed">Motivation fluctuates. Systems hold. ASR gives you structure that works even when willpower doesn't.</p>
+            </div>
+            <div class="text-center p-6">
+                <div class="text-4xl font-black text-asr-sky/30 mb-3">04</div>
+                <h3 class="font-bold text-asr-text text-lg">Progress</h3>
+                <p class="text-asr-muted text-sm mt-2 leading-relaxed">Focused time should produce something. ASR tracks your discipline and helps you see real, cumulative progress.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════════════════════════════
+     INTERACTIVE APP SIMULATOR
+════════════════════════════════════════════════════════════════════ -->
+<section id="simulator" class="py-24 px-5 reveal">
+    <div class="max-w-6xl mx-auto">
+        <div class="text-center mb-12">
+            <p class="text-asr-faint text-xs font-bold tracking-widest uppercase mb-3">Interactive Preview</p>
+            <h2 class="text-3xl sm:text-4xl font-bold text-asr-text">Try ASR right now.</h2>
+            <p class="text-asr-muted text-sm mt-3 max-w-lg mx-auto">This is the actual app experience — interactive, real-time, no install needed.</p>
+        </div>
+
+        <div class="flex flex-col items-center">
+
+            <!-- Simulator Control Bar -->
+            <div class="flex items-center gap-3 mb-5 flex-wrap justify-center">
+                <div class="flex items-center gap-2 bg-asr-surface border border-asr-border px-3.5 py-1.5 rounded-lg text-xs">
+                    <span class="w-2 h-2 rounded-full bg-asr-emerald animate-pulse"></span>
+                    <span class="font-semibold text-asr-muted">ASR Live Demo</span>
                 </div>
-                <span class="bg-alertStrict/15 border border-alertStrict/40 text-alertStrict text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider mt-4">
-                    SHIELD ACTIVE
-                </span>
-                <h2 class="text-2xl font-bold text-textPrimary mt-4">Take a Deep Breath</h2>
-                <p class="text-xs text-textSecondary mt-2 leading-relaxed px-4">
-                    "<span x-text="simulatedBlockedAppName"></span>" is paused during your focus session. Stay mindful of your intention.
-                </p>
-                <div class="bg-deepSurface border border-subtleBorder rounded-xl px-4 py-2 mt-5 text-xs text-cyanAccent font-bold">
-                    Remaining: <span x-text="formatTime(remainingSeconds)"></span>
-                </div>
+                <button @click="simulateOpenBlockedApp()"
+                        class="bg-asr-red/10 hover:bg-asr-red/20 border border-asr-red/30 text-asr-red px-3.5 py-1.5 rounded-lg text-xs font-semibold transition flex items-center gap-1.5">
+                    <i data-lucide="shield-alert" class="w-3.5 h-3.5"></i>
+                    Simulate Block
+                </button>
             </div>
 
-            <div class="w-full space-y-2 mb-6">
-                <button @click="showInterventionOverlay = false; currentTab = 'home'" class="w-full py-3.5 bg-cyanAccent text-obsidian font-bold text-xs rounded-xl shadow-lg">
-                    Return to Focus
-                </button>
-                <button @click="showInterventionOverlay = false; currentTab = 'focus'" class="w-full py-3 bg-transparent border border-subtleBorder text-textSecondary font-semibold text-xs rounded-xl">
-                    View Focus Dashboard
-                </button>
+            <!-- Phone Shell -->
+            <div class="w-full max-w-[360px] h-[780px] max-h-[90vh] bg-asr-bg border-[3px] border-asr-elevated rounded-[44px] shadow-2xl overflow-hidden flex flex-col relative glow-sky">
+
+                <!-- Status Bar -->
+                <div class="h-10 bg-asr-bg px-6 pt-2 flex items-center justify-between text-xs text-asr-faint font-medium z-20 shrink-0">
+                    <span x-text="currentTimeStr">09:41</span>
+                    <div class="w-20 h-3.5 bg-asr-surface rounded-full flex items-center justify-center">
+                        <div class="w-2 h-2 rounded-full bg-asr-bg mr-1.5"></div>
+                        <div class="w-1.5 h-1.5 rounded-full bg-asr-elevated"></div>
+                    </div>
+                    <div class="flex items-center gap-1.5">
+                        <i data-lucide="wifi" class="w-3.5 h-3.5 text-asr-muted"></i>
+                        <i data-lucide="battery-medium" class="w-4 h-4 text-asr-muted"></i>
+                    </div>
+                </div>
+
+                <!-- Scrollable Content -->
+                <div class="flex-1 overflow-y-auto px-5 pb-20 pt-2 relative">
+
+                    <!-- ── TAB: HOME ────────────────────────────────── -->
+                    <section x-show="currentTab === 'home'"
+                             x-transition:enter="transition ease-out duration-200"
+                             x-transition:enter-start="opacity-0 translate-y-1">
+
+                        <!-- Header -->
+                        <div class="flex items-center justify-between mt-2">
+                            <div>
+                                <p class="text-[10px] uppercase tracking-widest font-bold text-asr-sky" x-text="todayDateStr"></p>
+                                <h1 class="text-xl font-bold text-asr-text tracking-tight" x-text="greeting"></h1>
+                            </div>
+                            <div class="w-9 h-9 rounded-full bg-asr-elevated border border-asr-border flex items-center justify-center">
+                                <!-- ASR mini mark -->
+                                <svg width="18" height="18" viewBox="0 0 28 28" fill="none">
+                                    <path d="M9 20L14 8L19 20" stroke="#38BDF8" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path d="M10.8 16.5H17.2" stroke="#38BDF8" stroke-width="1.8" stroke-linecap="round"/>
+                                </svg>
+                            </div>
+                        </div>
+
+                        <!-- Discipline Score + XP row -->
+                        <div class="grid grid-cols-2 gap-2.5 mt-4">
+                            <div class="bg-asr-surface border border-asr-border rounded-2xl p-3">
+                                <div class="text-[10px] font-bold tracking-wider text-asr-faint uppercase">Score</div>
+                                <div class="text-2xl font-black mt-1"
+                                     :class="disciplineScore >= 80 ? 'text-asr-emerald' : disciplineScore >= 60 ? 'text-asr-sky' : 'text-asr-red'"
+                                     x-text="disciplineScore"></div>
+                                <div class="text-[10px] text-asr-faint">/100 discipline</div>
+                            </div>
+                            <div class="bg-asr-surface border border-asr-border rounded-2xl p-3">
+                                <div class="text-[10px] font-bold tracking-wider text-asr-faint uppercase">Streak</div>
+                                <div class="text-2xl font-black text-asr-text mt-1" x-text="streakDays + 'd'"></div>
+                                <div class="text-[10px] text-asr-faint">🔥 active streak</div>
+                            </div>
+                        </div>
+
+                        <!-- Active session hero or start CTA -->
+                        <div class="mt-4">
+                            <template x-if="isSessionActive">
+                                <div @click="currentTab = 'focus'" class="cursor-pointer bg-asr-elevated border-2 rounded-2xl p-4 transition-all"
+                                     :class="activeMode === 'STRICT' ? 'border-asr-red glow-red' : 'border-asr-sky glow-sky'">
+                                    <div class="flex items-center justify-between text-xs">
+                                        <div class="flex items-center gap-2 font-bold tracking-wider"
+                                             :class="activeMode === 'STRICT' ? 'text-asr-red' : 'text-asr-sky'">
+                                            <span class="w-2 h-2 rounded-full animate-ping" :class="activeMode === 'STRICT' ? 'bg-asr-red' : 'bg-asr-sky'"></span>
+                                            SESSION ACTIVE
+                                        </div>
+                                        <span class="bg-asr-surface border border-asr-border px-2 py-0.5 rounded text-[10px] font-bold text-asr-text" x-text="activeMode"></span>
+                                    </div>
+                                    <div class="mt-2 text-3xl font-extrabold text-asr-text tracking-tight" x-text="formatTime(remainingSeconds)"></div>
+                                    <p class="text-xs text-asr-muted mt-1" x-text="sessionGoal + ' · ' + selectedApps.length + ' apps blocked'"></p>
+                                    <div class="mt-2 text-right text-xs font-semibold text-asr-sky flex items-center justify-end gap-1">
+                                        View Timer <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+                                    </div>
+                                </div>
+                            </template>
+
+                            <template x-if="!isSessionActive">
+                                <button @click="currentTab = 'focus'"
+                                        class="w-full h-12 bg-asr-sky hover:bg-asr-sky/90 active:scale-[0.98] text-asr-bg font-bold text-sm tracking-wide rounded-2xl transition-all shadow-lg shadow-asr-sky/20 flex items-center justify-center gap-2">
+                                    <i data-lucide="play" class="w-4 h-4 fill-current"></i>
+                                    START FOCUS SESSION
+                                </button>
+                            </template>
+                        </div>
+
+                        <!-- Stats row -->
+                        <div class="grid grid-cols-2 gap-2.5 mt-4">
+                            <div class="bg-asr-surface border border-asr-border rounded-2xl p-3">
+                                <div class="text-[10px] font-bold tracking-wider text-asr-faint uppercase mb-1">Focus Time</div>
+                                <div class="text-base font-bold text-asr-text" x-text="focusTimeToday"></div>
+                                <div class="text-[10px] text-asr-faint" x-text="sessionsCompletedCount + ' sessions today'"></div>
+                            </div>
+                            <div class="bg-asr-surface border border-asr-border rounded-2xl p-3">
+                                <div class="text-[10px] font-bold tracking-wider text-asr-faint uppercase mb-1">Screen Time</div>
+                                <div class="text-base font-bold text-asr-text" x-text="screenTimeToday"></div>
+                                <div class="text-[10px] text-asr-faint">Total phone usage</div>
+                            </div>
+                        </div>
+
+                        <!-- Quick Launch -->
+                        <template x-if="!isSessionActive">
+                            <div class="mt-5">
+                                <h2 class="text-xs font-bold text-asr-text tracking-wide mb-2">Quick Launch</h2>
+                                <div class="grid grid-cols-3 gap-2">
+                                    <button @click="startQuickSession(25, 'NORMAL')" class="bg-asr-surface hover:bg-asr-elevated border border-asr-border rounded-xl p-2.5 text-center transition">
+                                        <span class="text-base font-bold text-asr-sky block">25m</span>
+                                        <span class="text-[10px] text-asr-muted mt-0.5 block">Pomodoro</span>
+                                    </button>
+                                    <button @click="startQuickSession(50, 'STRICT')" class="bg-asr-surface hover:bg-asr-elevated border border-asr-border rounded-xl p-2.5 text-center transition">
+                                        <span class="text-base font-bold text-asr-sky block">50m</span>
+                                        <span class="text-[10px] text-asr-muted mt-0.5 block">Deep Work</span>
+                                    </button>
+                                    <button @click="startQuickSession(90, 'STRICT')" class="bg-asr-surface hover:bg-asr-elevated border border-asr-border rounded-xl p-2.5 text-center transition">
+                                        <span class="text-base font-bold text-asr-sky block">90m</span>
+                                        <span class="text-[10px] text-asr-muted mt-0.5 block">Immersion</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </template>
+                    </section>
+
+
+                    <!-- ── TAB: FOCUS ──────────────────────────────── -->
+                    <section x-show="currentTab === 'focus'"
+                             x-transition:enter="transition ease-out duration-200"
+                             x-transition:enter-start="opacity-0 translate-y-1">
+
+                        <!-- Active: countdown -->
+                        <template x-if="isSessionActive">
+                            <div class="flex flex-col items-center pt-3 text-center">
+                                <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold tracking-wider"
+                                     :class="activeMode === 'STRICT' ? 'bg-asr-red/10 border border-asr-red/30 text-asr-red' : 'bg-asr-sky/10 border border-asr-sky/30 text-asr-sky'">
+                                    <i :data-lucide="activeMode === 'STRICT' ? 'lock' : 'shield'" class="w-3.5 h-3.5"></i>
+                                    <span x-text="activeMode === 'STRICT' ? 'STRICT ACTIVE' : 'FOCUS IN PROGRESS'"></span>
+                                </div>
+
+                                <h2 class="text-lg font-bold text-asr-text mt-3" x-text="sessionGoal"></h2>
+
+                                <!-- Circular timer -->
+                                <div class="relative w-52 h-52 mt-5 flex items-center justify-center">
+                                    <svg class="w-full h-full transform -rotate-90">
+                                        <circle cx="104" cy="104" r="88" stroke="#1A2235" stroke-width="10" fill="transparent"></circle>
+                                        <circle cx="104" cy="104" r="88"
+                                                :stroke="activeMode === 'STRICT' ? '#F87171' : '#38BDF8'"
+                                                stroke-width="10"
+                                                stroke-linecap="round"
+                                                stroke-dasharray="552.9"
+                                                :stroke-dashoffset="552.9 * (1 - (remainingSeconds / (durationMinutes * 60)))"
+                                                fill="transparent"
+                                                class="progress-ring-circle"></circle>
+                                    </svg>
+                                    <div class="absolute flex flex-col items-center">
+                                        <span class="text-3xl font-extrabold text-asr-text tracking-tight" x-text="formatTime(remainingSeconds)"></span>
+                                        <span class="text-[10px] font-semibold text-asr-muted uppercase tracking-widest mt-1">Remaining</span>
+                                    </div>
+                                </div>
+
+                                <!-- Blocked apps -->
+                                <div class="w-full bg-asr-surface border border-asr-border rounded-2xl p-3.5 mt-5 text-left">
+                                    <div class="flex items-center justify-between text-xs mb-2">
+                                        <span class="font-bold text-asr-text flex items-center gap-1.5">
+                                            <i data-lucide="shield-ban" class="w-3.5 h-3.5 text-asr-red"></i>
+                                            Blocked Apps
+                                        </span>
+                                        <span class="text-asr-sky font-semibold" x-text="selectedApps.length + ' apps'"></span>
+                                    </div>
+                                    <div class="flex gap-1.5 overflow-x-auto pb-1">
+                                        <template x-for="app in selectedApps" :key="app">
+                                            <span class="bg-asr-elevated border border-asr-border px-2.5 py-1 rounded-lg text-xs text-asr-muted shrink-0" x-text="app"></span>
+                                        </template>
+                                    </div>
+                                </div>
+
+                                <!-- Controls -->
+                                <div class="w-full mt-5 space-y-2">
+                                    <template x-if="activeMode === 'STRICT'">
+                                        <div>
+                                            <div class="bg-asr-surface border border-asr-border rounded-xl p-3 text-left flex items-center gap-2.5 text-xs text-asr-faint mb-2">
+                                                <i data-lucide="lock" class="w-4 h-4 shrink-0"></i>
+                                                <span>Rules are immutable until completion to protect your attention.</span>
+                                            </div>
+                                            <button @click="openEmergencyModal()"
+                                                    class="w-full h-10 bg-transparent hover:bg-asr-red/10 border border-asr-red/40 text-asr-red font-semibold rounded-xl text-xs transition">
+                                                Emergency Exit (With Friction)
+                                            </button>
+                                        </div>
+                                    </template>
+                                    <template x-if="activeMode === 'NORMAL'">
+                                        <button @click="cancelSession()"
+                                                class="w-full h-10 bg-transparent hover:bg-asr-elevated border border-asr-border text-asr-muted font-semibold rounded-xl text-xs transition">
+                                            End Session Early
+                                        </button>
+                                    </template>
+                                </div>
+                            </div>
+                        </template>
+
+                        <!-- Idle: config -->
+                        <template x-if="!isSessionActive">
+                            <div>
+                                <h1 class="text-xl font-bold text-asr-text tracking-tight">New Session</h1>
+                                <p class="text-xs text-asr-muted mt-0.5">Deliberate focus. Undisturbed mind.</p>
+
+                                <!-- Goal input -->
+                                <div class="mt-4">
+                                    <label class="text-xs text-asr-muted font-medium">What's your intention?</label>
+                                    <input type="text" x-model="sessionGoal"
+                                           class="w-full bg-asr-surface border border-asr-border rounded-xl px-3.5 py-2.5 text-sm text-asr-text focus:outline-none focus:border-asr-sky mt-1 transition">
+                                </div>
+
+                                <!-- Profiles -->
+                                <div class="mt-4">
+                                    <label class="text-xs text-asr-muted font-medium">Focus Profiles</label>
+                                    <div class="grid grid-cols-2 gap-2 mt-1.5">
+                                        <template x-for="p in profiles" :key="p.name">
+                                            <div @click="applyProfile(p)"
+                                                 class="cursor-pointer border rounded-xl p-2.5 transition"
+                                                 :class="sessionGoal === p.name ? 'bg-asr-elevated border-asr-sky' : 'bg-asr-surface border-asr-border'">
+                                                <div class="text-xs font-bold text-asr-text" x-text="p.name"></div>
+                                                <div class="text-[10px] text-asr-muted mt-0.5" x-text="p.duration + 'm · ' + p.mode"></div>
+                                            </div>
+                                        </template>
+                                    </div>
+                                </div>
+
+                                <!-- Duration presets -->
+                                <div class="mt-4">
+                                    <label class="text-xs text-asr-muted font-medium">Duration</label>
+                                    <div class="grid grid-cols-3 gap-2 mt-1.5">
+                                        <button @click="durationMinutes = 25"
+                                                class="py-2 rounded-xl border text-sm font-bold transition"
+                                                :class="durationMinutes === 25 ? 'bg-asr-elevated border-asr-sky text-asr-sky' : 'bg-asr-surface border-asr-border text-asr-text'">25m</button>
+                                        <button @click="durationMinutes = 50"
+                                                class="py-2 rounded-xl border text-sm font-bold transition"
+                                                :class="durationMinutes === 50 ? 'bg-asr-elevated border-asr-sky text-asr-sky' : 'bg-asr-surface border-asr-border text-asr-text'">50m</button>
+                                        <button @click="durationMinutes = 90"
+                                                class="py-2 rounded-xl border text-sm font-bold transition"
+                                                :class="durationMinutes === 90 ? 'bg-asr-elevated border-asr-sky text-asr-sky' : 'bg-asr-surface border-asr-border text-asr-text'">90m</button>
+                                    </div>
+                                    <div class="bg-asr-surface border border-asr-border rounded-xl p-2.5 mt-2 flex items-center justify-between text-xs">
+                                        <span class="text-asr-muted">Custom:</span>
+                                        <div class="flex items-center gap-3">
+                                            <button @click="if(durationMinutes > 5) durationMinutes -= 5" class="w-7 h-7 bg-asr-elevated rounded-lg text-asr-sky font-bold">−</button>
+                                            <span class="font-bold text-asr-text" x-text="durationMinutes + 'm'"></span>
+                                            <button @click="durationMinutes += 5" class="w-7 h-7 bg-asr-elevated rounded-lg text-asr-sky font-bold">+</button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Mode -->
+                                <div class="mt-4">
+                                    <label class="text-xs text-asr-muted font-medium">Mode</label>
+                                    <div class="grid grid-cols-2 gap-2 mt-1.5">
+                                        <div @click="activeMode = 'NORMAL'"
+                                             class="cursor-pointer border rounded-xl p-3 transition"
+                                             :class="activeMode === 'NORMAL' ? 'bg-asr-elevated border-asr-sky' : 'bg-asr-surface border-asr-border'">
+                                            <div class="flex items-center gap-1.5 text-xs font-bold" :class="activeMode === 'NORMAL' ? 'text-asr-sky' : 'text-asr-text'">
+                                                <i data-lucide="shield" class="w-3.5 h-3.5"></i> Normal
+                                            </div>
+                                            <p class="text-[10px] text-asr-faint mt-1">Flexible — can exit anytime</p>
+                                        </div>
+                                        <div @click="activeMode = 'STRICT'"
+                                             class="cursor-pointer border rounded-xl p-3 transition"
+                                             :class="activeMode === 'STRICT' ? 'bg-asr-elevated border-asr-red' : 'bg-asr-surface border-asr-border'">
+                                            <div class="flex items-center gap-1.5 text-xs font-bold" :class="activeMode === 'STRICT' ? 'text-asr-red' : 'text-asr-text'">
+                                                <i data-lucide="lock" class="w-3.5 h-3.5"></i> Strict
+                                            </div>
+                                            <p class="text-[10px] text-asr-faint mt-1">Immutable — no easy exit</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Apps link -->
+                                <div @click="currentTab = 'apps'"
+                                     class="cursor-pointer bg-asr-surface border border-asr-border rounded-xl p-3.5 mt-4 flex items-center justify-between">
+                                    <div class="flex items-center gap-2.5">
+                                        <i data-lucide="layout-grid" class="w-4 h-4 text-asr-sky"></i>
+                                        <div>
+                                            <div class="text-xs font-bold text-asr-text">Blocked Apps</div>
+                                            <div class="text-[10px] text-asr-muted" x-text="selectedApps.length + ' apps configured'"></div>
+                                        </div>
+                                    </div>
+                                    <i data-lucide="chevron-right" class="w-4 h-4 text-asr-faint"></i>
+                                </div>
+
+                                <button @click="startSession()"
+                                        class="w-full h-12 bg-asr-sky hover:bg-asr-sky/90 active:scale-[0.98] text-asr-bg font-bold text-sm tracking-wide rounded-2xl transition mt-5 shadow-lg shadow-asr-sky/20">
+                                    START SESSION
+                                </button>
+                            </div>
+                        </template>
+                    </section>
+
+
+                    <!-- ── TAB: APPS ───────────────────────────────── -->
+                    <section x-show="currentTab === 'apps'"
+                             x-transition:enter="transition ease-out duration-200"
+                             x-transition:enter-start="opacity-0 translate-y-1">
+                        <h1 class="text-xl font-bold text-asr-text tracking-tight">Block Apps</h1>
+                        <p class="text-xs text-asr-muted" x-text="selectedApps.length + ' apps configured for blocking'"></p>
+
+                        <template x-if="isSessionActive && activeMode === 'STRICT'">
+                            <div class="bg-asr-red/10 border border-asr-red/30 rounded-xl p-2.5 text-xs text-asr-red flex items-center gap-2 mt-3">
+                                <i data-lucide="lock" class="w-4 h-4 shrink-0"></i>
+                                <span>Strict Mode Active — app list locked.</span>
+                            </div>
+                        </template>
+
+                        <div class="mt-3 relative">
+                            <i data-lucide="search" class="w-4 h-4 text-asr-faint absolute left-3 top-2.5"></i>
+                            <input type="text" x-model="appSearchQuery" placeholder="Search apps..."
+                                   class="w-full bg-asr-surface border border-asr-border rounded-xl pl-9 pr-3.5 py-2 text-xs text-asr-text focus:outline-none focus:border-asr-sky transition">
+                        </div>
+
+                        <div class="flex gap-1.5 overflow-x-auto py-2.5 mt-1 text-xs">
+                            <template x-for="cat in ['ALL','SOCIAL','ENTERTAINMENT','GAMES']" :key="cat">
+                                <button @click="selectedCategory = cat"
+                                        class="px-2.5 py-1 rounded-lg border text-[11px] shrink-0 transition"
+                                        :class="selectedCategory === cat ? 'bg-asr-elevated border-asr-sky text-asr-sky font-bold' : 'bg-asr-surface border-asr-border text-asr-muted'"
+                                        x-text="cat === 'ALL' ? 'All' : cat.charAt(0) + cat.slice(1).toLowerCase()">
+                                </button>
+                            </template>
+                        </div>
+
+                        <div class="space-y-2 mt-1">
+                            <template x-for="app in filteredApps" :key="app.pkg">
+                                <div @click="toggleApp(app.name)"
+                                     class="bg-asr-surface border border-asr-border hover:border-asr-sky/40 rounded-xl p-3 flex items-center justify-between cursor-pointer transition"
+                                     :class="isAppSelected(app.name) ? 'bg-asr-elevated border-asr-sky/40' : ''">
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-8 h-8 rounded-full bg-asr-elevated border border-asr-border flex items-center justify-center text-sm font-bold text-asr-sky"
+                                             x-text="app.name.charAt(0)"></div>
+                                        <div>
+                                            <div class="text-xs font-bold text-asr-text" x-text="app.name"></div>
+                                            <div class="text-[10px] text-asr-faint" x-text="app.category"></div>
+                                        </div>
+                                    </div>
+                                    <div class="w-4 h-4 rounded border-2 flex items-center justify-center transition"
+                                         :class="isAppSelected(app.name) ? 'bg-asr-sky border-asr-sky' : 'border-asr-border'">
+                                        <svg x-show="isAppSelected(app.name)" class="w-2.5 h-2.5" viewBox="0 0 10 10" fill="none">
+                                            <path d="M1.5 5L4 7.5L8.5 2.5" stroke="#0A0D14" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+                    </section>
+
+
+                    <!-- ── TAB: STATS ──────────────────────────────── -->
+                    <section x-show="currentTab === 'stats'"
+                             x-transition:enter="transition ease-out duration-200"
+                             x-transition:enter-start="opacity-0 translate-y-1">
+                        <h1 class="text-xl font-bold text-asr-text tracking-tight">Analytics</h1>
+                        <p class="text-xs text-asr-muted">Local, private behavioral tracking.</p>
+
+                        <!-- Score breakdown -->
+                        <div class="bg-asr-surface border border-asr-border rounded-2xl p-4 mt-4">
+                            <h2 class="text-xs font-bold text-asr-text mb-3">Discipline Score Breakdown</h2>
+                            <div class="flex items-end gap-2">
+                                <div class="text-4xl font-black" :class="disciplineScore >= 80 ? 'text-asr-emerald' : 'text-asr-sky'" x-text="disciplineScore"></div>
+                                <div class="text-asr-faint text-sm mb-1">/100</div>
+                            </div>
+                            <div class="space-y-2 mt-3">
+                                <div class="flex justify-between text-xs">
+                                    <span class="text-asr-muted">Base</span>
+                                    <span class="font-bold text-asr-text">+80</span>
+                                </div>
+                                <div class="flex justify-between text-xs">
+                                    <span class="text-asr-muted">Streak bonus</span>
+                                    <span class="font-bold text-asr-emerald">+5</span>
+                                </div>
+                                <div class="flex justify-between text-xs">
+                                    <span class="text-asr-muted">Goal met</span>
+                                    <span class="font-bold text-asr-emerald">+5</span>
+                                </div>
+                                <div class="flex justify-between text-xs">
+                                    <span class="text-asr-muted">Distraction penalty</span>
+                                    <span class="font-bold text-asr-red">-6</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 7-day chart -->
+                        <div class="bg-asr-surface border border-asr-border rounded-2xl p-4 mt-4">
+                            <h2 class="text-xs font-bold text-asr-text mb-3">7-Day Pattern</h2>
+                            <div class="flex items-end justify-between h-24 pt-2">
+                                <template x-for="d in weeklyData" :key="d.day">
+                                    <div class="flex flex-col items-center gap-1.5 flex-1">
+                                        <div class="w-full flex justify-center items-end gap-1 h-16">
+                                            <div class="w-2 rounded-t bg-asr-emerald transition-all" :style="'height: ' + (d.focus / 120 * 100) + '%'"></div>
+                                            <div class="w-2 rounded-t bg-asr-sky/30 transition-all" :style="'height: ' + (d.screen / 240 * 100) + '%'"></div>
+                                        </div>
+                                        <span class="text-[10px] text-asr-faint font-semibold" x-text="d.day"></span>
+                                    </div>
+                                </template>
+                            </div>
+                            <div class="flex justify-center gap-4 text-[10px] text-asr-faint mt-3 border-t border-asr-border pt-2">
+                                <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-asr-emerald"></span> Focus</span>
+                                <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-asr-sky/40"></span> Screen</span>
+                            </div>
+                        </div>
+
+                        <!-- Top distractions -->
+                        <div class="bg-asr-surface border border-asr-border rounded-2xl p-4 mt-4">
+                            <h2 class="text-xs font-bold text-asr-text mb-3">Top Distractions</h2>
+                            <div class="space-y-3">
+                                <template x-for="d in topDistractions" :key="d.name">
+                                    <div>
+                                        <div class="flex justify-between text-xs mb-1">
+                                            <span class="font-semibold text-asr-text" x-text="d.name"></span>
+                                            <span class="text-asr-red font-bold text-[11px]" x-text="d.time"></span>
+                                        </div>
+                                        <div class="w-full bg-asr-elevated rounded-full h-1.5 overflow-hidden">
+                                            <div class="bg-asr-red h-full rounded-full transition-all" :style="'width: ' + d.percent + '%'"></div>
+                                        </div>
+                                    </div>
+                                </template>
+                            </div>
+                        </div>
+                    </section>
+
+
+                    <!-- ── TAB: SETTINGS ───────────────────────────── -->
+                    <section x-show="currentTab === 'settings'"
+                             x-transition:enter="transition ease-out duration-200"
+                             x-transition:enter-start="opacity-0 translate-y-1">
+                        <h1 class="text-xl font-bold text-asr-text tracking-tight">Settings</h1>
+                        <p class="text-xs text-asr-muted">Permissions, guardrails, and preferences.</p>
+
+                        <!-- Permissions -->
+                        <div class="mt-4 space-y-2">
+                            <h2 class="text-xs font-bold text-asr-text mb-2">Android Permissions</h2>
+                            <div class="bg-asr-surface border border-asr-border rounded-xl p-3 flex items-center justify-between text-xs">
+                                <div class="flex items-center gap-2.5">
+                                    <i data-lucide="bar-chart-2" class="w-4 h-4 text-asr-sky"></i>
+                                    <div>
+                                        <div class="font-bold text-asr-text">Usage Access</div>
+                                        <div class="text-[10px] text-asr-muted">Screen time & analytics</div>
+                                    </div>
+                                </div>
+                                <span class="bg-asr-emerald/10 text-asr-emerald text-[10px] font-bold px-2 py-0.5 rounded">GRANTED</span>
+                            </div>
+                            <div class="bg-asr-surface border border-asr-border rounded-xl p-3 flex items-center justify-between text-xs">
+                                <div class="flex items-center gap-2.5">
+                                    <i data-lucide="activity" class="w-4 h-4 text-asr-sky"></i>
+                                    <div>
+                                        <div class="font-bold text-asr-text">Accessibility Blocker</div>
+                                        <div class="text-[10px] text-asr-muted">Instant app shield</div>
+                                    </div>
+                                </div>
+                                <span class="bg-asr-emerald/10 text-asr-emerald text-[10px] font-bold px-2 py-0.5 rounded">ACTIVE</span>
+                            </div>
+                            <div class="bg-asr-surface border border-asr-border rounded-xl p-3 flex items-center justify-between text-xs">
+                                <div class="flex items-center gap-2.5">
+                                    <i data-lucide="bell" class="w-4 h-4 text-asr-sky"></i>
+                                    <div>
+                                        <div class="font-bold text-asr-text">Notifications</div>
+                                        <div class="text-[10px] text-asr-muted">Timer alerts</div>
+                                    </div>
+                                </div>
+                                <span class="bg-asr-emerald/10 text-asr-emerald text-[10px] font-bold px-2 py-0.5 rounded">ALLOWED</span>
+                            </div>
+                        </div>
+
+                        <!-- Strict Mode Preferences -->
+                        <div class="bg-asr-surface border border-asr-border rounded-2xl p-4 mt-5 space-y-4">
+                            <h2 class="text-xs font-bold text-asr-text">Strict Mode Preferences</h2>
+                            <div class="flex items-center justify-between text-xs">
+                                <div>
+                                    <div class="font-semibold text-asr-text">Emergency Exit Delay</div>
+                                    <div class="text-[10px] text-asr-muted">Mindful pause cooldown</div>
+                                </div>
+                                <select x-model="emergencyCooldown"
+                                        class="bg-asr-elevated border border-asr-border rounded px-2 py-1 text-xs text-asr-sky font-bold">
+                                    <option value="5">5 seconds</option>
+                                    <option value="10">10 seconds</option>
+                                    <option value="15">15 seconds</option>
+                                </select>
+                            </div>
+                            <div class="flex items-center justify-between text-xs border-t border-asr-border pt-3">
+                                <div>
+                                    <div class="font-semibold text-asr-text">Require Mindful Phrase</div>
+                                    <div class="text-[10px] text-asr-muted">Type to confirm exit</div>
+                                </div>
+                                <input type="checkbox" checked class="w-4 h-4 accent-sky-400">
+                            </div>
+                        </div>
+
+                        <!-- Privacy Guarantee -->
+                        <div class="bg-asr-surface border border-asr-emerald/20 rounded-2xl p-3.5 mt-5 flex items-start gap-3">
+                            <i data-lucide="shield-check" class="w-5 h-5 text-asr-emerald shrink-0 mt-0.5"></i>
+                            <div>
+                                <div class="text-xs font-bold text-asr-text">100% On-Device Privacy</div>
+                                <p class="text-[10px] text-asr-muted mt-0.5 leading-relaxed">
+                                    ASR runs strictly on-device using a local SQLite database. No servers, no tracking, zero cloud data. Your behavior stays on your phone.
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- About -->
+                        <div class="mt-5 text-center">
+                            <div class="flex items-center justify-center gap-2 mb-1">
+                                <svg width="16" height="16" viewBox="0 0 28 28" fill="none">
+                                    <path d="M9 20L14 8L19 20" stroke="#38BDF8" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path d="M10.8 16.5H17.2" stroke="#38BDF8" stroke-width="1.8" stroke-linecap="round"/>
+                                </svg>
+                                <span class="text-xs font-bold text-asr-text">ASR</span>
+                            </div>
+                            <p class="text-[10px] text-asr-faint">Turn Time Into Progress</p>
+                            <a href="https://github.com/khalidabdullahh/ASR-TurnTimeIntoProgress"
+                               target="_blank"
+                               class="text-[10px] text-asr-sky mt-1 block">github.com/khalidabdullahh/ASR-TurnTimeIntoProgress</a>
+                        </div>
+                    </section>
+
+                </div><!-- /scrollable -->
+
+                <!-- Bottom Navigation -->
+                <nav class="h-16 bg-asr-surface border-t border-asr-border px-2 flex items-center justify-around z-20 shrink-0">
+                    <template x-for="tab in navTabs" :key="tab.id">
+                        <button @click="currentTab = tab.id"
+                                class="flex flex-col items-center gap-1 transition"
+                                :class="currentTab === tab.id ? 'text-asr-sky' : 'text-asr-faint hover:text-asr-muted'">
+                            <i :data-lucide="tab.icon" class="w-5 h-5"></i>
+                            <span class="text-[10px] font-medium" x-text="tab.label"></span>
+                        </button>
+                    </template>
+                </nav>
+
+                <!-- Block Intervention Overlay -->
+                <div x-show="showInterventionOverlay" x-cloak
+                     class="absolute inset-0 bg-asr-bg z-50 p-6 flex flex-col items-center justify-between text-center"
+                     x-transition:enter="transition ease-out duration-200"
+                     x-transition:enter-start="opacity-0 scale-95"
+                     x-transition:enter-end="opacity-100 scale-100">
+
+                    <div class="mt-8 flex flex-col items-center">
+                        <div class="w-20 h-20 rounded-full bg-asr-elevated border-2 border-asr-red flex items-center justify-center">
+                            <i data-lucide="shield-ban" class="w-10 h-10 text-asr-red"></i>
+                        </div>
+                        <span class="bg-asr-red/10 border border-asr-red/30 text-asr-red text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider mt-4">
+                            FOCUS ACTIVE
+                        </span>
+                        <h2 class="text-2xl font-bold text-asr-text mt-4">Pause. Breathe.</h2>
+                        <p class="text-xs text-asr-muted mt-2 leading-relaxed px-4">
+                            "<span x-text="simulatedBlockedAppName"></span>" is blocked during your focus session. Return to what matters.
+                        </p>
+                        <div class="bg-asr-surface border border-asr-border rounded-xl px-4 py-2 mt-5 text-xs text-asr-sky font-bold">
+                            Remaining: <span x-text="formatTime(remainingSeconds)"></span>
+                        </div>
+                    </div>
+
+                    <div class="w-full space-y-2 mb-6">
+                        <button @click="showInterventionOverlay = false; currentTab = 'home'"
+                                class="w-full py-3.5 bg-asr-sky text-asr-bg font-bold text-xs rounded-xl shadow-lg">
+                            Return to Focus
+                        </button>
+                        <button @click="showInterventionOverlay = false; currentTab = 'focus'"
+                                class="w-full py-3 bg-transparent border border-asr-border text-asr-muted font-semibold text-xs rounded-xl">
+                            View Timer
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Emergency Exit Modal -->
+                <div x-show="showEmergencyModal" x-cloak
+                     class="absolute inset-0 bg-black/80 backdrop-blur-sm z-50 p-6 flex items-center justify-center"
+                     x-transition:enter="transition ease-out duration-150">
+                    <div class="bg-asr-surface border border-asr-red/40 rounded-3xl p-5 w-full max-w-xs text-center shadow-2xl">
+                        <i data-lucide="alert-triangle" class="w-10 h-10 text-asr-red mx-auto"></i>
+                        <h3 class="text-base font-bold text-asr-text mt-3">Emergency Exit</h3>
+                        <p class="text-xs text-asr-muted mt-1 leading-relaxed">
+                            Breaking focus breaks your streak. Type the phrase below to confirm:
+                        </p>
+                        <p class="text-xs font-bold text-asr-red mt-3 bg-asr-bg py-1.5 rounded-lg">"I choose to break focus"</p>
+                        <input type="text" x-model="emergencyTypedPhrase"
+                               placeholder="Type phrase to confirm..."
+                               class="w-full bg-asr-bg border border-asr-border rounded-xl px-3 py-2 text-xs text-asr-text focus:outline-none focus:border-asr-red mt-2 text-center">
+                        <div class="grid grid-cols-2 gap-2 mt-4">
+                            <button @click="showEmergencyModal = false"
+                                    class="py-2.5 bg-asr-elevated text-asr-muted font-semibold text-xs rounded-xl">
+                                Stay Focused
+                            </button>
+                            <button @click="confirmEmergencyExit()"
+                                    :disabled="emergencyCountdown > 0 || emergencyTypedPhrase.toLowerCase() !== 'i choose to break focus'"
+                                    class="py-2.5 bg-asr-red disabled:opacity-30 disabled:cursor-not-allowed text-asr-text font-bold text-xs rounded-xl transition">
+                                <span x-text="emergencyCountdown > 0 ? 'Wait (' + emergencyCountdown + 's)' : 'Break Focus'"></span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Session Complete Toast -->
+                <div x-show="showToast" x-cloak
+                     class="absolute bottom-20 left-4 right-4 z-50 bg-asr-emerald text-asr-bg text-xs font-bold px-4 py-3 rounded-xl text-center toast-enter shadow-lg">
+                    🎉 Session complete! Discipline streak extended.
+                </div>
+
+            </div><!-- /phone shell -->
+        </div><!-- /simulator wrapper -->
+    </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════════════════════════════
+     PRICING
+════════════════════════════════════════════════════════════════════ -->
+<section id="pricing" class="py-24 px-5 bg-asr-surface border-y border-asr-border reveal">
+    <div class="max-w-4xl mx-auto">
+        <div class="text-center mb-12">
+            <p class="text-asr-faint text-xs font-bold tracking-widest uppercase mb-3">Pricing</p>
+            <h2 class="text-3xl sm:text-4xl font-bold text-asr-text">Honest pricing. No tricks.</h2>
+            <p class="text-asr-muted text-sm mt-3">Core protection is free. Pro unlocks the advanced layers.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Free -->
+            <div class="bg-asr-bg border border-asr-border rounded-2xl p-7">
+                <div class="text-asr-faint text-xs font-bold tracking-widest uppercase mb-2">Free</div>
+                <div class="text-4xl font-black text-asr-text">$0</div>
+                <div class="text-asr-faint text-sm mt-1">Forever</div>
+                <ul class="mt-6 space-y-3 text-sm">
+                    <li class="flex items-center gap-2.5 text-asr-muted"><span class="text-asr-emerald">✓</span> Core app blocking</li>
+                    <li class="flex items-center gap-2.5 text-asr-muted"><span class="text-asr-emerald">✓</span> Focus sessions</li>
+                    <li class="flex items-center gap-2.5 text-asr-muted"><span class="text-asr-emerald">✓</span> Strict Mode (up to 3 hours)</li>
+                    <li class="flex items-center gap-2.5 text-asr-muted"><span class="text-asr-emerald">✓</span> Mindful pause</li>
+                    <li class="flex items-center gap-2.5 text-asr-muted"><span class="text-asr-emerald">✓</span> Discipline Score & Streak</li>
+                    <li class="flex items-center gap-2.5 text-asr-faint/50"><span>—</span> Unlimited Strict Mode</li>
+                    <li class="flex items-center gap-2.5 text-asr-faint/50"><span>—</span> Website blocking</li>
+                    <li class="flex items-center gap-2.5 text-asr-faint/50"><span>—</span> Notification shield</li>
+                </ul>
+            </div>
+
+            <!-- Pro -->
+            <div class="bg-asr-bg border-2 border-asr-sky/40 rounded-2xl p-7 relative overflow-hidden">
+                <div class="absolute top-4 right-4 bg-asr-sky/10 border border-asr-sky/30 text-asr-sky text-[10px] font-bold px-2.5 py-1 rounded-full">BEST VALUE</div>
+                <div class="text-asr-sky text-xs font-bold tracking-widest uppercase mb-2">Pro</div>
+                <div class="flex items-end gap-2">
+                    <div class="text-4xl font-black text-asr-text">$19.99</div>
+                    <div class="text-asr-faint text-sm mb-1">/year</div>
+                </div>
+                <div class="text-asr-faint text-xs mt-1">or $2.99/mo · $49.99 lifetime · $9.99/yr student</div>
+                <ul class="mt-6 space-y-3 text-sm">
+                    <li class="flex items-center gap-2.5 text-asr-muted"><span class="text-asr-sky">✓</span> Everything in Free</li>
+                    <li class="flex items-center gap-2.5 text-asr-muted"><span class="text-asr-sky">✓</span> Unlimited Strict Mode (6h, 12h, custom)</li>
+                    <li class="flex items-center gap-2.5 text-asr-muted"><span class="text-asr-sky">✓</span> Website & domain blocking</li>
+                    <li class="flex items-center gap-2.5 text-asr-muted"><span class="text-asr-sky">✓</span> Notification shield</li>
+                    <li class="flex items-center gap-2.5 text-asr-muted"><span class="text-asr-sky">✓</span> Adaptive friction (5s→30s escalation)</li>
+                    <li class="flex items-center gap-2.5 text-asr-muted"><span class="text-asr-sky">✓</span> Unlimited profiles & schedules</li>
+                    <li class="flex items-center gap-2.5 text-asr-muted"><span class="text-asr-sky">✓</span> Deep analytics</li>
+                </ul>
+                <div class="mt-6 text-[10px] text-asr-faint">No dark patterns. Cancel anytime. No hidden fees.</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════════════════════════════
+     FINAL CTA
+════════════════════════════════════════════════════════════════════ -->
+<section class="py-28 px-5 text-center reveal">
+    <div class="max-w-2xl mx-auto">
+        <!-- ASR mark large -->
+        <svg class="mx-auto mb-6" width="48" height="48" viewBox="0 0 28 28" fill="none">
+            <rect width="28" height="28" rx="7" fill="#111827"/>
+            <path d="M9 20L14 8L19 20" stroke="#38BDF8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M10.5 16.5H17.5" stroke="#38BDF8" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+
+        <h2 class="text-4xl sm:text-5xl font-black text-asr-text leading-tight">
+            Time is always<br>moving.
+        </h2>
+        <p class="text-asr-muted text-base mt-5 max-w-lg mx-auto leading-relaxed">
+            Every moment that passes becomes part of your past. ASR helps you choose where your attention goes — so that the time you spend actually becomes something.
+        </p>
+
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-3 mt-10">
+            <a href="#simulator"
+               class="w-full sm:w-auto bg-asr-sky hover:bg-asr-sky/90 text-asr-bg font-bold text-sm px-8 py-3.5 rounded-xl transition shadow-lg shadow-asr-sky/20 flex items-center justify-center gap-2">
+                <i data-lucide="play" class="w-4 h-4 fill-current"></i>
+                Try the Demo
+            </a>
+            <a href="https://github.com/khalidabdullahh/ASR-TurnTimeIntoProgress"
+               target="_blank"
+               class="w-full sm:w-auto bg-asr-surface hover:bg-asr-elevated border border-asr-border text-asr-text font-semibold text-sm px-8 py-3.5 rounded-xl transition flex items-center justify-center gap-2">
+                <i data-lucide="github" class="w-4 h-4"></i>
+                GitHub
+            </a>
+        </div>
+    </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════════════════════════════
+     FOOTER
+════════════════════════════════════════════════════════════════════ -->
+<footer class="border-t border-asr-border bg-asr-surface">
+    <div class="max-w-6xl mx-auto px-5 sm:px-8 py-10">
+        <div class="flex flex-col sm:flex-row items-start justify-between gap-8">
+
+            <!-- Brand -->
+            <div>
+                <div class="flex items-center gap-2.5 mb-3">
+                    <svg width="24" height="24" viewBox="0 0 28 28" fill="none">
+                        <rect width="28" height="28" rx="7" fill="#0F172A"/>
+                        <path d="M9 20L14 8L19 20" stroke="#38BDF8" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M10.8 16.5H17.2" stroke="#38BDF8" stroke-width="1.8" stroke-linecap="round"/>
+                    </svg>
+                    <span class="font-bold text-asr-text">ASR</span>
+                </div>
+                <p class="text-asr-faint text-xs max-w-xs leading-relaxed">
+                    Turn Time Into Progress.<br>
+                    A local-first focus and digital discipline system for Android.
+                </p>
+            </div>
+
+            <!-- Links -->
+            <div class="grid grid-cols-2 gap-8 text-sm">
+                <div>
+                    <div class="text-asr-text font-semibold mb-3 text-xs uppercase tracking-wider">Product</div>
+                    <ul class="space-y-2 text-asr-faint">
+                        <li><a href="#features" class="hover:text-asr-text transition">Features</a></li>
+                        <li><a href="#pricing" class="hover:text-asr-text transition">Pricing</a></li>
+                        <li><a href="#simulator" class="hover:text-asr-text transition">Demo</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <div class="text-asr-text font-semibold mb-3 text-xs uppercase tracking-wider">Links</div>
+                    <ul class="space-y-2 text-asr-faint">
+                        <li><a href="https://github.com/khalidabdullahh/ASR-TurnTimeIntoProgress" target="_blank" class="hover:text-asr-text transition">GitHub</a></li>
+                        <li><a href="#pillars" class="hover:text-asr-text transition">Philosophy</a></li>
+                    </ul>
+                </div>
             </div>
         </div>
 
-        <!-- EMERGENCY EXIT MODAL WITH 5-SECOND COOLDOWN FRICTION -->
-        <div x-show="showEmergencyModal" x-cloak class="absolute inset-0 bg-black/80 backdrop-blur-sm z-50 p-6 flex items-center justify-center"
-             x-transition:enter="transition ease-out duration-150">
-            <div class="bg-deepSurface border border-alertStrict/50 rounded-3xl p-5 w-full max-w-xs text-center shadow-2xl">
-                <i data-lucide="alert-triangle" class="w-10 h-10 text-alertStrict mx-auto"></i>
-                <h3 class="text-base font-bold text-textPrimary mt-3">Emergency Exit Request</h3>
-                <p class="text-xs text-textSecondary mt-1 leading-relaxed">
-                    Breaking focus interrupts your streak. Type below to confirm:
-                </p>
-                
-                <p class="text-xs font-bold text-alertStrict mt-3 bg-slate-900 py-1.5 rounded-lg">
-                    "I choose to break focus"
-                </p>
-                
-                <input type="text" x-model="emergencyTypedPhrase" placeholder="Type confirmation phrase..."
-                       class="w-full bg-slate-900 border border-subtleBorder rounded-xl px-3 py-2 text-xs text-textPrimary focus:outline-none focus:border-alertStrict mt-2 text-center">
-
-                <div class="grid grid-cols-2 gap-2 mt-4">
-                    <button @click="showEmergencyModal = false" class="py-2.5 bg-elevatedSurface text-textSecondary font-semibold text-xs rounded-xl">
-                        Stay Focused
-                    </button>
-                    <button @click="confirmEmergencyExit()" 
-                            :disabled="emergencyCountdown > 0 || emergencyTypedPhrase.toLowerCase() !== 'i choose to break focus'"
-                            class="py-2.5 bg-alertStrict disabled:opacity-40 disabled:cursor-not-allowed text-textPrimary font-bold text-xs rounded-xl transition">
-                        <span x-text="emergencyCountdown > 0 ? 'Wait (' + emergencyCountdown + 's)' : 'Break Focus'"></span>
-                    </button>
-                </div>
-            </div>
+        <div class="border-t border-asr-border mt-8 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-asr-faint">
+            <span>© 2025 ASR — Turn Time Into Progress. 100% local-first. No cloud. No tracking.</span>
+            <span>Native Android · Open Source</span>
         </div>
+    </div>
+</footer>
 
-    </main>
 
-    <footer class="mt-4 text-[11px] text-slate-500 text-center">
-        bProductive • Native Android + Web Simulator • 100% Local-First
-    </footer>
+<!-- ══════════════════════════════════════════════════════════════════
+     ALPINE.JS APPLICATION LOGIC
+════════════════════════════════════════════════════════════════════ -->
+<script>
+    function asrApp() {
+        return {
+            // ── Navigation ─────────────────────────────────────
+            currentTab: 'home',
+            navTabs: [
+                { id: 'home',     label: 'Home',     icon: 'shield' },
+                { id: 'focus',    label: 'Focus',    icon: 'hourglass' },
+                { id: 'apps',     label: 'Apps',     icon: 'layout-grid' },
+                { id: 'stats',    label: 'Stats',    icon: 'bar-chart-2' },
+                { id: 'settings', label: 'Settings', icon: 'settings' },
+            ],
 
-    <!-- Alpine.js Application Logic -->
-    <script>
-        function aegisApp() {
-            return {
-                currentTab: 'home',
-                isSessionActive: false,
-                sessionGoal: 'Deep Focus',
-                durationMinutes: 25,
-                remainingSeconds: 25 * 60,
-                activeMode: 'NORMAL',
-                timerInterval: null,
+            // ── Session State ───────────────────────────────────
+            isSessionActive:  false,
+            sessionGoal:      'Deep Focus',
+            durationMinutes:  25,
+            remainingSeconds: 25 * 60,
+            activeMode:       'NORMAL',
+            timerInterval:    null,
 
-                streakDays: 4,
-                productivityScore: 88,
-                focusTimeToday: '1h 15m',
-                screenTimeToday: '2h 40m',
-                sessionsCompletedCount: 2,
+            // ── Dashboard Stats ─────────────────────────────────
+            streakDays:             4,
+            disciplineScore:        84,
+            focusTimeToday:         '1h 15m',
+            screenTimeToday:        '2h 40m',
+            sessionsCompletedCount: 2,
 
-                currentTimeStr: '09:41',
-                todayDateStr: new Date().toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' }),
-                greeting: 'Good Afternoon',
+            // ── Time & Greeting ─────────────────────────────────
+            currentTimeStr: '09:41',
+            todayDateStr:   '',
+            greeting:       'Good Morning',
 
-                selectedApps: ['YouTube', 'Instagram', 'TikTok', 'X (Twitter)', 'Reddit'],
-                appSearchQuery: '',
-                selectedCategory: 'ALL',
+            // ── Apps ────────────────────────────────────────────
+            selectedApps:    ['YouTube', 'Instagram', 'TikTok', 'X (Twitter)', 'Reddit'],
+            appSearchQuery:  '',
+            selectedCategory: 'ALL',
 
-                showInterventionOverlay: false,
-                simulatedBlockedAppName: 'YouTube',
+            // ── Overlays ────────────────────────────────────────
+            showInterventionOverlay: false,
+            simulatedBlockedAppName: 'YouTube',
+            showEmergencyModal:      false,
+            emergencyCountdown:      5,
+            emergencyCountdownInterval: null,
+            emergencyTypedPhrase:    '',
+            emergencyCooldown:       5,
+            showToast:               false,
 
-                showEmergencyModal: false,
-                emergencyCountdown: 5,
-                emergencyCountdownInterval: null,
-                emergencyTypedPhrase: '',
-                emergencyCooldown: 5,
+            // ── Focus Profiles ──────────────────────────────────
+            profiles: [
+                { name: 'Deep Work',   duration: 50,  mode: 'STRICT' },
+                { name: 'Study',       duration: 25,  mode: 'NORMAL' },
+                { name: 'Sleep Calm',  duration: 480, mode: 'STRICT' },
+                { name: 'Quick Reset', duration: 15,  mode: 'NORMAL' },
+            ],
 
-                profiles: [
-                    { name: 'Deep Work', duration: 50, mode: 'STRICT' },
-                    { name: 'Study', duration: 25, mode: 'NORMAL' },
-                    { name: 'Sleep Calm', duration: 480, mode: 'STRICT' },
-                    { name: 'Quick Reset', duration: 15, mode: 'NORMAL' }
-                ],
+            // ── Apps List ───────────────────────────────────────
+            installedAppsList: [
+                { name: 'YouTube',     category: 'ENTERTAINMENT', pkg: 'com.google.android.youtube' },
+                { name: 'Instagram',   category: 'SOCIAL',        pkg: 'com.instagram.android' },
+                { name: 'TikTok',      category: 'SOCIAL',        pkg: 'com.zhiliaoapp.musically' },
+                { name: 'X (Twitter)', category: 'SOCIAL',        pkg: 'com.twitter.android' },
+                { name: 'Reddit',      category: 'SOCIAL',        pkg: 'com.reddit.frontpage' },
+                { name: 'Facebook',    category: 'SOCIAL',        pkg: 'com.facebook.katana' },
+                { name: 'Netflix',     category: 'ENTERTAINMENT', pkg: 'com.netflix.mediaclient' },
+                { name: 'Spotify',     category: 'ENTERTAINMENT', pkg: 'com.spotify.music' },
+                { name: 'PUBG Mobile', category: 'GAMES',         pkg: 'com.tencent.ig' },
+                { name: 'Candy Crush', category: 'GAMES',         pkg: 'com.king.candycrushsaga' },
+            ],
 
-                installedAppsList: [
-                    { name: 'YouTube', category: 'ENTERTAINMENT', pkg: 'com.google.android.youtube' },
-                    { name: 'Instagram', category: 'SOCIAL', pkg: 'com.instagram.android' },
-                    { name: 'TikTok', category: 'SOCIAL', pkg: 'com.zhiliaoapp.musically' },
-                    { name: 'X (Twitter)', category: 'SOCIAL', pkg: 'com.twitter.android' },
-                    { name: 'Reddit', category: 'SOCIAL', pkg: 'com.reddit.frontpage' },
-                    { name: 'Facebook', category: 'SOCIAL', pkg: 'com.facebook.katana' },
-                    { name: 'Netflix', category: 'ENTERTAINMENT', pkg: 'com.netflix.mediaclient' },
-                    { name: 'Spotify', category: 'ENTERTAINMENT', pkg: 'com.spotify.music' },
-                    { name: 'PUBG Mobile', category: 'GAMES', pkg: 'com.tencent.ig' },
-                    { name: 'Candy Crush', category: 'GAMES', pkg: 'com.king.candycrushsaga' }
-                ],
+            // ── Analytics Data ──────────────────────────────────
+            weeklyData: [
+                { day: 'Mon', focus: 75,  screen: 180 },
+                { day: 'Tue', focus: 100, screen: 150 },
+                { day: 'Wed', focus: 60,  screen: 210 },
+                { day: 'Thu', focus: 90,  screen: 140 },
+                { day: 'Fri', focus: 110, screen: 120 },
+                { day: 'Sat', focus: 45,  screen: 230 },
+                { day: 'Sun', focus: 85,  screen: 160 },
+            ],
+            topDistractions: [
+                { name: 'YouTube',     time: '1h 12m', percent: 80 },
+                { name: 'Instagram',   time: '45m',    percent: 55 },
+                { name: 'X (Twitter)', time: '28m',    percent: 35 },
+                { name: 'Reddit',      time: '15m',    percent: 20 },
+            ],
 
-                weeklyData: [
-                    { day: 'Mon', focus: 75, screen: 180 },
-                    { day: 'Tue', focus: 100, screen: 150 },
-                    { day: 'Wed', focus: 60, screen: 210 },
-                    { day: 'Thu', focus: 90, screen: 140 },
-                    { day: 'Fri', focus: 110, screen: 120 },
-                    { day: 'Sat', focus: 45, screen: 230 },
-                    { day: 'Sun', focus: 85, screen: 160 }
-                ],
+            // ── Init ────────────────────────────────────────────
+            initApp() {
+                this.updateGreeting();
+                this.todayDateStr = new Date().toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+                setInterval(() => {
+                    const d = new Date();
+                    this.currentTimeStr = d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                }, 1000);
+                setTimeout(() => lucide.createIcons(), 120);
 
-                topDistractions: [
-                    { name: 'YouTube', time: '1h 12m', percent: 80 },
-                    { name: 'Instagram', time: '45m', percent: 55 },
-                    { name: 'X (Twitter)', time: '28m', percent: 35 },
-                    { name: 'Reddit', time: '15m', percent: 20 }
-                ],
+                // Scroll reveal
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+                }, { threshold: 0.1 });
+                document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+            },
 
-                initApp() {
-                    this.updateGreeting();
-                    setInterval(() => {
-                        const d = new Date();
-                        this.currentTimeStr = d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-                    }, 1000);
-                    setTimeout(() => lucide.createIcons(), 100);
-                },
+            updateGreeting() {
+                const h = new Date().getHours();
+                if (h < 12)      this.greeting = 'Good Morning';
+                else if (h < 18) this.greeting = 'Good Afternoon';
+                else             this.greeting = 'Good Evening';
+            },
 
-                updateGreeting() {
-                    const h = new Date().getHours();
-                    if (h < 12) this.greeting = 'Good Morning';
-                    else if (h < 18) this.greeting = 'Good Afternoon';
-                    else this.greeting = 'Good Evening';
-                },
+            // ── Session Control ─────────────────────────────────
+            applyProfile(p) {
+                this.sessionGoal     = p.name;
+                this.durationMinutes = p.duration;
+                this.activeMode      = p.mode;
+            },
 
-                applyProfile(p) {
-                    this.sessionGoal = p.name;
-                    this.durationMinutes = p.duration;
-                    this.activeMode = p.mode;
-                },
+            startSession() {
+                this.isSessionActive  = true;
+                this.remainingSeconds = this.durationMinutes * 60;
+                this.startTimer();
+                this.currentTab = 'focus';
+                setTimeout(() => lucide.createIcons(), 60);
+            },
 
-                startSession() {
-                    this.isSessionActive = true;
-                    this.remainingSeconds = this.durationMinutes * 60;
-                    this.startTimer();
-                    this.currentTab = 'focus';
-                    setTimeout(() => lucide.createIcons(), 50);
-                },
+            startQuickSession(mins, mode) {
+                this.durationMinutes = mins;
+                this.activeMode      = mode;
+                this.sessionGoal     = mode === 'STRICT' ? 'Deep Work' : 'Pomodoro';
+                this.startSession();
+            },
 
-                startQuickSession(mins, mode) {
-                    this.durationMinutes = mins;
-                    this.activeMode = mode;
-                    this.sessionGoal = mode === 'STRICT' ? 'Deep Work' : 'Pomodoro';
-                    this.startSession();
-                },
-
-                startTimer() {
-                    clearInterval(this.timerInterval);
-                    this.timerInterval = setInterval(() => {
-                        if (this.remainingSeconds > 0) {
-                            this.remainingSeconds--;
-                        } else {
-                            this.completeSession();
-                        }
-                    }, 1000);
-                },
-
-                completeSession() {
-                    clearInterval(this.timerInterval);
-                    this.isSessionActive = false;
-                    this.sessionsCompletedCount++;
-                    this.streakDays++;
-                    alert('🎉 Focus session completed successfully! Digital discipline streak increased.');
-                },
-
-                cancelSession() {
-                    clearInterval(this.timerInterval);
-                    this.isSessionActive = false;
-                },
-
-                openEmergencyModal() {
-                    this.showEmergencyModal = true;
-                    this.emergencyCountdown = parseInt(this.emergencyCooldown) || 5;
-                    this.emergencyTypedPhrase = '';
-                    clearInterval(this.emergencyCountdownInterval);
-                    this.emergencyCountdownInterval = setInterval(() => {
-                        if (this.emergencyCountdown > 0) {
-                            this.emergencyCountdown--;
-                        } else {
-                            clearInterval(this.emergencyCountdownInterval);
-                        }
-                    }, 1000);
-                    setTimeout(() => lucide.createIcons(), 50);
-                },
-
-                confirmEmergencyExit() {
-                    clearInterval(this.emergencyCountdownInterval);
-                    this.showEmergencyModal = false;
-                    this.cancelSession();
-                },
-
-                simulateOpenBlockedApp() {
-                    if (!this.isSessionActive) {
-                        this.startQuickSession(25, 'NORMAL');
-                    }
-                    this.simulatedBlockedAppName = this.selectedApps[0] || 'YouTube';
-                    this.showInterventionOverlay = true;
-                    setTimeout(() => lucide.createIcons(), 50);
-                },
-
-                toggleApp(appName) {
-                    if (this.isSessionActive && this.activeMode === 'STRICT') return;
-                    if (this.selectedApps.includes(appName)) {
-                        this.selectedApps = this.selectedApps.filter(a => a !== appName);
+            startTimer() {
+                clearInterval(this.timerInterval);
+                this.timerInterval = setInterval(() => {
+                    if (this.remainingSeconds > 0) {
+                        this.remainingSeconds--;
                     } else {
-                        this.selectedApps.push(appName);
+                        this.completeSession();
                     }
-                },
+                }, 1000);
+            },
 
-                isAppSelected(appName) {
-                    return this.selectedApps.includes(appName);
-                },
+            completeSession() {
+                clearInterval(this.timerInterval);
+                this.isSessionActive = false;
+                this.sessionsCompletedCount++;
+                this.streakDays++;
+                this.disciplineScore = Math.min(100, this.disciplineScore + 3);
+                this.focusTimeToday  = (this.sessionsCompletedCount * 25) + 'm';
+                this.showToastMessage();
+                setTimeout(() => lucide.createIcons(), 60);
+            },
 
-                get filteredApps() {
-                    return this.installedAppsList.filter(app => {
-                        const matchesQuery = !this.appSearchQuery || app.name.toLowerCase().includes(this.appSearchQuery.toLowerCase());
-                        const matchesCategory = this.selectedCategory === 'ALL' || app.category === this.selectedCategory;
-                        return matchesQuery && matchesCategory;
-                    });
-                },
+            showToastMessage() {
+                this.showToast = true;
+                setTimeout(() => { this.showToast = false; }, 3500);
+            },
 
-                formatTime(totalSec) {
-                    const m = Math.floor(totalSec / 60);
-                    const s = totalSec % 60;
-                    return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+            cancelSession() {
+                clearInterval(this.timerInterval);
+                this.isSessionActive = false;
+            },
+
+            // ── Emergency Exit ──────────────────────────────────
+            openEmergencyModal() {
+                this.showEmergencyModal    = true;
+                this.emergencyCountdown    = parseInt(this.emergencyCooldown) || 5;
+                this.emergencyTypedPhrase  = '';
+                clearInterval(this.emergencyCountdownInterval);
+                this.emergencyCountdownInterval = setInterval(() => {
+                    if (this.emergencyCountdown > 0) { this.emergencyCountdown--; }
+                    else { clearInterval(this.emergencyCountdownInterval); }
+                }, 1000);
+                setTimeout(() => lucide.createIcons(), 60);
+            },
+
+            confirmEmergencyExit() {
+                clearInterval(this.emergencyCountdownInterval);
+                this.showEmergencyModal = false;
+                this.cancelSession();
+                this.disciplineScore = Math.max(10, this.disciplineScore - 8);
+            },
+
+            // ── Block Simulation ────────────────────────────────
+            simulateOpenBlockedApp() {
+                if (!this.isSessionActive) { this.startQuickSession(25, 'NORMAL'); }
+                this.simulatedBlockedAppName = this.selectedApps[0] || 'Instagram';
+                this.showInterventionOverlay = true;
+                setTimeout(() => lucide.createIcons(), 60);
+            },
+
+            // ── App List ────────────────────────────────────────
+            toggleApp(appName) {
+                if (this.isSessionActive && this.activeMode === 'STRICT') return;
+                if (this.selectedApps.includes(appName)) {
+                    this.selectedApps = this.selectedApps.filter(a => a !== appName);
+                } else {
+                    this.selectedApps.push(appName);
                 }
+            },
+
+            isAppSelected(appName) { return this.selectedApps.includes(appName); },
+
+            get filteredApps() {
+                return this.installedAppsList.filter(app => {
+                    const q = !this.appSearchQuery || app.name.toLowerCase().includes(this.appSearchQuery.toLowerCase());
+                    const c = this.selectedCategory === 'ALL' || app.category === this.selectedCategory;
+                    return q && c;
+                });
+            },
+
+            // ── Utilities ───────────────────────────────────────
+            formatTime(totalSec) {
+                const m = Math.floor(totalSec / 60);
+                const s = totalSec % 60;
+                return `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
             }
         }
-    </script>
+    }
+</script>
+
 </body>
 </html>

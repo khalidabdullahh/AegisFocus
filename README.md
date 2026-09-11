@@ -1,14 +1,27 @@
-# Aegis Focus — Digital Discipline & Attention Shield
+# ASR — Turn Time Into Progress
 
-**Aegis Focus** is a native, local-first Android application designed to help users deliberately control distracting apps and build digital discipline. Built with modern Android architecture: Jetpack Compose, Material 3, Room, Kotlin Coroutines, Flow, WorkManager, and a full Free/Pro entitlement system.
+**ASR** is a native, local-first Android application and digital discipline system designed to help users deliberately protect their attention, control distracting apps, and turn focused time into meaningful progress.
 
-> **Live Web Simulator:** [https://khalidabdullahh.github.io/bProductive/](https://khalidabdullahh.github.io/bProductive/) — Open in your browser for an interactive UI preview without Android Studio.
+> **Live Web Simulator & Landing Page:** [https://khalidabdullahh.github.io/ASR-TurnTimeIntoProgress/](https://khalidabdullahh.github.io/ASR-TurnTimeIntoProgress/) — Open in your browser for an interactive preview without Android Studio.
 
 ---
 
-## 🛡️ Core Features
+## 🛡️ Core Highlights
 
-| Feature | Free | Pro |
+- **ASR Focus Engine**: Minimalist, calm, dark-first interface crafted with Jetpack Compose & Material 3.
+- **Persistent Focus Sessions**: Sessions survive app kills, swipe aways, and system reboots via epoch-timestamp persistence in local Room SQLite DB.
+- **Modular App Blocking Engine**: Multi-layer detection using `AccessibilityService` for instant foreground intervention, backed by `UsageStatsManager` fallback monitoring.
+- **Tamper-Resistant Strict Mode**: When active, session parameters and blocked app lists are strictly locked. Normal cancellation is disabled. (Free: up to 3h; Pro: unlimited).
+- **Intentional Emergency Exit**: Multi-step friction mechanism (calm reflection, configurable cooldown timer, mindful phrase confirmation) with exit audit logging.
+- **Discipline Score & Analytics**: 100% on-device transparent discipline formula (Base 80 + consistency/streak/goal bonuses − distraction/exit penalties).
+- **XP Progression & Levels**: 5 tiers (🌱 New Starter → ⚡ Consistent → 🎯 Focused → 🔥 Disciplined → 🏆 Iron Will).
+- **100% On-Device Privacy Guarantee**: Zero cloud servers, zero analytics trackers, zero accounts. All data resides securely in your local Room database.
+
+---
+
+## 🛡️ Free vs. Pro Feature Matrix
+
+| Feature | Free ($0) | Pro ($19.99/yr) |
 |---|:---:|:---:|
 | Core app blocking | ✅ | ✅ |
 | Focus sessions (Normal mode) | ✅ | ✅ |
@@ -35,14 +48,14 @@ Clean Architecture + MVVM, fully local-first:
 ```
 com.aegisfocus.app/
 ├── core/
-│   ├── di/               # AppContainer & ServiceLocator (manual DI)
+│   ├── di/               # AppContainer & ServiceLocator (clean dependency injection)
 │   ├── theme/            # Obsidian dark palette, Typography, Shapes
 │   ├── navigation/       # Screen sealed class + AegisNavHost (5-tab bottom nav + Paywall)
 │   ├── common/           # TimeUtils, Result, epoch math
 │   └── components/       # Reusable Design System (Timer, Cards, Buttons, Dialogs)
 ├── domain/
 │   ├── model/            # FocusSession, FocusProfile, Schedule, AppInfo, AppCategory...
-│   ├── subscription/     # EntitlementManager, SubscriptionPlan (Free/Pro caps)
+│   ├── subscription/     # EntitlementManager, SubscriptionPlan (Free/Pro capability gates)
 │   ├── mindfulness/      # MindfulnessEngine, AdaptiveFrictionController, MindfulReason
 │   ├── analytics/        # DisciplineScoreCalculator (transparent formula)
 │   ├── motivation/       # XpManager, DisciplineLevel (NEW_STARTER→IRON_WILL), Achievement
@@ -80,8 +93,8 @@ Room database: `aegis_focus.db` — **version 2** with `Migration(1,2)`.
 | Table | Purpose |
 |---|---|
 | `focus_sessions` | All focus sessions (active, completed, cancelled) |
-| `focus_profiles` | Named focus profiles (Deep Work, Study, Sleep Calm, Quick Reset + user custom) |
-| `schedules` | Recurring timed rules (e.g. Study every Mon–Fri 09:00–13:00) |
+| `focus_profiles` | Named focus profiles (Deep Work, Study, Sleep Calm, Quick Reset + custom) |
+| `schedules` | Recurring timed rules (e.g. Study Mon–Fri 09:00–13:00) |
 | `blocked_apps` | Per-session blocked app package names |
 | `usage_snapshots` | Daily usage data snapshots for analytics |
 | `emergency_exits` | Audit log of all Strict Mode emergency exits |
@@ -96,7 +109,7 @@ Room database: `aegis_focus.db` — **version 2** with `Migration(1,2)`.
 
 ## 📐 Discipline Score Formula
 
-The Discipline Score is **fully transparent** — no hidden algorithm:
+The Discipline Score is **fully transparent** — no hidden math:
 
 ```
 Score = Base(80)
@@ -121,33 +134,9 @@ Clamped: [10, 100]
 | Disciplined | 3,500 | 🔥 | Disciplined mind, deliberate action |
 | Iron Will | 7,500 | 🏆 | Unbreakable. The highest tier. |
 
-**XP Earning:**
-- `2 XP/min` (capped at 200 per session)
-- `+50 XP` bonus for Strict Mode sessions
-- `+25 XP` bonus for zero-block-attempt "Laser Focus" sessions
-- `+50 XP` for meeting daily goal
-- `+XP` for unlocking achievements
-
----
-
-## 🔒 Strict Mode — Free vs Pro
-
-| | Free | Pro |
-|---|:---:|:---:|
-| Maximum duration | **3 hours** | **Unlimited** |
-| Presets | 30m, 60m, 2h, 3h | 30m, 1h, 2h, 3h, 6h, 12h + custom |
-| Commitment flow | ✅ | ✅ |
-| Emergency exit friction | ✅ | ✅ |
-| Adaptive friction escalation | — | ✅ (5s→10s→20s→30s) |
-
 ---
 
 ## 🚀 Local Setup & Development
-
-### Prerequisites
-- **Android Studio** Koala / Ladybug or newer
-- **JDK 17+**
-- Android device or emulator running **Android 8.0+ (API 26+)**
 
 ### 1. Open the Project
 ```bash
@@ -155,37 +144,13 @@ Clamped: [10, 100]
 /Users/khalidabdullah/AntiGravity/aegis-focus
 ```
 
-### 2. Sync Gradle
-Android Studio will auto-sync. If not: **File → Sync Project with Gradle Files**.
-Set Gradle JDK to Java 17: **Settings → Build, Execution, Deployment → Gradle → Gradle JDK**.
-
-### 3. Required Android Permissions
-These permissions require manual user grant in Android Settings:
-
-| Permission | Where to Grant | Required For |
-|---|---|---|
-| Usage Access | Settings → Digital Wellbeing → Usage Access | Screen time analytics |
-| Accessibility Service | Settings → Accessibility → Aegis Focus | App blocking (recommended) |
-| Display over other apps | Settings → Apps → Aegis Focus → Display over | Block intervention overlay |
-| Notification Listener | Settings → Notifications → Notification access | Notification Shield (Pro) |
-
-### 4. Build & Run
-```bash
-# Run on connected device or emulator:
-# Android Studio → Run → 'app' configuration
-
-# Or command line (requires JAVA_HOME set):
-cd aegis-focus
-./gradlew assembleDebug
-```
-
-### 5. Run Unit Tests
+### 2. Run Unit Tests
 ```bash
 cd aegis-focus
 ./gradlew test
 ```
 
-All **10 unit test suites** must pass:
+All **10 unit test suites** cover:
 1. `SessionExpirationTest`
 2. `StrictModeStateMachineTest`
 3. `EmergencyExitLogicTest`
@@ -203,7 +168,7 @@ All **10 unit test suites** must pass:
 
 Open the live simulator in a browser:
 
-**Online:** [https://khalidabdullahh.github.io/bProductive/](https://khalidabdullahh.github.io/bProductive/)
+**Online:** [https://khalidabdullahh.github.io/ASR-TurnTimeIntoProgress/](https://khalidabdullahh.github.io/ASR-TurnTimeIntoProgress/)
 
 **Locally:**
 ```bash
@@ -211,32 +176,6 @@ cd /Users/khalidabdullah/AntiGravity/aegis-focus
 python3 -m http.server 3000
 # Then open: http://localhost:3000
 ```
-
-The simulator includes: app blocking flow, Strict Mode commitment, mindful pause, Discipline Score display, XP progression, Free/Pro toggle, and schedule management.
-
----
-
-## 🏛️ Key Design Decisions
-
-### 1. No Hilt — Manual DI
-`AppContainer` (singleton) wired via `ServiceLocator`. Clean, predictable, no annotation processor overhead.
-
-### 2. Epoch-Based Session Persistence
-`endEpochMs` stored in Room. Timer ticks from `System.currentTimeMillis()`. Sessions survive app kills, swipe-aways, and reboots.
-
-### 3. EntitlementManager — Central Capability Queries
-Never scatter `isPro` flags. Always query a named capability:
-```kotlin
-entitlementManager.maxStrictDurationMinutes()   // 180 (Free) or Int.MAX_VALUE (Pro)
-entitlementManager.canUseWebsiteBlocking()       // false (Free) or true (Pro)
-entitlementManager.canUseNotificationShield()    // false (Free) or true (Pro)
-```
-
-### 4. minSdk = 26 (Android 8.0)
-Targeting minSdk 26 covers ~95%+ of active Android devices. Keeping this broad is intentional.
-
-### 5. 100% Local-First Privacy
-Zero cloud servers. Zero analytics SDKs. Zero mandatory accounts. All data in `aegis_focus.db` on your device.
 
 ---
 
