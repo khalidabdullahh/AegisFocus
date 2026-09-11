@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Philosophy &amp; Mission — ASR (Turn Time Into Progress)</title>
+    <meta name="description" content="Why ASR exists: Time is finite. Attention determines where that time goes. Discipline protects attention. Focused time creates progress.">
+    <meta name="theme-color" content="#0A0D14">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%230A0D14'/><text x='50%25' y='55%25' dominant-baseline='middle' text-anchor='middle' font-family='system-ui,sans-serif' font-weight='700' font-size='18' fill='%2338BDF8'>A</text></svg>">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] },
+                    colors: {
+                        asr: {
+                            bg:       '#0A0D14',
+                            surface:  '#111827',
+                            elevated: '#1A2235',
+                            border:   '#1E2D45',
+                            sky:      '#38BDF8',
+                            emerald:  '#10B981',
+                            red:      '#F87171',
+                            text:     '#F8FAFC',
+                            muted:    '#94A3B8',
+                            faint:    '#64748B',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        ::-webkit-scrollbar { width: 4px; height: 4px; }
+        ::-webkit-scrollbar-track { background: #0A0D14; }
+        ::-webkit-scrollbar-thumb { background: #1E2D45; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #38BDF8; }
+        .text-gradient {
+            background: linear-gradient(135deg, #38BDF8 0%, #818CF8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .hero-grid {
+            background-image:
+                linear-gradient(rgba(56,189,248,0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(56,189,248,0.03) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+    </style>
+</head>
+<body class="bg-asr-bg text-asr-text font-sans antialiased min-h-screen flex flex-col justify-between">
+
+<!-- Header -->
+<header class="fixed top-0 left-0 right-0 z-50 border-b border-asr-border/60 backdrop-blur-xl bg-asr-bg/80">
+    <div class="max-w-6xl mx-auto px-5 sm:px-8 h-14 flex items-center justify-between">
+        <a href="index.html" class="flex items-center gap-2.5">
+            <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+                <rect width="28" height="28" rx="7" fill="#0F172A"/>
+                <path d="M9 20L14 8L19 20" stroke="#38BDF8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M10.5 16.5H17.5" stroke="#38BDF8" stroke-width="1.5" stroke-linecap="round"/>
+                <circle cx="14" cy="14" r="12" stroke="#1E2D45" stroke-width="1" fill="none"/>
+            </svg>
+            <span class="font-bold text-lg text-asr-text tracking-tight">ASR</span>
+        </a>
+
+        <nav class="hidden md:flex items-center gap-7 text-sm font-medium text-asr-muted">
+            <a href="features.html" class="hover:text-asr-text transition">Features</a>
+            <a href="pricing.html" class="hover:text-asr-text transition">Pricing</a>
+            <a href="about.html" class="text-asr-sky font-semibold">Philosophy</a>
+            <a href="privacy.html" class="hover:text-asr-text transition">Privacy</a>
+            <a href="index.html#simulator" class="hover:text-asr-text transition">Simulator</a>
+        </nav>
+
+        <a href="index.html#simulator"
+           class="bg-asr-sky/10 hover:bg-asr-sky/20 border border-asr-sky/30 text-asr-sky text-sm font-semibold px-4 py-1.5 rounded-lg transition">
+            Launch App Demo
+        </a>
+    </div>
+</header>
+
+<!-- Main Content -->
+<main class="pt-24 pb-20 px-5 max-w-4xl mx-auto flex-1 w-full hero-grid">
+    <div class="text-center pt-8 pb-12">
+        <div class="inline-flex items-center gap-2 bg-asr-surface border border-asr-border text-xs font-semibold text-asr-muted px-3.5 py-1.5 rounded-full mb-6">
+            <i data-lucide="compass" class="w-3.5 h-3.5 text-asr-sky"></i>
+            Core Philosophy
+        </div>
+        <h1 class="text-4xl sm:text-5xl font-black tracking-tight leading-tight">
+            Time is Always <span class="text-gradient">Moving</span>.
+        </h1>
+        <p class="mt-4 text-base sm:text-lg text-asr-muted leading-relaxed max-w-2xl mx-auto">
+            Every moment that passes becomes part of our past — and we never get it back. ASR was built from a fundamental principle: our time is our only irreplaceable opportunity.
+        </p>
+    </div>
+
+    <!-- The 4 Pillars Deep Dive -->
+    <div class="space-y-6 mt-4">
+        
+        <div class="bg-asr-surface border border-asr-border rounded-3xl p-8">
+            <div class="flex items-center gap-3 mb-3">
+                <span class="text-2xl font-black text-asr-sky">01</span>
+                <h3 class="text-xl font-bold text-asr-text">Time — Finite &amp; Irreplaceable</h3>
+            </div>
+            <p class="text-sm text-asr-muted leading-relaxed">
+                Productivity is not about squeezing 18 hours of frantic hustle into every day. It is about understanding that time is finite. When you allow algorithms to siphon hours from your day through mindless scrolling, you trade away non-renewable moments of your life.
+            </p>
+        </div>
+
+        <div class="bg-asr-surface border border-asr-border rounded-3xl p-8">
+            <div class="flex items-center gap-3 mb-3">
+                <span class="text-2xl font-black text-asr-sky">02</span>
+                <h3 class="text-xl font-bold text-asr-text">Focus — The Single Leverage Point</h3>
+            </div>
+            <p class="text-sm text-asr-muted leading-relaxed">
+                Modern software is weaponized to fragment your attention. A single notification takes an average of 23 minutes of mental energy to recover from. ASR provides the intentional shield that keeps your mind on one single, deliberate objective.
+            </p>
+        </div>
+
+        <div class="bg-asr-surface border border-asr-border rounded-3xl p-8">
+            <div class="flex items-center gap-3 mb-3">
+                <span class="text-2xl font-black text-asr-sky">03</span>
+                <h3 class="text-xl font-bold text-asr-text">Discipline — Systems Over Fleeting Willpower</h3>
+            </div>
+            <p class="text-sm text-asr-muted leading-relaxed">
+                Willpower is an exhaustible daily resource. You cannot rely on raw motivation when you are tired or stressed. ASR creates clear, tamper-resistant guardrails — such as Strict Mode and Mindful Pauses — that enforce your best intentions automatically.
+            </p>
+        </div>
+
+        <div class="bg-asr-surface border border-asr-border rounded-3xl p-8">
+            <div class="flex items-center gap-3 mb-3">
+                <span class="text-2xl font-black text-asr-sky">04</span>
+                <h3 class="text-xl font-bold text-asr-text">Progress — Meaningful Cumulative Growth</h3>
+            </div>
+            <p class="text-sm text-asr-muted leading-relaxed">
+                Focused time compounds. By seeing your Discipline Score evolve transparently and watching your focus streaks grow day after day, ASR turns disciplined hours into undeniable progress toward your life's real goals.
+            </p>
+        </div>
+
+    </div>
+
+    <!-- Author & Open Source Note -->
+    <div class="mt-12 bg-asr-surface border border-asr-border rounded-3xl p-8 flex flex-col sm:flex-row items-center gap-6">
+        <div class="w-16 h-16 rounded-full bg-asr-sky/10 border border-asr-sky/30 flex items-center justify-center text-asr-sky shrink-0">
+            <i data-lucide="code" class="w-8 h-8"></i>
+        </div>
+        <div>
+            <h3 class="text-base font-bold text-asr-text">Architected by Khalid Abdullah</h3>
+            <p class="text-xs text-asr-muted mt-1 leading-relaxed">
+                ASR was built with a vision to create the cleanest, most trustworthy native digital discipline companion for Android. 100% open architecture, private local-first storage, and designed without manipulation or dark patterns.
+            </p>
+            <div class="mt-3 flex items-center gap-3">
+                <a href="https://github.com/khalidabdullahh/ASR-TurnTimeIntoProgress" target="_blank" class="text-xs text-asr-sky font-semibold hover:underline flex items-center gap-1">
+                    <i data-lucide="github" class="w-3.5 h-3.5"></i> View Source Code
+                </a>
+                <span class="text-asr-faint text-xs">•</span>
+                <a href="https://github.com/khalidabdullahh" target="_blank" class="text-xs text-asr-muted hover:text-asr-text font-semibold flex items-center gap-1">
+                    <i data-lucide="user" class="w-3.5 h-3.5"></i> Khalid Abdullah
+                </a>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- Footer -->
+<footer class="border-t border-asr-border bg-asr-surface">
+    <div class="max-w-6xl mx-auto px-5 sm:px-8 py-10">
+        <div class="flex flex-col sm:flex-row items-start justify-between gap-8">
+            <div>
+                <div class="flex items-center gap-2.5 mb-3">
+                    <svg width="24" height="24" viewBox="0 0 28 28" fill="none">
+                        <rect width="28" height="28" rx="7" fill="#0F172A"/>
+                        <path d="M9 20L14 8L19 20" stroke="#38BDF8" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M10.8 16.5H17.2" stroke="#38BDF8" stroke-width="1.8" stroke-linecap="round"/>
+                    </svg>
+                    <span class="font-bold text-asr-text">ASR</span>
+                </div>
+                <p class="text-asr-faint text-xs max-w-xs leading-relaxed">
+                    Turn Time Into Progress.<br>
+                    Crafted with focus by <a href="https://github.com/khalidabdullahh" target="_blank" class="text-asr-sky hover:underline font-semibold">Khalid Abdullah</a>.
+                </p>
+                <div class="mt-3 flex items-center gap-2">
+                    <a href="https://github.com/khalidabdullahh" target="_blank" class="text-[11px] bg-asr-elevated border border-asr-border px-2.5 py-1 rounded text-asr-muted hover:text-asr-sky transition flex items-center gap-1.5">
+                        <i data-lucide="github" class="w-3.5 h-3.5"></i> @khalidabdullahh
+                    </a>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-8 text-sm">
+                <div>
+                    <div class="text-asr-text font-semibold mb-3 text-xs uppercase tracking-wider">Product</div>
+                    <ul class="space-y-2 text-asr-faint text-xs">
+                        <li><a href="features.html" class="hover:text-asr-text transition">Features</a></li>
+                        <li><a href="pricing.html" class="hover:text-asr-text transition">Pricing</a></li>
+                        <li><a href="about.html" class="text-asr-sky font-medium">Philosophy</a></li>
+                        <li><a href="privacy.html" class="hover:text-asr-text transition">Privacy Policy</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <div class="text-asr-text font-semibold mb-3 text-xs uppercase tracking-wider">Developer &amp; Code</div>
+                    <ul class="space-y-2 text-asr-faint text-xs">
+                        <li><a href="https://github.com/khalidabdullahh/ASR-TurnTimeIntoProgress" target="_blank" class="hover:text-asr-text transition flex items-center gap-1"><i data-lucide="git-branch" class="w-3 h-3"></i> Repository</a></li>
+                        <li><a href="https://github.com/khalidabdullahh" target="_blank" class="hover:text-asr-text transition flex items-center gap-1"><i data-lucide="user" class="w-3 h-3"></i> Khalid Abdullah</a></li>
+                        <li><a href="index.html#simulator" class="hover:text-asr-text transition">Live Simulator</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="border-t border-asr-border mt-8 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-asr-faint">
+            <span>© 2025 ASR — Turn Time Into Progress. Designed &amp; Developed by <a href="https://github.com/khalidabdullahh" target="_blank" class="text-asr-sky hover:underline">Khalid Abdullah</a>.</span>
+            <span>100% Local-First · Open Source</span>
+        </div>
+    </div>
+</footer>
+
+<script>lucide.createIcons();</script>
+</body>
+</html>

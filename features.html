@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Features — ASR (Turn Time Into Progress)</title>
+    <meta name="description" content="Explore ASR's complete feature suite: Foreground App Blocking, Persistent Timers, Strict Mode, Mindful Pause, Transparent Discipline Score, and Notification Shield.">
+    <meta name="theme-color" content="#0A0D14">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%230A0D14'/><text x='50%25' y='55%25' dominant-baseline='middle' text-anchor='middle' font-family='system-ui,sans-serif' font-weight='700' font-size='18' fill='%2338BDF8'>A</text></svg>">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] },
+                    colors: {
+                        asr: {
+                            bg:       '#0A0D14',
+                            surface:  '#111827',
+                            elevated: '#1A2235',
+                            border:   '#1E2D45',
+                            sky:      '#38BDF8',
+                            emerald:  '#10B981',
+                            red:      '#F87171',
+                            text:     '#F8FAFC',
+                            muted:    '#94A3B8',
+                            faint:    '#64748B',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        ::-webkit-scrollbar { width: 4px; height: 4px; }
+        ::-webkit-scrollbar-track { background: #0A0D14; }
+        ::-webkit-scrollbar-thumb { background: #1E2D45; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #38BDF8; }
+        .text-gradient {
+            background: linear-gradient(135deg, #38BDF8 0%, #818CF8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .hero-grid {
+            background-image:
+                linear-gradient(rgba(56,189,248,0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(56,189,248,0.03) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+    </style>
+</head>
+<body class="bg-asr-bg text-asr-text font-sans antialiased min-h-screen flex flex-col justify-between">
+
+<!-- Header -->
+<header class="fixed top-0 left-0 right-0 z-50 border-b border-asr-border/60 backdrop-blur-xl bg-asr-bg/80">
+    <div class="max-w-6xl mx-auto px-5 sm:px-8 h-14 flex items-center justify-between">
+        <a href="index.html" class="flex items-center gap-2.5">
+            <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+                <rect width="28" height="28" rx="7" fill="#0F172A"/>
+                <path d="M9 20L14 8L19 20" stroke="#38BDF8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M10.5 16.5H17.5" stroke="#38BDF8" stroke-width="1.5" stroke-linecap="round"/>
+                <circle cx="14" cy="14" r="12" stroke="#1E2D45" stroke-width="1" fill="none"/>
+            </svg>
+            <span class="font-bold text-lg text-asr-text tracking-tight">ASR</span>
+        </a>
+
+        <nav class="hidden md:flex items-center gap-7 text-sm font-medium text-asr-muted">
+            <a href="features.html" class="text-asr-sky font-semibold">Features</a>
+            <a href="pricing.html" class="hover:text-asr-text transition">Pricing</a>
+            <a href="about.html" class="hover:text-asr-text transition">Philosophy</a>
+            <a href="privacy.html" class="hover:text-asr-text transition">Privacy</a>
+            <a href="index.html#simulator" class="hover:text-asr-text transition">Simulator</a>
+        </nav>
+
+        <a href="index.html#simulator"
+           class="bg-asr-sky/10 hover:bg-asr-sky/20 border border-asr-sky/30 text-asr-sky text-sm font-semibold px-4 py-1.5 rounded-lg transition">
+            Launch App Demo
+        </a>
+    </div>
+</header>
+
+<!-- Main Content -->
+<main class="pt-24 pb-20 px-5 max-w-6xl mx-auto flex-1 w-full hero-grid">
+    <!-- Hero Title -->
+    <div class="text-center max-w-3xl mx-auto pt-8 pb-14">
+        <div class="inline-flex items-center gap-2 bg-asr-surface border border-asr-border text-xs font-semibold text-asr-muted px-3.5 py-1.5 rounded-full mb-6">
+            <i data-lucide="shield" class="w-3.5 h-3.5 text-asr-sky"></i>
+            ASR System Architecture
+        </div>
+        <h1 class="text-4xl sm:text-5xl md:text-6xl font-black tracking-tight leading-tight">
+            Engineered for <span class="text-gradient">Real Digital Discipline</span>.
+        </h1>
+        <p class="mt-5 text-base sm:text-lg text-asr-muted leading-relaxed">
+            Every feature in ASR is crafted to build psychological friction against mindless habit loops while preserving deliberate deep focus.
+        </p>
+    </div>
+
+    <!-- Feature Grid Detailed -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+        
+        <!-- Feature 1: Foreground Blocking -->
+        <div class="bg-asr-surface border border-asr-border rounded-2xl p-7 hover:border-asr-sky/40 transition">
+            <div class="w-12 h-12 rounded-xl bg-asr-sky/10 border border-asr-sky/20 flex items-center justify-center text-asr-sky mb-5">
+                <i data-lucide="shield-alert" class="w-6 h-6"></i>
+            </div>
+            <h3 class="text-xl font-bold text-asr-text">Modular App & Web Blocker</h3>
+            <p class="text-asr-muted text-sm mt-2.5 leading-relaxed">
+                Uses Android's low-latency AccessibilityService combined with fallback UsageStatsManager monitoring. When a blocked distracting app is opened, ASR intervenes immediately and pushes the app to background before dopamine loops can form.
+            </p>
+            <ul class="mt-4 space-y-2 text-xs text-asr-faint">
+                <li class="flex items-center gap-2"><span class="text-asr-emerald">✓</span> Sub-50ms instant detection</li>
+                <li class="flex items-center gap-2"><span class="text-asr-emerald">✓</span> Pro: Domain-level website blocking in browsers</li>
+                <li class="flex items-center gap-2"><span class="text-asr-emerald">✓</span> System whitelist protects dialer, emergency & launcher</li>
+            </ul>
+        </div>
+
+        <!-- Feature 2: Strict Mode State Machine -->
+        <div class="bg-asr-surface border border-asr-border rounded-2xl p-7 hover:border-asr-red/40 transition">
+            <div class="w-12 h-12 rounded-xl bg-asr-red/10 border border-asr-red/20 flex items-center justify-center text-asr-red mb-5">
+                <i data-lucide="lock" class="w-6 h-6"></i>
+            </div>
+            <h3 class="text-xl font-bold text-asr-text">Tamper-Resistant Strict Mode</h3>
+            <p class="text-asr-muted text-sm mt-2.5 leading-relaxed">
+                When Strict Mode is active, session parameters, timer duration, and blocked app lists become strictly immutable in both UI and domain layers. Normal cancellation is disabled.
+            </p>
+            <ul class="mt-4 space-y-2 text-xs text-asr-faint">
+                <li class="flex items-center gap-2"><span class="text-asr-emerald">✓</span> Free Tier: Genuine strict sessions up to 3 hours</li>
+                <li class="flex items-center gap-2"><span class="text-asr-emerald">✓</span> Pro Tier: Unlimited strict sessions (6h, 12h, custom)</li>
+                <li class="flex items-center gap-2"><span class="text-asr-emerald">✓</span> "Ready to commit?" review dialog before locking in</li>
+            </ul>
+        </div>
+
+        <!-- Feature 3: Mindful Pause & Adaptive Friction -->
+        <div class="bg-asr-surface border border-asr-border rounded-2xl p-7 hover:border-asr-sky/40 transition">
+            <div class="w-12 h-12 rounded-xl bg-asr-sky/10 border border-asr-sky/20 flex items-center justify-center text-asr-sky mb-5">
+                <i data-lucide="brain" class="w-6 h-6"></i>
+            </div>
+            <h3 class="text-xl font-bold text-asr-text">Mindful Pause & Reason Selection</h3>
+            <p class="text-asr-muted text-sm mt-2.5 leading-relaxed">
+                Instead of harsh unhelpful lockouts, ASR presents a 5-second breathing moment and asks for your intention (Important / Just checking / Bored / Habit).
+            </p>
+            <ul class="mt-4 space-y-2 text-xs text-asr-faint">
+                <li class="flex items-center gap-2"><span class="text-asr-emerald">✓</span> 5-second calm breathing countdown</li>
+                <li class="flex items-center gap-2"><span class="text-asr-emerald">✓</span> Pro: Escalating delay on repeated attempts (5s → 10s → 20s → 30s)</li>
+                <li class="flex items-center gap-2"><span class="text-asr-emerald">✓</span> Logs reasons into private local analytics</li>
+            </ul>
+        </div>
+
+        <!-- Feature 4: Discipline Score & Formula -->
+        <div class="bg-asr-surface border border-asr-border rounded-2xl p-7 hover:border-asr-emerald/40 transition">
+            <div class="w-12 h-12 rounded-xl bg-asr-emerald/10 border border-asr-emerald/20 flex items-center justify-center text-asr-emerald mb-5">
+                <i data-lucide="sparkles" class="w-6 h-6"></i>
+            </div>
+            <h3 class="text-xl font-bold text-asr-text">Transparent Discipline Score</h3>
+            <p class="text-asr-muted text-sm mt-2.5 leading-relaxed">
+                A documented, mathematical behavioral score from 10 to 100 based on your completed sessions, consistency, streaks, and distraction avoidance.
+            </p>
+            <div class="mt-3 bg-asr-bg border border-asr-border rounded-xl p-3 font-mono text-[11px] text-asr-muted">
+                Score = Base(80) + StreakBonus(0–5) + GoalBonus(0–5) − DistractionPenalty(0–20) − ExitPenalty(0–20)
+            </div>
+        </div>
+
+        <!-- Feature 5: Emergency Exit Cooldown -->
+        <div class="bg-asr-surface border border-asr-border rounded-2xl p-7 hover:border-asr-sky/40 transition">
+            <div class="w-12 h-12 rounded-xl bg-asr-sky/10 border border-asr-sky/20 flex items-center justify-center text-asr-sky mb-5">
+                <i data-lucide="alert-triangle" class="w-6 h-6"></i>
+            </div>
+            <h3 class="text-xl font-bold text-asr-text">Emergency Exit with Multi-Friction</h3>
+            <p class="text-asr-muted text-sm mt-2.5 leading-relaxed">
+                If an actual emergency happens during Strict Mode, users can exit by navigating through a calm cooldown timer and manually typing the mindful confirmation phrase.
+            </p>
+            <ul class="mt-4 space-y-2 text-xs text-asr-faint">
+                <li class="flex items-center gap-2"><span class="text-asr-emerald">✓</span> Configurable cooldown delay (5s, 10s, 15s)</li>
+                <li class="flex items-center gap-2"><span class="text-asr-emerald">✓</span> Phrase typing: "I choose to break focus"</li>
+                <li class="flex items-center gap-2"><span class="text-asr-emerald">✓</span> Audited locally in `emergency_exits` table</li>
+            </ul>
+        </div>
+
+        <!-- Feature 6: Local-First Persistence -->
+        <div class="bg-asr-surface border border-asr-border rounded-2xl p-7 hover:border-asr-emerald/40 transition">
+            <div class="w-12 h-12 rounded-xl bg-asr-emerald/10 border border-asr-emerald/20 flex items-center justify-center text-asr-emerald mb-5">
+                <i data-lucide="database" class="w-6 h-6"></i>
+            </div>
+            <h3 class="text-xl font-bold text-asr-text">Epoch-Based Crash Survival</h3>
+            <p class="text-asr-muted text-sm mt-2.5 leading-relaxed">
+                Timers are never kept solely in volatile memory. ASR records exact epoch millisecond timestamps into local Room SQLite. If the device reboots or app is killed, the session seamlessly restores.
+            </p>
+            <ul class="mt-4 space-y-2 text-xs text-asr-faint">
+                <li class="flex items-center gap-2"><span class="text-asr-emerald">✓</span> Survives system kills &amp; restarts</li>
+                <li class="flex items-center gap-2"><span class="text-asr-emerald">✓</span> 100% on-device SQLite database</li>
+                <li class="flex items-center gap-2"><span class="text-asr-emerald">✓</span> Zero server sync, zero accounts required</li>
+            </ul>
+        </div>
+
+    </div>
+
+    <!-- CTA Section -->
+    <div class="mt-16 text-center bg-asr-surface border border-asr-border rounded-3xl p-10">
+        <h2 class="text-2xl sm:text-3xl font-bold text-asr-text">Experience ASR in your browser</h2>
+        <p class="text-asr-muted text-sm mt-2 max-w-md mx-auto">Try the live interactive simulation right now without installing anything.</p>
+        <a href="index.html#simulator" class="inline-flex items-center gap-2 mt-6 bg-asr-sky hover:bg-asr-sky/90 text-asr-bg font-bold text-sm px-6 py-3 rounded-xl transition shadow-lg shadow-asr-sky/20">
+            <i data-lucide="play" class="w-4 h-4 fill-current"></i> Open Interactive Demo
+        </a>
+    </div>
+</main>
+
+<!-- Footer -->
+<footer class="border-t border-asr-border bg-asr-surface">
+    <div class="max-w-6xl mx-auto px-5 sm:px-8 py-10">
+        <div class="flex flex-col sm:flex-row items-start justify-between gap-8">
+            <div>
+                <div class="flex items-center gap-2.5 mb-3">
+                    <svg width="24" height="24" viewBox="0 0 28 28" fill="none">
+                        <rect width="28" height="28" rx="7" fill="#0F172A"/>
+                        <path d="M9 20L14 8L19 20" stroke="#38BDF8" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M10.8 16.5H17.2" stroke="#38BDF8" stroke-width="1.8" stroke-linecap="round"/>
+                    </svg>
+                    <span class="font-bold text-asr-text">ASR</span>
+                </div>
+                <p class="text-asr-faint text-xs max-w-xs leading-relaxed">
+                    Turn Time Into Progress.<br>
+                    Crafted with focus by <a href="https://github.com/khalidabdullahh" target="_blank" class="text-asr-sky hover:underline font-semibold">Khalid Abdullah</a>.
+                </p>
+                <div class="mt-3 flex items-center gap-2">
+                    <a href="https://github.com/khalidabdullahh" target="_blank" class="text-[11px] bg-asr-elevated border border-asr-border px-2.5 py-1 rounded text-asr-muted hover:text-asr-sky transition flex items-center gap-1.5">
+                        <i data-lucide="github" class="w-3.5 h-3.5"></i> @khalidabdullahh
+                    </a>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-8 text-sm">
+                <div>
+                    <div class="text-asr-text font-semibold mb-3 text-xs uppercase tracking-wider">Product</div>
+                    <ul class="space-y-2 text-asr-faint text-xs">
+                        <li><a href="features.html" class="text-asr-sky font-medium">Features</a></li>
+                        <li><a href="pricing.html" class="hover:text-asr-text transition">Pricing</a></li>
+                        <li><a href="about.html" class="hover:text-asr-text transition">Philosophy</a></li>
+                        <li><a href="privacy.html" class="hover:text-asr-text transition">Privacy Policy</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <div class="text-asr-text font-semibold mb-3 text-xs uppercase tracking-wider">Developer &amp; Code</div>
+                    <ul class="space-y-2 text-asr-faint text-xs">
+                        <li><a href="https://github.com/khalidabdullahh/ASR-TurnTimeIntoProgress" target="_blank" class="hover:text-asr-text transition flex items-center gap-1"><i data-lucide="git-branch" class="w-3 h-3"></i> Repository</a></li>
+                        <li><a href="https://github.com/khalidabdullahh" target="_blank" class="hover:text-asr-text transition flex items-center gap-1"><i data-lucide="user" class="w-3 h-3"></i> Khalid Abdullah</a></li>
+                        <li><a href="index.html#simulator" class="hover:text-asr-text transition">Live Simulator</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="border-t border-asr-border mt-8 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-asr-faint">
+            <span>© 2025 ASR — Turn Time Into Progress. Designed &amp; Developed by <a href="https://github.com/khalidabdullahh" target="_blank" class="text-asr-sky hover:underline">Khalid Abdullah</a>.</span>
+            <span>100% Local-First · Open Source</span>
+        </div>
+    </div>
+</footer>
+
+<script>lucide.createIcons();</script>
+</body>
+</html>
