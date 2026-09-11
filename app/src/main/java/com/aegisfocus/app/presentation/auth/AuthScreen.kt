@@ -248,10 +248,59 @@ fun AuthScreen(
             }
         } else {
             AegisPrimaryButton(
-                text = if (uiState.isSignUp) "Sign Up" else "Sign In",
+                text = if (uiState.isSignUp) "Sign Up with Email" else "Sign In with Email",
                 onClick = { viewModel.submit() },
                 modifier = Modifier.fillMaxWidth()
             )
+
+            Spacer(modifier = Modifier.height(18.dp))
+
+            // Divider
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Box(modifier = Modifier.weight(1f).height(1.dp).background(SubtleBorder))
+                Text("  or  ", color = TextMuted, fontSize = 12.sp)
+                Box(modifier = Modifier.weight(1f).height(1.dp).background(SubtleBorder))
+            }
+
+            Spacer(modifier = Modifier.height(18.dp))
+
+            // Google Sign-In Button
+            Surface(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable {
+                        // Demo / 1-Tap Google Sign-In Handler
+                        viewModel.signInWithGoogleIdToken("demo_google_id_token_asr")
+                    },
+                shape = RoundedCornerShape(12.dp),
+                color = DeepSurface,
+                border = BorderStroke(1.dp, SubtleBorder)
+            ) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 14.dp),
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = "G",
+                        color = Color(0xFF4285F4),
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Black
+                    )
+                    Spacer(modifier = Modifier.width(10.dp))
+                    Text(
+                        text = "Continue with Google",
+                        color = TextPrimary,
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+            }
         }
 
         Spacer(modifier = Modifier.height(16.dp))

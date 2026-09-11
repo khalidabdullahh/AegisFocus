@@ -172,6 +172,66 @@ class SupabaseAuthService(private val context: Context) {
     }
 
     /**
+     * Signs in or registers a user via Google Sign-In ID Token.
+     */
+    suspend fun signInWithGoogle(idToken: String, rawNonce: String? = null): AuthResult = withContext(Dispatchers.IO) {
+        try {
+            val url = URL("${SupabaseConfig.AUTH_ENDPOINT}/token?grant_type=id_token")
+            val conn = url.openConnection() as HttpURLConnection
+            conn.requestMethod = "POST"
+            conn.setRequestProperty("apikey", SupabaseConfig.ANON_KEY)
+            conn.setRequestProperty("Content-Type", "application/json")
+            conn.doOutput = true
+            conn.connectTimeout = 8000
+            conn.readTimeout = 8000
+
+            val body = JSONObject().apply {
+                put("provider", "google")
+                put("id_token", idToken)
+                if (rawNonce != null) put("nonce", rawNonce)
+            }
+
+            conn.outputStream.use { it.write(body.toString().toByteArray(Charsets.UTF_8)) }
+
+            val responseCode = conn.responseCode
+            val stream = if (responseCode in 200..299) conn.inputStream else conn.errorStream
+            val respText = stream.bufferedReader().use { it.readText() }
+            conn.disconnect()
+
+            if (responseCode in 200..299) {
+                val json = JSONObject(respText)
+                val userObj = json.getJSONObject("user")
+                val userId = userObj.getString("id")
+                val userEmail = userObj.getString("email")
+                val userMeta = userObj.optJSONObject("user_metadata")
+                val name = userMeta?.optString("full_name") ?: userMeta?.optString("name") ?: ""
+                val token = json.getString("access_token")
+
+                val authUser = AuthUser(id = userId, email = userEmail, displayName = name, accessToken = token)
+                saveSession(authUser)
+
+                DiscordNotifier.notifyUserAuth(
+                    eventType = "Google 1-Tap Sign-In",
+                    email = userEmail,
+                    username = name
+                )
+
+                AuthResult.Success(authUser, "Google Sign-In successful!")
+            } else {
+                val errJson = try { JSONObject(respText) } catch (e: Exception) { null }
+                val errorMsg = errJson?.optString("error_description")
+                    ?: errJson?.optString("msg")
+                    ?: errJson?.optString("message")
+                    ?: "Google Sign-In failed ($responseCode)."
+                AuthResult.Error(errorMsg)
+            }
+        } catch (e: Exception) {
+            Log.e(tag, "Google Sign-In error: ${e.message}", e)
+            AuthResult.Error("Network error: ${e.localizedMessage}")
+        }
+    }
+
+    /**
      * Signs out and clears stored credentials.
      */
     fun signOut() {

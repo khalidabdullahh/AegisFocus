@@ -94,6 +94,28 @@ class AuthViewModel(
         }
     }
 
+    fun signInWithGoogleIdToken(idToken: String) {
+        viewModelScope.launch {
+            _uiState.value = _uiState.value.copy(isLoading = true, errorMessage = null, successMessage = null)
+            val result = authService.signInWithGoogle(idToken)
+            when (result) {
+                is AuthResult.Success -> {
+                    _uiState.value = _uiState.value.copy(
+                        isLoading = false,
+                        successMessage = result.message,
+                        currentUser = result.user
+                    )
+                }
+                is AuthResult.Error -> {
+                    _uiState.value = _uiState.value.copy(
+                        isLoading = false,
+                        errorMessage = result.message
+                    )
+                }
+            }
+        }
+    }
+
     fun signOut() {
         authService.signOut()
         _uiState.value = _uiState.value.copy(currentUser = null, successMessage = "Signed out successfully.")
