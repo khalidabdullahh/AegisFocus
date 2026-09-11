@@ -197,7 +197,11 @@ fun AegisNavHost(
 
             composable(Screen.Stats.route) {
                 val vm = androidx.lifecycle.viewmodel.compose.viewModel {
-                    StatsViewModel(container.getUsageAnalyticsUseCase)
+                    StatsViewModel(
+                        getUsageAnalyticsUseCase = container.getUsageAnalyticsUseCase,
+                        disciplineScoreCalculator = container.disciplineScoreCalculator,
+                        xpManager = container.xpManager
+                    )
                 }
                 StatsScreen(viewModel = vm)
             }
