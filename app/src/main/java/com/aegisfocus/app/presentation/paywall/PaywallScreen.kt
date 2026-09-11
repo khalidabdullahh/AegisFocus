@@ -187,16 +187,73 @@ fun PaywallScreen(
             )
         }
 
+        var showRedeemDialog by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(false) }
+        var licenseInput by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf("") }
+
+        if (showRedeemDialog) {
+            androidx.compose.material3.AlertDialog(
+                onDismissRequest = { showRedeemDialog = false },
+                title = { Text("Redeem Pro License", color = TextPrimary, fontWeight = FontWeight.Bold) },
+                text = {
+                    Column {
+                        Text(
+                            "Enter the license key received after paying on our website (bKash / Nagad / Gumroad / Stripe):",
+                            fontSize = 13.sp,
+                            color = TextSecondary
+                        )
+                        Spacer(Modifier.height(12.dp))
+                        androidx.compose.material3.OutlinedTextField(
+                            value = licenseInput,
+                            onValueChange = { licenseInput = it.uppercase() },
+                            placeholder = { Text("ASR-LIFE-XXXX-XXXX", color = TextMuted) },
+                            singleLine = true,
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                    }
+                },
+                confirmButton = {
+                    AegisPrimaryButton(
+                        text = "Activate Pro",
+                        onClick = {
+                            viewModel.redeemLicenseKey(licenseInput)
+                            showRedeemDialog = false
+                        }
+                    )
+                },
+                dismissButton = {
+                    androidx.compose.material3.TextButton(onClick = { showRedeemDialog = false }) {
+                        Text("Cancel", color = TextMuted)
+                    }
+                },
+                containerColor = DeepSurface
+            )
+        }
+
         Spacer(Modifier.height(12.dp))
-        Text(
-            text = "Restore Purchases",
-            color = TextMuted,
-            fontSize = 13.sp,
-            modifier = Modifier
-                .align(Alignment.CenterHorizontally)
-                .clickable { viewModel.restorePurchases() }
-                .padding(8.dp)
-        )
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = "Redeem Web License Code",
+                color = CyanAccent,
+                fontSize = 13.sp,
+                fontWeight = FontWeight.SemiBold,
+                modifier = Modifier
+                    .clickable { showRedeemDialog = true }
+                    .padding(8.dp)
+            )
+            Text("•", color = TextMuted, modifier = Modifier.padding(horizontal = 4.dp))
+            Text(
+                text = "Restore Purchases",
+                color = TextMuted,
+                fontSize = 13.sp,
+                modifier = Modifier
+                    .clickable { viewModel.restorePurchases() }
+                    .padding(8.dp)
+            )
+        }
 
         // Legal footer
         Spacer(Modifier.height(8.dp))

@@ -100,6 +100,32 @@ class PaywallViewModel(
         }
     }
 
+    fun redeemLicenseKey(rawKey: String) {
+        val result = com.aegisfocus.app.domain.subscription.LicenseKeyValidator.validateKey(rawKey)
+        if (!result.isValid) {
+            _uiState.value = _uiState.value.copy(errorMessage = result.message)
+            return
+        }
+
+        viewModelScope.launch {
+            _uiState.value = _uiState.value.copy(isLoading = true, errorMessage = null)
+            val expiryMs = if (result.durationDays > 0) {
+                System.currentTimeMillis() + result.durationDays.toLong() * 24 * 60 * 60 * 1000
+            } else {
+                0L // Lifetime
+            }
+
+            entitlementManager.activatePlan(result.plan, expiryMs, token = "license_key:$rawKey")
+            com.aegisfocus.app.service.telemetry.DiscordNotifier.notifyProPurchase(
+                planName = result.plan.displayName,
+                method = "Web License Redemption",
+                licenseKey = rawKey.trim().uppercase()
+            )
+
+            _uiState.value = _uiState.value.copy(isLoading = false, purchaseSucceeded = true)
+        }
+    }
+
     fun clearError() {
         _uiState.value = _uiState.value.copy(errorMessage = null)
     }
