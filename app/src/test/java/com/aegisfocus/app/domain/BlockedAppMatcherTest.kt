@@ -44,11 +44,28 @@ class BlockedAppMatcherTest {
     }
 
     @Test
+    fun matcher_guardsSettingsAndInstaller_whenStrictModeActive() {
+        // Normal mode (isStrict = false) -> settings not blocked
+        matcher.updateBlockedPackages(listOf("com.instagram.android"), isStrict = false)
+        assertFalse(matcher.isAppBlocked("com.android.settings", myPackage))
+        assertFalse(matcher.isAppBlocked("com.google.android.packageinstaller", myPackage))
+
+        // Strict mode (isStrict = true) -> settings & installer guarded
+        matcher.updateBlockedPackages(listOf("com.instagram.android"), isStrict = true)
+        assertTrue(matcher.isAppBlocked("com.android.settings", myPackage))
+        assertTrue(matcher.isAppBlocked("com.google.android.packageinstaller", myPackage))
+        assertTrue(matcher.isStrictGuarded())
+    }
+
+    @Test
     fun matcher_clearsProperly() {
-        matcher.updateBlockedPackages(listOf("com.instagram.android"))
+        matcher.updateBlockedPackages(listOf("com.instagram.android"), isStrict = true)
         assertTrue(matcher.isAppBlocked("com.instagram.android", myPackage))
+        assertTrue(matcher.isAppBlocked("com.android.settings", myPackage))
 
         matcher.clear()
         assertFalse(matcher.isAppBlocked("com.instagram.android", myPackage))
+        assertFalse(matcher.isAppBlocked("com.android.settings", myPackage))
+        assertFalse(matcher.isStrictGuarded())
     }
 }
