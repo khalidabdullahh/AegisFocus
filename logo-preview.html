@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ASR / Khalid Abdullah — Logo System Showcase</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen p-6 sm:p-12 flex flex-col items-center justify-center">
+
+    <div class="max-w-4xl w-full text-center mb-10">
+        <span class="text-xs font-bold text-sky-400 uppercase tracking-widest bg-sky-950/60 border border-sky-800 px-3 py-1 rounded-full">
+            Brand Identity &amp; Monogram Showcase
+        </span>
+        <h1 class="text-3xl sm:text-4xl font-black mt-3 text-white">ASR × Khalid Abdullah Logo System</h1>
+        <p class="text-slate-400 text-sm mt-2">Crafted with sharp geometric letterforms and a dynamic signature horizon swoosh arc.</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl w-full">
+        
+        <!-- 1. Dark Edition (ASR Brand Palette) -->
+        <div class="bg-[#0A0D14] border border-[#1E2D45] rounded-3xl p-8 flex flex-col items-center justify-center shadow-2xl relative overflow-hidden group hover:border-sky-500/50 transition">
+            <span class="absolute top-4 left-4 text-[10px] font-bold text-slate-400 uppercase tracking-wider bg-slate-900 px-2.5 py-1 rounded-md border border-slate-800">
+                Dark Brand Edition
+            </span>
+            <div class="w-full max-w-xs my-6 flex items-center justify-center">
+                <svg viewBox="0 0 400 240" fill="none" class="w-full h-auto">
+                    <!-- Stylized Monogram -->
+                    <g transform="translate(140, 25)">
+                        <path d="M12 10 L12 85" stroke="#F8FAFC" stroke-width="5" stroke-linecap="round"/>
+                        <path d="M52 12 L14 48" stroke="#F8FAFC" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M22 42 L56 85" stroke="#F8FAFC" stroke-width="4.5" stroke-linecap="round"/>
+                        <path d="M52 12 L78 85" stroke="#F8FAFC" stroke-width="5" stroke-linecap="round"/>
+                        <!-- Dynamic Sky Arc -->
+                        <path d="M8 82 Q 45 42, 85 70" stroke="#38BDF8" stroke-width="4.5" stroke-linecap="round" fill="none"/>
+                    </g>
+                    <!-- Typography -->
+                    <text x="200" y="165" text-anchor="middle" font-family="'Inter', sans-serif" font-weight="600" font-size="14" letter-spacing="9" fill="#F8FAFC">KHALID ABDULLAH</text>
+                    <text x="200" y="190" text-anchor="middle" font-family="'Inter', sans-serif" font-weight="500" font-size="9" letter-spacing="4" fill="#38BDF8">ASR · TURN TIME INTO PROGRESS</text>
+                </svg>
+            </div>
+            <p class="text-[11px] text-slate-400 mt-2">Used in app header, landing hero, and dark UI surfaces.</p>
+        </div>
+
+        <!-- 2. Minimalist White Edition (Exact Matching Reference) -->
+        <div class="bg-white border border-slate-200 rounded-3xl p-8 flex flex-col items-center justify-center shadow-2xl relative overflow-hidden group hover:border-sky-500/50 transition">
+            <span class="absolute top-4 left-4 text-[10px] font-bold text-slate-600 uppercase tracking-wider bg-slate-100 px-2.5 py-1 rounded-md border border-slate-300">
+                Signature White Edition
+            </span>
+            <div class="w-full max-w-xs my-6 flex items-center justify-center">
+                <svg viewBox="0 0 400 240" fill="none" class="w-full h-auto">
+                    <!-- Stylized Monogram in Jet Black -->
+                    <g transform="translate(140, 25)">
+                        <path d="M12 10 L12 85" stroke="#0F172A" stroke-width="5" stroke-linecap="round"/>
+                        <path d="M52 12 L14 48" stroke="#0F172A" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M22 42 L56 85" stroke="#0F172A" stroke-width="4.5" stroke-linecap="round"/>
+                        <path d="M52 12 L78 85" stroke="#0F172A" stroke-width="5" stroke-linecap="round"/>
+                        <!-- Sharp Black Signature Arc -->
+                        <path d="M8 82 Q 45 42, 85 70" stroke="#0F172A" stroke-width="4.5" stroke-linecap="round" fill="none"/>
+                    </g>
+                    <!-- Typography -->
+                    <text x="200" y="165" text-anchor="middle" font-family="'Inter', sans-serif" font-weight="600" font-size="14" letter-spacing="9" fill="#0F172A">KHALID ABDULLAH</text>
+                    <text x="200" y="190" text-anchor="middle" font-family="'Inter', sans-serif" font-weight="500" font-size="9" letter-spacing="4" fill="#64748B">ASR · TURN TIME INTO PROGRESS</text>
+                </svg>
+            </div>
+            <p class="text-[11px] text-slate-500 mt-2">Exact minimalist monochrome design matching the reference artwork.</p>
+        </div>
+
+    </div>
+
+    <!-- Monogram Mark Variants (Favicon, App Icon, Square Badge) -->
+    <div class="max-w-4xl w-full mt-10 bg-[#111827] border border-[#1E2D45] rounded-3xl p-8">
+        <h3 class="text-base font-bold text-white mb-6 text-center">App Icon &amp; Favicon Formats</h3>
+        <div class="flex flex-wrap items-center justify-center gap-8">
+            
+            <div class="flex flex-col items-center gap-2">
+                <div class="w-20 h-20 bg-[#0A0D14] border-2 border-sky-500/40 rounded-2xl flex items-center justify-center p-3 shadow-lg shadow-sky-500/10">
+                    <svg viewBox="0 0 100 100" fill="none" class="w-full h-full">
+                        <g transform="translate(13, 8)">
+                            <path d="M12 10 L12 78" stroke="#F8FAFC" stroke-width="6" stroke-linecap="round"/>
+                            <path d="M48 12 L14 44" stroke="#F8FAFC" stroke-width="6" stroke-linecap="round"/>
+                            <path d="M22 38 L52 78" stroke="#F8FAFC" stroke-width="5" stroke-linecap="round"/>
+                            <path d="M48 12 L70 78" stroke="#F8FAFC" stroke-width="6" stroke-linecap="round"/>
+                            <path d="M8 74 Q 40 38, 76 64" stroke="#38BDF8" stroke-width="5.5" stroke-linecap="round" fill="none"/>
+                        </g>
+                    </svg>
+                </div>
+                <span class="text-xs text-slate-400">Android App Icon (Dark)</span>
+            </div>
+
+            <div class="flex flex-col items-center gap-2">
+                <div class="w-20 h-20 bg-white border border-slate-300 rounded-2xl flex items-center justify-center p-3 shadow-lg">
+                    <svg viewBox="0 0 100 100" fill="none" class="w-full h-full">
+                        <g transform="translate(13, 8)">
+                            <path d="M12 10 L12 78" stroke="#0F172A" stroke-width="6" stroke-linecap="round"/>
+                            <path d="M48 12 L14 44" stroke="#0F172A" stroke-width="6" stroke-linecap="round"/>
+                            <path d="M22 38 L52 78" stroke="#0F172A" stroke-width="5" stroke-linecap="round"/>
+                            <path d="M48 12 L70 78" stroke="#0F172A" stroke-width="6" stroke-linecap="round"/>
+                            <path d="M8 74 Q 40 38, 76 64" stroke="#0F172A" stroke-width="5.5" stroke-linecap="round" fill="none"/>
+                        </g>
+                    </svg>
+                </div>
+                <span class="text-xs text-slate-400">App Icon (Light)</span>
+            </div>
+
+            <div class="flex flex-col items-center gap-2">
+                <div class="w-12 h-12 bg-[#0A0D14] border border-sky-500/30 rounded-xl flex items-center justify-center p-2">
+                    <svg viewBox="0 0 100 100" fill="none" class="w-full h-full">
+                        <g transform="translate(13, 8)">
+                            <path d="M12 10 L12 78" stroke="#F8FAFC" stroke-width="7" stroke-linecap="round"/>
+                            <path d="M48 12 L14 44" stroke="#F8FAFC" stroke-width="7" stroke-linecap="round"/>
+                            <path d="M22 38 L52 78" stroke="#F8FAFC" stroke-width="6" stroke-linecap="round"/>
+                            <path d="M48 12 L70 78" stroke="#F8FAFC" stroke-width="7" stroke-linecap="round"/>
+                            <path d="M8 74 Q 40 38, 76 64" stroke="#38BDF8" stroke-width="6.5" stroke-linecap="round" fill="none"/>
+                        </g>
+                    </svg>
+                </div>
+                <span class="text-xs text-slate-400">Favicon (32x32)</span>
+            </div>
+
+        </div>
+    </div>
+
+</body>
+</html>
