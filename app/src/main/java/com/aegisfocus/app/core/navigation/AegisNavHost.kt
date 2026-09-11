@@ -218,7 +218,10 @@ fun AegisNavHost(
 
             composable(Screen.Paywall.route) {
                 val vm = androidx.lifecycle.viewmodel.compose.viewModel {
-                    PaywallViewModel(container.entitlementManager)
+                    PaywallViewModel(
+                        entitlementManager = container.entitlementManager,
+                        playBillingManager = container.playBillingManager
+                    )
                 }
                 PaywallScreen(
                     viewModel = vm,

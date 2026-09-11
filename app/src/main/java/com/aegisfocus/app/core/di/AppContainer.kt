@@ -75,6 +75,7 @@ class AppContainer(private val context: Context) {
 
     // ─── Domain Engines (v2) ─────────────────────────────────────────────────
     val entitlementManager by lazy { EntitlementManager(subscriptionDao) }
+    val playBillingManager by lazy { com.aegisfocus.app.data.billing.PlayBillingManager(context, entitlementManager) }
 
     val adaptiveFrictionController by lazy { AdaptiveFrictionController() }
 
@@ -109,6 +110,9 @@ class AppContainer(private val context: Context) {
     }
     val strictModeCommitUseCase by lazy {
         StrictModeCommitUseCase(entitlementManager)
+    }
+    val exportDataUseCase by lazy {
+        com.aegisfocus.app.domain.usecase.ExportDataUseCase(focusSessionDao, focusEventDao, userXpDao)
     }
 
     // ─── Engine Components ───────────────────────────────────────────────────
