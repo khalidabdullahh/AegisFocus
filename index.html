@@ -1019,44 +1019,128 @@
             <p class="text-asr-muted text-sm mt-3">Core protection is free. Pro unlocks the advanced layers.</p>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <!-- Free -->
-            <div class="bg-asr-bg border border-asr-border rounded-2xl p-7">
-                <div class="text-asr-faint text-xs font-bold tracking-widest uppercase mb-2">Free</div>
-                <div class="text-4xl font-black text-asr-text">$0</div>
-                <div class="text-asr-faint text-sm mt-1">Forever</div>
-                <ul class="mt-6 space-y-3 text-sm">
-                    <li class="flex items-center gap-2.5 text-asr-muted"><span class="text-asr-emerald">✓</span> Core app blocking</li>
-                    <li class="flex items-center gap-2.5 text-asr-muted"><span class="text-asr-emerald">✓</span> Focus sessions</li>
-                    <li class="flex items-center gap-2.5 text-asr-muted"><span class="text-asr-emerald">✓</span> Strict Mode (up to 3 hours)</li>
-                    <li class="flex items-center gap-2.5 text-asr-muted"><span class="text-asr-emerald">✓</span> Mindful pause</li>
-                    <li class="flex items-center gap-2.5 text-asr-muted"><span class="text-asr-emerald">✓</span> Discipline Score & Streak</li>
-                    <li class="flex items-center gap-2.5 text-asr-faint/50"><span>—</span> Unlimited Strict Mode</li>
-                    <li class="flex items-center gap-2.5 text-asr-faint/50"><span>—</span> Website blocking</li>
-                    <li class="flex items-center gap-2.5 text-asr-faint/50"><span>—</span> Notification shield</li>
-                </ul>
+        <!-- Pricing Cards Grid: All 5 Distinct Plans -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+            
+            <!-- 1. Free Tier -->
+            <div class="bg-asr-bg border border-asr-border rounded-2xl p-6 flex flex-col justify-between hover:border-asr-sky/30 transition">
+                <div>
+                    <div class="text-asr-faint text-[10px] font-bold tracking-widest uppercase mb-1">Free Tier</div>
+                    <div class="text-3xl font-black text-asr-text">$0</div>
+                    <div class="text-asr-faint text-xs mt-0.5">Forever free</div>
+                    <p class="text-xs text-asr-muted mt-3 leading-relaxed">
+                        Core local focus &amp; app blocking protection.
+                    </p>
+                    <ul class="mt-5 space-y-2 text-xs">
+                        <li class="flex items-center gap-2 text-asr-muted"><span class="text-asr-emerald font-bold">✓</span> Core app blocking</li>
+                        <li class="flex items-center gap-2 text-asr-muted"><span class="text-asr-emerald font-bold">✓</span> Focus sessions &amp; timer</li>
+                        <li class="flex items-center gap-2 text-asr-muted"><span class="text-asr-emerald font-bold">✓</span> Strict Mode (up to 3h)</li>
+                        <li class="flex items-center gap-2 text-asr-muted"><span class="text-asr-emerald font-bold">✓</span> Mindful pause prompt</li>
+                        <li class="flex items-center gap-2 text-asr-muted"><span class="text-asr-emerald font-bold">✓</span> Discipline Score &amp; Streak</li>
+                        <li class="flex items-center gap-2 text-asr-muted"><span class="text-asr-emerald font-bold">✓</span> 100% on-device SQLite</li>
+                    </ul>
+                </div>
+                <a href="#simulator" class="mt-6 w-full block text-center py-2.5 bg-asr-elevated hover:bg-asr-border text-asr-text font-bold text-xs rounded-xl transition">
+                    Start Free
+                </a>
             </div>
 
-            <!-- Pro -->
-            <div class="bg-asr-bg border-2 border-asr-sky/40 rounded-2xl p-7 relative overflow-hidden">
-                <div class="absolute top-4 right-4 bg-asr-sky/10 border border-asr-sky/30 text-asr-sky text-[10px] font-bold px-2.5 py-1 rounded-full">BEST VALUE</div>
-                <div class="text-asr-sky text-xs font-bold tracking-widest uppercase mb-2">Pro</div>
-                <div class="flex items-end gap-2">
-                    <div class="text-4xl font-black text-asr-text">$19.99</div>
-                    <div class="text-asr-faint text-sm mb-1">/year</div>
+            <!-- 2. Pro Monthly -->
+            <div class="bg-asr-bg border border-asr-border rounded-2xl p-6 flex flex-col justify-between hover:border-asr-sky/40 transition">
+                <div>
+                    <div class="text-asr-sky text-[10px] font-bold tracking-widest uppercase mb-1">Pro Monthly</div>
+                    <div class="flex items-baseline gap-1">
+                        <span class="text-3xl font-black text-asr-text">$2.99</span>
+                        <span class="text-asr-faint text-xs">/mo</span>
+                    </div>
+                    <div class="text-asr-faint text-xs mt-0.5">Cancel anytime</div>
+                    <p class="text-xs text-asr-muted mt-3 leading-relaxed">
+                        Flexible monthly discipline with all Pro capabilities.
+                    </p>
+                    <ul class="mt-5 space-y-2 text-xs">
+                        <li class="flex items-center gap-2 text-asr-muted"><span class="text-asr-sky font-bold">✓</span> Unlimited Strict Mode</li>
+                        <li class="flex items-center gap-2 text-asr-muted"><span class="text-asr-sky font-bold">✓</span> Website &amp; domain blocker</li>
+                        <li class="flex items-center gap-2 text-asr-muted"><span class="text-asr-sky font-bold">✓</span> Notification shield</li>
+                        <li class="flex items-center gap-2 text-asr-muted"><span class="text-asr-sky font-bold">✓</span> Adaptive friction (5s→30s)</li>
+                        <li class="flex items-center gap-2 text-asr-muted"><span class="text-asr-sky font-bold">✓</span> Unlimited profiles &amp; routines</li>
+                    </ul>
                 </div>
-                <div class="text-asr-faint text-xs mt-1">or $2.99/mo · $49.99 lifetime · $9.99/yr student</div>
-                <ul class="mt-6 space-y-3 text-sm">
-                    <li class="flex items-center gap-2.5 text-asr-muted"><span class="text-asr-sky">✓</span> Everything in Free</li>
-                    <li class="flex items-center gap-2.5 text-asr-muted"><span class="text-asr-sky">✓</span> Unlimited Strict Mode (6h, 12h, custom)</li>
-                    <li class="flex items-center gap-2.5 text-asr-muted"><span class="text-asr-sky">✓</span> Website & domain blocking</li>
-                    <li class="flex items-center gap-2.5 text-asr-muted"><span class="text-asr-sky">✓</span> Notification shield</li>
-                    <li class="flex items-center gap-2.5 text-asr-muted"><span class="text-asr-sky">✓</span> Adaptive friction (5s→30s escalation)</li>
-                    <li class="flex items-center gap-2.5 text-asr-muted"><span class="text-asr-sky">✓</span> Unlimited profiles & schedules</li>
-                    <li class="flex items-center gap-2.5 text-asr-muted"><span class="text-asr-sky">✓</span> Deep analytics</li>
-                </ul>
-                <div class="mt-6 text-[10px] text-asr-faint">No dark patterns. Cancel anytime. No hidden fees.</div>
+                <a href="#simulator" class="mt-6 w-full block text-center py-2.5 bg-asr-elevated hover:bg-asr-border text-asr-text font-bold text-xs rounded-xl transition">
+                    Choose Monthly
+                </a>
             </div>
+
+            <!-- 3. Pro Yearly (Featured) -->
+            <div class="bg-asr-bg border-2 border-asr-sky/60 rounded-2xl p-6 flex flex-col justify-between relative overflow-hidden shadow-xl shadow-asr-sky/10">
+                <div class="absolute top-3 right-3 bg-asr-sky text-asr-bg text-[9px] font-extrabold px-2 py-0.5 rounded-full uppercase tracking-wider">
+                    BEST VALUE
+                </div>
+                <div>
+                    <div class="text-asr-sky text-[10px] font-bold tracking-widest uppercase mb-1">Pro Yearly</div>
+                    <div class="flex items-baseline gap-1">
+                        <span class="text-3xl font-black text-asr-text">$19.99</span>
+                        <span class="text-asr-faint text-xs">/yr</span>
+                    </div>
+                    <div class="text-asr-sky text-xs font-semibold mt-0.5">Only $1.67 / month</div>
+                    <p class="text-xs text-asr-muted mt-3 leading-relaxed">
+                        Our most popular annual plan. Save 45% over monthly.
+                    </p>
+                    <ul class="mt-5 space-y-2 text-xs">
+                        <li class="flex items-center gap-2 text-asr-muted"><span class="text-asr-sky font-bold">✓</span> Everything in Pro</li>
+                        <li class="flex items-center gap-2 text-asr-muted"><span class="text-asr-sky font-bold">✓</span> Unlimited Strict Mode (6h–24h)</li>
+                        <li class="flex items-center gap-2 text-asr-muted"><span class="text-asr-sky font-bold">✓</span> Domain &amp; website shield</li>
+                        <li class="flex items-center gap-2 text-asr-muted"><span class="text-asr-sky font-bold">✓</span> Notification suppression</li>
+                        <li class="flex items-center gap-2 text-asr-muted"><span class="text-asr-sky font-bold">✓</span> Deep analytics &amp; stats</li>
+                    </ul>
+                </div>
+                <a href="#simulator" class="mt-6 w-full block text-center py-2.5 bg-asr-sky hover:bg-asr-sky/90 text-asr-bg font-bold text-xs rounded-xl transition shadow-md shadow-asr-sky/20">
+                    Get Pro Yearly
+                </a>
+            </div>
+
+            <!-- 4. Lifetime Pro -->
+            <div class="bg-asr-bg border border-asr-border rounded-2xl p-6 flex flex-col justify-between hover:border-asr-sky/40 transition">
+                <div class="inline-block self-end bg-asr-elevated border border-asr-border text-asr-muted text-[9px] font-bold px-2 py-0.5 rounded-full mb-1">
+                    ONE-TIME
+                </div>
+                <div>
+                    <div class="text-asr-text text-[10px] font-bold tracking-widest uppercase mb-1">Lifetime Pro</div>
+                    <div class="text-3xl font-black text-asr-text">$49.99</div>
+                    <div class="text-asr-faint text-xs mt-0.5">Pay once · Keep forever</div>
+                    <p class="text-xs text-asr-muted mt-3 leading-relaxed">
+                        Lifetime license with all current and future Pro updates included.
+                    </p>
+                    <ul class="mt-5 space-y-2 text-xs">
+                        <li class="flex items-center gap-2 text-asr-muted"><span class="text-asr-sky font-bold">✓</span> Full Pro lifetime access</li>
+                        <li class="flex items-center gap-2 text-asr-muted"><span class="text-asr-sky font-bold">✓</span> Zero recurring fees forever</li>
+                        <li class="flex items-center gap-2 text-asr-muted"><span class="text-asr-sky font-bold">✓</span> Priority support &amp; updates</li>
+                        <li class="flex items-center gap-2 text-asr-muted"><span class="text-asr-sky font-bold">✓</span> All upcoming Pro features</li>
+                    </ul>
+                </div>
+                <a href="#simulator" class="mt-6 w-full block text-center py-2.5 bg-asr-elevated hover:bg-asr-border text-asr-text font-bold text-xs rounded-xl transition">
+                    Buy Lifetime
+                </a>
+            </div>
+
+        </div>
+
+        <!-- 5. Student Discount Banner -->
+        <div class="mt-5 bg-asr-bg border border-asr-border rounded-2xl p-5 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="flex items-center gap-3.5 text-left">
+                <div class="w-10 h-10 rounded-xl bg-asr-sky/10 border border-asr-sky/20 flex items-center justify-center text-asr-sky shrink-0">
+                    <i data-lucide="graduation-cap" class="w-5 h-5"></i>
+                </div>
+                <div>
+                    <div class="flex items-center gap-2">
+                        <span class="font-bold text-sm text-asr-text">Student Pro Plan — $9.99 / year</span>
+                        <span class="bg-asr-emerald/10 text-asr-emerald text-[10px] font-bold px-2 py-0.5 rounded">50% OFF</span>
+                    </div>
+                    <p class="text-xs text-asr-muted mt-0.5">Special discounted annual plan for high school &amp; university students.</p>
+                </div>
+            </div>
+            <a href="pricing.html" class="shrink-0 text-xs font-bold text-asr-sky hover:underline flex items-center gap-1">
+                Learn more &amp; verify student status <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+            </a>
         </div>
     </div>
 </section>

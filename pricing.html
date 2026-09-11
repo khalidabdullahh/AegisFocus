@@ -105,99 +105,209 @@
         </p>
     </div>
 
-    <!-- Pricing Cards Grid -->
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 max-w-5xl mx-auto mt-4">
+    <!-- Pricing Cards Grid: All 4 Main Plans -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 max-w-6xl mx-auto mt-4">
         
-        <!-- Tier 1: Free -->
-        <div class="bg-asr-surface border border-asr-border rounded-3xl p-8 flex flex-col justify-between">
+        <!-- 1. Free Tier -->
+        <div class="bg-asr-surface border border-asr-border rounded-3xl p-6 flex flex-col justify-between hover:border-asr-sky/30 transition">
             <div>
-                <div class="text-asr-faint text-xs font-bold tracking-widest uppercase mb-2">Free Tier</div>
+                <div class="text-asr-faint text-xs font-bold tracking-widest uppercase mb-1">Free Tier</div>
                 <div class="text-4xl font-black text-asr-text">$0</div>
-                <div class="text-asr-faint text-xs mt-1">Free forever · No credit card required</div>
-                <p class="text-xs text-asr-muted mt-4 leading-relaxed">
-                    Full core digital discipline suite. Genuine Strict Mode up to 3 hours with full blocking and local analytics.
+                <div class="text-asr-faint text-xs mt-1">Forever free · No card needed</div>
+                <p class="text-xs text-asr-muted mt-3 leading-relaxed">
+                    Essential focus and real app blocking protection.
                 </p>
 
-                <div class="border-t border-asr-border mt-6 pt-6 space-y-3 text-xs">
-                    <div class="flex items-center gap-2.5 text-asr-muted"><span class="text-asr-emerald">✓</span> Core Android app blocking</div>
-                    <div class="flex items-center gap-2.5 text-asr-muted"><span class="text-asr-emerald">✓</span> Focus sessions &amp; timer</div>
-                    <div class="flex items-center gap-2.5 text-asr-muted"><span class="text-asr-emerald">✓</span> Strict Mode (presets: 30m, 1h, 2h, 3h)</div>
-                    <div class="flex items-center gap-2.5 text-asr-muted"><span class="text-asr-emerald">✓</span> Mindful pause on distraction</div>
-                    <div class="flex items-center gap-2.5 text-asr-muted"><span class="text-asr-emerald">✓</span> Discipline Score (10–100)</div>
-                    <div class="flex items-center gap-2.5 text-asr-muted"><span class="text-asr-emerald">✓</span> 100% on-device private Room DB</div>
-                    <div class="flex items-center gap-2.5 text-asr-faint/50"><span>—</span> Unlimited Strict Mode (6h+)</div>
-                    <div class="flex items-center gap-2.5 text-asr-faint/50"><span>—</span> Website &amp; domain blocking</div>
-                    <div class="flex items-center gap-2.5 text-asr-faint/50"><span>—</span> Notification shield</div>
+                <div class="border-t border-asr-border mt-5 pt-5 space-y-2.5 text-xs">
+                    <div class="flex items-center gap-2 text-asr-muted"><span class="text-asr-emerald font-bold">✓</span> Core app blocking</div>
+                    <div class="flex items-center gap-2 text-asr-muted"><span class="text-asr-emerald font-bold">✓</span> Focus sessions &amp; timer</div>
+                    <div class="flex items-center gap-2 text-asr-muted"><span class="text-asr-emerald font-bold">✓</span> Strict Mode (up to 3 hours)</div>
+                    <div class="flex items-center gap-2 text-asr-muted"><span class="text-asr-emerald font-bold">✓</span> Mindful pause prompt</div>
+                    <div class="flex items-center gap-2 text-asr-muted"><span class="text-asr-emerald font-bold">✓</span> Discipline Score &amp; Streak</div>
+                    <div class="flex items-center gap-2 text-asr-muted"><span class="text-asr-emerald font-bold">✓</span> 100% on-device SQLite DB</div>
+                    <div class="flex items-center gap-2 text-asr-faint/50"><span>—</span> Unlimited Strict Mode</div>
+                    <div class="flex items-center gap-2 text-asr-faint/50"><span>—</span> Website blocking</div>
+                    <div class="flex items-center gap-2 text-asr-faint/50"><span>—</span> Notification shield</div>
                 </div>
             </div>
 
-            <a href="index.html#simulator" class="mt-8 w-full block text-center py-3 bg-asr-elevated hover:bg-asr-border text-asr-text font-bold text-xs rounded-xl transition">
+            <a href="index.html#simulator" class="mt-6 w-full block text-center py-2.5 bg-asr-elevated hover:bg-asr-border text-asr-text font-bold text-xs rounded-xl transition">
                 Start Free
             </a>
         </div>
 
-        <!-- Tier 2: Pro Yearly (Featured) -->
-        <div class="bg-asr-surface border-2 border-asr-sky/50 rounded-3xl p-8 flex flex-col justify-between relative overflow-hidden shadow-2xl shadow-asr-sky/10">
-            <div class="absolute top-4 right-4 bg-asr-sky/10 border border-asr-sky/30 text-asr-sky text-[10px] font-bold px-3 py-1 rounded-full">
+        <!-- 2. Pro Monthly -->
+        <div class="bg-asr-surface border border-asr-border rounded-3xl p-6 flex flex-col justify-between hover:border-asr-sky/40 transition">
+            <div>
+                <div class="text-asr-sky text-xs font-bold tracking-widest uppercase mb-1">Pro Monthly</div>
+                <div class="flex items-baseline gap-1">
+                    <span class="text-4xl font-black text-asr-text">$2.99</span>
+                    <span class="text-asr-faint text-xs">/ month</span>
+                </div>
+                <div class="text-asr-faint text-xs mt-1">Month-to-month · Cancel anytime</div>
+                <p class="text-xs text-asr-muted mt-3 leading-relaxed">
+                    Maximum flexibility with all advanced Pro capabilities.
+                </p>
+
+                <div class="border-t border-asr-border mt-5 pt-5 space-y-2.5 text-xs">
+                    <div class="flex items-center gap-2 text-asr-muted"><span class="text-asr-sky font-bold">✓</span> Everything in Free</div>
+                    <div class="flex items-center gap-2 text-asr-muted"><span class="text-asr-sky font-bold">✓</span> Unlimited Strict Mode (6h–24h)</div>
+                    <div class="flex items-center gap-2 text-asr-muted"><span class="text-asr-sky font-bold">✓</span> Website &amp; domain blocking</div>
+                    <div class="flex items-center gap-2 text-asr-muted"><span class="text-asr-sky font-bold">✓</span> Notification shield</div>
+                    <div class="flex items-center gap-2 text-asr-muted"><span class="text-asr-sky font-bold">✓</span> Adaptive friction (5s→30s)</div>
+                    <div class="flex items-center gap-2 text-asr-muted"><span class="text-asr-sky font-bold">✓</span> Unlimited custom profiles</div>
+                    <div class="flex items-center gap-2 text-asr-muted"><span class="text-asr-sky font-bold">✓</span> Deep analytics</div>
+                </div>
+            </div>
+
+            <a href="index.html#simulator" class="mt-6 w-full block text-center py-2.5 bg-asr-elevated hover:bg-asr-border text-asr-text font-bold text-xs rounded-xl transition">
+                Choose Monthly
+            </a>
+        </div>
+
+        <!-- 3. Pro Yearly (Featured) -->
+        <div class="bg-asr-surface border-2 border-asr-sky/60 rounded-3xl p-6 flex flex-col justify-between relative overflow-hidden shadow-2xl shadow-asr-sky/15">
+            <div class="absolute top-3 right-3 bg-asr-sky text-asr-bg text-[9px] font-extrabold px-2.5 py-0.5 rounded-full uppercase tracking-wider">
                 BEST VALUE
             </div>
             <div>
-                <div class="text-asr-sky text-xs font-bold tracking-widest uppercase mb-2">Pro Yearly</div>
+                <div class="text-asr-sky text-xs font-bold tracking-widest uppercase mb-1">Pro Yearly</div>
                 <div class="flex items-baseline gap-1">
                     <span class="text-4xl font-black text-asr-text">$19.99</span>
                     <span class="text-asr-faint text-xs">/ year</span>
                 </div>
-                <div class="text-asr-sky text-xs font-semibold mt-1">Just $1.67 / month</div>
-                <p class="text-xs text-asr-muted mt-4 leading-relaxed">
-                    Unlocks unlimited focus durations, domain web blocking, notification suppression, and adaptive friction.
+                <div class="text-asr-sky text-xs font-semibold mt-1">Just $1.67 / month · Save 45%</div>
+                <p class="text-xs text-asr-muted mt-3 leading-relaxed">
+                    Our most popular plan for committed digital discipline.
                 </p>
 
-                <div class="border-t border-asr-border mt-6 pt-6 space-y-3 text-xs">
-                    <div class="flex items-center gap-2.5 text-asr-muted"><span class="text-asr-sky">✓</span> <strong>Everything in Free</strong></div>
-                    <div class="flex items-center gap-2.5 text-asr-muted"><span class="text-asr-sky">✓</span> <strong>Unlimited Strict Mode</strong> (6h, 12h, custom)</div>
-                    <div class="flex items-center gap-2.5 text-asr-muted"><span class="text-asr-sky">✓</span> <strong>Website &amp; Domain Blocking</strong></div>
-                    <div class="flex items-center gap-2.5 text-asr-muted"><span class="text-asr-sky">✓</span> <strong>Notification Shield</strong> (auto-suppress)</div>
-                    <div class="flex items-center gap-2.5 text-asr-muted"><span class="text-asr-sky">✓</span> <strong>Adaptive Friction</strong> (5s → 30s delays)</div>
-                    <div class="flex items-center gap-2.5 text-asr-muted"><span class="text-asr-sky">✓</span> Unlimited Custom Profiles &amp; Routines</div>
-                    <div class="flex items-center gap-2.5 text-asr-muted"><span class="text-asr-sky">✓</span> Deep Longitudinal Analytics</div>
+                <div class="border-t border-asr-border mt-5 pt-5 space-y-2.5 text-xs">
+                    <div class="flex items-center gap-2 text-asr-muted"><span class="text-asr-sky font-bold">✓</span> <strong>Everything in Pro</strong></div>
+                    <div class="flex items-center gap-2 text-asr-muted"><span class="text-asr-sky font-bold">✓</span> Unlimited Strict Mode (6h–24h)</div>
+                    <div class="flex items-center gap-2 text-asr-muted"><span class="text-asr-sky font-bold">✓</span> Website &amp; Domain Blocking</div>
+                    <div class="flex items-center gap-2 text-asr-muted"><span class="text-asr-sky font-bold">✓</span> Notification Shield</div>
+                    <div class="flex items-center gap-2 text-asr-muted"><span class="text-asr-sky font-bold">✓</span> Adaptive Friction Escalation</div>
+                    <div class="flex items-center gap-2 text-asr-muted"><span class="text-asr-sky font-bold">✓</span> Unlimited Profiles &amp; Routines</div>
+                    <div class="flex items-center gap-2 text-asr-muted"><span class="text-asr-sky font-bold">✓</span> Longitudinal Analytics</div>
                 </div>
             </div>
 
-            <a href="index.html#simulator" class="mt-8 w-full block text-center py-3 bg-asr-sky hover:bg-asr-sky/90 text-asr-bg font-bold text-xs rounded-xl transition shadow-lg shadow-asr-sky/20">
-                Unlock Pro Access
+            <a href="index.html#simulator" class="mt-6 w-full block text-center py-2.5 bg-asr-sky hover:bg-asr-sky/90 text-asr-bg font-bold text-xs rounded-xl transition shadow-lg shadow-asr-sky/20">
+                Unlock Pro Yearly
             </a>
         </div>
 
-        <!-- Tier 3: Lifetime & Student -->
-        <div class="bg-asr-surface border border-asr-border rounded-3xl p-8 flex flex-col justify-between">
+        <!-- 4. Lifetime Pro -->
+        <div class="bg-asr-surface border border-asr-border rounded-3xl p-6 flex flex-col justify-between hover:border-asr-sky/40 transition">
+            <div class="inline-block self-end bg-asr-elevated border border-asr-border text-asr-muted text-[9px] font-bold px-2 py-0.5 rounded-full mb-1">
+                ONE-TIME
+            </div>
             <div>
-                <div class="text-asr-faint text-xs font-bold tracking-widest uppercase mb-2">Lifetime or Student</div>
+                <div class="text-asr-text text-xs font-bold tracking-widest uppercase mb-1">Lifetime Pro</div>
                 <div class="text-4xl font-black text-asr-text">$49.99</div>
-                <div class="text-asr-faint text-xs mt-1">One-time payment · Never pay again</div>
-                <p class="text-xs text-asr-muted mt-4 leading-relaxed">
-                    Own ASR Pro forever with all future updates included, or choose the discounted Student tier.
+                <div class="text-asr-faint text-xs mt-1">One-time payment · Never renew</div>
+                <p class="text-xs text-asr-muted mt-3 leading-relaxed">
+                    Own ASR Pro forever with all future updates and releases.
                 </p>
 
-                <div class="border-t border-asr-border mt-6 pt-6 space-y-4 text-xs">
-                    <div class="bg-asr-bg border border-asr-border rounded-xl p-3">
-                        <div class="font-bold text-asr-text">🎓 Student Pro: $9.99/yr</div>
-                        <div class="text-[11px] text-asr-faint mt-0.5">Special pricing for verified high school and university students.</div>
-                    </div>
-                    <div class="bg-asr-bg border border-asr-border rounded-xl p-3">
-                        <div class="font-bold text-asr-text">⚡ Pro Monthly: $2.99/mo</div>
-                        <div class="text-[11px] text-asr-faint mt-0.5">Month-to-month flexibility. Cancel anytime in one tap.</div>
-                    </div>
-                    <div class="text-asr-faint text-[11px]">
-                        ✓ All Pro features included for all tiers.
-                    </div>
+                <div class="border-t border-asr-border mt-5 pt-5 space-y-2.5 text-xs">
+                    <div class="flex items-center gap-2 text-asr-muted"><span class="text-asr-sky font-bold">✓</span> Full lifetime license</div>
+                    <div class="flex items-center gap-2 text-asr-muted"><span class="text-asr-sky font-bold">✓</span> Zero recurring subscription fees</div>
+                    <div class="flex items-center gap-2 text-asr-muted"><span class="text-asr-sky font-bold">✓</span> Priority updates &amp; roadmap</div>
+                    <div class="flex items-center gap-2 text-asr-muted"><span class="text-asr-sky font-bold">✓</span> All upcoming Pro capabilities</div>
+                    <div class="flex items-center gap-2 text-asr-muted"><span class="text-asr-sky font-bold">✓</span> Support independent development</div>
                 </div>
             </div>
 
-            <a href="index.html#simulator" class="mt-8 w-full block text-center py-3 bg-asr-elevated hover:bg-asr-border text-asr-text font-bold text-xs rounded-xl transition">
-                Explore All Plans
+            <a href="index.html#simulator" class="mt-6 w-full block text-center py-2.5 bg-asr-elevated hover:bg-asr-border text-asr-text font-bold text-xs rounded-xl transition">
+                Buy Lifetime Pro
             </a>
         </div>
 
+    </div>
+
+    <!-- 5. Student Plan Highlight Card -->
+    <div class="max-w-6xl mx-auto mt-6 bg-asr-surface border border-asr-border rounded-3xl p-6 sm:p-8 flex flex-col sm:flex-row items-center justify-between gap-6">
+        <div class="flex items-center gap-4">
+            <div class="w-14 h-14 rounded-2xl bg-asr-sky/10 border border-asr-sky/30 flex items-center justify-center text-asr-sky shrink-0">
+                <i data-lucide="graduation-cap" class="w-7 h-7"></i>
+            </div>
+            <div>
+                <div class="flex items-center gap-2">
+                    <h3 class="text-lg font-bold text-asr-text">Student Pro Plan — $9.99 / year</h3>
+                    <span class="bg-asr-emerald/15 text-asr-emerald text-[10px] font-bold px-2 py-0.5 rounded">50% DISCOUNT</span>
+                </div>
+                <p class="text-xs text-asr-muted mt-1 leading-relaxed max-w-xl">
+                    Full Pro access at half the price for high school, college, and university students. Build strong study habits without paying full commercial subscription rates.
+                </p>
+            </div>
+        </div>
+        <a href="index.html#simulator" class="shrink-0 bg-asr-elevated hover:bg-asr-border border border-asr-border text-asr-text font-bold text-xs px-6 py-3 rounded-xl transition">
+            Claim Student Discount
+        </a>
+    </div>
+
+    <!-- Feature Comparison Table -->
+    <div class="max-w-6xl mx-auto mt-16 bg-asr-surface border border-asr-border rounded-3xl p-6 sm:p-8">
+        <h3 class="text-xl font-bold text-asr-text text-center mb-6">Detailed Tier Comparison</h3>
+        <div class="overflow-x-auto">
+            <table class="w-full text-xs text-left">
+                <thead>
+                    <tr class="border-b border-asr-border text-asr-faint">
+                        <th class="py-3 font-bold uppercase tracking-wider">Feature</th>
+                        <th class="py-3 px-4 font-bold uppercase tracking-wider text-center">Free ($0)</th>
+                        <th class="py-3 px-4 font-bold uppercase tracking-wider text-center text-asr-sky">Pro ($19.99/yr)</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-asr-border/60 text-asr-muted">
+                    <tr>
+                        <td class="py-3.5 font-semibold text-asr-text">Foreground Application Blocking</td>
+                        <td class="py-3.5 px-4 text-center text-asr-emerald font-bold">✓ Included</td>
+                        <td class="py-3.5 px-4 text-center text-asr-sky font-bold">✓ Included</td>
+                    </tr>
+                    <tr>
+                        <td class="py-3.5 font-semibold text-asr-text">Focus Timer &amp; Presets</td>
+                        <td class="py-3.5 px-4 text-center text-asr-emerald font-bold">✓ Included</td>
+                        <td class="py-3.5 px-4 text-center text-asr-sky font-bold">✓ Included</td>
+                    </tr>
+                    <tr>
+                        <td class="py-3.5 font-semibold text-asr-text">Strict Mode Max Duration</td>
+                        <td class="py-3.5 px-4 text-center font-bold text-asr-text">Up to 3 hours</td>
+                        <td class="py-3.5 px-4 text-center text-asr-sky font-bold">Unlimited (6h, 12h, 24h)</td>
+                    </tr>
+                    <tr>
+                        <td class="py-3.5 font-semibold text-asr-text">Mindful Pause &amp; Reason Prompt</td>
+                        <td class="py-3.5 px-4 text-center text-asr-emerald font-bold">✓ Fixed 5s</td>
+                        <td class="py-3.5 px-4 text-center text-asr-sky font-bold">✓ Adaptive (5s → 30s)</td>
+                    </tr>
+                    <tr>
+                        <td class="py-3.5 font-semibold text-asr-text">Website &amp; Domain Blocking</td>
+                        <td class="py-3.5 px-4 text-center text-asr-faint">—</td>
+                        <td class="py-3.5 px-4 text-center text-asr-sky font-bold">✓ Full Browser Blocker</td>
+                    </tr>
+                    <tr>
+                        <td class="py-3.5 font-semibold text-asr-text">Notification Shield</td>
+                        <td class="py-3.5 px-4 text-center text-asr-faint">—</td>
+                        <td class="py-3.5 px-4 text-center text-asr-sky font-bold">✓ Auto-suppress distracting alerts</td>
+                    </tr>
+                    <tr>
+                        <td class="py-3.5 font-semibold text-asr-text">Focus Profiles</td>
+                        <td class="py-3.5 px-4 text-center font-bold text-asr-text">Up to 4 profiles</td>
+                        <td class="py-3.5 px-4 text-center text-asr-sky font-bold">Unlimited profiles</td>
+                    </tr>
+                    <tr>
+                        <td class="py-3.5 font-semibold text-asr-text">Discipline Score &amp; XP Progression</td>
+                        <td class="py-3.5 px-4 text-center text-asr-emerald font-bold">✓ Included</td>
+                        <td class="py-3.5 px-4 text-center text-asr-sky font-bold">✓ Included + Deep Analytics</td>
+                    </tr>
+                    <tr>
+                        <td class="py-3.5 font-semibold text-asr-text">100% On-Device Privacy (SQLite Room)</td>
+                        <td class="py-3.5 px-4 text-center text-asr-emerald font-bold">✓ 100% Local</td>
+                        <td class="py-3.5 px-4 text-center text-asr-sky font-bold">✓ 100% Local</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 
     <!-- FAQ Section -->
