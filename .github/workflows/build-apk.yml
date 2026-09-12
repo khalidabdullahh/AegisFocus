@@ -5,7 +5,7 @@ on:
     branches: [ main ]
   pull_request:
     branches: [ main ]
-  workflow_dispatch: # Allows manual trigger from GitHub web UI
+  workflow_dispatch:
 
 jobs:
   build:
@@ -25,15 +25,11 @@ jobs:
       - name: Grant Execute Permission for Gradlew
         run: chmod +x gradlew
 
-      - name: Install Android SDK Packages & Licenses
-        run: |
-          yes | sdkmanager --licenses || true
-          sdkmanager "platforms;android-35" "platforms;android-34" "build-tools;35.0.0" "build-tools;34.0.0" || true
+      - name: Accept Android SDK Licenses
+        run: yes | sdkmanager --licenses || true
 
       - name: Build Debug APK
-        run: |
-          set -e -o pipefail
-          ./gradlew assembleDebug --no-daemon --stacktrace 2>&1 | tee build_output.log
+        run: ./gradlew assembleDebug --no-daemon --stacktrace
 
       - name: Verify APK Output
         run: |
@@ -44,7 +40,6 @@ jobs:
           fi
           echo "✅ APK successfully generated at: $APK_FILE"
           ls -lh "$APK_FILE"
-          echo "APK_PATH=$APK_FILE" >> $GITHUB_ENV
 
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
