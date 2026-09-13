@@ -3,6 +3,7 @@ package com.aegisfocus.app.data.repository
 import android.app.usage.UsageStats
 import android.app.usage.UsageStatsManager
 import android.content.Context
+import android.content.Intent
 import com.aegisfocus.app.core.common.TimeUtils
 import com.aegisfocus.app.data.local.dao.FocusSessionDao
 import com.aegisfocus.app.data.local.dao.UsageSnapshotDao
@@ -41,7 +42,7 @@ class UsageStatsRepositoryImpl(
         if (usageStatsManager != null) {
             val stats: List<UsageStats>? = try {
                 usageStatsManager.queryUsageStats(
-                    UsageStatsManager.INTERVAL_BEST,
+                    UsageStatsManager.INTERVAL_DAILY,
                     startOfDay,
                     endOfDay
                 )
@@ -51,18 +52,23 @@ class UsageStatsRepositoryImpl(
 
             if (!stats.isNullOrEmpty()) {
                 val pm = context.packageManager
-                val ignoredPackages = setOf(
-                    context.packageName,
-                    "com.android.systemui",
-                    "com.google.android.inputmethod.latin",
-                    "com.google.android.apps.nexuslauncher",
-                    "com.oneplus.launcher",
-                    "com.android.launcher3"
-                )
+                val launchablePackages: Set<String> = try {
+                    val mainIntent = Intent(Intent.ACTION_MAIN, null).apply {
+                        addCategory(Intent.CATEGORY_LAUNCHER)
+                    }
+                    pm.queryIntentActivities(mainIntent, 0).map { it.activityInfo.packageName }.toSet()
+                } catch (e: Exception) {
+                    emptySet()
+                }
 
-                // Group by package name and take max foreground time today
+                // Filter to ONLY user launchable apps active today
                 val appMap = stats
-                    .filter { it.totalTimeInForeground > 1000L && it.packageName !in ignoredPackages }
+                    .filter { usage ->
+                        usage.totalTimeInForeground > 1000L &&
+                        usage.lastTimeUsed >= startOfDay &&
+                        usage.packageName != context.packageName &&
+                        (usage.packageName in launchablePackages || pm.getLaunchIntentForPackage(usage.packageName) != null)
+                    }
                     .groupBy { it.packageName }
                     .mapValues { (_, usages) -> usages.maxOf { s -> s.totalTimeInForeground } }
 
