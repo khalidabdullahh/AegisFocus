@@ -6,10 +6,12 @@ import androidx.lifecycle.viewModelScope
 import com.aegisfocus.app.data.billing.PlayBillingManager
 import com.aegisfocus.app.domain.subscription.EntitlementManager
 import com.aegisfocus.app.domain.subscription.SubscriptionPlan
+import com.aegisfocus.app.service.telemetry.DiscordNotifier
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import java.util.Collections
 
 data class PaywallUiState(
     val currentPlan: SubscriptionPlan = SubscriptionPlan.FREE,
@@ -126,7 +128,54 @@ class PaywallViewModel(
         }
     }
 
+    fun submitBkashPayment(rawTrxId: String, senderPhone: String, userEmail: String? = null) {
+        val cleanTrxId = rawTrxId.trim().uppercase()
+        val cleanPhone = senderPhone.trim()
+
+        if (cleanTrxId.length < 6) {
+            _uiState.value = _uiState.value.copy(errorMessage = "Please enter a valid bKash Transaction ID (e.g. 9A2B3C4D)")
+            return
+        }
+
+        if (cleanPhone.length < 10) {
+            _uiState.value = _uiState.value.copy(errorMessage = "Please enter a valid bKash sender mobile number.")
+            return
+        }
+
+        if (usedTrxIds.contains(cleanTrxId)) {
+            _uiState.value = _uiState.value.copy(errorMessage = "⚠️ This Transaction ID ($cleanTrxId) has already been used to unlock Pro. Duplicate TrxIDs are prohibited.")
+            return
+        }
+
+        viewModelScope.launch {
+            _uiState.value = _uiState.value.copy(isLoading = true, errorMessage = null)
+            usedTrxIds.add(cleanTrxId)
+
+            val option = _uiState.value.selectedOption
+            val plan = option.planType
+            val expiryMs = when (plan) {
+                SubscriptionPlan.PRO_MONTHLY -> System.currentTimeMillis() + 30L * 24 * 60 * 60 * 1000
+                SubscriptionPlan.PRO_YEARLY, SubscriptionPlan.STUDENT_YEARLY -> System.currentTimeMillis() + 365L * 24 * 60 * 60 * 1000
+                else -> 0L // Lifetime
+            }
+
+            entitlementManager.activatePlan(plan, expiryMs, token = "bkash_trx:$cleanTrxId")
+
+            DiscordNotifier.notifyProPurchase(
+                planName = plan.displayName,
+                method = "bKash In-App TrxID ($cleanPhone -> 01643526721)",
+                licenseKey = "TrxID: $cleanTrxId | Phone: $cleanPhone | Email: ${userEmail ?: "N/A"}"
+            )
+
+            _uiState.value = _uiState.value.copy(isLoading = false, purchaseSucceeded = true)
+        }
+    }
+
     fun clearError() {
         _uiState.value = _uiState.value.copy(errorMessage = null)
+    }
+
+    companion object {
+        private val usedTrxIds = Collections.synchronizedSet(mutableSetOf<String>())
     }
 }

@@ -10,6 +10,7 @@ import com.aegisfocus.app.domain.usecase.GetUsageAnalyticsUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 enum class AnalyticsHorizon(val label: String) {
@@ -102,20 +103,21 @@ class StatsViewModel(
                 AppCategoryStat("Utilities & Tools", 750_000L, 0.09f, 0xFF10B981)
             )
 
-            val savedMins = (today.totalFocusTimeMs / 60_000L * 0.45).toInt().coerceAtLeast(24)
+            val realXp = try { xpManager.currentXp.first() } catch (e: Exception) { 0 }
+            val savedMins = (today.totalFocusTimeMs / 60_000L * 0.45).toInt()
 
             _uiState.value = StatsUiState(
                 selectedHorizon = _uiState.value.selectedHorizon,
                 todaySummary = today,
                 weeklyHistory = weekly,
                 disciplineScore = score,
-                disciplineLevel = DisciplineLevel.fromXp(_uiState.value.currentXp),
-                currentXp = 1250,
-                currentStreak = today.streakDays.coerceAtLeast(3),
+                disciplineLevel = DisciplineLevel.fromXp(realXp),
+                currentXp = realXp,
+                currentStreak = today.streakDays,
                 hourlyFocusDistribution = hourly,
                 categoryStats = categories,
                 savedDistractionMinutes = savedMins,
-                totalFocusSessions = today.sessionsCompleted.coerceAtLeast(4),
+                totalFocusSessions = today.sessionsCompleted,
                 isLoading = false
             )
         }

@@ -184,44 +184,39 @@ fun ActiveFocusScreen(
 
         // Exit / Cancellation Action Area
         if (isStrict) {
-            Column(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally
+            Surface(
+                shape = RoundedCornerShape(14.dp),
+                color = DeepSurface,
+                border = BorderStroke(1.dp, AlertStrict.copy(alpha = 0.3f)),
+                modifier = Modifier.fillMaxWidth()
             ) {
-                Surface(
-                    shape = RoundedCornerShape(12.dp),
-                    color = DeepSurface,
-                    border = BorderStroke(1.dp, SubtleBorder),
-                    modifier = Modifier.fillMaxWidth()
+                Row(
+                    modifier = Modifier.padding(16.dp),
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Row(
-                        modifier = Modifier.padding(14.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Lock,
-                            contentDescription = null,
-                            tint = TextMuted,
-                            modifier = Modifier.size(18.dp)
-                        )
-                        Spacer(modifier = Modifier.width(10.dp))
+                    Icon(
+                        imageVector = Icons.Default.Lock,
+                        contentDescription = null,
+                        tint = AlertStrict,
+                        modifier = Modifier.size(20.dp)
+                    )
+                    Spacer(modifier = Modifier.width(12.dp))
+                    Column {
                         Text(
-                            text = "Rules are immutable until session completion to preserve your digital discipline.",
+                            text = "Unbreakable Discipline Active",
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = TextPrimary
+                        )
+                        Spacer(modifier = Modifier.height(2.dp))
+                        Text(
+                            text = "Emergency exit is completely disabled in Strict Mode. Session parameters and shield rules remain locked until 00:00.",
                             fontSize = 12.sp,
-                            color = TextMuted,
+                            color = TextSecondary,
                             lineHeight = 16.sp
                         )
                     }
                 }
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                AegisOutlinedButton(
-                    text = "Emergency Exit",
-                    onClick = onEmergencyExit,
-                    borderColor = AlertStrict.copy(alpha = 0.5f),
-                    textColor = AlertStrict
-                )
             }
         } else {
             AegisOutlinedButton(

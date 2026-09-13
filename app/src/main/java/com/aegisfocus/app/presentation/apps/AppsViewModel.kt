@@ -4,13 +4,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.aegisfocus.app.domain.model.AppCategory
 import com.aegisfocus.app.domain.model.AppInfo
+import com.aegisfocus.app.domain.model.FocusSession
 import com.aegisfocus.app.domain.model.SessionMode
 import com.aegisfocus.app.domain.repository.AppDiscoveryRepository
 import com.aegisfocus.app.engine.FocusSessionManager
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -42,7 +42,16 @@ class AppsViewModel(
         _blockedPackages,
         focusSessionManager.activeSession,
         _isLoading
-    ) { apps, query, category, blocked, activeSession, loading ->
+    ) { flows: Array<Any?> ->
+        @Suppress("UNCHECKED_CAST")
+        val apps = flows[0] as List<AppInfo>
+        val query = flows[1] as String
+        val category = flows[2] as AppCategory?
+        @Suppress("UNCHECKED_CAST")
+        val blocked = flows[3] as Set<String>
+        val activeSession = flows[4] as FocusSession?
+        val loading = flows[5] as Boolean
+
         val isStrict = activeSession != null && activeSession.mode == SessionMode.STRICT && !activeSession.isExpired
 
         val filtered = apps.filter { app ->

@@ -9,4 +9,6 @@
 .externalNativeBuild
 .cxx
 *.apk
+!ASAR-v1.0.0.apk
+!ASAR-Latest.apk
 *.aab

@@ -1,5 +1,6 @@
 package com.aegisfocus.app.presentation.onboarding
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.provider.Settings
@@ -110,12 +111,19 @@ fun OnboardingScreen(
                 else -> OnboardingStep3(
                     permissions = uiState.permissions,
                     onConfigureUsage = {
-                        val intent = Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS).apply { flags = Intent.FLAG_ACTIVITY_NEW_TASK }
+                        val intent = Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS).apply {
+                            if (context !is Activity) flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                        }
                         runCatching { context.startActivity(intent) }
                     },
                     onConfigureAccessibility = {
-                        val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS).apply { flags = Intent.FLAG_ACTIVITY_NEW_TASK }
+                        val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS).apply {
+                            if (context !is Activity) flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                        }
                         runCatching { context.startActivity(intent) }
+                    },
+                    onConfigureDeviceAdmin = {
+                        viewModel.openDeviceAdminSettings(context)
                     },
                     onRefresh = { viewModel.refreshPermissions() }
                 )
@@ -245,6 +253,7 @@ private fun OnboardingStep3(
     permissions: com.aegisfocus.app.domain.model.PermissionState,
     onConfigureUsage: () -> Unit,
     onConfigureAccessibility: () -> Unit,
+    onConfigureDeviceAdmin: () -> Unit,
     onRefresh: () -> Unit
 ) {
     Column(
@@ -262,7 +271,7 @@ private fun OnboardingStep3(
         Spacer(modifier = Modifier.height(6.dp))
 
         Text(
-            text = "Aegis runs 100% locally. Grant these legitimate permissions to enable real-time app shielding.",
+            text = "Aegis runs 100% locally. Grant these legitimate permissions to enable real-time app shielding and anti-uninstall protection.",
             fontSize = 13.sp,
             color = TextSecondary,
             textAlign = TextAlign.Center
@@ -341,6 +350,45 @@ private fun OnboardingStep3(
                         colors = ButtonDefaults.buttonColors(containerColor = CyanAccent, contentColor = ObsidianBg)
                     ) {
                         Text("Enable", fontSize = 11.sp, fontWeight = FontWeight.Bold)
+                    }
+                }
+            }
+        }
+
+        Spacer(modifier = Modifier.height(10.dp))
+
+        // Anti-Uninstall Device Admin Card
+        Surface(
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(14.dp),
+            color = DeepSurface,
+            border = BorderStroke(1.dp, SubtleBorder)
+        ) {
+            Row(
+                modifier = Modifier.padding(14.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.weight(1f)) {
+                    Icon(
+                        imageVector = if (permissions.hasDeviceAdminPermission) Icons.Default.CheckCircle else Icons.Default.Shield,
+                        contentDescription = null,
+                        tint = if (permissions.hasDeviceAdminPermission) EmeraldFocus else CyanAccent,
+                        modifier = Modifier.size(24.dp)
+                    )
+                    Spacer(modifier = Modifier.width(10.dp))
+                    Column {
+                        Text("Anti-Uninstall Admin", fontSize = 14.sp, fontWeight = FontWeight.Bold, color = TextPrimary)
+                        Text("Prevents uninstall during Strict Mode", fontSize = 11.sp, color = TextSecondary)
+                    }
+                }
+                if (!permissions.hasDeviceAdminPermission) {
+                    Button(
+                        onClick = onConfigureDeviceAdmin,
+                        shape = RoundedCornerShape(8.dp),
+                        colors = ButtonDefaults.buttonColors(containerColor = CyanAccent, contentColor = ObsidianBg)
+                    ) {
+                        Text("Activate", fontSize = 11.sp, fontWeight = FontWeight.Bold)
                     }
                 }
             }

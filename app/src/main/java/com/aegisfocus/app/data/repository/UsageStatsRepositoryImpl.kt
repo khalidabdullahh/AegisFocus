@@ -7,7 +7,6 @@ import com.aegisfocus.app.core.common.TimeUtils
 import com.aegisfocus.app.data.local.dao.FocusSessionDao
 import com.aegisfocus.app.data.local.dao.UsageSnapshotDao
 import com.aegisfocus.app.data.local.entity.UsageSnapshotEntity
-import com.aegisfocus.app.domain.model.AppCategory
 import com.aegisfocus.app.domain.model.AppUsageStat
 import com.aegisfocus.app.domain.model.HourlyDistribution
 import com.aegisfocus.app.domain.model.UsageStatsSummary
@@ -42,7 +41,7 @@ class UsageStatsRepositoryImpl(
         if (usageStatsManager != null) {
             val stats: List<UsageStats>? = try {
                 usageStatsManager.queryUsageStats(
-                    UsageStatsManager.INTERVAL_DAILY,
+                    UsageStatsManager.INTERVAL_BEST,
                     startOfDay,
                     endOfDay
                 )
@@ -52,27 +51,41 @@ class UsageStatsRepositoryImpl(
 
             if (!stats.isNullOrEmpty()) {
                 val pm = context.packageManager
-                val filteredStats = stats
-                    .filter { it.totalTimeInForeground > 1000L && it.packageName != context.packageName }
-                    .sortedByDescending { it.totalTimeInForeground }
+                val ignoredPackages = setOf(
+                    context.packageName,
+                    "com.android.systemui",
+                    "com.google.android.inputmethod.latin",
+                    "com.google.android.apps.nexuslauncher",
+                    "com.oneplus.launcher",
+                    "com.android.launcher3"
+                )
 
-                totalScreenTimeMs = filteredStats.sumOf { it.totalTimeInForeground }
+                // Group by package name and take max foreground time today
+                val appMap = stats
+                    .filter { it.totalTimeInForeground > 1000L && it.packageName !in ignoredPackages }
+                    .groupBy { it.packageName }
+                    .mapValues { (_, usages) -> usages.maxOf { s -> s.totalTimeInForeground } }
 
-                filteredStats.take(5).forEach { usage ->
-                    val appName = try {
-                        val info = pm.getApplicationInfo(usage.packageName, 0)
-                        pm.getApplicationLabel(info).toString()
-                    } catch (e: Exception) {
-                        usage.packageName.substringAfterLast(".")
-                    }
-                    appUsageList.add(
-                        AppUsageStat(
-                            packageName = usage.packageName,
-                            appName = appName,
-                            usageTimeMs = usage.totalTimeInForeground
+                totalScreenTimeMs = appMap.values.sum()
+
+                appMap.entries
+                    .sortedByDescending { it.value }
+                    .take(5)
+                    .forEach { (pkg, usageMs) ->
+                        val appName = try {
+                            val info = pm.getApplicationInfo(pkg, 0)
+                            pm.getApplicationLabel(info).toString()
+                        } catch (e: Exception) {
+                            pkg.substringAfterLast(".")
+                        }
+                        appUsageList.add(
+                            AppUsageStat(
+                                packageName = pkg,
+                                appName = appName,
+                                usageTimeMs = usageMs
+                            )
                         )
-                    )
-                }
+                    }
             }
         }
 

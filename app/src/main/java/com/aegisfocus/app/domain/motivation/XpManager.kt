@@ -95,7 +95,7 @@ class XpManager(private val userXpDao: UserXpDao) {
             userXpDao.insertAchievement(
                 AchievementEntity(
                     achievementId = achievement.achievementId,
-                    name = achievement.name,
+                    name = achievement.title,
                     description = achievement.description,
                     xpReward = achievement.xpReward
                 )

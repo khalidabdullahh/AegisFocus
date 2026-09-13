@@ -3,6 +3,8 @@ package com.aegisfocus.app.data.repository
 import android.app.AlarmManager
 import android.app.AppOpsManager
 import android.app.NotificationManager
+import android.app.admin.DevicePolicyManager
+import android.content.ComponentName
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Build
@@ -12,6 +14,7 @@ import android.view.accessibility.AccessibilityManager
 import androidx.core.app.NotificationManagerCompat
 import com.aegisfocus.app.domain.model.PermissionState
 import com.aegisfocus.app.domain.repository.SettingsRepository
+import com.aegisfocus.app.service.receiver.AegisDeviceAdminReceiver
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -37,8 +40,15 @@ class SettingsRepositoryImpl(
             hasAccessibilityService = isAccessibilityServiceEnabled(),
             hasNotificationPermission = hasNotificationPermission(),
             hasOverlayPermission = hasOverlayPermission(),
-            hasExactAlarmPermission = hasExactAlarmPermission()
+            hasExactAlarmPermission = hasExactAlarmPermission(),
+            hasDeviceAdminPermission = isDeviceAdminActive()
         )
+    }
+
+    private fun isDeviceAdminActive(): Boolean {
+        val dpm = context.getSystemService(Context.DEVICE_POLICY_SERVICE) as? DevicePolicyManager ?: return false
+        val adminComponent = ComponentName(context, AegisDeviceAdminReceiver::class.java)
+        return dpm.isAdminActive(adminComponent)
     }
 
     private fun hasUsageStatsPermission(): Boolean {

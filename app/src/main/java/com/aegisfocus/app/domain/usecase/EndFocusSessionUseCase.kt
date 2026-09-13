@@ -17,7 +17,7 @@ class EndFocusSessionUseCase(
         }
 
         if (session.mode == SessionMode.STRICT && !session.isExpired && isNormalCancel) {
-            return Result.failure(IllegalStateException("Cannot cancel a Strict Mode session directly. Use Emergency Exit if necessary."))
+            return Result.failure(IllegalStateException("Strict Mode sessions are unbreakable and cannot be ended early."))
         }
 
         val newStatus = if (session.isExpired) SessionStatus.COMPLETED else SessionStatus.CANCELLED

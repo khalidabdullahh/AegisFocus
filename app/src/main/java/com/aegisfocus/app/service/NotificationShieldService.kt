@@ -23,7 +23,7 @@ class NotificationShieldService : NotificationListenerService() {
 
     override fun onNotificationPosted(sbn: StatusBarNotification?) {
         sbn ?: return
-        val container = ServiceLocator.appContainer ?: return
+        val container = ServiceLocator.getContainer(applicationContext)
 
         val focusSessionManager = container.focusSessionManager
         val activeSession = focusSessionManager.activeSession.value ?: return

@@ -1,9 +1,13 @@
 package com.aegisfocus.app.presentation.settings
 
+import android.graphics.BitmapFactory
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -14,6 +18,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -24,7 +29,8 @@ import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Layers
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Security
-import androidx.compose.material.icons.filled.Shield
+import androidx.compose.material.icons.filled.Star
+import com.aegisfocus.app.core.theme.ObsidianBg
 import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -45,8 +51,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.AnnotatedString
+import java.io.File
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.aegisfocus.app.core.components.AegisOutlinedButton
@@ -63,7 +76,9 @@ import com.aegisfocus.app.core.theme.SubtleBorder
 import com.aegisfocus.app.core.theme.TextMuted
 import com.aegisfocus.app.core.theme.TextPrimary
 import com.aegisfocus.app.core.theme.TextSecondary
+import com.aegisfocus.app.data.remote.SupabaseAuthService
 import com.aegisfocus.app.domain.model.Schedule
+import com.aegisfocus.app.domain.subscription.LicenseKeyValidator
 
 @Composable
 fun SettingsScreen(
@@ -105,35 +120,207 @@ fun SettingsScreen(
         Spacer(modifier = Modifier.height(18.dp))
 
         // Account & Cloud Sync Card
+        val user = uiState.currentUser
+        if (user == null) {
+            Surface(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable { onNavigateToAuth() },
+                shape = RoundedCornerShape(16.dp),
+                color = DeepSurface,
+                border = BorderStroke(1.dp, CyanAccent.copy(alpha = 0.3f))
+            ) {
+                Row(
+                    modifier = Modifier.padding(16.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                        Box(
+                            modifier = Modifier
+                                .size(44.dp)
+                                .clip(RoundedCornerShape(12.dp))
+                                .background(CyanAccent.copy(alpha = 0.15f)),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(Icons.Default.Security, contentDescription = null, tint = CyanAccent, modifier = Modifier.size(24.dp))
+                        }
+                        Column {
+                            Text("Account & Cloud Sync", color = TextPrimary, fontWeight = FontWeight.Bold, fontSize = 15.sp)
+                            Text("Sign in to backup & sync your focus stats", color = TextSecondary, fontSize = 12.sp)
+                        }
+                    }
+                    Surface(
+                        shape = RoundedCornerShape(20.dp),
+                        color = CyanAccent.copy(alpha = 0.15f),
+                        border = BorderStroke(1.dp, CyanAccent)
+                    ) {
+                        Text(
+                            text = "Sign In",
+                            color = CyanAccent,
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
+                        )
+                    }
+                }
+            }
+        } else {
+            Surface(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable { onNavigateToAuth() },
+                shape = RoundedCornerShape(16.dp),
+                color = DeepSurface,
+                border = BorderStroke(1.dp, CyanAccent.copy(alpha = 0.4f))
+            ) {
+                Row(
+                    modifier = Modifier.padding(16.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(12.dp),
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        val avatarBitmap = remember(user.avatarUri) {
+                            user.avatarUri?.let { path ->
+                                try {
+                                    val file = File(path)
+                                    if (file.exists()) {
+                                        BitmapFactory.decodeFile(file.absolutePath)?.asImageBitmap()
+                                    } else null
+                                } catch (e: Exception) { null }
+                            }
+                        }
+
+                        val initial = user.displayName?.firstOrNull()?.uppercaseChar()
+                            ?: user.email.firstOrNull()?.uppercaseChar()
+                            ?: 'A'
+                        Box(
+                            modifier = Modifier
+                                .size(48.dp)
+                                .clip(CircleShape)
+                                .background(CyanAccent.copy(alpha = 0.2f))
+                                .border(BorderStroke(1.5.dp, CyanAccent), CircleShape),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            if (avatarBitmap != null) {
+                                Image(
+                                    bitmap = avatarBitmap,
+                                    contentDescription = "Avatar",
+                                    contentScale = ContentScale.Crop,
+                                    modifier = Modifier.fillMaxSize()
+                                )
+                            } else {
+                                Text(
+                                    text = initial.toString(),
+                                    color = CyanAccent,
+                                    fontSize = 20.sp,
+                                    fontWeight = FontWeight.ExtraBold
+                                )
+                            }
+                        }
+
+                        Column {
+                            Text(
+                                text = user.displayName?.takeIf { it.isNotBlank() } ?: user.email.substringBefore("@"),
+                                color = TextPrimary,
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 16.sp
+                            )
+                            Text(
+                                text = user.email,
+                                color = TextSecondary,
+                                fontSize = 12.sp
+                            )
+                            Spacer(modifier = Modifier.height(2.dp))
+                            val isSuper = SupabaseAuthService.isSuperAdmin(user.email)
+                            Text(
+                                text = if (isSuper) "👑 Super Admin • Lifetime Pro" else "✓ Cloud Sync Active",
+                                color = if (isSuper) CyanAccent else EmeraldFocus,
+                                fontSize = 11.sp,
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
+                    }
+
+                    Surface(
+                        shape = RoundedCornerShape(20.dp),
+                        color = ElevatedSurface,
+                        border = BorderStroke(1.dp, SubtleBorder)
+                    ) {
+                        Text(
+                            text = "Edit Profile",
+                            color = TextPrimary,
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
+                        )
+                    }
+                }
+            }
+        }
+
+        if (user != null && SupabaseAuthService.isSuperAdmin(user.email)) {
+            Spacer(modifier = Modifier.height(12.dp))
+            SuperAdminKeyGeneratorCard()
+        }
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        // Aegis Pro Membership Card
         Surface(
             modifier = Modifier
                 .fillMaxWidth()
-                .clickable { onNavigateToAuth() },
+                .clickable { onNavigateToPaywall() },
             shape = RoundedCornerShape(16.dp),
             color = DeepSurface,
-            border = BorderStroke(1.dp, CyanAccent.copy(alpha = 0.3f))
+            border = BorderStroke(1.dp, CyanAccent.copy(alpha = 0.5f))
         ) {
             Row(
                 modifier = Modifier.padding(16.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(12.dp),
+                    modifier = Modifier.weight(1f)
+                ) {
                     Box(
                         modifier = Modifier
-                            .size(40.dp)
-                            .clip(RoundedCornerShape(10.dp))
-                            .background(CyanAccent.copy(alpha = 0.15f)),
+                            .size(44.dp)
+                            .clip(RoundedCornerShape(12.dp))
+                            .background(CyanAccent.copy(alpha = 0.2f)),
                         contentAlignment = Alignment.Center
                     ) {
-                        Icon(Icons.Default.Security, contentDescription = null, tint = CyanAccent, modifier = Modifier.size(22.dp))
+                        Icon(
+                            imageVector = Icons.Default.Star,
+                            contentDescription = null,
+                            tint = CyanAccent,
+                            modifier = Modifier.size(24.dp)
+                        )
                     }
                     Column {
-                        Text("Account & Cloud Backup", color = TextPrimary, fontWeight = FontWeight.Bold, fontSize = 15.sp)
-                        Text("Sign in with Supabase to sync focus stats", color = TextSecondary, fontSize = 12.sp)
+                        Text("Aegis Pro Membership", color = TextPrimary, fontWeight = FontWeight.Bold, fontSize = 15.sp)
+                        Text("Unlimited Strict Mode, Website Blocking & Analytics", color = TextSecondary, fontSize = 11.sp)
                     }
                 }
-                Text("Manage", color = CyanAccent, fontWeight = FontWeight.Bold, fontSize = 13.sp)
+                Surface(
+                    shape = RoundedCornerShape(20.dp),
+                    color = CyanAccent,
+                    border = BorderStroke(1.dp, CyanAccent)
+                ) {
+                    Text(
+                        text = "Upgrade",
+                        color = ObsidianBg,
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.Black,
+                        modifier = Modifier.padding(horizontal = 14.dp, vertical = 6.dp)
+                    )
+                }
             }
         }
 
@@ -193,6 +380,17 @@ fun SettingsScreen(
             isGranted = uiState.permissions.hasExactAlarmPermission,
             onGrantClick = { viewModel.openExactAlarmSettings(context) },
             icon = Icons.Default.Alarm,
+            isRequired = false
+        )
+
+        Spacer(modifier = Modifier.height(10.dp))
+
+        PermissionStatusRow(
+            title = "Anti-Uninstall Device Admin",
+            description = "Prevents unauthorized uninstallation or bypass during active Strict Mode focus sessions.",
+            isGranted = uiState.permissions.hasDeviceAdminPermission,
+            onGrantClick = { viewModel.openDeviceAdminSettings(context) },
+            icon = Icons.Default.Security,
             isRequired = false
         )
 
@@ -521,6 +719,107 @@ private fun AddScheduleDialog(
                         },
                         modifier = Modifier.width(140.dp)
                     )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun SuperAdminKeyGeneratorCard() {
+    var generatedKey by remember { mutableStateOf("") }
+    var selectedTier by remember { mutableStateOf("LIFE") }
+    val clipboardManager = LocalClipboardManager.current
+
+    Surface(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(16.dp),
+        color = DeepSurface,
+        border = BorderStroke(1.dp, CyanAccent)
+    ) {
+        Column(modifier = Modifier.padding(16.dp)) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                Text("🔑", fontSize = 18.sp)
+                Text(
+                    text = "Super Admin • License Generator",
+                    color = CyanAccent,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 14.sp
+                )
+            }
+
+            Spacer(modifier = Modifier.height(4.dp))
+
+            Text(
+                text = "Generate cryptographic Pro license keys for bKash / Nagad / Direct customers:",
+                fontSize = 11.sp,
+                color = TextSecondary
+            )
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                listOf("LIFE" to "Lifetime Pro", "YEAR" to "1-Year Pro", "MNTH" to "1-Month").forEach { (tier, label) ->
+                    val isSel = selectedTier == tier
+                    Surface(
+                        modifier = Modifier
+                            .weight(1f)
+                            .clickable { selectedTier = tier },
+                        shape = RoundedCornerShape(8.dp),
+                        color = if (isSel) CyanAccent.copy(alpha = 0.2f) else DeepSurface,
+                        border = BorderStroke(1.dp, if (isSel) CyanAccent else SubtleBorder)
+                    ) {
+                        Text(
+                            text = label,
+                            color = if (isSel) CyanAccent else TextMuted,
+                            fontSize = 11.sp,
+                            fontWeight = FontWeight.Bold,
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.padding(vertical = 8.dp)
+                        )
+                    }
+                }
+            }
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            AegisPrimaryButton(
+                text = "Generate License Key",
+                onClick = {
+                    generatedKey = LicenseKeyValidator.generateKey(selectedTier)
+                },
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            if (generatedKey.isNotBlank()) {
+                Spacer(modifier = Modifier.height(12.dp))
+                Surface(
+                    shape = RoundedCornerShape(10.dp),
+                    color = ElevatedSurface,
+                    border = BorderStroke(1.dp, EmeraldFocus),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable {
+                            clipboardManager.setText(AnnotatedString(generatedKey))
+                        }
+                ) {
+                    Row(
+                        modifier = Modifier.padding(12.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Column {
+                            Text("KEY (TAP TO COPY):", fontSize = 10.sp, color = TextMuted, fontWeight = FontWeight.Bold)
+                            Text(generatedKey, fontSize = 16.sp, color = EmeraldFocus, fontWeight = FontWeight.Black, letterSpacing = 1.sp)
+                        }
+                        Text("Copy 📋", fontSize = 12.sp, color = CyanAccent, fontWeight = FontWeight.Bold)
+                    }
                 }
             }
         }

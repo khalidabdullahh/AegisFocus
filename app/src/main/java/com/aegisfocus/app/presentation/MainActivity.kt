@@ -42,4 +42,10 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
+
+    override fun onResume() {
+        super.onResume()
+        val app = application as AegisApplication
+        app.container.settingsRepository.refreshPermissionState()
+    }
 }

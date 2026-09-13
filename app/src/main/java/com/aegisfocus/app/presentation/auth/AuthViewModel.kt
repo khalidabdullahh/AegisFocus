@@ -94,10 +94,10 @@ class AuthViewModel(
         }
     }
 
-    fun signInWithGoogleIdToken(idToken: String) {
+    fun signInWithGoogleIdToken(idToken: String, userEmail: String? = null, displayName: String? = null) {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isLoading = true, errorMessage = null, successMessage = null)
-            val result = authService.signInWithGoogle(idToken)
+            val result = authService.signInWithGoogle(idToken, userEmail = userEmail, displayName = displayName)
             when (result) {
                 is AuthResult.Success -> {
                     _uiState.value = _uiState.value.copy(
@@ -114,6 +114,47 @@ class AuthViewModel(
                 }
             }
         }
+    }
+
+    fun updateDisplayName(newName: String) {
+        if (newName.isBlank()) return
+        authService.updateDisplayName(newName)
+        _uiState.value = _uiState.value.copy(successMessage = "Profile name updated successfully!")
+    }
+
+    fun updateAvatarUri(uri: String) {
+        authService.updateAvatarUri(uri)
+        _uiState.value = _uiState.value.copy(successMessage = "Profile photo updated successfully!")
+    }
+
+    fun updatePassword(newPass: String) {
+        if (newPass.length < 6) {
+            _uiState.value = _uiState.value.copy(errorMessage = "New password must be at least 6 characters.")
+            return
+        }
+        viewModelScope.launch {
+            _uiState.value = _uiState.value.copy(isLoading = true, errorMessage = null, successMessage = null)
+            val res = authService.updatePassword(newPass)
+            when (res) {
+                is AuthResult.Success -> _uiState.value = _uiState.value.copy(isLoading = false, successMessage = res.message)
+                is AuthResult.Error -> _uiState.value = _uiState.value.copy(isLoading = false, errorMessage = res.message)
+            }
+        }
+    }
+
+    fun sendPasswordReset(email: String) {
+        viewModelScope.launch {
+            _uiState.value = _uiState.value.copy(isLoading = true, errorMessage = null, successMessage = null)
+            val res = authService.sendPasswordReset(email)
+            when (res) {
+                is AuthResult.Success -> _uiState.value = _uiState.value.copy(isLoading = false, successMessage = res.message)
+                is AuthResult.Error -> _uiState.value = _uiState.value.copy(isLoading = false, errorMessage = res.message)
+            }
+        }
+    }
+
+    fun setErrorMessage(msg: String) {
+        _uiState.value = _uiState.value.copy(errorMessage = msg, isLoading = false)
     }
 
     fun signOut() {

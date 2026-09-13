@@ -3,7 +3,7 @@ package com.aegisfocus.app.domain.motivation
 /** Catalogue of all earnable achievements. */
 enum class Achievement(
     val achievementId: String,
-    val name: String,
+    val title: String,
     val description: String,
     val xpReward: Int,
     val emoji: String

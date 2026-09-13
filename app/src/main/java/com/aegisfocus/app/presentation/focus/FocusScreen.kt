@@ -22,17 +22,20 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Apps
 import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material.icons.filled.Remove
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -60,6 +63,7 @@ fun FocusScreen(
     val uiState by viewModel.uiState.collectAsState()
     val activeSession by viewModel.activeSession.collectAsState()
     val remainingMillis by viewModel.remainingMillis.collectAsState()
+    val context = LocalContext.current
 
     if (activeSession != null) {
         ActiveFocusScreen(
@@ -78,6 +82,45 @@ fun FocusScreen(
             onStartSession = { viewModel.startFocusSession() },
             onNavigateToApps = onNavigateToApps,
             modifier = modifier
+        )
+    }
+
+    if (uiState.isDeviceAdminPromptOpen) {
+        AlertDialog(
+            onDismissRequest = { viewModel.dismissDeviceAdminPrompt() },
+            title = {
+                Text(
+                    text = "Activate Anti-Uninstall Protection",
+                    fontWeight = FontWeight.Bold,
+                    color = TextPrimary
+                )
+            },
+            text = {
+                Text(
+                    text = "Strict Mode provides anti-uninstall protection. To prevent accidental deactivation or uninstallation during your focus session, grant Device Administrator permission.",
+                    fontSize = 14.sp,
+                    color = TextSecondary
+                )
+            },
+            confirmButton = {
+                AegisPrimaryButton(
+                    text = "Activate Device Admin",
+                    onClick = {
+                        viewModel.openDeviceAdminSettings(context)
+                        viewModel.dismissDeviceAdminPrompt()
+                    }
+                )
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = {
+                        viewModel.startFocusSession(skipAdminCheck = true)
+                    }
+                ) {
+                    Text("Start Session Anyway", color = TextMuted, fontSize = 13.sp)
+                }
+            },
+            containerColor = DeepSurface
         )
     }
 

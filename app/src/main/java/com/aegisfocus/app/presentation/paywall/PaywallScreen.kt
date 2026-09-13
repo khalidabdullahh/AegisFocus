@@ -22,21 +22,29 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Star
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalClipboardManager
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -159,6 +167,89 @@ fun PaywallScreen(
 
         Spacer(Modifier.height(20.dp))
 
+        var showBkashDialog by remember { mutableStateOf(false) }
+        var bkashPhoneInput by remember { mutableStateOf("") }
+        var bkashTrxInput by remember { mutableStateOf("") }
+        val clipboardManager = LocalClipboardManager.current
+
+        if (showBkashDialog) {
+            AlertDialog(
+                onDismissRequest = { showBkashDialog = false },
+                title = {
+                    Text("💳 Pay via bKash / Nagad", color = TextPrimary, fontWeight = FontWeight.Bold, fontSize = 18.sp)
+                },
+                text = {
+                    Column {
+                        Text(
+                            "1. Send Money / Cash Out BDT ${if (uiState.selectedOption == PaywallOption.LIFETIME) "1000" else "500"} to our bKash/Nagad Personal number:",
+                            fontSize = 12.sp,
+                            color = TextSecondary
+                        )
+                        Spacer(Modifier.height(8.dp))
+                        Surface(
+                            shape = RoundedCornerShape(10.dp),
+                            color = ElevatedSurface,
+                            border = BorderStroke(1.dp, CyanAccent),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable {
+                                    clipboardManager.setText(AnnotatedString("01643526721"))
+                                }
+                        ) {
+                            Row(
+                                modifier = Modifier.padding(12.dp),
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Column {
+                                    Text("BKASH / NAGAD NUMBER (TAP TO COPY):", fontSize = 10.sp, color = TextMuted, fontWeight = FontWeight.Bold)
+                                    Text("01643526721", fontSize = 18.sp, color = CyanAccent, fontWeight = FontWeight.Black)
+                                }
+                                Text("Copy 📋", fontSize = 12.sp, color = EmeraldFocus, fontWeight = FontWeight.Bold)
+                            }
+                        }
+
+                        Spacer(Modifier.height(14.dp))
+                        Text("2. Enter your payment details below to verify:", fontSize = 12.sp, color = TextSecondary)
+                        Spacer(Modifier.height(8.dp))
+
+                        OutlinedTextField(
+                            value = bkashPhoneInput,
+                            onValueChange = { bkashPhoneInput = it },
+                            label = { Text("Your Mobile Number (018XXXXXXXX)", color = TextMuted) },
+                            singleLine = true,
+                            modifier = Modifier.fillMaxWidth()
+                        )
+
+                        Spacer(Modifier.height(8.dp))
+
+                        OutlinedTextField(
+                            value = bkashTrxInput,
+                            onValueChange = { bkashTrxInput = it.uppercase() },
+                            label = { Text("bKash Transaction ID (e.g. 9A2B3C4D)", color = TextMuted) },
+                            singleLine = true,
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                    }
+                },
+                confirmButton = {
+                    AegisPrimaryButton(
+                        text = "Verify TrxID & Unlock Pro",
+                        onClick = {
+                            viewModel.submitBkashPayment(bkashTrxInput, bkashPhoneInput)
+                            showBkashDialog = false
+                        }
+                    )
+                },
+                dismissButton = {
+                    TextButton(onClick = { showBkashDialog = false }) {
+                        Text("Cancel", color = TextMuted)
+                    }
+                },
+                containerColor = DeepSurface
+            )
+        }
+
         // CTA
         Box(Modifier.padding(horizontal = 20.dp).fillMaxWidth()) {
             if (uiState.isLoading) {
@@ -169,11 +260,37 @@ fun PaywallScreen(
                     CircularProgressIndicator(color = CyanAccent)
                 }
             } else {
-                AegisPrimaryButton(
-                    text = "Continue with ${uiState.selectedOption.label} — ${uiState.selectedOption.price}",
-                    onClick = { viewModel.purchaseSelected() },
-                    modifier = Modifier.fillMaxWidth()
-                )
+                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    AegisPrimaryButton(
+                        text = "Continue with ${uiState.selectedOption.label} — ${uiState.selectedOption.price}",
+                        onClick = { viewModel.purchaseSelected() },
+                        modifier = Modifier.fillMaxWidth()
+                    )
+
+                    Surface(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable { showBkashDialog = true },
+                        shape = RoundedCornerShape(12.dp),
+                        color = CyanAccent.copy(alpha = 0.15f),
+                        border = BorderStroke(1.dp, CyanAccent)
+                    ) {
+                        Row(
+                            modifier = Modifier.padding(vertical = 12.dp),
+                            horizontalArrangement = Arrangement.Center,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text("💳", fontSize = 16.sp)
+                            Spacer(Modifier.width(8.dp))
+                            Text(
+                                text = "Pay via bKash / Nagad (In-App TrxID Verification)",
+                                color = CyanAccent,
+                                fontSize = 13.sp,
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
+                    }
+                }
             }
         }
 

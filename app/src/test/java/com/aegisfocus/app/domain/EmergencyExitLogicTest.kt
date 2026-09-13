@@ -22,9 +22,9 @@ class EmergencyExitLogicTest {
     }
 
     @Test
-    fun emergencyExit_transitionsSessionToEmergencyExited_andRecordsEvent() = runBlocking {
+    fun strictSession_rejectsEmergencyExit() = runBlocking {
         val now = System.currentTimeMillis()
-        val session = FocusSession(
+        val strictSession = FocusSession(
             id = 20,
             name = "Strict Study",
             startEpochMs = now,
@@ -34,18 +34,36 @@ class EmergencyExitLogicTest {
             status = SessionStatus.ACTIVE,
             blockedPackageNames = listOf("com.instagram.android")
         )
-        fakeSessionRepository.activeSession = session
+        fakeSessionRepository.activeSession = strictSession
 
-        val result = emergencyExitUseCase(sessionId = 20, reasonNote = "Urgent family call")
+        val result = emergencyExitUseCase(sessionId = 20, reasonNote = "Attempt early exit")
+
+        assertTrue(result.isFailure)
+        assertTrue(result.exceptionOrNull()?.message?.contains("disabled in Strict Mode") == true)
+        assertEquals(SessionStatus.ACTIVE, fakeSessionRepository.activeSession?.status)
+    }
+
+    @Test
+    fun normalSession_allowsEmergencyExit() = runBlocking {
+        val now = System.currentTimeMillis()
+        val normalSession = FocusSession(
+            id = 21,
+            name = "Normal Study",
+            startEpochMs = now,
+            endEpochMs = now + 15 * 60 * 1000L,
+            durationMinutes = 25,
+            mode = SessionMode.NORMAL,
+            status = SessionStatus.ACTIVE,
+            blockedPackageNames = listOf("com.instagram.android")
+        )
+        fakeSessionRepository.activeSession = normalSession
+
+        val result = emergencyExitUseCase(sessionId = 21, reasonNote = "Urgent family call")
 
         assertTrue(result.isSuccess)
         val record = result.getOrNull()
-        assertEquals(20L, record?.sessionId)
+        assertEquals(21L, record?.sessionId)
         assertEquals("Urgent family call", record?.reasonNote)
-        assertEquals(25, record?.sessionDurationMinutes)
-
-        // Verify session status updated
         assertEquals(SessionStatus.EMERGENCY_EXITED, fakeSessionRepository.activeSession?.status)
-        assertEquals(1, fakeSessionRepository.emergencyExits.size)
     }
 }

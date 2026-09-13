@@ -1,9 +1,15 @@
 package com.aegisfocus.app.presentation.onboarding
 
+import android.app.Activity
+import android.app.admin.DevicePolicyManager
+import android.content.ComponentName
+import android.content.Context
+import android.content.Intent
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.aegisfocus.app.domain.model.PermissionState
 import com.aegisfocus.app.domain.repository.SettingsRepository
+import com.aegisfocus.app.service.receiver.AegisDeviceAdminReceiver
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -54,5 +60,20 @@ class OnboardingViewModel(
 
     fun completeOnboarding() {
         settingsRepository.setOnboardingCompleted(true)
+    }
+
+    fun openDeviceAdminSettings(context: Context) {
+        val adminComponent = ComponentName(context, AegisDeviceAdminReceiver::class.java)
+        val intent = Intent(DevicePolicyManager.ACTION_ADD_DEVICE_ADMIN).apply {
+            putExtra(DevicePolicyManager.EXTRA_DEVICE_ADMIN, adminComponent)
+            putExtra(
+                DevicePolicyManager.EXTRA_ADD_EXPLANATION,
+                "Activate Anti-Uninstall Protection so Aegis Focus cannot be uninstalled during strict focus sessions."
+            )
+            if (context !is Activity) {
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            }
+        }
+        runCatching { context.startActivity(intent) }
     }
 }

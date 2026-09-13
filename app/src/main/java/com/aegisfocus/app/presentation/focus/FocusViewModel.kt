@@ -1,5 +1,10 @@
 package com.aegisfocus.app.presentation.focus
 
+import android.app.Activity
+import android.app.admin.DevicePolicyManager
+import android.content.ComponentName
+import android.content.Context
+import android.content.Intent
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.aegisfocus.app.domain.model.AppInfo
@@ -10,6 +15,7 @@ import com.aegisfocus.app.domain.repository.AppDiscoveryRepository
 import com.aegisfocus.app.domain.repository.ProfileRepository
 import com.aegisfocus.app.domain.repository.SettingsRepository
 import com.aegisfocus.app.engine.FocusSessionManager
+import com.aegisfocus.app.service.receiver.AegisDeviceAdminReceiver
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -26,6 +32,8 @@ data class FocusUiState(
     val isEmergencyDialogOpen: Boolean = false,
     val emergencyCooldownSeconds: Int = 5,
     val isStrictFrictionPhraseEnabled: Boolean = true,
+    val hasDeviceAdminPermission: Boolean = false,
+    val isDeviceAdminPromptOpen: Boolean = false,
     val errorMessage: String? = null
 )
 
@@ -44,6 +52,11 @@ class FocusViewModel(
 
     init {
         loadInitialData()
+        viewModelScope.launch {
+            settingsRepository.getPermissionStateFlow().collect { perms ->
+                _uiState.value = _uiState.value.copy(hasDeviceAdminPermission = perms.hasDeviceAdminPermission)
+            }
+        }
     }
 
     fun loadInitialData() {
@@ -112,9 +125,15 @@ class FocusViewModel(
         }
     }
 
-    fun startFocusSession() {
+    fun startFocusSession(skipAdminCheck: Boolean = false) {
         val state = _uiState.value
+        if (state.selectedMode == SessionMode.STRICT && !state.hasDeviceAdminPermission && !skipAdminCheck) {
+            _uiState.value = state.copy(isDeviceAdminPromptOpen = true)
+            return
+        }
+
         viewModelScope.launch {
+            _uiState.value = _uiState.value.copy(isDeviceAdminPromptOpen = false)
             val result = focusSessionManager.startSession(
                 name = state.sessionName,
                 durationMinutes = state.selectedDurationMinutes,
@@ -126,6 +145,25 @@ class FocusViewModel(
                 _uiState.value = _uiState.value.copy(errorMessage = it.message)
             }
         }
+    }
+
+    fun dismissDeviceAdminPrompt() {
+        _uiState.value = _uiState.value.copy(isDeviceAdminPromptOpen = false)
+    }
+
+    fun openDeviceAdminSettings(context: Context) {
+        val adminComponent = ComponentName(context, AegisDeviceAdminReceiver::class.java)
+        val intent = Intent(DevicePolicyManager.ACTION_ADD_DEVICE_ADMIN).apply {
+            putExtra(DevicePolicyManager.EXTRA_DEVICE_ADMIN, adminComponent)
+            putExtra(
+                DevicePolicyManager.EXTRA_ADD_EXPLANATION,
+                "Activate Anti-Uninstall Protection so Aegis Focus cannot be uninstalled during strict focus sessions."
+            )
+            if (context !is Activity) {
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            }
+        }
+        runCatching { context.startActivity(intent) }
     }
 
     fun cancelActiveSession() {

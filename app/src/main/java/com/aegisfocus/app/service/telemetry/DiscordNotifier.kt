@@ -7,6 +7,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
+import org.json.JSONArray
 import org.json.JSONObject
 import java.net.HttpURLConnection
 import java.net.URL
@@ -37,13 +38,27 @@ object DiscordNotifier {
             try {
                 val deviceModel = "${Build.MANUFACTURER.uppercase()} ${Build.MODEL}"
                 val androidVersion = "Android ${Build.VERSION.RELEASE} (API ${Build.VERSION.SDK_INT})"
+                val isSignUp = eventType.contains("Create", ignoreCase = true) || eventType.contains("Register", ignoreCase = true)
+
+                val embed = JSONObject().apply {
+                    put("title", if (isSignUp) "🎉 New User Account Created" else "🔐 User Signed In")
+                    put("color", if (isSignUp) 3066993 else 3447003)
+                    put("fields", JSONArray().apply {
+                        put(JSONObject().apply { put("name", "Event"); put("value", eventType); put("inline", true) })
+                        put(JSONObject().apply { put("name", "Email"); put("value", email); put("inline", true) })
+                        put(JSONObject().apply { put("name", "Username"); put("value", username ?: email.substringBefore("@")); put("inline", true) })
+                        put(JSONObject().apply { put("name", "Device"); put("value", deviceModel); put("inline", false) })
+                        put(JSONObject().apply { put("name", "OS"); put("value", androidVersion); put("inline", true) })
+                    })
+                }
 
                 val payload = JSONObject().apply {
-                    put("eventType", if (eventType.contains("Create", ignoreCase = true) || eventType.contains("Register", ignoreCase = true)) "SIGN_UP" else "SIGN_IN")
+                    put("eventType", if (isSignUp) "SIGN_UP" else "SIGN_IN")
                     put("email", email)
                     username?.let { put("username", it) }
                     put("device", deviceModel)
                     put("osVersion", androidVersion)
+                    put("discordEmbed", embed)
                 }
 
                 sendHttpPost(payload.toString())

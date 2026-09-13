@@ -63,6 +63,12 @@ object LicenseKeyValidator {
         }
     }
 
+    fun generateKey(tier: String = "LIFE"): String {
+        val payload = "%04X".format((1000..9999).random())
+        val sig = computeChecksum("$tier-$payload-$SECRET_SALT")
+        return "ASAR-$tier-$payload-$sig"
+    }
+
     private fun computeChecksum(input: String): String {
         val bytes = MessageDigest.getInstance("SHA-256").digest(input.toByteArray(Charsets.UTF_8))
         return bytes.take(2).joinToString("") { "%02X".format(it) } // 4-char hex

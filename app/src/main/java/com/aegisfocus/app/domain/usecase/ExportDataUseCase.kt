@@ -39,17 +39,21 @@ class ExportDataUseCase(
         sessions.forEach { s ->
             val sObj = JSONObject().apply {
                 put("id", s.id)
+                put("name", s.name)
                 put("mode", s.mode)
-                put("startTime", s.startTime)
-                put("endTime", s.endTime)
-                put("targetDurationMinutes", s.targetDurationMinutes)
-                put("actualDurationMinutes", s.actualDurationMinutes)
-                put("isCompleted", s.isCompleted)
-                put("emergencyExitUsed", s.emergencyExitUsed)
+                put("startEpochMs", s.startEpochMs)
+                put("endEpochMs", s.endEpochMs)
+                put("durationMinutes", s.durationMinutes)
+                put("status", s.status)
+                put("totalInterventions", s.totalInterventions)
             }
             sessionsArr.put(sObj)
         }
         root.put("focusSessions", sessionsArr)
+
+        // Total Block Attempts
+        val totalBlockAttempts = focusEventDao.countBlockAttemptsAfter(0)
+        root.put("totalBlockAttempts", totalBlockAttempts)
 
         root.toString(2)
     }

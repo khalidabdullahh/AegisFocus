@@ -27,6 +27,9 @@ interface FocusSessionDao {
     fun getActiveSessionFlow(): Flow<FocusSessionEntity?>
 
     @Query("SELECT * FROM focus_sessions ORDER BY startEpochMs DESC")
+    suspend fun getAllSessions(): List<FocusSessionEntity>
+
+    @Query("SELECT * FROM focus_sessions ORDER BY startEpochMs DESC")
     fun getAllSessionsFlow(): Flow<List<FocusSessionEntity>>
 
     @Query("SELECT * FROM focus_sessions WHERE startEpochMs >= :startEpochMs AND startEpochMs <= :endEpochMs ORDER BY startEpochMs DESC")

@@ -38,7 +38,6 @@ import com.aegisfocus.app.core.theme.DeepSurface
 import com.aegisfocus.app.core.theme.ObsidianBg
 import com.aegisfocus.app.core.theme.SubtleBorder
 import com.aegisfocus.app.core.theme.TextMuted
-import com.aegisfocus.app.core.theme.TextPrimary
 import com.aegisfocus.app.presentation.apps.AppsScreen
 import com.aegisfocus.app.presentation.apps.AppsViewModel
 import com.aegisfocus.app.presentation.focus.FocusScreen
@@ -106,7 +105,9 @@ fun AegisNavHost(
                                 },
                                 selected = isSelected,
                                 onClick = {
-                                    if (currentRoute != screen.route) {
+                                    if (screen.route == Screen.Settings.route && currentRoute == Screen.Auth.route) {
+                                        navController.popBackStack(Screen.Settings.route, false)
+                                    } else if (currentRoute != screen.route) {
                                         navController.navigate(screen.route) {
                                             popUpTo(navController.graph.findStartDestination().id) {
                                                 saveState = true
@@ -191,13 +192,7 @@ fun AegisNavHost(
                 FocusScreen(
                     viewModel = vm,
                     onNavigateToApps = {
-                        navController.navigate(Screen.Apps.route) {
-                            popUpTo(navController.graph.findStartDestination().id) {
-                                saveState = true
-                            }
-                            launchSingleTop = true
-                            restoreState = true
-                        }
+                        navController.navigate(Screen.Apps.route)
                     }
                 )
             }
@@ -227,7 +222,8 @@ fun AegisNavHost(
                 val vm = androidx.lifecycle.viewmodel.compose.viewModel {
                     SettingsViewModel(
                         settingsRepository = container.settingsRepository,
-                        scheduleRepository = container.scheduleRepository
+                        scheduleRepository = container.scheduleRepository,
+                        authService = container.supabaseAuthService
                     )
                 }
                 SettingsScreen(

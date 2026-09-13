@@ -5,10 +5,11 @@ data class PermissionState(
     val hasAccessibilityService: Boolean = false,
     val hasNotificationPermission: Boolean = false,
     val hasOverlayPermission: Boolean = false,
-    val hasExactAlarmPermission: Boolean = false
+    val hasExactAlarmPermission: Boolean = false,
+    val hasDeviceAdminPermission: Boolean = false
 ) {
     val isFullyConfigured: Boolean
-        get() = hasUsageAccess && hasAccessibilityService && hasNotificationPermission
+        get() = hasUsageAccess && hasAccessibilityService && hasNotificationPermission && hasDeviceAdminPermission
 
     val coreBlockingReady: Boolean
         get() = hasAccessibilityService || hasUsageAccess
