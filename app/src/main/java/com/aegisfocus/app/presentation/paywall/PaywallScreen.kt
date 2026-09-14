@@ -21,6 +21,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.HourglassTop
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
@@ -60,7 +61,7 @@ import com.aegisfocus.app.core.theme.SubtleBorder
 import com.aegisfocus.app.core.theme.TextMuted
 import com.aegisfocus.app.core.theme.TextPrimary
 import com.aegisfocus.app.core.theme.TextSecondary
-import com.aegisfocus.app.domain.subscription.SubscriptionPlan
+import com.aegisfocus.app.data.remote.PaymentRequest
 
 @Composable
 fun PaywallScreen(
@@ -141,6 +142,40 @@ fun PaywallScreen(
 
         Spacer(Modifier.height(24.dp))
 
+        // Submission success message banner
+        uiState.submissionSuccessMessage?.let { msg ->
+            Surface(
+                shape = RoundedCornerShape(12.dp),
+                color = EmeraldFocus.copy(alpha = 0.15f),
+                border = BorderStroke(1.dp, EmeraldFocus),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 20.dp, vertical = 8.dp)
+            ) {
+                Column(Modifier.padding(16.dp)) {
+                    Text(
+                        text = "Payment Request Submitted",
+                        color = EmeraldFocus,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 15.sp
+                    )
+                    Spacer(Modifier.height(4.dp))
+                    Text(
+                        text = msg,
+                        color = TextPrimary,
+                        fontSize = 13.sp
+                    )
+                }
+            }
+            Spacer(Modifier.height(12.dp))
+        }
+
+        // User's past claims status section
+        if (uiState.myClaims.isNotEmpty()) {
+            UserClaimsSection(claims = uiState.myClaims)
+            Spacer(Modifier.height(20.dp))
+        }
+
         // Feature comparison
         FeatureComparisonTable()
 
@@ -172,6 +207,13 @@ fun PaywallScreen(
         var bkashTrxInput by remember { mutableStateOf("") }
         val clipboardManager = LocalClipboardManager.current
 
+        val bdtPrice = when (uiState.selectedOption) {
+            PaywallOption.MONTHLY -> "300 BDT"
+            PaywallOption.YEARLY -> "1500 BDT"
+            PaywallOption.LIFETIME -> "2500 BDT"
+            PaywallOption.STUDENT -> "800 BDT"
+        }
+
         if (showBkashDialog) {
             AlertDialog(
                 onDismissRequest = { showBkashDialog = false },
@@ -181,7 +223,7 @@ fun PaywallScreen(
                 text = {
                     Column {
                         Text(
-                            "1. Send Money / Cash Out BDT ${if (uiState.selectedOption == PaywallOption.LIFETIME) "1000" else "500"} to our bKash/Nagad Personal number:",
+                            "1. Send Money / Cash Out $bdtPrice (${uiState.selectedOption.label}) to our bKash/Nagad Personal number:",
                             fontSize = 12.sp,
                             color = TextSecondary
                         )
@@ -210,13 +252,13 @@ fun PaywallScreen(
                         }
 
                         Spacer(Modifier.height(14.dp))
-                        Text("2. Enter your payment details below to verify:", fontSize = 12.sp, color = TextSecondary)
+                        Text("2. Enter your payment details below to submit claim for verification:", fontSize = 12.sp, color = TextSecondary)
                         Spacer(Modifier.height(8.dp))
 
                         OutlinedTextField(
                             value = bkashPhoneInput,
                             onValueChange = { bkashPhoneInput = it },
-                            label = { Text("Your Mobile Number (018XXXXXXXX)", color = TextMuted) },
+                            label = { Text("Sender Mobile Number (e.g. 018XXXXXXXX)", color = TextMuted) },
                             singleLine = true,
                             modifier = Modifier.fillMaxWidth()
                         )
@@ -226,7 +268,7 @@ fun PaywallScreen(
                         OutlinedTextField(
                             value = bkashTrxInput,
                             onValueChange = { bkashTrxInput = it.uppercase() },
-                            label = { Text("bKash Transaction ID (e.g. 9A2B3C4D)", color = TextMuted) },
+                            label = { Text("Transaction ID (TrxID e.g. 9A2B3C4D)", color = TextMuted) },
                             singleLine = true,
                             modifier = Modifier.fillMaxWidth()
                         )
@@ -234,7 +276,7 @@ fun PaywallScreen(
                 },
                 confirmButton = {
                     AegisPrimaryButton(
-                        text = "Verify TrxID & Unlock Pro",
+                        text = "Submit Claim for Verification",
                         onClick = {
                             viewModel.submitBkashPayment(bkashTrxInput, bkashPhoneInput)
                             showBkashDialog = false
@@ -283,7 +325,7 @@ fun PaywallScreen(
                             Text("💳", fontSize = 16.sp)
                             Spacer(Modifier.width(8.dp))
                             Text(
-                                text = "Pay via bKash / Nagad (In-App TrxID Verification)",
+                                text = "Pay via bKash / Nagad ($bdtPrice)",
                                 color = CyanAccent,
                                 fontSize = 13.sp,
                                 fontWeight = FontWeight.Bold
@@ -304,22 +346,22 @@ fun PaywallScreen(
             )
         }
 
-        var showRedeemDialog by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(false) }
-        var licenseInput by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf("") }
+        var showRedeemDialog by remember { mutableStateOf(false) }
+        var licenseInput by remember { mutableStateOf("") }
 
         if (showRedeemDialog) {
-            androidx.compose.material3.AlertDialog(
+            AlertDialog(
                 onDismissRequest = { showRedeemDialog = false },
                 title = { Text("Redeem Pro License", color = TextPrimary, fontWeight = FontWeight.Bold) },
                 text = {
                     Column {
                         Text(
-                            "Enter the license key received after paying on our website (bKash / Nagad / Gumroad / Stripe):",
+                            "Enter the license key received after purchasing on our website (bKash / Nagad / Gumroad / Stripe):",
                             fontSize = 13.sp,
                             color = TextSecondary
                         )
                         Spacer(Modifier.height(12.dp))
-                        androidx.compose.material3.OutlinedTextField(
+                        OutlinedTextField(
                             value = licenseInput,
                             onValueChange = { licenseInput = it.uppercase() },
                             placeholder = { Text("ASR-LIFE-XXXX-XXXX", color = TextMuted) },
@@ -338,7 +380,7 @@ fun PaywallScreen(
                     )
                 },
                 dismissButton = {
-                    androidx.compose.material3.TextButton(onClick = { showRedeemDialog = false }) {
+                    TextButton(onClick = { showRedeemDialog = false }) {
                         Text("Cancel", color = TextMuted)
                     }
                 },
@@ -381,6 +423,84 @@ fun PaywallScreen(
             textAlign = TextAlign.Center,
             modifier = Modifier.padding(horizontal = 24.dp).fillMaxWidth()
         )
+    }
+}
+
+@Composable
+private fun UserClaimsSection(claims: List<PaymentRequest>) {
+    Card(
+        modifier = Modifier
+            .padding(horizontal = 20.dp)
+            .fillMaxWidth(),
+        colors = CardDefaults.cardColors(containerColor = DeepSurface),
+        shape = RoundedCornerShape(12.dp),
+        border = BorderStroke(1.dp, SubtleBorder)
+    ) {
+        Column(Modifier.padding(16.dp)) {
+            Text(
+                text = "Your Submitted Claims",
+                color = TextPrimary,
+                fontWeight = FontWeight.Bold,
+                fontSize = 14.sp
+            )
+            Spacer(Modifier.height(8.dp))
+
+            claims.forEach { claim ->
+                val statusColor = when (claim.status.uppercase()) {
+                    "VERIFIED" -> EmeraldFocus
+                    "REJECTED" -> AlertStrict
+                    else -> CyanAccent
+                }
+                val statusText = when (claim.status.uppercase()) {
+                    "VERIFIED" -> "✅ Verified & Active"
+                    "REJECTED" -> "❌ Rejected"
+                    else -> "⏳ Pending Verification"
+                }
+
+                Surface(
+                    shape = RoundedCornerShape(8.dp),
+                    color = ElevatedSurface,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 4.dp)
+                ) {
+                    Column(Modifier.padding(10.dp)) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                text = "TrxID: ${claim.transactionId}",
+                                color = TextPrimary,
+                                fontWeight = FontWeight.SemiBold,
+                                fontSize = 13.sp
+                            )
+                            Text(
+                                text = statusText,
+                                color = statusColor,
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 12.sp
+                            )
+                        }
+                        Spacer(Modifier.height(2.dp))
+                        Text(
+                            text = "${claim.planRequested} • ৳${claim.amount.toInt()} BDT via ${claim.paymentMethod}",
+                            color = TextMuted,
+                            fontSize = 11.sp
+                        )
+                        if (!claim.rejectionReason.isNullOrBlank()) {
+                            Spacer(Modifier.height(4.dp))
+                            Text(
+                                text = "Reason: ${claim.rejectionReason}",
+                                color = AlertStrict,
+                                fontSize = 11.sp
+                            )
+                        }
+                    }
+                }
+            }
+        }
     }
 }
 

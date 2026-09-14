@@ -70,9 +70,10 @@ fun AegisNavHost(
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
-    // অনবোর্ডিং বা পে-ওয়াল স্ক্রিনে বটম বার হাইড রাখা
+    // অনবোর্ডিং, পে-ওয়াল বা এডমিন স্ক্রিনে বটম বার হাইড রাখা
     val showBottomBar = currentRoute != Screen.Onboarding.route &&
-            currentRoute != Screen.Paywall.route
+            currentRoute != Screen.Paywall.route &&
+            currentRoute != Screen.AdminPayment.route
 
     Scaffold(
         modifier = modifier.fillMaxSize(),
@@ -229,7 +230,8 @@ fun AegisNavHost(
                 SettingsScreen(
                     viewModel = vm,
                     onNavigateToAuth = { navController.navigate(Screen.Auth.route) },
-                    onNavigateToPaywall = { navController.navigate(Screen.Paywall.route) }
+                    onNavigateToPaywall = { navController.navigate(Screen.Paywall.route) },
+                    onNavigateToAdminPayment = { navController.navigate(Screen.AdminPayment.route) }
                 )
             }
 
@@ -237,7 +239,8 @@ fun AegisNavHost(
                 val vm = androidx.lifecycle.viewmodel.compose.viewModel {
                     PaywallViewModel(
                         entitlementManager = container.entitlementManager,
-                        playBillingManager = container.playBillingManager
+                        playBillingManager = container.playBillingManager,
+                        paymentService = container.supabasePaymentService
                     )
                 }
                 PaywallScreen(
@@ -253,6 +256,18 @@ fun AegisNavHost(
                     )
                 }
                 com.aegisfocus.app.presentation.auth.AuthScreen(
+                    viewModel = vm,
+                    onNavigateBack = { navController.popBackStack() }
+                )
+            }
+
+            composable(Screen.AdminPayment.route) {
+                val vm = androidx.lifecycle.viewmodel.compose.viewModel {
+                    com.aegisfocus.app.presentation.admin.AdminPaymentViewModel(
+                        paymentService = container.supabasePaymentService
+                    )
+                }
+                com.aegisfocus.app.presentation.admin.AdminPaymentScreen(
                     viewModel = vm,
                     onNavigateBack = { navController.popBackStack() }
                 )

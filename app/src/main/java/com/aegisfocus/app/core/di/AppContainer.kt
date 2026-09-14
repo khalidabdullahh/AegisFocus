@@ -77,6 +77,7 @@ class AppContainer(private val context: Context) {
     val entitlementManager by lazy { EntitlementManager(subscriptionDao) }
     val playBillingManager by lazy { com.aegisfocus.app.data.billing.PlayBillingManager(context, entitlementManager) }
     val supabaseAuthService by lazy { com.aegisfocus.app.data.remote.SupabaseAuthService(context) }
+    val supabasePaymentService by lazy { com.aegisfocus.app.data.remote.SupabasePaymentService(supabaseAuthService) }
     val supabaseSyncService by lazy { com.aegisfocus.app.data.remote.SupabaseSyncService(supabaseAuthService, userXpDao, subscriptionDao) }
 
     val adaptiveFrictionController by lazy { AdaptiveFrictionController() }

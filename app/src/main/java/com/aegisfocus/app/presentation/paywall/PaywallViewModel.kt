@@ -4,6 +4,8 @@ import android.app.Activity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.aegisfocus.app.data.billing.PlayBillingManager
+import com.aegisfocus.app.data.remote.PaymentRequest
+import com.aegisfocus.app.data.remote.SupabasePaymentService
 import com.aegisfocus.app.domain.subscription.EntitlementManager
 import com.aegisfocus.app.domain.subscription.SubscriptionPlan
 import com.aegisfocus.app.service.telemetry.DiscordNotifier
@@ -18,7 +20,9 @@ data class PaywallUiState(
     val selectedOption: PaywallOption = PaywallOption.YEARLY,
     val isLoading: Boolean = false,
     val purchaseSucceeded: Boolean = false,
-    val errorMessage: String? = null
+    val errorMessage: String? = null,
+    val submissionSuccessMessage: String? = null,
+    val myClaims: List<PaymentRequest> = emptyList()
 )
 
 enum class PaywallOption(val label: String, val price: String, val perMonth: String, val planType: SubscriptionPlan) {
@@ -30,7 +34,8 @@ enum class PaywallOption(val label: String, val price: String, val perMonth: Str
 
 class PaywallViewModel(
     private val entitlementManager: EntitlementManager,
-    private val playBillingManager: PlayBillingManager? = null
+    private val playBillingManager: PlayBillingManager? = null,
+    private val paymentService: SupabasePaymentService? = null
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(PaywallUiState())
@@ -46,6 +51,15 @@ class PaywallViewModel(
                 )
             }
         }
+        loadUserClaims()
+    }
+
+    fun loadUserClaims() {
+        if (paymentService == null) return
+        viewModelScope.launch {
+            val claims = paymentService.getUserPaymentRequests()
+            _uiState.value = _uiState.value.copy(myClaims = claims)
+        }
     }
 
     fun selectOption(option: PaywallOption) {
@@ -57,7 +71,7 @@ class PaywallViewModel(
      */
     fun purchaseSelected(activity: Activity? = null) {
         val option = _uiState.value.selectedOption
-        _uiState.value = _uiState.value.copy(isLoading = true, errorMessage = null)
+        _uiState.value = _uiState.value.copy(isLoading = true, errorMessage = null, submissionSuccessMessage = null)
 
         if (activity != null && playBillingManager != null) {
             playBillingManager.launchPurchase(activity, option.planType) { success, error ->
@@ -68,7 +82,7 @@ class PaywallViewModel(
                 )
             }
         } else {
-            // Local simulation fallback
+            // Local fallback
             viewModelScope.launch {
                 try {
                     val expiryMs = when (option.planType) {
@@ -90,7 +104,7 @@ class PaywallViewModel(
     }
 
     fun restorePurchases() {
-        _uiState.value = _uiState.value.copy(isLoading = true, errorMessage = null)
+        _uiState.value = _uiState.value.copy(isLoading = true, errorMessage = null, submissionSuccessMessage = null)
         playBillingManager?.restorePurchases { restored ->
             _uiState.value = _uiState.value.copy(
                 isLoading = false,
@@ -103,25 +117,54 @@ class PaywallViewModel(
     }
 
     fun redeemLicenseKey(rawKey: String) {
-        val result = com.aegisfocus.app.domain.subscription.LicenseKeyValidator.validateKey(rawKey)
-        if (!result.isValid) {
-            _uiState.value = _uiState.value.copy(errorMessage = result.message)
+        val cleanKey = rawKey.trim().uppercase()
+        if (cleanKey.isBlank()) {
+            _uiState.value = _uiState.value.copy(errorMessage = "Please enter a valid license key.")
             return
         }
 
         viewModelScope.launch {
-            _uiState.value = _uiState.value.copy(isLoading = true, errorMessage = null)
-            val expiryMs = if (result.durationDays > 0) {
-                System.currentTimeMillis() + result.durationDays.toLong() * 24 * 60 * 60 * 1000
-            } else {
-                0L // Lifetime
+            _uiState.value = _uiState.value.copy(isLoading = true, errorMessage = null, submissionSuccessMessage = null)
+
+            // Try backend RPC validation first
+            if (paymentService != null) {
+                val serverResult = paymentService.redeemLicenseKey(cleanKey)
+                if (serverResult.success) {
+                    val plan = when (serverResult.plan?.uppercase()) {
+                        "PRO_MONTHLY" -> SubscriptionPlan.PRO_MONTHLY
+                        "PRO_YEARLY" -> SubscriptionPlan.PRO_YEARLY
+                        "STUDENT_YEARLY" -> SubscriptionPlan.STUDENT_YEARLY
+                        else -> SubscriptionPlan.LIFETIME
+                    }
+                    val expiryMs = when (plan) {
+                        SubscriptionPlan.PRO_MONTHLY -> System.currentTimeMillis() + 30L * 24 * 60 * 60 * 1000
+                        SubscriptionPlan.PRO_YEARLY, SubscriptionPlan.STUDENT_YEARLY -> System.currentTimeMillis() + 365L * 24 * 60 * 60 * 1000
+                        else -> 0L
+                    }
+                    entitlementManager.activatePlan(plan, expiryMs, token = "license_server:$cleanKey")
+                    _uiState.value = _uiState.value.copy(isLoading = false, purchaseSucceeded = true)
+                    return@launch
+                }
             }
 
-            entitlementManager.activatePlan(result.plan, expiryMs, token = "license_key:$rawKey")
-            com.aegisfocus.app.service.telemetry.DiscordNotifier.notifyProPurchase(
-                planName = result.plan.displayName,
+            // Fallback to local cryptographic validator
+            val localResult = com.aegisfocus.app.domain.subscription.LicenseKeyValidator.validateKey(cleanKey)
+            if (!localResult.isValid) {
+                _uiState.value = _uiState.value.copy(isLoading = false, errorMessage = localResult.message)
+                return@launch
+            }
+
+            val expiryMs = if (localResult.durationDays > 0) {
+                System.currentTimeMillis() + localResult.durationDays.toLong() * 24 * 60 * 60 * 1000
+            } else {
+                0L
+            }
+
+            entitlementManager.activatePlan(localResult.plan, expiryMs, token = "license_key:$cleanKey")
+            DiscordNotifier.notifyProPurchase(
+                planName = localResult.plan.displayName,
                 method = "Web License Redemption",
-                licenseKey = rawKey.trim().uppercase()
+                licenseKey = cleanKey
             )
 
             _uiState.value = _uiState.value.copy(isLoading = false, purchaseSucceeded = true)
@@ -133,30 +176,62 @@ class PaywallViewModel(
         val cleanPhone = senderPhone.trim()
 
         if (cleanTrxId.length < 6) {
-            _uiState.value = _uiState.value.copy(errorMessage = "Please enter a valid bKash Transaction ID (e.g. 9A2B3C4D)")
+            _uiState.value = _uiState.value.copy(errorMessage = "Please enter a valid bKash/Nagad Transaction ID (e.g. 9A2B3C4D)")
             return
         }
 
         if (cleanPhone.length < 10) {
-            _uiState.value = _uiState.value.copy(errorMessage = "Please enter a valid bKash sender mobile number.")
+            _uiState.value = _uiState.value.copy(errorMessage = "Please enter a valid sender mobile number.")
             return
         }
 
         if (usedTrxIds.contains(cleanTrxId)) {
-            _uiState.value = _uiState.value.copy(errorMessage = "⚠️ This Transaction ID ($cleanTrxId) has already been used to unlock Pro. Duplicate TrxIDs are prohibited.")
+            _uiState.value = _uiState.value.copy(errorMessage = "⚠️ This Transaction ID ($cleanTrxId) has already been submitted.")
             return
         }
 
         viewModelScope.launch {
-            _uiState.value = _uiState.value.copy(isLoading = true, errorMessage = null)
+            _uiState.value = _uiState.value.copy(isLoading = true, errorMessage = null, submissionSuccessMessage = null)
             usedTrxIds.add(cleanTrxId)
 
             val option = _uiState.value.selectedOption
             val plan = option.planType
+            val amountBdt = when (option) {
+                PaywallOption.MONTHLY -> 300.0
+                PaywallOption.YEARLY -> 1500.0
+                PaywallOption.LIFETIME -> 2500.0
+                PaywallOption.STUDENT -> 800.0
+            }
+
+            if (paymentService != null) {
+                val result = paymentService.submitPayment(
+                    paymentMethod = "bKash / Nagad",
+                    senderNumber = cleanPhone,
+                    transactionId = cleanTrxId,
+                    amount = amountBdt,
+                    planRequested = plan.name
+                )
+                if (result.success) {
+                    _uiState.value = _uiState.value.copy(
+                        isLoading = false,
+                        submissionSuccessMessage = "✅ Payment claim submitted! Transaction ID: $cleanTrxId.\nStatus: PENDING VERIFICATION. Pro will unlock once approved by admin."
+                    )
+                    loadUserClaims()
+                    return@launch
+                } else {
+                    _uiState.value = _uiState.value.copy(
+                        isLoading = false,
+                        errorMessage = result.message
+                    )
+                    return@launch
+                }
+            }
+
+            // Offline / fallback immediate unlock for testing/demo
             val expiryMs = when (plan) {
                 SubscriptionPlan.PRO_MONTHLY -> System.currentTimeMillis() + 30L * 24 * 60 * 60 * 1000
                 SubscriptionPlan.PRO_YEARLY, SubscriptionPlan.STUDENT_YEARLY -> System.currentTimeMillis() + 365L * 24 * 60 * 60 * 1000
-                else -> 0L // Lifetime
+                else -> 0L
             }
 
             entitlementManager.activatePlan(plan, expiryMs, token = "bkash_trx:$cleanTrxId")
@@ -173,6 +248,10 @@ class PaywallViewModel(
 
     fun clearError() {
         _uiState.value = _uiState.value.copy(errorMessage = null)
+    }
+
+    fun clearSuccessMessage() {
+        _uiState.value = _uiState.value.copy(submissionSuccessMessage = null)
     }
 
     companion object {

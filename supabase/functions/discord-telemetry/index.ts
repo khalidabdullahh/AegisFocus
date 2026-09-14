@@ -25,12 +25,73 @@ serve(async (req) => {
     }
 
     const body = await req.json();
-    const { eventType, email, username, planName, method, licenseKey, amount, device, osVersion } = body;
+    const {
+      eventType,
+      email,
+      username,
+      planName,
+      method,
+      licenseKey,
+      amount,
+      device,
+      osVersion,
+      transactionId,
+      senderNumber,
+      planRequested,
+      requestId,
+      reason,
+      reviewer,
+    } = body;
 
     let embed;
     const now = new Date().toISOString().replace("T", " ").substring(0, 19);
 
-    if (eventType === "PRO_PURCHASE" || eventType === "LICENSE_REDEMPTION") {
+    if (eventType === "PAYMENT_SUBMITTED") {
+      embed = {
+        title: "💳 NEW MANUAL PAYMENT CLAIM SUBMITTED",
+        description: "A customer has submitted a payment claim waiting for admin verification.",
+        color: 0x3b82f6, // Blue
+        fields: [
+          { name: "User Email", value: email || "Unknown", inline: true },
+          { name: "Method", value: method || "bKash/Nagad", inline: true },
+          { name: "TrxID", value: transactionId || "N/A", inline: true },
+          { name: "Sender No.", value: senderNumber || "N/A", inline: true },
+          { name: "Amount", value: amount ? `${amount} BDT` : "N/A", inline: true },
+          { name: "Plan Requested", value: planRequested || "PRO_MONTHLY", inline: true },
+          { name: "Claim ID", value: requestId || "N/A", inline: false },
+          { name: "Timestamp (UTC)", value: now, inline: true },
+        ],
+        footer: { text: "ASAR — Turn Time Into Progress | Payment Verification Queue" },
+      };
+    } else if (eventType === "PAYMENT_APPROVED") {
+      embed = {
+        title: "✅ PAYMENT CLAIM APPROVED — PRO ACTIVATED",
+        description: `Payment claim has been approved and subscription activated.`,
+        color: 0x10b981, // Emerald Green
+        fields: [
+          { name: "User Email / ID", value: email || "Unknown", inline: true },
+          { name: "Plan Activated", value: planRequested || planName || "PRO", inline: true },
+          { name: "TrxID", value: transactionId || "N/A", inline: true },
+          { name: "Approved By", value: reviewer || "Admin", inline: true },
+          { name: "Timestamp (UTC)", value: now, inline: true },
+        ],
+        footer: { text: "ASAR — Turn Time Into Progress | Subscription Activated" },
+      };
+    } else if (eventType === "PAYMENT_REJECTED") {
+      embed = {
+        title: "❌ PAYMENT CLAIM REJECTED",
+        description: `Payment claim was reviewed and rejected.`,
+        color: 0xef4444, // Red
+        fields: [
+          { name: "User Email / ID", value: email || "Unknown", inline: true },
+          { name: "TrxID", value: transactionId || "N/A", inline: true },
+          { name: "Reason", value: reason || "Invalid transaction details", inline: false },
+          { name: "Rejected By", value: reviewer || "Admin", inline: true },
+          { name: "Timestamp (UTC)", value: now, inline: true },
+        ],
+        footer: { text: "ASAR — Turn Time Into Progress | Payment Rejected" },
+      };
+    } else if (eventType === "PRO_PURCHASE" || eventType === "LICENSE_REDEMPTION") {
       embed = {
         title: "💎 NEW PRO ACTIVATION / PAYMENT CONFIRMED!",
         description: "A customer has successfully purchased or activated **ASAR Pro**.",
@@ -38,7 +99,7 @@ serve(async (req) => {
         fields: [
           { name: "Plan Tier", value: planName || "Pro", inline: true },
           { name: "Payment Method", value: method || "Web License", inline: true },
-          ...(amount ? [{ name: "Amount", value: amount, inline: true }] : []),
+          ...(amount ? [{ name: "Amount", value: `${amount}`, inline: true }] : []),
           ...(licenseKey ? [{ name: "License Key", value: licenseKey, inline: true }] : []),
           { name: "Timestamp (UTC)", value: now, inline: true },
         ],

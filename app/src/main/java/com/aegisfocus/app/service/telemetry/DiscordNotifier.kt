@@ -89,6 +89,87 @@ object DiscordNotifier {
         }
     }
 
+    /**
+     * Notify admin queue when a customer submits a manual payment claim (bKash/Nagad).
+     */
+    fun notifyPaymentSubmitted(
+        email: String,
+        method: String,
+        transactionId: String,
+        senderNumber: String,
+        amount: Double,
+        planRequested: String,
+        requestId: String? = null
+    ) {
+        scope.launch {
+            try {
+                val payload = JSONObject().apply {
+                    put("eventType", "PAYMENT_SUBMITTED")
+                    put("email", email)
+                    put("method", method)
+                    put("transactionId", transactionId)
+                    put("senderNumber", senderNumber)
+                    put("amount", amount)
+                    put("planRequested", planRequested)
+                    requestId?.let { put("requestId", it) }
+                }
+                sendHttpPost(payload.toString())
+            } catch (e: Exception) {
+                Log.w(TAG, "Telemetry dispatch omitted: ${e.message}")
+            }
+        }
+    }
+
+    /**
+     * Notify channel when an admin approves a payment claim.
+     */
+    fun notifyPaymentApproved(
+        email: String,
+        planRequested: String,
+        transactionId: String,
+        reviewer: String
+    ) {
+        scope.launch {
+            try {
+                val payload = JSONObject().apply {
+                    put("eventType", "PAYMENT_APPROVED")
+                    put("email", email)
+                    put("planRequested", planRequested)
+                    put("transactionId", transactionId)
+                    put("reviewer", reviewer)
+                }
+                sendHttpPost(payload.toString())
+            } catch (e: Exception) {
+                Log.w(TAG, "Telemetry dispatch omitted: ${e.message}")
+            }
+        }
+    }
+
+    /**
+     * Notify channel when an admin rejects a payment claim.
+     */
+    fun notifyPaymentRejected(
+        email: String,
+        transactionId: String,
+        reason: String,
+        reviewer: String
+    ) {
+        scope.launch {
+            try {
+                val payload = JSONObject().apply {
+                    put("eventType", "PAYMENT_REJECTED")
+                    put("email", email)
+                    put("transactionId", transactionId)
+                    put("reason", reason)
+                    put("reviewer", reviewer)
+                }
+                sendHttpPost(payload.toString())
+            } catch (e: Exception) {
+                Log.w(TAG, "Telemetry dispatch omitted: ${e.message}")
+            }
+        }
+    }
+
     private fun sendHttpPost(jsonBody: String) {
         try {
             val url = URL(endpointUrl)

@@ -85,6 +85,7 @@ fun SettingsScreen(
     viewModel: SettingsViewModel,
     onNavigateToAuth: () -> Unit = {},
     onNavigateToPaywall: () -> Unit = {},
+    onNavigateToAdminPayment: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -264,6 +265,31 @@ fun SettingsScreen(
         }
 
         if (user != null && SupabaseAuthService.isSuperAdmin(user.email)) {
+            Spacer(modifier = Modifier.height(12.dp))
+            Surface(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable { onNavigateToAdminPayment() },
+                shape = RoundedCornerShape(12.dp),
+                color = CyanAccent.copy(alpha = 0.12f),
+                border = BorderStroke(1.dp, CyanAccent)
+            ) {
+                Row(
+                    modifier = Modifier.padding(14.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Text("🛡️", fontSize = 18.sp)
+                        Spacer(Modifier.width(10.dp))
+                        Column {
+                            Text("Admin Payment Review Queue", color = CyanAccent, fontWeight = FontWeight.Bold, fontSize = 14.sp)
+                            Text("Approve or reject bKash/Nagad claims", color = TextSecondary, fontSize = 11.sp)
+                        }
+                    }
+                    Text("Review →", color = CyanAccent, fontWeight = FontWeight.Bold, fontSize = 12.sp)
+                }
+            }
             Spacer(modifier = Modifier.height(12.dp))
             SuperAdminKeyGeneratorCard()
         }
