@@ -1,4 +1,4 @@
-name: Build Android APK
+name: Build and Release Android APK
 
 on:
   push:
@@ -6,6 +6,9 @@ on:
   pull_request:
     branches: [ main ]
   workflow_dispatch:
+
+permissions:
+  contents: write
 
 jobs:
   build:
@@ -33,7 +36,7 @@ jobs:
       - name: Build Debug APK
         run: ./gradlew assembleDebug --no-daemon --stacktrace
 
-      - name: Verify APK Output
+      - name: Verify and Package APK
         run: |
           APK_FILE=$(find app/build/outputs/apk/debug -name "*.apk" | head -n 1)
           if [ -z "$APK_FILE" ] || [ ! -f "$APK_FILE" ]; then
@@ -41,12 +44,42 @@ jobs:
             exit 1
           fi
           echo "✅ APK successfully generated at: $APK_FILE"
-          ls -lh "$APK_FILE"
+          mkdir -p release-assets
+          cp "$APK_FILE" release-assets/ASAR-Latest.apk
+          cp "$APK_FILE" release-assets/ASAR-v1.0.0.apk
+          ls -lh release-assets/
 
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ASAR-debug-apk
-          path: app/build/outputs/apk/debug/*.apk
-          retention-days: 14
+          name: ASAR-Latest-APK
+          path: release-assets/*.apk
+          retention-days: 30
           if-no-files-found: error
+
+      - name: Create or Update GitHub Release
+        if: github.ref == 'refs/heads/main'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: latest
+          name: "ASAR Focus v1.0.0 (Latest Release)"
+          body: |
+            ## 🚀 ASAR (Aegis Focus) Android Release
+            
+            ### ✨ What's New:
+            - 🛡️ **Server-Authoritative Payment Queue**: bKash & Nagad instant TrxID submission & admin 1-tap activation.
+            - 🔒 **Super Admin Portal**: Review and verify payment claims directly inside the app.
+            - 💎 **Encrypted Licensing**: Server-validated license key generation and redemption.
+            - ⚡ **Offline Discipline Guardrails**: Anti-tamper strict mode, focus XP level system, and distraction blocker.
+            - 🔔 **Discord Telemetry Relay**: Real-time event notifications via secure Supabase Edge Function.
+            
+            ---
+            ### 📥 Download & Install
+            Click **[`ASAR-Latest.apk`](https://github.com/khalidabdullahh/AegisFocus/releases/latest/download/ASAR-Latest.apk)** below to install on your Android device.
+          draft: false
+          prerelease: false
+          files: |
+            release-assets/ASAR-Latest.apk
+            release-assets/ASAR-v1.0.0.apk
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
