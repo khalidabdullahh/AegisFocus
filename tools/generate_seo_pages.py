@@ -1809,6 +1809,7 @@ def generate_html(page):
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google-site-verification" content="fizlBwqvFqvA47dXrpi7GA3AOoU08X4Xrz-o9q7nONU">
     <title>{title} — ASAR</title>
     <meta name="description" content="{meta_desc}">
     <link rel="canonical" href="{canonical_url}">
@@ -2086,6 +2087,7 @@ def generate_hub_html(pages):
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google-site-verification" content="fizlBwqvFqvA47dXrpi7GA3AOoU08X4Xrz-o9q7nONU">
     <title>ASAR Knowledge Base &amp; Focus Guides (100 High-Impact Articles)</title>
     <meta name="description" content="Explore 100 comprehensive focus, dopamine detox, study productivity, and app blocking guides. Turn time into progress with ASAR.">
     <link rel="canonical" href="{BASE_URL}/guides">
