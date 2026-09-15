@@ -27,7 +27,7 @@ Samsung Galaxy Store is pre-installed on over **1 Billion+** Samsung smartphones
 4. **Description**: Copy & paste from `store_distribution/STORE_METADATA_AND_DESCRIPTIONS.md`.
 5. **Category**: `Applications > Productivity` or `Health/Fitness`.
 6. **Age Rating**: Set to **4+ / All Ages**.
-7. **Privacy Policy URL**: `https://asr-turntimeintoprogress.vercel.app/privacy.html`
+7. **Privacy Policy URL**: `https://bproductive.vercel.app/privacy.html`
 
 ---
 

@@ -44,5 +44,5 @@ Publishing to alternative stores allows you to reach hundreds of millions of And
 
 ## 🌐 5. Your Website (Direct Download via Vercel / GitHub)
 * **Cost**: $0
-* Users downloading directly from your landing page (`https://asr-turntimeintoprogress.vercel.app`) get the latest build immediately.
+* Users downloading directly from your landing page (`https://bproductive.vercel.app`) get the latest build immediately.
 * Users can unlock Pro via **bKash / Nagad Transaction ID** or **Web License Key Redemption**, giving you **100% revenue** with **0% platform cuts**.

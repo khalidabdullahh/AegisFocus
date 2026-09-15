@@ -12,8 +12,8 @@ Use these copy-paste ready texts for submitting to **Samsung Galaxy Store**, **A
 * **Secondary Category**: `Health & Fitness` / `Self-Improvement`
 * **Content Rating**: `Everyone / All Ages (3+)`
 * **Pricing**: `Free with In-App Purchases / Subscriptions`
-* **Privacy Policy URL**: `https://asr-turntimeintoprogress.vercel.app/privacy.html`
-* **Terms of Service URL**: `https://asr-turntimeintoprogress.vercel.app/terms.html`
+* **Privacy Policy URL**: `https://bproductive.vercel.app/privacy.html`
+* **Terms of Service URL**: `https://bproductive.vercel.app/terms.html`
 * **Support Email**: `khalidabdullah.dev@gmail.com`
 
 ---

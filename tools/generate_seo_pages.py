@@ -8,7 +8,7 @@ import os
 import re
 
 OUTPUT_DIR = "/Users/khalidabdullah/AntiGravity/aegis-focus/guides"
-BASE_URL = "https://asr-turntimeintoprogress.vercel.app"
+BASE_URL = "https://bproductive.vercel.app"
 APK_DOWNLOAD_URL = "https://github.com/khalidabdullahh/AegisFocus/releases/latest/download/ASAR-Latest.apk"
 
 PAGES = [

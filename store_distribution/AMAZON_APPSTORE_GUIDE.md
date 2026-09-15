@@ -17,7 +17,7 @@ Amazon Appstore serves millions of users across **Amazon Fire Tablets, Fire OS, 
 3. **App SKU**: `ASAR-FOCUS-ANDROID`
 4. **App Category**: `Productivity / Utilities`
 5. **Customer Support Email**: `khalidabdullah.dev@gmail.com`
-6. **Privacy Policy URL**: `https://asr-turntimeintoprogress.vercel.app/privacy.html`
+6. **Privacy Policy URL**: `https://bproductive.vercel.app/privacy.html`
 
 ---
 
