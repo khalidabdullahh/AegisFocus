@@ -1,0 +1,2050 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ASAR Knowledge Base &amp; Focus Guides (100 High-Impact Articles)</title>
+    <meta name="description" content="Explore 100 comprehensive focus, dopamine detox, study productivity, and app blocking guides. Turn time into progress with ASAR.">
+    <link rel="canonical" href="https://asr-turntimeintoprogress.vercel.app/guides">
+    <meta name="theme-color" content="#0A0D14">
+
+    <!-- Fonts & Tailwind -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] },
+                    colors: {
+                        asr: {
+                            bg:       '#0A0D14',
+                            surface:  '#111827',
+                            elevated: '#1A2235',
+                            border:   '#1E2D45',
+                            sky:      '#38BDF8',
+                            emerald:  '#10B981',
+                            red:      '#F87171',
+                            text:     '#F8FAFC',
+                            muted:    '#94A3B8',
+                            faint:    '#64748B',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        ::-webkit-scrollbar { width: 4px; height: 4px; }
+        ::-webkit-scrollbar-track { background: #0A0D14; }
+        ::-webkit-scrollbar-thumb { background: #1E2D45; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #38BDF8; }
+        .text-gradient {
+            background: linear-gradient(135deg, #38BDF8 0%, #818CF8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .hero-grid {
+            background-image:
+                linear-gradient(rgba(56,189,248,0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(56,189,248,0.03) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+    </style>
+</head>
+<body class="bg-asr-bg text-asr-text font-sans antialiased min-h-screen flex flex-col justify-between">
+
+<!-- Header -->
+<header class="fixed top-0 left-0 right-0 z-50 border-b border-asr-border/60 backdrop-blur-xl bg-asr-bg/80">
+    <div class="max-w-6xl mx-auto px-5 sm:px-8 h-14 flex items-center justify-between">
+        <a href="index.html" class="flex items-center group">
+            <img src="assets/asar_navbar_brand.png" alt="ASAR — Be Productive" class="h-8 sm:h-9 w-auto object-contain">
+        </a>
+        <nav class="hidden md:flex items-center gap-7 text-sm font-medium text-asr-muted">
+            <a href="features.html" class="hover:text-asr-text transition">Features</a>
+            <a href="pricing.html" class="hover:text-asr-text transition">Pricing</a>
+            <a href="about.html" class="hover:text-asr-text transition">Philosophy</a>
+            <a href="guides.html" class="text-asr-sky font-semibold">Guides &amp; Hub</a>
+            <a href="privacy.html" class="hover:text-asr-text transition">Privacy</a>
+        </nav>
+        <div class="flex items-center gap-3">
+            <a href="https://github.com/khalidabdullahh/AegisFocus/releases/latest/download/ASAR-Latest.apk"
+               download="ASAR-Latest.apk"
+               class="bg-asr-emerald hover:bg-asr-emerald/90 text-asr-bg text-xs sm:text-sm font-bold px-3.5 py-1.5 rounded-lg transition flex items-center gap-1.5 shadow-lg shadow-asr-emerald/20">
+                <i data-lucide="download" class="w-3.5 h-3.5"></i>
+                Download APK
+            </a>
+            <a href="index.html#simulator"
+               class="hidden sm:inline-flex bg-asr-sky/10 hover:bg-asr-sky/20 border border-asr-sky/30 text-asr-sky text-sm font-semibold px-4 py-1.5 rounded-lg transition">
+                Try Demo
+            </a>
+        </div>
+    </div>
+</header>
+
+<!-- Main Container -->
+<main class="pt-24 pb-20 px-5 max-w-6xl mx-auto flex-1 w-full hero-grid">
+    <div class="text-center max-w-3xl mx-auto pt-8 pb-12">
+        <div class="inline-flex items-center gap-2 bg-asr-surface border border-asr-border text-xs font-semibold text-asr-sky px-3.5 py-1.5 rounded-full mb-6">
+            <i data-lucide="book-open" class="w-3.5 h-3.5"></i>
+            ASAR Knowledge Base &amp; Strategy Hub
+        </div>
+        <h1 class="text-4xl sm:text-5xl md:text-6xl font-black tracking-tight leading-tight">
+            Master Your <span class="text-gradient">Attention</span>.
+        </h1>
+        <p class="mt-5 text-base sm:text-lg text-asr-muted leading-relaxed">
+            100 in-depth guides on app blocking, dopamine detoxing, study protocols, and digital discipline.
+        </p>
+    </div>
+
+    <!-- Search / Filter (Static UX) -->
+    <div class="max-w-xl mx-auto mb-10">
+        <input type="text"
+               id="searchInput"
+               onkeyup="filterGuides()"
+               placeholder="🔍 Search 100 focus guides (e.g. Instagram, SAT, ADHD, Strict Mode)..."
+               class="w-full bg-asr-surface border border-asr-border focus:border-asr-sky text-asr-text rounded-xl px-4 py-3 text-sm focus:outline-none transition">
+    </div>
+
+    <!-- 100 Guides Grid -->
+    <div id="guidesGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        
+        <a href="guides/how-to-block-instagram-reels-android.html" class="bg-asr-surface hover:bg-asr-elevated border border-asr-border hover:border-asr-sky/40 rounded-2xl p-6 transition flex flex-col justify-between group">
+            <div>
+                <div class="inline-flex items-center gap-1.5 text-xs font-bold text-asr-sky uppercase tracking-wider mb-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-asr-sky"></span>
+                    App Blocking
+                </div>
+                <h3 class="text-base font-bold text-asr-text group-hover:text-asr-sky transition mb-2">
+                    How to Block Instagram Reels on Android (Strict & Unbreakable)
+                </h3>
+                <p class="text-xs text-asr-muted line-clamp-3 leading-relaxed">
+                    Learn how to permanently block Instagram Reels on Android using ASAR's mindful friction and strict mode. Stop doomscrolling and reclaim your focus.
+                </p>
+            </div>
+            <div class="mt-4 pt-4 border-t border-asr-border flex items-center justify-between text-xs text-asr-faint">
+                <span>4 min read</span>
+                <span class="text-asr-sky font-semibold flex items-center gap-1 group-hover:translate-x-1 transition">Read Guide &rarr;</span>
+            </div>
+        </a>
+        
+        <a href="guides/how-to-block-youtube-shorts-android.html" class="bg-asr-surface hover:bg-asr-elevated border border-asr-border hover:border-asr-sky/40 rounded-2xl p-6 transition flex flex-col justify-between group">
+            <div>
+                <div class="inline-flex items-center gap-1.5 text-xs font-bold text-asr-sky uppercase tracking-wider mb-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-asr-sky"></span>
+                    App Blocking
+                </div>
+                <h3 class="text-base font-bold text-asr-text group-hover:text-asr-sky transition mb-2">
+                    How to Block YouTube Shorts on Android Without Disabling YouTube
+                </h3>
+                <p class="text-xs text-asr-muted line-clamp-3 leading-relaxed">
+                    Block addictive YouTube Shorts and video feeds on Android while keeping tutorials and study videos accessible.
+                </p>
+            </div>
+            <div class="mt-4 pt-4 border-t border-asr-border flex items-center justify-between text-xs text-asr-faint">
+                <span>5 min read</span>
+                <span class="text-asr-sky font-semibold flex items-center gap-1 group-hover:translate-x-1 transition">Read Guide &rarr;</span>
+            </div>
+        </a>
+        
+        <a href="guides/how-to-block-tiktok-on-android.html" class="bg-asr-surface hover:bg-asr-elevated border border-asr-border hover:border-asr-sky/40 rounded-2xl p-6 transition flex flex-col justify-between group">
+            <div>
+                <div class="inline-flex items-center gap-1.5 text-xs font-bold text-asr-sky uppercase tracking-wider mb-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-asr-sky"></span>
+                    App Blocking
+                </div>
+                <h3 class="text-base font-bold text-asr-text group-hover:text-asr-sky transition mb-2">
+                    How to Block TikTok on Android Completely (Anti-Relapse Guide)
+                </h3>
+                <p class="text-xs text-asr-muted line-clamp-3 leading-relaxed">
+                    Permanently block TikTok on Android with ASAR Strict Mode. Prevent impulsive re-installations and dopamine burnout.
+                </p>
+            </div>
+            <div class="mt-4 pt-4 border-t border-asr-border flex items-center justify-between text-xs text-asr-faint">
+                <span>4 min read</span>
+                <span class="text-asr-sky font-semibold flex items-center gap-1 group-hover:translate-x-1 transition">Read Guide &rarr;</span>
+            </div>
+        </a>
+        
+        <a href="guides/how-to-block-facebook-scroll-android.html" class="bg-asr-surface hover:bg-asr-elevated border border-asr-border hover:border-asr-sky/40 rounded-2xl p-6 transition flex flex-col justify-between group">
+            <div>
+                <div class="inline-flex items-center gap-1.5 text-xs font-bold text-asr-sky uppercase tracking-wider mb-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-asr-sky"></span>
+                    App Blocking
+                </div>
+                <h3 class="text-base font-bold text-asr-text group-hover:text-asr-sky transition mb-2">
+                    How to Block Facebook News Feed & Watch on Android
+                </h3>
+                <p class="text-xs text-asr-muted line-clamp-3 leading-relaxed">
+                    Stop mindless Facebook news feed scrolling on Android with ASAR's focus guardrails and scheduled routines.
+                </p>
+            </div>
+            <div class="mt-4 pt-4 border-t border-asr-border flex items-center justify-between text-xs text-asr-faint">
+                <span>4 min read</span>
+                <span class="text-asr-sky font-semibold flex items-center gap-1 group-hover:translate-x-1 transition">Read Guide &rarr;</span>
+            </div>
+        </a>
+        
+        <a href="guides/how-to-block-twitter-x-addiction-android.html" class="bg-asr-surface hover:bg-asr-elevated border border-asr-border hover:border-asr-sky/40 rounded-2xl p-6 transition flex flex-col justify-between group">
+            <div>
+                <div class="inline-flex items-center gap-1.5 text-xs font-bold text-asr-sky uppercase tracking-wider mb-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-asr-sky"></span>
+                    App Blocking
+                </div>
+                <h3 class="text-base font-bold text-asr-text group-hover:text-asr-sky transition mb-2">
+                    How to Block X (Twitter) Doomscrolling on Android
+                </h3>
+                <p class="text-xs text-asr-muted line-clamp-3 leading-relaxed">
+                    Block Twitter / X political outrage feeds and doomscrolling with ASAR's unbreakable strict mode timer.
+                </p>
+            </div>
+            <div class="mt-4 pt-4 border-t border-asr-border flex items-center justify-between text-xs text-asr-faint">
+                <span>4 min read</span>
+                <span class="text-asr-sky font-semibold flex items-center gap-1 group-hover:translate-x-1 transition">Read Guide &rarr;</span>
+            </div>
+        </a>
+        
+        <a href="guides/how-to-block-reddit-feed-android.html" class="bg-asr-surface hover:bg-asr-elevated border border-asr-border hover:border-asr-sky/40 rounded-2xl p-6 transition flex flex-col justify-between group">
+            <div>
+                <div class="inline-flex items-center gap-1.5 text-xs font-bold text-asr-sky uppercase tracking-wider mb-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-asr-sky"></span>
+                    App Blocking
+                </div>
+                <h3 class="text-base font-bold text-asr-text group-hover:text-asr-sky transition mb-2">
+                    How to Block Reddit Feeds & Distractions on Android
+                </h3>
+                <p class="text-xs text-asr-muted line-clamp-3 leading-relaxed">
+                    Block endless Reddit feeds on Android while keeping necessary research tabs accessible.
+                </p>
+            </div>
+            <div class="mt-4 pt-4 border-t border-asr-border flex items-center justify-between text-xs text-asr-faint">
+                <span>4 min read</span>
+                <span class="text-asr-sky font-semibold flex items-center gap-1 group-hover:translate-x-1 transition">Read Guide &rarr;</span>
+            </div>
+        </a>
+        
+        <a href="guides/how-to-block-snapchat-distraction-android.html" class="bg-asr-surface hover:bg-asr-elevated border border-asr-border hover:border-asr-sky/40 rounded-2xl p-6 transition flex flex-col justify-between group">
+            <div>
+                <div class="inline-flex items-center gap-1.5 text-xs font-bold text-asr-sky uppercase tracking-wider mb-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-asr-sky"></span>
+                    App Blocking
+                </div>
+                <h3 class="text-base font-bold text-asr-text group-hover:text-asr-sky transition mb-2">
+                    How to Block Snapchat Streaks and Spotlight on Android
+                </h3>
+                <p class="text-xs text-asr-muted line-clamp-3 leading-relaxed">
+                    Break artificial Snapchat streak anxiety and block Spotlight video scrolling during school and work.
+                </p>
+            </div>
+            <div class="mt-4 pt-4 border-t border-asr-border flex items-center justify-between text-xs text-asr-faint">
+                <span>3 min read</span>
+                <span class="text-asr-sky font-semibold flex items-center gap-1 group-hover:translate-x-1 transition">Read Guide &rarr;</span>
+            </div>
+        </a>
+        
+        <a href="guides/how-to-block-mobile-games-study-time.html" class="bg-asr-surface hover:bg-asr-elevated border border-asr-border hover:border-asr-sky/40 rounded-2xl p-6 transition flex flex-col justify-between group">
+            <div>
+                <div class="inline-flex items-center gap-1.5 text-xs font-bold text-asr-sky uppercase tracking-wider mb-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-asr-sky"></span>
+                    App Blocking
+                </div>
+                <h3 class="text-base font-bold text-asr-text group-hover:text-asr-sky transition mb-2">
+                    How to Block Mobile Games During Study Time on Android
+                </h3>
+                <p class="text-xs text-asr-muted line-clamp-3 leading-relaxed">
+                    Lock mobile games (PUBG, Free Fire, Clash of Clans, Genshin) during study hours with unbreakable strict mode.
+                </p>
+            </div>
+            <div class="mt-4 pt-4 border-t border-asr-border flex items-center justify-between text-xs text-asr-faint">
+                <span>4 min read</span>
+                <span class="text-asr-sky font-semibold flex items-center gap-1 group-hover:translate-x-1 transition">Read Guide &rarr;</span>
+            </div>
+        </a>
+        
+        <a href="guides/how-to-block-adult-websites-android.html" class="bg-asr-surface hover:bg-asr-elevated border border-asr-border hover:border-asr-sky/40 rounded-2xl p-6 transition flex flex-col justify-between group">
+            <div>
+                <div class="inline-flex items-center gap-1.5 text-xs font-bold text-asr-sky uppercase tracking-wider mb-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-asr-sky"></span>
+                    App Blocking
+                </div>
+                <h3 class="text-base font-bold text-asr-text group-hover:text-asr-sky transition mb-2">
+                    How to Block Adult Websites & Explicit Content on Android
+                </h3>
+                <p class="text-xs text-asr-muted line-clamp-3 leading-relaxed">
+                    Block explicit websites and adult domains across all Android mobile browsers with ASAR Pro domain filtering.
+                </p>
+            </div>
+            <div class="mt-4 pt-4 border-t border-asr-border flex items-center justify-between text-xs text-asr-faint">
+                <span>5 min read</span>
+                <span class="text-asr-sky font-semibold flex items-center gap-1 group-hover:translate-x-1 transition">Read Guide &rarr;</span>
+            </div>
+        </a>
+        
+        <a href="guides/how-to-block-gambling-betting-apps-android.html" class="bg-asr-surface hover:bg-asr-elevated border border-asr-border hover:border-asr-sky/40 rounded-2xl p-6 transition flex flex-col justify-between group">
+            <div>
+                <div class="inline-flex items-center gap-1.5 text-xs font-bold text-asr-sky uppercase tracking-wider mb-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-asr-sky"></span>
+                    App Blocking
+                </div>
+                <h3 class="text-base font-bold text-asr-text group-hover:text-asr-sky transition mb-2">
+                    How to Block Gambling and Betting Apps on Android
+                </h3>
+                <p class="text-xs text-asr-muted line-clamp-3 leading-relaxed">
+                    Lock betting, casino, and sports gambling apps on Android with unbreakable anti-tamper guardrails.
+                </p>
+            </div>
+            <div class="mt-4 pt-4 border-t border-asr-border flex items-center justify-between text-xs text-asr-faint">
+                <span>4 min read</span>
+                <span class="text-asr-sky font-semibold flex items-center gap-1 group-hover:translate-x-1 transition">Read Guide &rarr;</span>
+            </div>
+        </a>
+        
+        <a href="guides/how-to-block-telegram-channels-distraction.html" class="bg-asr-surface hover:bg-asr-elevated border border-asr-border hover:border-asr-sky/40 rounded-2xl p-6 transition flex flex-col justify-between group">
+            <div>
+                <div class="inline-flex items-center gap-1.5 text-xs font-bold text-asr-sky uppercase tracking-wider mb-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-asr-sky"></span>
+                    App Blocking
+                </div>
+                <h3 class="text-base font-bold text-asr-text group-hover:text-asr-sky transition mb-2">
+                    How to Block Distracting Telegram Channels on Android
+                </h3>
+                <p class="text-xs text-asr-muted line-clamp-3 leading-relaxed">
+                    Block Telegram distractions and notifications while keeping work communications intact.
+                </p>
+            </div>
+            <div class="mt-4 pt-4 border-t border-asr-border flex items-center justify-between text-xs text-asr-faint">
+                <span>4 min read</span>
+                <span class="text-asr-sky font-semibold flex items-center gap-1 group-hover:translate-x-1 transition">Read Guide &rarr;</span>
+            </div>
+        </a>
+        
+        <a href="guides/how-to-block-whatsapp-status-notifications.html" class="bg-asr-surface hover:bg-asr-elevated border border-asr-border hover:border-asr-sky/40 rounded-2xl p-6 transition flex flex-col justify-between group">
+            <div>
+                <div class="inline-flex items-center gap-1.5 text-xs font-bold text-asr-sky uppercase tracking-wider mb-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-asr-sky"></span>
+                    App Blocking
+                </div>
+                <h3 class="text-base font-bold text-asr-text group-hover:text-asr-sky transition mb-2">
+                    How to Block WhatsApp Status & Notification Distractions
+                </h3>
+                <p class="text-xs text-asr-muted line-clamp-3 leading-relaxed">
+                    Stop checking WhatsApp status updates and group notifications during working hours.
+                </p>
+            </div>
+            <div class="mt-4 pt-4 border-t border-asr-border flex items-center justify-between text-xs text-asr-faint">
+                <span>3 min read</span>
+                <span class="text-asr-sky font-semibold flex items-center gap-1 group-hover:translate-x-1 transition">Read Guide &rarr;</span>
+            </div>
+        </a>
+        
+        <a href="guides/how-to-block-shopping-apps-impulse-buying.html" class="bg-asr-surface hover:bg-asr-elevated border border-asr-border hover:border-asr-sky/40 rounded-2xl p-6 transition flex flex-col justify-between group">
+            <div>
+                <div class="inline-flex items-center gap-1.5 text-xs font-bold text-asr-sky uppercase tracking-wider mb-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-asr-sky"></span>
+                    App Blocking
+                </div>
+                <h3 class="text-base font-bold text-asr-text group-hover:text-asr-sky transition mb-2">
+                    How to Block Shopping Apps and Prevent Impulse Buying
+                </h3>
+                <p class="text-xs text-asr-muted line-clamp-3 leading-relaxed">
+                    Lock Daraz, Amazon, AliExpress, and shopping apps to save money and curb impulse purchases on Android.
+                </p>
+            </div>
+            <div class="mt-4 pt-4 border-t border-asr-border flex items-center justify-between text-xs text-asr-faint">
+                <span>4 min read</span>
+                <span class="text-asr-sky font-semibold flex items-center gap-1 group-hover:translate-x-1 transition">Read Guide &rarr;</span>
+            </div>
+        </a>
+        
+        <a href="guides/how-to-block-netflix-streaming-working-hours.html" class="bg-asr-surface hover:bg-asr-elevated border border-asr-border hover:border-asr-sky/40 rounded-2xl p-6 transition flex flex-col justify-between group">
+            <div>
+                <div class="inline-flex items-center gap-1.5 text-xs font-bold text-asr-sky uppercase tracking-wider mb-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-asr-sky"></span>
+                    App Blocking
+                </div>
+                <h3 class="text-base font-bold text-asr-text group-hover:text-asr-sky transition mb-2">
+                    How to Block Netflix & Streaming Apps During Work Hours
+                </h3>
+                <p class="text-xs text-asr-muted line-clamp-3 leading-relaxed">
+                    Block Netflix, YouTube, Hotstar, and streaming platforms during remote work and study hours.
+                </p>
+            </div>
+            <div class="mt-4 pt-4 border-t border-asr-border flex items-center justify-between text-xs text-asr-faint">
+                <span>4 min read</span>
+                <span class="text-asr-sky font-semibold flex items-center gap-1 group-hover:translate-x-1 transition">Read Guide &rarr;</span>
+            </div>
+        </a>
+        
+        <a href="guides/how-to-block-distracting-websites-chrome-android.html" class="bg-asr-surface hover:bg-asr-elevated border border-asr-border hover:border-asr-sky/40 rounded-2xl p-6 transition flex flex-col justify-between group">
+            <div>
+                <div class="inline-flex items-center gap-1.5 text-xs font-bold text-asr-sky uppercase tracking-wider mb-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-asr-sky"></span>
+                    App Blocking
+                </div>
+                <h3 class="text-base font-bold text-asr-text group-hover:text-asr-sky transition mb-2">
+                    How to Block Distracting Websites on Chrome (Android)
+                </h3>
+                <p class="text-xs text-asr-muted line-clamp-3 leading-relaxed">
+                    Block news websites, social web feeds, and distracting domains inside Google Chrome on Android with ASAR Pro.
+                </p>
+            </div>
+            <div class="mt-4 pt-4 border-t border-asr-border flex items-center justify-between text-xs text-asr-faint">
+                <span>4 min read</span>
+                <span class="text-asr-sky font-semibold flex items-center gap-1 group-hover:translate-x-1 transition">Read Guide &rarr;</span>
+            </div>
+        </a>
+        
+        <a href="guides/how-to-stop-scrolling-reels-subconsciously.html" class="bg-asr-surface hover:bg-asr-elevated border border-asr-border hover:border-asr-sky/40 rounded-2xl p-6 transition flex flex-col justify-between group">
+            <div>
+                <div class="inline-flex items-center gap-1.5 text-xs font-bold text-asr-sky uppercase tracking-wider mb-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-asr-sky"></span>
+                    Psychology & Focus
+                </div>
+                <h3 class="text-base font-bold text-asr-text group-hover:text-asr-sky transition mb-2">
+                    How to Stop Opening Apps Subconsciously (Dopamine Loop Fix)
+                </h3>
+                <p class="text-xs text-asr-muted line-clamp-3 leading-relaxed">
+                    Learn how adaptive friction and mindful pauses break the subconscious muscle memory of opening distracting apps.
+                </p>
+            </div>
+            <div class="mt-4 pt-4 border-t border-asr-border flex items-center justify-between text-xs text-asr-faint">
+                <span>5 min read</span>
+                <span class="text-asr-sky font-semibold flex items-center gap-1 group-hover:translate-x-1 transition">Read Guide &rarr;</span>
+            </div>
+        </a>
+        
+        <a href="guides/how-to-lock-phone-for-studying-android.html" class="bg-asr-surface hover:bg-asr-elevated border border-asr-border hover:border-asr-sky/40 rounded-2xl p-6 transition flex flex-col justify-between group">
+            <div>
+                <div class="inline-flex items-center gap-1.5 text-xs font-bold text-asr-sky uppercase tracking-wider mb-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-asr-sky"></span>
+                    Study & Exams
+                </div>
+                <h3 class="text-base font-bold text-asr-text group-hover:text-asr-sky transition mb-2">
+                    How to Lock Your Phone for Studying (Strict Study Mode)
+                </h3>
+                <p class="text-xs text-asr-muted line-clamp-3 leading-relaxed">
+                    Lock your Android phone into a high-discipline study machine. Prevent distractions during SAT, BCS, and university exam prep.
+                </p>
+            </div>
+            <div class="mt-4 pt-4 border-t border-asr-border flex items-center justify-between text-xs text-asr-faint">
+                <span>4 min read</span>
+                <span class="text-asr-sky font-semibold flex items-center gap-1 group-hover:translate-x-1 transition">Read Guide &rarr;</span>
+            </div>
+        </a>
+        
+        <a href="guides/how-to-set-daily-screen-time-limits-android.html" class="bg-asr-surface hover:bg-asr-elevated border border-asr-border hover:border-asr-sky/40 rounded-2xl p-6 transition flex flex-col justify-between group">
+            <div>
+                <div class="inline-flex items-center gap-1.5 text-xs font-bold text-asr-sky uppercase tracking-wider mb-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-asr-sky"></span>
+                    Digital Wellbeing
+                </div>
+                <h3 class="text-base font-bold text-asr-text group-hover:text-asr-sky transition mb-2">
+                    How to Set Hard Screen Time Limits on Android That Actually Work
+                </h3>
+                <p class="text-xs text-asr-muted line-clamp-3 leading-relaxed">
+                    Set unbypassable screen time limits on Android apps that you cannot easily dismiss when your limit runs out.
+                </p>
+            </div>
+            <div class="mt-4 pt-4 border-t border-asr-border flex items-center justify-between text-xs text-asr-faint">
+                <span>4 min read</span>
+                <span class="text-asr-sky font-semibold flex items-center gap-1 group-hover:translate-x-1 transition">Read Guide &rarr;</span>
+            </div>
+        </a>
+        
+        <a href="guides/how-to-turn-off-notifications-during-deep-work.html" class="bg-asr-surface hover:bg-asr-elevated border border-asr-border hover:border-asr-sky/40 rounded-2xl p-6 transition flex flex-col justify-between group">
+            <div>
+                <div class="inline-flex items-center gap-1.5 text-xs font-bold text-asr-sky uppercase tracking-wider mb-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-asr-sky"></span>
+                    Productivity
+                </div>
+                <h3 class="text-base font-bold text-asr-text group-hover:text-asr-sky transition mb-2">
+                    How to Silence Distracting Notifications During Deep Work
+                </h3>
+                <p class="text-xs text-asr-muted line-clamp-3 leading-relaxed">
+                    Use ASAR's Notification Shield to automatically silence non-essential pings and app banners during focus sessions.
+                </p>
+            </div>
+            <div class="mt-4 pt-4 border-t border-asr-border flex items-center justify-between text-xs text-asr-faint">
+                <span>4 min read</span>
+                <span class="text-asr-sky font-semibold flex items-center gap-1 group-hover:translate-x-1 transition">Read Guide &rarr;</span>
+            </div>
+        </a>
+        
+        <a href="guides/how-to-prevent-bypassing-app-blockers.html" class="bg-asr-surface hover:bg-asr-elevated border border-asr-border hover:border-asr-sky/40 rounded-2xl p-6 transition flex flex-col justify-between group">
+            <div>
+                <div class="inline-flex items-center gap-1.5 text-xs font-bold text-asr-sky uppercase tracking-wider mb-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-asr-sky"></span>
+                    Discipline & Security
+                </div>
+                <h3 class="text-base font-bold text-asr-text group-hover:text-asr-sky transition mb-2">
+                    How to Prevent Bypassing App Blockers on Android (Anti-Tamper Guide)
+                </h3>
+                <p class="text-xs text-asr-muted line-clamp-3 leading-relaxed">
+                    Learn how ASAR's Device Administrator policies and Strict Mode prevent force-closing or uninstalling app blockers.
+                </p>
+            </div>
+            <div class="mt-4 pt-4 border-t border-asr-border flex items-center justify-between text-xs text-asr-faint">
+                <span>5 min read</span>
+                <span class="text-asr-sky font-semibold flex items-center gap-1 group-hover:translate-x-1 transition">Read Guide &rarr;</span>
+            </div>
+        </a>
+        
+        <a href="guides/how-to-schedule-app-blocking-routines.html" class="bg-asr-surface hover:bg-asr-elevated border border-asr-border hover:border-asr-sky/40 rounded-2xl p-6 transition flex flex-col justify-between group">
+            <div>
+                <div class="inline-flex items-center gap-1.5 text-xs font-bold text-asr-sky uppercase tracking-wider mb-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-asr-sky"></span>
+                    Productivity
+                </div>
+                <h3 class="text-base font-bold text-asr-text group-hover:text-asr-sky transition mb-2">
+                    How to Automate Daily App Blocking Schedules on Android
+                </h3>
+                <p class="text-xs text-asr-muted line-clamp-3 leading-relaxed">
+                    Automate your daily focus routines. Set schedules for morning deep work, afternoon study, and evening sleep curfews.
+                </p>
+            </div>
+            <div class="mt-4 pt-4 border-t border-asr-border flex items-center justify-between text-xs text-asr-faint">
+                <span>4 min read</span>
+                <span class="text-asr-sky font-semibold flex items-center gap-1 group-hover:translate-x-1 transition">Read Guide &rarr;</span>
+            </div>
+        </a>
+        
+        <a href="guides/how-to-block-news-feed-doomscrolling.html" class="bg-asr-surface hover:bg-asr-elevated border border-asr-border hover:border-asr-sky/40 rounded-2xl p-6 transition flex flex-col justify-between group">
+            <div>
+                <div class="inline-flex items-center gap-1.5 text-xs font-bold text-asr-sky uppercase tracking-wider mb-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-asr-sky"></span>
+                    Mental Health & Focus
+                </div>
+                <h3 class="text-base font-bold text-asr-text group-hover:text-asr-sky transition mb-2">
+                    How to Stop Doomscrolling News & Social Feeds on Android
+                </h3>
+                <p class="text-xs text-asr-muted line-clamp-3 leading-relaxed">
+                    Protect your mental peace by blocking anxiety-inducing news apps and algorithmic social feeds with ASAR.
+                </p>
+            </div>
+            <div class="mt-4 pt-4 border-t border-asr-border flex items-center justify-between text-xs text-asr-faint">
+                <span>4 min read</span>
+                <span class="text-asr-sky font-semibold flex items-center gap-1 group-hover:translate-x-1 transition">Read Guide &rarr;</span>
+            </div>
+        </a>
+        
+        <a href="guides/how-to-stop-opening-apps-out-of-boredom.html" class="bg-asr-surface hover:bg-asr-elevated border border-asr-border hover:border-asr-sky/40 rounded-2xl p-6 transition flex flex-col justify-between group">
+            <div>
+                <div class="inline-flex items-center gap-1.5 text-xs font-bold text-asr-sky uppercase tracking-wider mb-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-asr-sky"></span>
+                    Psychology & Focus
+                </div>
+                <h3 class="text-base font-bold text-asr-text group-hover:text-asr-sky transition mb-2">
+                    How to Stop Opening Your Phone Out of Boredom
+                </h3>
+                <p class="text-xs text-asr-muted line-clamp-3 leading-relaxed">
+                    Train your brain to tolerate healthy boredom and build laser-like attention span using mindful friction.
+                </p>
+            </div>
+            <div class="mt-4 pt-4 border-t border-asr-border flex items-center justify-between text-xs text-asr-faint">
+                <span>4 min read</span>
+                <span class="text-asr-sky font-semibold flex items-center gap-1 group-hover:translate-x-1 transition">Read Guide &rarr;</span>
+            </div>
+        </a>
+        
+        <a href="guides/how-to-build-a-digital-curfew-before-sleep.html" class="bg-asr-surface hover:bg-asr-elevated border border-asr-border hover:border-asr-sky/40 rounded-2xl p-6 transition flex flex-col justify-between group">
+            <div>
+                <div class="inline-flex items-center gap-1.5 text-xs font-bold text-asr-sky uppercase tracking-wider mb-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-asr-sky"></span>
+                    Digital Wellbeing
+                </div>
+                <h3 class="text-base font-bold text-asr-text group-hover:text-asr-sky transition mb-2">
+                    How to Create a Digital Curfew on Android for Better Sleep
+                </h3>
+                <p class="text-xs text-asr-muted line-clamp-3 leading-relaxed">
+                    Lock blue-light emitting apps and social media feeds 1 hour before bed for deeper, restorative sleep.
+                </p>
+            </div>
+            <div class="mt-4 pt-4 border-t border-asr-border flex items-center justify-between text-xs text-asr-faint">
+                <span>4 min read</span>
+                <span class="text-asr-sky font-semibold flex items-center gap-1 group-hover:translate-x-1 transition">Read Guide &rarr;</span>
+            </div>
+        </a>
+        
+        <a href="guides/how-to-lock-apps-during-exam-season.html" class="bg-asr-surface hover:bg-asr-elevated border border-asr-border hover:border-asr-sky/40 rounded-2xl p-6 transition flex flex-col justify-between group">
+            <div>
+                <div class="inline-flex items-center gap-1.5 text-xs font-bold text-asr-sky uppercase tracking-wider mb-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-asr-sky"></span>
+                    Study & Exams
+                </div>
+                <h3 class="text-base font-bold text-asr-text group-hover:text-asr-sky transition mb-2">
+                    How to Lock Distracting Apps During Exam Season
+                </h3>
+                <p class="text-xs text-asr-muted line-clamp-3 leading-relaxed">
+                    The ultimate exam survival guide: lock distractions, maximize study retention, and score higher with ASAR.
+                </p>
+            </div>
+            <div class="mt-4 pt-4 border-t border-asr-border flex items-center justify-between text-xs text-asr-faint">
+                <span>5 min read</span>
+                <span class="text-asr-sky font-semibold flex items-center gap-1 group-hover:translate-x-1 transition">Read Guide &rarr;</span>
+            </div>
+        </a>
+        
+        <a href="guides/best-app-blocker-for-android-2026.html" class="bg-asr-surface hover:bg-asr-elevated border border-asr-border hover:border-asr-sky/40 rounded-2xl p-6 transition flex flex-col justify-between group">
+            <div>
+                <div class="inline-flex items-center gap-1.5 text-xs font-bold text-asr-sky uppercase tracking-wider mb-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-asr-sky"></span>
+                    Best Apps
+                </div>
+                <h3 class="text-base font-bold text-asr-text group-hover:text-asr-sky transition mb-2">
+                    Best App Blocker for Android in 2026 (Tested & Ranked)
+                </h3>
+                <p class="text-xs text-asr-muted line-clamp-3 leading-relaxed">
+                    Discover why ASAR is ranked the #1 best app blocker for Android in 2026. Unbreakable strict mode, mindful friction, and 100% on-device privacy.
+                </p>
+            </div>
+            <div class="mt-4 pt-4 border-t border-asr-border flex items-center justify-between text-xs text-asr-faint">
+                <span>6 min read</span>
+                <span class="text-asr-sky font-semibold flex items-center gap-1 group-hover:translate-x-1 transition">Read Guide &rarr;</span>
+            </div>
+        </a>
+        
+        <a href="guides/best-strict-mode-app-blocker-android.html" class="bg-asr-surface hover:bg-asr-elevated border border-asr-border hover:border-asr-sky/40 rounded-2xl p-6 transition flex flex-col justify-between group">
+            <div>
+                <div class="inline-flex items-center gap-1.5 text-xs font-bold text-asr-sky uppercase tracking-wider mb-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-asr-sky"></span>
+                    Best Apps
+                </div>
+                <h3 class="text-base font-bold text-asr-text group-hover:text-asr-sky transition mb-2">
+                    Best Strict Mode App Blocker for Android (Cannot Be Bypassed)
+                </h3>
+                <p class="text-xs text-asr-muted line-clamp-3 leading-relaxed">
+                    Looking for an app blocker you cannot bypass in moments of weakness? ASAR Strict Mode provides iron-clad enforcement.
+                </p>
+            </div>
+            <div class="mt-4 pt-4 border-t border-asr-border flex items-center justify-between text-xs text-asr-faint">
+                <span>5 min read</span>
+                <span class="text-asr-sky font-semibold flex items-center gap-1 group-hover:translate-x-1 transition">Read Guide &rarr;</span>
+            </div>
+        </a>
+        
+        <a href="guides/best-screen-time-limiter-app-android.html" class="bg-asr-surface hover:bg-asr-elevated border border-asr-border hover:border-asr-sky/40 rounded-2xl p-6 transition flex flex-col justify-between group">
+            <div>
+                <div class="inline-flex items-center gap-1.5 text-xs font-bold text-asr-sky uppercase tracking-wider mb-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-asr-sky"></span>
+                    Best Apps
+                </div>
+                <h3 class="text-base font-bold text-asr-text group-hover:text-asr-sky transition mb-2">
+                    Best Screen Time Limiter App for Android (Free & Private)
+                </h3>
+                <p class="text-xs text-asr-muted line-clamp-3 leading-relaxed">
+                    The best screen time limiter for Android. Set real limits on addictive apps without paying monthly subscription fees.
+                </p>
+            </div>
+            <div class="mt-4 pt-4 border-t border-asr-border flex items-center justify-between text-xs text-asr-faint">
+                <span>4 min read</span>
+                <span class="text-asr-sky font-semibold flex items-center gap-1 group-hover:translate-x-1 transition">Read Guide &rarr;</span>
+            </div>
+        </a>
+        
+        <a href="guides/best-dopamine-detox-app-android.html" class="bg-asr-surface hover:bg-asr-elevated border border-asr-border hover:border-asr-sky/40 rounded-2xl p-6 transition flex flex-col justify-between group">
+            <div>
+                <div class="inline-flex items-center gap-1.5 text-xs font-bold text-asr-sky uppercase tracking-wider mb-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-asr-sky"></span>
+                    Best Apps
+                </div>
+                <h3 class="text-base font-bold text-asr-text group-hover:text-asr-sky transition mb-2">
+                    Best Dopamine Detox App for Android (30-Day Reset)
+                </h3>
+                <p class="text-xs text-asr-muted line-clamp-3 leading-relaxed">
+                    Reset your attention span with ASAR, the best dopamine detox companion app for Android.
+                </p>
+            </div>
+            <div class="mt-4 pt-4 border-t border-asr-border flex items-center justify-between text-xs text-asr-faint">
+                <span>5 min read</span>
+                <span class="text-asr-sky font-semibold flex items-center gap-1 group-hover:translate-x-1 transition">Read Guide &rarr;</span>
+            </div>
+        </a>
+        
+        <a href="guides/best-study-timer-app-for-students.html" class="bg-asr-surface hover:bg-asr-elevated border border-asr-border hover:border-asr-sky/40 rounded-2xl p-6 transition flex flex-col justify-between group">
+            <div>
+                <div class="inline-flex items-center gap-1.5 text-xs font-bold text-asr-sky uppercase tracking-wider mb-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-asr-sky"></span>
+                    Study & Exams
+                </div>
+                <h3 class="text-base font-bold text-asr-text group-hover:text-asr-sky transition mb-2">
+                    Best Study Timer App with App Blocking for Students
+                </h3>
+                <p class="text-xs text-asr-muted line-clamp-3 leading-relaxed">
+                    Boost your GPA with ASAR: the best study timer and distraction blocker designed for high school and university students.
+                </p>
+            </div>
+            <div class="mt-4 pt-4 border-t border-asr-border flex items-center justify-between text-xs text-asr-faint">
+                <span>5 min read</span>
+                <span class="text-asr-sky font-semibold flex items-center gap-1 group-hover:translate-x-1 transition">Read Guide &rarr;</span>
+            </div>
+        </a>
+        
+        <a href="guides/best-deep-work-focus-app-android.html" class="bg-asr-surface hover:bg-asr-elevated border border-asr-border hover:border-asr-sky/40 rounded-2xl p-6 transition flex flex-col justify-between group">
+            <div>
+                <div class="inline-flex items-center gap-1.5 text-xs font-bold text-asr-sky uppercase tracking-wider mb-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-asr-sky"></span>
+                    Productivity
+                </div>
+                <h3 class="text-base font-bold text-asr-text group-hover:text-asr-sky transition mb-2">
+                    Best Deep Work Focus App for Android (Cal Newport Method)
+                </h3>
+                <p class="text-xs text-asr-muted line-clamp-3 leading-relaxed">
+                    Implement Cal Newport's Deep Work principles on your Android phone with ASAR's distraction shield.
+                </p>
+            </div>
+            <div class="mt-4 pt-4 border-t border-asr-border flex items-center justify-between text-xs text-asr-faint">
+                <span>5 min read</span>
+                <span class="text-asr-sky font-semibold flex items-center gap-1 group-hover:translate-x-1 transition">Read Guide &rarr;</span>
+            </div>
+        </a>
+        
+        <a href="guides/best-adhd-friendly-app-blocker.html" class="bg-asr-surface hover:bg-asr-elevated border border-asr-border hover:border-asr-sky/40 rounded-2xl p-6 transition flex flex-col justify-between group">
+            <div>
+                <div class="inline-flex items-center gap-1.5 text-xs font-bold text-asr-sky uppercase tracking-wider mb-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-asr-sky"></span>
+                    Digital Wellbeing
+                </div>
+                <h3 class="text-base font-bold text-asr-text group-hover:text-asr-sky transition mb-2">
+                    Best ADHD-Friendly App Blocker for Android (Gentle Friction)
+                </h3>
+                <p class="text-xs text-asr-muted line-clamp-3 leading-relaxed">
+                    Discover the best ADHD-friendly app blocker. Adaptive friction and mindful breathing help regulate dopamine without shame.
+                </p>
+            </div>
+            <div class="mt-4 pt-4 border-t border-asr-border flex items-center justify-between text-xs text-asr-faint">
+                <span>5 min read</span>
+                <span class="text-asr-sky font-semibold flex items-center gap-1 group-hover:translate-x-1 transition">Read Guide &rarr;</span>
+            </div>
+        </a>
+        
+        <a href="guides/best-pomodoro-timer-with-app-blocking.html" class="bg-asr-surface hover:bg-asr-elevated border border-asr-border hover:border-asr-sky/40 rounded-2xl p-6 transition flex flex-col justify-between group">
+            <div>
+                <div class="inline-flex items-center gap-1.5 text-xs font-bold text-asr-sky uppercase tracking-wider mb-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-asr-sky"></span>
+                    Productivity
+                </div>
+                <h3 class="text-base font-bold text-asr-text group-hover:text-asr-sky transition mb-2">
+                    Best Pomodoro Timer with Built-In App Blocking (Android)
+                </h3>
+                <p class="text-xs text-asr-muted line-clamp-3 leading-relaxed">
+                    Stop tab switching during Pomodoro sessions. ASAR enforces real app blocking while your Pomodoro timer runs.
+                </p>
+            </div>
+            <div class="mt-4 pt-4 border-t border-asr-border flex items-center justify-between text-xs text-asr-faint">
+                <span>4 min read</span>
+                <span class="text-asr-sky font-semibold flex items-center gap-1 group-hover:translate-x-1 transition">Read Guide &rarr;</span>
+            </div>
+        </a>
+        
+        <a href="guides/best-mindful-pause-friction-app.html" class="bg-asr-surface hover:bg-asr-elevated border border-asr-border hover:border-asr-sky/40 rounded-2xl p-6 transition flex flex-col justify-between group">
+            <div>
+                <div class="inline-flex items-center gap-1.5 text-xs font-bold text-asr-sky uppercase tracking-wider mb-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-asr-sky"></span>
+                    Psychology & Focus
+                </div>
+                <h3 class="text-base font-bold text-asr-text group-hover:text-asr-sky transition mb-2">
+                    Best Mindful Pause and Screen Time Friction App for Android
+                </h3>
+                <p class="text-xs text-asr-muted line-clamp-3 leading-relaxed">
+                    Inspired by one sec: ASAR brings mindful breathing pauses and adaptive friction to Android with zero ads.
+                </p>
+            </div>
+            <div class="mt-4 pt-4 border-t border-asr-border flex items-center justify-between text-xs text-asr-faint">
+                <span>4 min read</span>
+                <span class="text-asr-sky font-semibold flex items-center gap-1 group-hover:translate-x-1 transition">Read Guide &rarr;</span>
+            </div>
+        </a>
+        
+        <a href="guides/best-anti-distraction-app-without-ads.html" class="bg-asr-surface hover:bg-asr-elevated border border-asr-border hover:border-asr-sky/40 rounded-2xl p-6 transition flex flex-col justify-between group">
+            <div>
+                <div class="inline-flex items-center gap-1.5 text-xs font-bold text-asr-sky uppercase tracking-wider mb-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-asr-sky"></span>
+                    Best Apps
+                </div>
+                <h3 class="text-base font-bold text-asr-text group-hover:text-asr-sky transition mb-2">
+                    Best Anti-Distraction App Without Ads for Android
+                </h3>
+                <p class="text-xs text-asr-muted line-clamp-3 leading-relaxed">
+                    Clean, ad-free focus. Discover ASAR: the obsidian-themed focus app built with zero third-party advertisements.
+                </p>
+            </div>
+            <div class="mt-4 pt-4 border-t border-asr-border flex items-center justify-between text-xs text-asr-faint">
+                <span>4 min read</span>
+                <span class="text-asr-sky font-semibold flex items-center gap-1 group-hover:translate-x-1 transition">Read Guide &rarr;</span>
+            </div>
+        </a>
+        
+        <a href="guides/best-offline-app-blocker-private-secure.html" class="bg-asr-surface hover:bg-asr-elevated border border-asr-border hover:border-asr-sky/40 rounded-2xl p-6 transition flex flex-col justify-between group">
+            <div>
+                <div class="inline-flex items-center gap-1.5 text-xs font-bold text-asr-sky uppercase tracking-wider mb-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-asr-sky"></span>
+                    Discipline & Security
+                </div>
+                <h3 class="text-base font-bold text-asr-text group-hover:text-asr-sky transition mb-2">
+                    Best Offline App Blocker for Android (100% Private & Local)
+                </h3>
+                <p class="text-xs text-asr-muted line-clamp-3 leading-relaxed">
+                    Keep your screen time data private. ASAR stores all focus records locally on-device with zero cloud surveillance.
+                </p>
+            </div>
+            <div class="mt-4 pt-4 border-t border-asr-border flex items-center justify-between text-xs text-asr-faint">
+                <span>4 min read</span>
+                <span class="text-asr-sky font-semibold flex items-center gap-1 group-hover:translate-x-1 transition">Read Guide &rarr;</span>
+            </div>
+        </a>
+        
+        <a href="guides/best-app-blocker-you-cannot-bypass.html" class="bg-asr-surface hover:bg-asr-elevated border border-asr-border hover:border-asr-sky/40 rounded-2xl p-6 transition flex flex-col justify-between group">
+            <div>
+                <div class="inline-flex items-center gap-1.5 text-xs font-bold text-asr-sky uppercase tracking-wider mb-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-asr-sky"></span>
+                    Discipline & Security
+                </div>
+                <h3 class="text-base font-bold text-asr-text group-hover:text-asr-sky transition mb-2">
+                    Best App Blocker You Cannot Bypass in Moments of Weakness
+                </h3>
+                <p class="text-xs text-asr-muted line-clamp-3 leading-relaxed">
+                    Tired of disabling your blocker when an urge strikes? ASAR Strict Mode creates unbreakable barriers against relapse.
+                </p>
+            </div>
+            <div class="mt-4 pt-4 border-t border-asr-border flex items-center justify-between text-xs text-asr-faint">
+                <span>5 min read</span>
+                <span class="text-asr-sky font-semibold flex items-center gap-1 group-hover:translate-x-1 transition">Read Guide &rarr;</span>
+            </div>
+        </a>
+        
+        <a href="guides/best-app-blocker-you-cannot-uninstall.html" class="bg-asr-surface hover:bg-asr-elevated border border-asr-border hover:border-asr-sky/40 rounded-2xl p-6 transition flex flex-col justify-between group">
+            <div>
+                <div class="inline-flex items-center gap-1.5 text-xs font-bold text-asr-sky uppercase tracking-wider mb-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-asr-sky"></span>
+                    Discipline & Security
+                </div>
+                <h3 class="text-base font-bold text-asr-text group-hover:text-asr-sky transition mb-2">
+                    Best App Blocker You Cannot Uninstall (Anti-Uninstall Lock)
+                </h3>
+                <p class="text-xs text-asr-muted line-clamp-3 leading-relaxed">
+                    Protect your long-term goals. ASAR Device Administration prevents uninstallation while focus sessions are active.
+                </p>
+            </div>
+            <div class="mt-4 pt-4 border-t border-asr-border flex items-center justify-between text-xs text-asr-faint">
+                <span>4 min read</span>
+                <span class="text-asr-sky font-semibold flex items-center gap-1 group-hover:translate-x-1 transition">Read Guide &rarr;</span>
+            </div>
+        </a>
+        
+        <a href="guides/best-productivity-apps-for-university-students.html" class="bg-asr-surface hover:bg-asr-elevated border border-asr-border hover:border-asr-sky/40 rounded-2xl p-6 transition flex flex-col justify-between group">
+            <div>
+                <div class="inline-flex items-center gap-1.5 text-xs font-bold text-asr-sky uppercase tracking-wider mb-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-asr-sky"></span>
+                    Study & Exams
+                </div>
+                <h3 class="text-base font-bold text-asr-text group-hover:text-asr-sky transition mb-2">
+                    Best Productivity & Focus Apps for University Students (2026)
+                </h3>
+                <p class="text-xs text-asr-muted line-clamp-3 leading-relaxed">
+                    Top productivity apps for college and university students to manage deadlines, ace exams, and stop phone addiction.
+                </p>
+            </div>
+            <div class="mt-4 pt-4 border-t border-asr-border flex items-center justify-between text-xs text-asr-faint">
+                <span>5 min read</span>
+                <span class="text-asr-sky font-semibold flex items-center gap-1 group-hover:translate-x-1 transition">Read Guide &rarr;</span>
+            </div>
+        </a>
+        
+        <a href="guides/best-digital-wellbeing-alternatives-android.html" class="bg-asr-surface hover:bg-asr-elevated border border-asr-border hover:border-asr-sky/40 rounded-2xl p-6 transition flex flex-col justify-between group">
+            <div>
+                <div class="inline-flex items-center gap-1.5 text-xs font-bold text-asr-sky uppercase tracking-wider mb-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-asr-sky"></span>
+                    Best Apps
+                </div>
+                <h3 class="text-base font-bold text-asr-text group-hover:text-asr-sky transition mb-2">
+                    Best Digital Wellbeing Alternatives for Android (More Features)
+                </h3>
+                <p class="text-xs text-asr-muted line-clamp-3 leading-relaxed">
+                    Why Android's built-in Digital Wellbeing fails and why ASAR provides superior strictness, mindful pauses, and XP tracking.
+                </p>
+            </div>
+            <div class="mt-4 pt-4 border-t border-asr-border flex items-center justify-between text-xs text-asr-faint">
+                <span>5 min read</span>
+                <span class="text-asr-sky font-semibold flex items-center gap-1 group-hover:translate-x-1 transition">Read Guide &rarr;</span>
+            </div>
+        </a>
+        
+        <a href="guides/best-social-media-blocker-for-exams.html" class="bg-asr-surface hover:bg-asr-elevated border border-asr-border hover:border-asr-sky/40 rounded-2xl p-6 transition flex flex-col justify-between group">
+            <div>
+                <div class="inline-flex items-center gap-1.5 text-xs font-bold text-asr-sky uppercase tracking-wider mb-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-asr-sky"></span>
+                    Study & Exams
+                </div>
+                <h3 class="text-base font-bold text-asr-text group-hover:text-asr-sky transition mb-2">
+                    Best Social Media Blocker for Board & University Exams
+                </h3>
+                <p class="text-xs text-asr-muted line-clamp-3 leading-relaxed">
+                    Block Facebook, Instagram, TikTok, and YouTube during board exams, SAT, and finals with ASAR.
+                </p>
+            </div>
+            <div class="mt-4 pt-4 border-t border-asr-border flex items-center justify-between text-xs text-asr-faint">
+                <span>4 min read</span>
+                <span class="text-asr-sky font-semibold flex items-center gap-1 group-hover:translate-x-1 transition">Read Guide &rarr;</span>
+            </div>
+        </a>
+        
+        <a href="guides/best-phone-addiction-breaker-apps.html" class="bg-asr-surface hover:bg-asr-elevated border border-asr-border hover:border-asr-sky/40 rounded-2xl p-6 transition flex flex-col justify-between group">
+            <div>
+                <div class="inline-flex items-center gap-1.5 text-xs font-bold text-asr-sky uppercase tracking-wider mb-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-asr-sky"></span>
+                    Digital Wellbeing
+                </div>
+                <h3 class="text-base font-bold text-asr-text group-hover:text-asr-sky transition mb-2">
+                    Best Phone Addiction Breaker Apps on Android (Habit Loop Reset)
+                </h3>
+                <p class="text-xs text-asr-muted line-clamp-3 leading-relaxed">
+                    Break smartphone addiction with proven psychological habit design, mindful friction, and gamification.
+                </p>
+            </div>
+            <div class="mt-4 pt-4 border-t border-asr-border flex items-center justify-between text-xs text-asr-faint">
+                <span>5 min read</span>
+                <span class="text-asr-sky font-semibold flex items-center gap-1 group-hover:translate-x-1 transition">Read Guide &rarr;</span>
+            </div>
+        </a>
+        
+        <a href="guides/best-habit-discipline-tracker-apps.html" class="bg-asr-surface hover:bg-asr-elevated border border-asr-border hover:border-asr-sky/40 rounded-2xl p-6 transition flex flex-col justify-between group">
+            <div>
+                <div class="inline-flex items-center gap-1.5 text-xs font-bold text-asr-sky uppercase tracking-wider mb-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-asr-sky"></span>
+                    Discipline & Security
+                </div>
+                <h3 class="text-base font-bold text-asr-text group-hover:text-asr-sky transition mb-2">
+                    Best Habit & Discipline Tracker Apps for Android (XP & Streaks)
+                </h3>
+                <p class="text-xs text-asr-muted line-clamp-3 leading-relaxed">
+                    Track your daily mental discipline with ASAR's transparent score formula, streaks, and earnable achievements.
+                </p>
+            </div>
+            <div class="mt-4 pt-4 border-t border-asr-border flex items-center justify-between text-xs text-asr-faint">
+                <span>5 min read</span>
+                <span class="text-asr-sky font-semibold flex items-center gap-1 group-hover:translate-x-1 transition">Read Guide &rarr;</span>
+            </div>
+        </a>
+        
+        <a href="guides/best-app-blockers-for-software-engineers.html" class="bg-asr-surface hover:bg-asr-elevated border border-asr-border hover:border-asr-sky/40 rounded-2xl p-6 transition flex flex-col justify-between group">
+            <div>
+                <div class="inline-flex items-center gap-1.5 text-xs font-bold text-asr-sky uppercase tracking-wider mb-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-asr-sky"></span>
+                    Productivity
+                </div>
+                <h3 class="text-base font-bold text-asr-text group-hover:text-asr-sky transition mb-2">
+                    Best App Blockers for Software Engineers & Developers
+                </h3>
+                <p class="text-xs text-asr-muted line-clamp-3 leading-relaxed">
+                    Protect your coding flow state. Block social feeds and mobile notifications while coding and debugging.
+                </p>
+            </div>
+            <div class="mt-4 pt-4 border-t border-asr-border flex items-center justify-between text-xs text-asr-faint">
+                <span>5 min read</span>
+                <span class="text-asr-sky font-semibold flex items-center gap-1 group-hover:translate-x-1 transition">Read Guide &rarr;</span>
+            </div>
+        </a>
+        
+        <a href="guides/best-focus-apps-for-writers-creators.html" class="bg-asr-surface hover:bg-asr-elevated border border-asr-border hover:border-asr-sky/40 rounded-2xl p-6 transition flex flex-col justify-between group">
+            <div>
+                <div class="inline-flex items-center gap-1.5 text-xs font-bold text-asr-sky uppercase tracking-wider mb-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-asr-sky"></span>
+                    Productivity
+                </div>
+                <h3 class="text-base font-bold text-asr-text group-hover:text-asr-sky transition mb-2">
+                    Best Focus Apps for Writers, Authors & Content Creators
+                </h3>
+                <p class="text-xs text-asr-muted line-clamp-3 leading-relaxed">
+                    Eliminate writer's block and procrastination. ASAR creates a silent, distraction-free environment for writers.
+                </p>
+            </div>
+            <div class="mt-4 pt-4 border-t border-asr-border flex items-center justify-between text-xs text-asr-faint">
+                <span>4 min read</span>
+                <span class="text-asr-sky font-semibold flex items-center gap-1 group-hover:translate-x-1 transition">Read Guide &rarr;</span>
+            </div>
+        </a>
+        
+        <a href="guides/asar-vs-opal-app-blocker-android.html" class="bg-asr-surface hover:bg-asr-elevated border border-asr-border hover:border-asr-sky/40 rounded-2xl p-6 transition flex flex-col justify-between group">
+            <div>
+                <div class="inline-flex items-center gap-1.5 text-xs font-bold text-asr-sky uppercase tracking-wider mb-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-asr-sky"></span>
+                    Comparison
+                </div>
+                <h3 class="text-base font-bold text-asr-text group-hover:text-asr-sky transition mb-2">
+                    ASAR vs Opal: The Best Android Alternative to Opal App Blocker
+                </h3>
+                <p class="text-xs text-asr-muted line-clamp-3 leading-relaxed">
+                    Looking for Opal on Android? Discover ASAR, the top-rated on-device digital discipline app with mindful friction and strict mode.
+                </p>
+            </div>
+            <div class="mt-4 pt-4 border-t border-asr-border flex items-center justify-between text-xs text-asr-faint">
+                <span>5 min read</span>
+                <span class="text-asr-sky font-semibold flex items-center gap-1 group-hover:translate-x-1 transition">Read Guide &rarr;</span>
+            </div>
+        </a>
+        
+        <a href="guides/asar-vs-freedom-app-comparison.html" class="bg-asr-surface hover:bg-asr-elevated border border-asr-border hover:border-asr-sky/40 rounded-2xl p-6 transition flex flex-col justify-between group">
+            <div>
+                <div class="inline-flex items-center gap-1.5 text-xs font-bold text-asr-sky uppercase tracking-wider mb-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-asr-sky"></span>
+                    Comparison
+                </div>
+                <h3 class="text-base font-bold text-asr-text group-hover:text-asr-sky transition mb-2">
+                    ASAR vs Freedom App: Which Focus Blocker is Better for Android?
+                </h3>
+                <p class="text-xs text-asr-muted line-clamp-3 leading-relaxed">
+                    Comprehensive comparison between ASAR and Freedom app blocker on Android. Features, privacy, and pricing breakdown.
+                </p>
+            </div>
+            <div class="mt-4 pt-4 border-t border-asr-border flex items-center justify-between text-xs text-asr-faint">
+                <span>5 min read</span>
+                <span class="text-asr-sky font-semibold flex items-center gap-1 group-hover:translate-x-1 transition">Read Guide &rarr;</span>
+            </div>
+        </a>
+        
+        <a href="guides/asar-vs-forest-stay-focused-alternative.html" class="bg-asr-surface hover:bg-asr-elevated border border-asr-border hover:border-asr-sky/40 rounded-2xl p-6 transition flex flex-col justify-between group">
+            <div>
+                <div class="inline-flex items-center gap-1.5 text-xs font-bold text-asr-sky uppercase tracking-wider mb-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-asr-sky"></span>
+                    Comparison
+                </div>
+                <h3 class="text-base font-bold text-asr-text group-hover:text-asr-sky transition mb-2">
+                    ASAR vs Forest: Gamified Tree Planting vs Real Strict Discipline
+                </h3>
+                <p class="text-xs text-asr-muted line-clamp-3 leading-relaxed">
+                    Why ASAR's unbreakable strict mode and discipline XP system outperforms Forest for serious students and professionals.
+                </p>
+            </div>
+            <div class="mt-4 pt-4 border-t border-asr-border flex items-center justify-between text-xs text-asr-faint">
+                <span>5 min read</span>
+                <span class="text-asr-sky font-semibold flex items-center gap-1 group-hover:translate-x-1 transition">Read Guide &rarr;</span>
+            </div>
+        </a>
+        
+        <a href="guides/asar-vs-one-sec-delay-friction-alternative.html" class="bg-asr-surface hover:bg-asr-elevated border border-asr-border hover:border-asr-sky/40 rounded-2xl p-6 transition flex flex-col justify-between group">
+            <div>
+                <div class="inline-flex items-center gap-1.5 text-xs font-bold text-asr-sky uppercase tracking-wider mb-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-asr-sky"></span>
+                    Comparison
+                </div>
+                <h3 class="text-base font-bold text-asr-text group-hover:text-asr-sky transition mb-2">
+                    ASAR vs one sec: Best Android Alternative for Mindful Friction
+                </h3>
+                <p class="text-xs text-asr-muted line-clamp-3 leading-relaxed">
+                    Looking for a 'one sec' alternative for Android? ASAR combines 5s breathing pauses with full app and website blocking.
+                </p>
+            </div>
+            <div class="mt-4 pt-4 border-t border-asr-border flex items-center justify-between text-xs text-asr-faint">
+                <span>5 min read</span>
+                <span class="text-asr-sky font-semibold flex items-center gap-1 group-hover:translate-x-1 transition">Read Guide &rarr;</span>
+            </div>
+        </a>
+        
+        <a href="guides/asar-vs-appblock-stay-focused-comparison.html" class="bg-asr-surface hover:bg-asr-elevated border border-asr-border hover:border-asr-sky/40 rounded-2xl p-6 transition flex flex-col justify-between group">
+            <div>
+                <div class="inline-flex items-center gap-1.5 text-xs font-bold text-asr-sky uppercase tracking-wider mb-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-asr-sky"></span>
+                    Comparison
+                </div>
+                <h3 class="text-base font-bold text-asr-text group-hover:text-asr-sky transition mb-2">
+                    ASAR vs AppBlock: Feature, UI & Privacy Comparison
+                </h3>
+                <p class="text-xs text-asr-muted line-clamp-3 leading-relaxed">
+                    Compare ASAR vs AppBlock. Discover why ASAR's minimalist obsidian UI, transparent formula, and ad-free experience wins.
+                </p>
+            </div>
+            <div class="mt-4 pt-4 border-t border-asr-border flex items-center justify-between text-xs text-asr-faint">
+                <span>5 min read</span>
+                <span class="text-asr-sky font-semibold flex items-center gap-1 group-hover:translate-x-1 transition">Read Guide &rarr;</span>
+            </div>
+        </a>
+        
+        <a href="guides/asar-vs-stayfree-screen-time-alternative.html" class="bg-asr-surface hover:bg-asr-elevated border border-asr-border hover:border-asr-sky/40 rounded-2xl p-6 transition flex flex-col justify-between group">
+            <div>
+                <div class="inline-flex items-center gap-1.5 text-xs font-bold text-asr-sky uppercase tracking-wider mb-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-asr-sky"></span>
+                    Comparison
+                </div>
+                <h3 class="text-base font-bold text-asr-text group-hover:text-asr-sky transition mb-2">
+                    ASAR vs StayFree: Screen Time Analytics vs Active Intervention
+                </h3>
+                <p class="text-xs text-asr-muted line-clamp-3 leading-relaxed">
+                    Why active blocking and mindful pauses in ASAR beat passive screen time charts in StayFree.
+                </p>
+            </div>
+            <div class="mt-4 pt-4 border-t border-asr-border flex items-center justify-between text-xs text-asr-faint">
+                <span>4 min read</span>
+                <span class="text-asr-sky font-semibold flex items-center gap-1 group-hover:translate-x-1 transition">Read Guide &rarr;</span>
+            </div>
+        </a>
+        
+        <a href="guides/asar-vs-cold-turkey-android-alternative.html" class="bg-asr-surface hover:bg-asr-elevated border border-asr-border hover:border-asr-sky/40 rounded-2xl p-6 transition flex flex-col justify-between group">
+            <div>
+                <div class="inline-flex items-center gap-1.5 text-xs font-bold text-asr-sky uppercase tracking-wider mb-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-asr-sky"></span>
+                    Comparison
+                </div>
+                <h3 class="text-base font-bold text-asr-text group-hover:text-asr-sky transition mb-2">
+                    ASAR vs Cold Turkey: The Best Cold Turkey Alternative for Android
+                </h3>
+                <p class="text-xs text-asr-muted line-clamp-3 leading-relaxed">
+                    Cold Turkey is famous for unbreakable desktop blocking. ASAR brings that same iron-clad strictness to Android phones.
+                </p>
+            </div>
+            <div class="mt-4 pt-4 border-t border-asr-border flex items-center justify-between text-xs text-asr-faint">
+                <span>5 min read</span>
+                <span class="text-asr-sky font-semibold flex items-center gap-1 group-hover:translate-x-1 transition">Read Guide &rarr;</span>
+            </div>
+        </a>
+        
+        <a href="guides/asar-vs-blocksite-website-blocker-alternative.html" class="bg-asr-surface hover:bg-asr-elevated border border-asr-border hover:border-asr-sky/40 rounded-2xl p-6 transition flex flex-col justify-between group">
+            <div>
+                <div class="inline-flex items-center gap-1.5 text-xs font-bold text-asr-sky uppercase tracking-wider mb-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-asr-sky"></span>
+                    Comparison
+                </div>
+                <h3 class="text-base font-bold text-asr-text group-hover:text-asr-sky transition mb-2">
+                    ASAR vs BlockSite: Privacy, Battery & Strictness Compared
+                </h3>
+                <p class="text-xs text-asr-muted line-clamp-3 leading-relaxed">
+                    Compare ASAR vs BlockSite. Learn why on-device local blocking in ASAR protects your privacy better than proxy extensions.
+                </p>
+            </div>
+            <div class="mt-4 pt-4 border-t border-asr-border flex items-center justify-between text-xs text-asr-faint">
+                <span>4 min read</span>
+                <span class="text-asr-sky font-semibold flex items-center gap-1 group-hover:translate-x-1 transition">Read Guide &rarr;</span>
+            </div>
+        </a>
+        
+        <a href="guides/asar-vs-digital-detox-app-comparison.html" class="bg-asr-surface hover:bg-asr-elevated border border-asr-border hover:border-asr-sky/40 rounded-2xl p-6 transition flex flex-col justify-between group">
+            <div>
+                <div class="inline-flex items-center gap-1.5 text-xs font-bold text-asr-sky uppercase tracking-wider mb-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-asr-sky"></span>
+                    Comparison
+                </div>
+                <h3 class="text-base font-bold text-asr-text group-hover:text-asr-sky transition mb-2">
+                    ASAR vs Digital Detox: Which Blocker Keeps You Accountable?
+                </h3>
+                <p class="text-xs text-asr-muted line-clamp-3 leading-relaxed">
+                    Compare ASAR vs Digital Detox app. Find out which app provides better usability, mindful pauses, and XP leveling.
+                </p>
+            </div>
+            <div class="mt-4 pt-4 border-t border-asr-border flex items-center justify-between text-xs text-asr-faint">
+                <span>4 min read</span>
+                <span class="text-asr-sky font-semibold flex items-center gap-1 group-hover:translate-x-1 transition">Read Guide &rarr;</span>
+            </div>
+        </a>
+        
+        <a href="guides/asar-vs-focus-to-do-pomodoro-timer.html" class="bg-asr-surface hover:bg-asr-elevated border border-asr-border hover:border-asr-sky/40 rounded-2xl p-6 transition flex flex-col justify-between group">
+            <div>
+                <div class="inline-flex items-center gap-1.5 text-xs font-bold text-asr-sky uppercase tracking-wider mb-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-asr-sky"></span>
+                    Comparison
+                </div>
+                <h3 class="text-base font-bold text-asr-text group-hover:text-asr-sky transition mb-2">
+                    ASAR vs Focus To-Do: Pomodoro Plus Real App Blocking
+                </h3>
+                <p class="text-xs text-asr-muted line-clamp-3 leading-relaxed">
+                    Compare ASAR and Focus To-Do. See why built-in app blocking makes ASAR superior for maintaining uninterrupted Pomodoro sprints.
+                </p>
+            </div>
+            <div class="mt-4 pt-4 border-t border-asr-border flex items-center justify-between text-xs text-asr-faint">
+                <span>4 min read</span>
+                <span class="text-asr-sky font-semibold flex items-center gap-1 group-hover:translate-x-1 transition">Read Guide &rarr;</span>
+            </div>
+        </a>
+        
+        <a href="guides/best-free-opal-alternative-for-android.html" class="bg-asr-surface hover:bg-asr-elevated border border-asr-border hover:border-asr-sky/40 rounded-2xl p-6 transition flex flex-col justify-between group">
+            <div>
+                <div class="inline-flex items-center gap-1.5 text-xs font-bold text-asr-sky uppercase tracking-wider mb-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-asr-sky"></span>
+                    Comparison
+                </div>
+                <h3 class="text-base font-bold text-asr-text group-hover:text-asr-sky transition mb-2">
+                    Best Free Opal Alternative for Android in 2026
+                </h3>
+                <p class="text-xs text-asr-muted line-clamp-3 leading-relaxed">
+                    Get all of Opal's best features on Android for free: mindful delays, strict mode sessions, and deep focus tracking.
+                </p>
+            </div>
+            <div class="mt-4 pt-4 border-t border-asr-border flex items-center justify-between text-xs text-asr-faint">
+                <span>5 min read</span>
+                <span class="text-asr-sky font-semibold flex items-center gap-1 group-hover:translate-x-1 transition">Read Guide &rarr;</span>
+            </div>
+        </a>
+        
+        <a href="guides/best-free-freedom-app-alternative-android.html" class="bg-asr-surface hover:bg-asr-elevated border border-asr-border hover:border-asr-sky/40 rounded-2xl p-6 transition flex flex-col justify-between group">
+            <div>
+                <div class="inline-flex items-center gap-1.5 text-xs font-bold text-asr-sky uppercase tracking-wider mb-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-asr-sky"></span>
+                    Comparison
+                </div>
+                <h3 class="text-base font-bold text-asr-text group-hover:text-asr-sky transition mb-2">
+                    Best Free Freedom App Alternative for Android
+                </h3>
+                <p class="text-xs text-asr-muted line-clamp-3 leading-relaxed">
+                    Looking for a free alternative to Freedom? ASAR offers local app and website blocking without monthly fees.
+                </p>
+            </div>
+            <div class="mt-4 pt-4 border-t border-asr-border flex items-center justify-between text-xs text-asr-faint">
+                <span>4 min read</span>
+                <span class="text-asr-sky font-semibold flex items-center gap-1 group-hover:translate-x-1 transition">Read Guide &rarr;</span>
+            </div>
+        </a>
+        
+        <a href="guides/best-free-one-sec-alternative-for-android.html" class="bg-asr-surface hover:bg-asr-elevated border border-asr-border hover:border-asr-sky/40 rounded-2xl p-6 transition flex flex-col justify-between group">
+            <div>
+                <div class="inline-flex items-center gap-1.5 text-xs font-bold text-asr-sky uppercase tracking-wider mb-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-asr-sky"></span>
+                    Comparison
+                </div>
+                <h3 class="text-base font-bold text-asr-text group-hover:text-asr-sky transition mb-2">
+                    Best Free one sec Alternative for Android (Breathing Delay)
+                </h3>
+                <p class="text-xs text-asr-muted line-clamp-3 leading-relaxed">
+                    Experience the power of mindful breathing delays on Android. ASAR is the best free alternative to one sec.
+                </p>
+            </div>
+            <div class="mt-4 pt-4 border-t border-asr-border flex items-center justify-between text-xs text-asr-faint">
+                <span>4 min read</span>
+                <span class="text-asr-sky font-semibold flex items-center gap-1 group-hover:translate-x-1 transition">Read Guide &rarr;</span>
+            </div>
+        </a>
+        
+        <a href="guides/best-free-cold-turkey-alternative-android.html" class="bg-asr-surface hover:bg-asr-elevated border border-asr-border hover:border-asr-sky/40 rounded-2xl p-6 transition flex flex-col justify-between group">
+            <div>
+                <div class="inline-flex items-center gap-1.5 text-xs font-bold text-asr-sky uppercase tracking-wider mb-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-asr-sky"></span>
+                    Comparison
+                </div>
+                <h3 class="text-base font-bold text-asr-text group-hover:text-asr-sky transition mb-2">
+                    Best Free Cold Turkey Alternative for Android Devices
+                </h3>
+                <p class="text-xs text-asr-muted line-clamp-3 leading-relaxed">
+                    Bring Cold Turkey's strict discipline to your Android smartphone with ASAR Strict Mode.
+                </p>
+            </div>
+            <div class="mt-4 pt-4 border-t border-asr-border flex items-center justify-between text-xs text-asr-faint">
+                <span>5 min read</span>
+                <span class="text-asr-sky font-semibold flex items-center gap-1 group-hover:translate-x-1 transition">Read Guide &rarr;</span>
+            </div>
+        </a>
+        
+        <a href="guides/why-choose-asar-over-subscription-bloatware.html" class="bg-asr-surface hover:bg-asr-elevated border border-asr-border hover:border-asr-sky/40 rounded-2xl p-6 transition flex flex-col justify-between group">
+            <div>
+                <div class="inline-flex items-center gap-1.5 text-xs font-bold text-asr-sky uppercase tracking-wider mb-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-asr-sky"></span>
+                    Comparison
+                </div>
+                <h3 class="text-base font-bold text-asr-text group-hover:text-asr-sky transition mb-2">
+                    Why Choose ASAR Over Expensive Subscription Focus Apps
+                </h3>
+                <p class="text-xs text-asr-muted line-clamp-3 leading-relaxed">
+                    No dark patterns, no hidden trial charges. Why ASAR's transparent philosophy and lifetime pricing wins.
+                </p>
+            </div>
+            <div class="mt-4 pt-4 border-t border-asr-border flex items-center justify-between text-xs text-asr-faint">
+                <span>5 min read</span>
+                <span class="text-asr-sky font-semibold flex items-center gap-1 group-hover:translate-x-1 transition">Read Guide &rarr;</span>
+            </div>
+        </a>
+        
+        <a href="guides/asar-vs-google-digital-wellbeing-comparison.html" class="bg-asr-surface hover:bg-asr-elevated border border-asr-border hover:border-asr-sky/40 rounded-2xl p-6 transition flex flex-col justify-between group">
+            <div>
+                <div class="inline-flex items-center gap-1.5 text-xs font-bold text-asr-sky uppercase tracking-wider mb-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-asr-sky"></span>
+                    Comparison
+                </div>
+                <h3 class="text-base font-bold text-asr-text group-hover:text-asr-sky transition mb-2">
+                    ASAR vs Google Digital Wellbeing: The Ultimate Comparison
+                </h3>
+                <p class="text-xs text-asr-muted line-clamp-3 leading-relaxed">
+                    Why Google Digital Wellbeing fails to stop social media addiction and how ASAR solves it.
+                </p>
+            </div>
+            <div class="mt-4 pt-4 border-t border-asr-border flex items-center justify-between text-xs text-asr-faint">
+                <span>4 min read</span>
+                <span class="text-asr-sky font-semibold flex items-center gap-1 group-hover:translate-x-1 transition">Read Guide &rarr;</span>
+            </div>
+        </a>
+        
+        <a href="guides/asar-vs-samsung-digital-wellbeing-mode.html" class="bg-asr-surface hover:bg-asr-elevated border border-asr-border hover:border-asr-sky/40 rounded-2xl p-6 transition flex flex-col justify-between group">
+            <div>
+                <div class="inline-flex items-center gap-1.5 text-xs font-bold text-asr-sky uppercase tracking-wider mb-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-asr-sky"></span>
+                    Comparison
+                </div>
+                <h3 class="text-base font-bold text-asr-text group-hover:text-asr-sky transition mb-2">
+                    ASAR vs Samsung Digital Wellbeing & Modes and Routines
+                </h3>
+                <p class="text-xs text-asr-muted line-clamp-3 leading-relaxed">
+                    How ASAR enhances Samsung Galaxy smartphones with true strict mode and mindful breathing friction.
+                </p>
+            </div>
+            <div class="mt-4 pt-4 border-t border-asr-border flex items-center justify-between text-xs text-asr-faint">
+                <span>4 min read</span>
+                <span class="text-asr-sky font-semibold flex items-center gap-1 group-hover:translate-x-1 transition">Read Guide &rarr;</span>
+            </div>
+        </a>
+        
+        <a href="guides/asar-vs-focus-plant-gamified-study-app.html" class="bg-asr-surface hover:bg-asr-elevated border border-asr-border hover:border-asr-sky/40 rounded-2xl p-6 transition flex flex-col justify-between group">
+            <div>
+                <div class="inline-flex items-center gap-1.5 text-xs font-bold text-asr-sky uppercase tracking-wider mb-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-asr-sky"></span>
+                    Comparison
+                </div>
+                <h3 class="text-base font-bold text-asr-text group-hover:text-asr-sky transition mb-2">
+                    ASAR vs Focus Plant: Virtual Gardening vs Real Focus Discipline
+                </h3>
+                <p class="text-xs text-asr-muted line-clamp-3 leading-relaxed">
+                    Compare ASAR vs Focus Plant. See why active app blocking and Discipline Scores beat virtual gamification.
+                </p>
+            </div>
+            <div class="mt-4 pt-4 border-t border-asr-border flex items-center justify-between text-xs text-asr-faint">
+                <span>4 min read</span>
+                <span class="text-asr-sky font-semibold flex items-center gap-1 group-hover:translate-x-1 transition">Read Guide &rarr;</span>
+            </div>
+        </a>
+        
+        <a href="guides/asar-vs-minimalist-phone-launcher-alternative.html" class="bg-asr-surface hover:bg-asr-elevated border border-asr-border hover:border-asr-sky/40 rounded-2xl p-6 transition flex flex-col justify-between group">
+            <div>
+                <div class="inline-flex items-center gap-1.5 text-xs font-bold text-asr-sky uppercase tracking-wider mb-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-asr-sky"></span>
+                    Comparison
+                </div>
+                <h3 class="text-base font-bold text-asr-text group-hover:text-asr-sky transition mb-2">
+                    ASAR vs Minimalist Phone Launcher: Which is Better for Screen Time?
+                </h3>
+                <p class="text-xs text-asr-muted line-clamp-3 leading-relaxed">
+                    Compare ASAR app blocker with minimalist text launchers. Why targeted blocking often outperforms replacing your home screen.
+                </p>
+            </div>
+            <div class="mt-4 pt-4 border-t border-asr-border flex items-center justify-between text-xs text-asr-faint">
+                <span>5 min read</span>
+                <span class="text-asr-sky font-semibold flex items-center gap-1 group-hover:translate-x-1 transition">Read Guide &rarr;</span>
+            </div>
+        </a>
+        
+        <a href="guides/asar-vs-unpluq-physical-key-tag-alternative.html" class="bg-asr-surface hover:bg-asr-elevated border border-asr-border hover:border-asr-sky/40 rounded-2xl p-6 transition flex flex-col justify-between group">
+            <div>
+                <div class="inline-flex items-center gap-1.5 text-xs font-bold text-asr-sky uppercase tracking-wider mb-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-asr-sky"></span>
+                    Comparison
+                </div>
+                <h3 class="text-base font-bold text-asr-text group-hover:text-asr-sky transition mb-2">
+                    ASAR vs Unpluq: Digital Friction vs Expensive Physical Tags
+                </h3>
+                <p class="text-xs text-asr-muted line-clamp-3 leading-relaxed">
+                    Why ASAR's software-based adaptive friction gives you all the benefits of Unpluq without buying $40 hardware tags.
+                </p>
+            </div>
+            <div class="mt-4 pt-4 border-t border-asr-border flex items-center justify-between text-xs text-asr-faint">
+                <span>4 min read</span>
+                <span class="text-asr-sky font-semibold flex items-center gap-1 group-hover:translate-x-1 transition">Read Guide &rarr;</span>
+            </div>
+        </a>
+        
+        <a href="guides/how-to-focus-on-studying-for-sat-act.html" class="bg-asr-surface hover:bg-asr-elevated border border-asr-border hover:border-asr-sky/40 rounded-2xl p-6 transition flex flex-col justify-between group">
+            <div>
+                <div class="inline-flex items-center gap-1.5 text-xs font-bold text-asr-sky uppercase tracking-wider mb-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-asr-sky"></span>
+                    Study & Exams
+                </div>
+                <h3 class="text-base font-bold text-asr-text group-hover:text-asr-sky transition mb-2">
+                    How to Focus on Studying for the SAT & ACT (Score 1500+)
+                </h3>
+                <p class="text-xs text-asr-muted line-clamp-3 leading-relaxed">
+                    The proven SAT study schedule: eliminate phone distractions, master timed practice tests, and hit your target score with ASAR.
+                </p>
+            </div>
+            <div class="mt-4 pt-4 border-t border-asr-border flex items-center justify-between text-xs text-asr-faint">
+                <span>5 min read</span>
+                <span class="text-asr-sky font-semibold flex items-center gap-1 group-hover:translate-x-1 transition">Read Guide &rarr;</span>
+            </div>
+        </a>
+        
+        <a href="guides/how-to-study-long-hours-for-medical-mcat.html" class="bg-asr-surface hover:bg-asr-elevated border border-asr-border hover:border-asr-sky/40 rounded-2xl p-6 transition flex flex-col justify-between group">
+            <div>
+                <div class="inline-flex items-center gap-1.5 text-xs font-bold text-asr-sky uppercase tracking-wider mb-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-asr-sky"></span>
+                    Study & Exams
+                </div>
+                <h3 class="text-base font-bold text-asr-text group-hover:text-asr-sky transition mb-2">
+                    How to Study 8+ Hours Daily for Medical School & MCAT
+                </h3>
+                <p class="text-xs text-asr-muted line-clamp-3 leading-relaxed">
+                    How top medical students maintain 8-10 hours of intense daily focus for MCAT, USMLE, and med school finals with ASAR.
+                </p>
+            </div>
+            <div class="mt-4 pt-4 border-t border-asr-border flex items-center justify-between text-xs text-asr-faint">
+                <span>6 min read</span>
+                <span class="text-asr-sky font-semibold flex items-center gap-1 group-hover:translate-x-1 transition">Read Guide &rarr;</span>
+            </div>
+        </a>
+        
+        <a href="guides/how-to-focus-for-coding-and-software-dev.html" class="bg-asr-surface hover:bg-asr-elevated border border-asr-border hover:border-asr-sky/40 rounded-2xl p-6 transition flex flex-col justify-between group">
+            <div>
+                <div class="inline-flex items-center gap-1.5 text-xs font-bold text-asr-sky uppercase tracking-wider mb-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-asr-sky"></span>
+                    Productivity
+                </div>
+                <h3 class="text-base font-bold text-asr-text group-hover:text-asr-sky transition mb-2">
+                    How Software Engineers Can Focus and Code for Hours
+                </h3>
+                <p class="text-xs text-asr-muted line-clamp-3 leading-relaxed">
+                    Eliminate phone distractions and code with deep focus. Master algorithms, system design, and shipping features.
+                </p>
+            </div>
+            <div class="mt-4 pt-4 border-t border-asr-border flex items-center justify-between text-xs text-asr-faint">
+                <span>5 min read</span>
+                <span class="text-asr-sky font-semibold flex items-center gap-1 group-hover:translate-x-1 transition">Read Guide &rarr;</span>
+            </div>
+        </a>
+        
+        <a href="guides/how-to-study-for-ielts-gre-toefl-exams.html" class="bg-asr-surface hover:bg-asr-elevated border border-asr-border hover:border-asr-sky/40 rounded-2xl p-6 transition flex flex-col justify-between group">
+            <div>
+                <div class="inline-flex items-center gap-1.5 text-xs font-bold text-asr-sky uppercase tracking-wider mb-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-asr-sky"></span>
+                    Study & Exams
+                </div>
+                <h3 class="text-base font-bold text-asr-text group-hover:text-asr-sky transition mb-2">
+                    How to Study for IELTS, GRE & TOEFL Exams with High Focus
+                </h3>
+                <p class="text-xs text-asr-muted line-clamp-3 leading-relaxed">
+                    Maximize your IELTS and GRE scores by eliminating phone distraction during vocabulary and reading prep.
+                </p>
+            </div>
+            <div class="mt-4 pt-4 border-t border-asr-border flex items-center justify-between text-xs text-asr-faint">
+                <span>5 min read</span>
+                <span class="text-asr-sky font-semibold flex items-center gap-1 group-hover:translate-x-1 transition">Read Guide &rarr;</span>
+            </div>
+        </a>
+        
+        <a href="guides/how-to-prepare-for-bcs-government-exams-study-focus.html" class="bg-asr-surface hover:bg-asr-elevated border border-asr-border hover:border-asr-sky/40 rounded-2xl p-6 transition flex flex-col justify-between group">
+            <div>
+                <div class="inline-flex items-center gap-1.5 text-xs font-bold text-asr-sky uppercase tracking-wider mb-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-asr-sky"></span>
+                    Study & Exams
+                </div>
+                <h3 class="text-base font-bold text-asr-text group-hover:text-asr-sky transition mb-2">
+                    How to Prepare for BCS & Competitive Government Exams
+                </h3>
+                <p class="text-xs text-asr-muted line-clamp-3 leading-relaxed">
+                    Complete focus strategy for BCS and competitive exam candidates. Block Facebook and YouTube during 10-hour study schedules.
+                </p>
+            </div>
+            <div class="mt-4 pt-4 border-t border-asr-border flex items-center justify-between text-xs text-asr-faint">
+                <span>6 min read</span>
+                <span class="text-asr-sky font-semibold flex items-center gap-1 group-hover:translate-x-1 transition">Read Guide &rarr;</span>
+            </div>
+        </a>
+        
+        <a href="guides/how-to-study-for-engineering-calculus-physics.html" class="bg-asr-surface hover:bg-asr-elevated border border-asr-border hover:border-asr-sky/40 rounded-2xl p-6 transition flex flex-col justify-between group">
+            <div>
+                <div class="inline-flex items-center gap-1.5 text-xs font-bold text-asr-sky uppercase tracking-wider mb-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-asr-sky"></span>
+                    Study & Exams
+                </div>
+                <h3 class="text-base font-bold text-asr-text group-hover:text-asr-sky transition mb-2">
+                    How to Study for Engineering, Calculus & Physics Exams
+                </h3>
+                <p class="text-xs text-asr-muted line-clamp-3 leading-relaxed">
+                    Master difficult STEM subjects with deep work. Eliminate phone distractions while solving problem sets.
+                </p>
+            </div>
+            <div class="mt-4 pt-4 border-t border-asr-border flex items-center justify-between text-xs text-asr-faint">
+                <span>5 min read</span>
+                <span class="text-asr-sky font-semibold flex items-center gap-1 group-hover:translate-x-1 transition">Read Guide &rarr;</span>
+            </div>
+        </a>
+        
+        <a href="guides/how-to-manage-screen-time-working-remotely.html" class="bg-asr-surface hover:bg-asr-elevated border border-asr-border hover:border-asr-sky/40 rounded-2xl p-6 transition flex flex-col justify-between group">
+            <div>
+                <div class="inline-flex items-center gap-1.5 text-xs font-bold text-asr-sky uppercase tracking-wider mb-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-asr-sky"></span>
+                    Productivity
+                </div>
+                <h3 class="text-base font-bold text-asr-text group-hover:text-asr-sky transition mb-2">
+                    How to Manage Screen Time While Working Remotely (WFH)
+                </h3>
+                <p class="text-xs text-asr-muted line-clamp-3 leading-relaxed">
+                    Remote work screen time management guide. Separate work from distraction and finish your day by 5 PM.
+                </p>
+            </div>
+            <div class="mt-4 pt-4 border-t border-asr-border flex items-center justify-between text-xs text-asr-faint">
+                <span>5 min read</span>
+                <span class="text-asr-sky font-semibold flex items-center gap-1 group-hover:translate-x-1 transition">Read Guide &rarr;</span>
+            </div>
+        </a>
+        
+        <a href="guides/how-to-eliminate-distractions-working-from-home.html" class="bg-asr-surface hover:bg-asr-elevated border border-asr-border hover:border-asr-sky/40 rounded-2xl p-6 transition flex flex-col justify-between group">
+            <div>
+                <div class="inline-flex items-center gap-1.5 text-xs font-bold text-asr-sky uppercase tracking-wider mb-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-asr-sky"></span>
+                    Productivity
+                </div>
+                <h3 class="text-base font-bold text-asr-text group-hover:text-asr-sky transition mb-2">
+                    How to Eliminate Distractions When Working From Home
+                </h3>
+                <p class="text-xs text-asr-muted line-clamp-3 leading-relaxed">
+                    Practical steps to eliminate smartphone distraction, boost output, and maintain high professional standards at home.
+                </p>
+            </div>
+            <div class="mt-4 pt-4 border-t border-asr-border flex items-center justify-between text-xs text-asr-faint">
+                <span>5 min read</span>
+                <span class="text-asr-sky font-semibold flex items-center gap-1 group-hover:translate-x-1 transition">Read Guide &rarr;</span>
+            </div>
+        </a>
+        
+        <a href="guides/how-to-study-without-phone-distractions-college.html" class="bg-asr-surface hover:bg-asr-elevated border border-asr-border hover:border-asr-sky/40 rounded-2xl p-6 transition flex flex-col justify-between group">
+            <div>
+                <div class="inline-flex items-center gap-1.5 text-xs font-bold text-asr-sky uppercase tracking-wider mb-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-asr-sky"></span>
+                    Study & Exams
+                </div>
+                <h3 class="text-base font-bold text-asr-text group-hover:text-asr-sky transition mb-2">
+                    How to Study in College Without Phone Distractions
+                </h3>
+                <p class="text-xs text-asr-muted line-clamp-3 leading-relaxed">
+                    College student guide: how to survive dorm distractions, study in the library, and boost your GPA with ASAR.
+                </p>
+            </div>
+            <div class="mt-4 pt-4 border-t border-asr-border flex items-center justify-between text-xs text-asr-faint">
+                <span>4 min read</span>
+                <span class="text-asr-sky font-semibold flex items-center gap-1 group-hover:translate-x-1 transition">Read Guide &rarr;</span>
+            </div>
+        </a>
+        
+        <a href="guides/how-to-do-monk-mode-30-day-productivity-challenge.html" class="bg-asr-surface hover:bg-asr-elevated border border-asr-border hover:border-asr-sky/40 rounded-2xl p-6 transition flex flex-col justify-between group">
+            <div>
+                <div class="inline-flex items-center gap-1.5 text-xs font-bold text-asr-sky uppercase tracking-wider mb-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-asr-sky"></span>
+                    Psychology & Focus
+                </div>
+                <h3 class="text-base font-bold text-asr-text group-hover:text-asr-sky transition mb-2">
+                    How to Do Monk Mode: The 30-Day Productivity Protocol
+                </h3>
+                <p class="text-xs text-asr-muted line-clamp-3 leading-relaxed">
+                    Complete 30-day Monk Mode guide: eliminate cheap dopamine, build rock-solid focus habits, and level up with ASAR.
+                </p>
+            </div>
+            <div class="mt-4 pt-4 border-t border-asr-border flex items-center justify-between text-xs text-asr-faint">
+                <span>6 min read</span>
+                <span class="text-asr-sky font-semibold flex items-center gap-1 group-hover:translate-x-1 transition">Read Guide &rarr;</span>
+            </div>
+        </a>
+        
+        <a href="guides/how-to-do-deep-work-cal-newport-method-android.html" class="bg-asr-surface hover:bg-asr-elevated border border-asr-border hover:border-asr-sky/40 rounded-2xl p-6 transition flex flex-col justify-between group">
+            <div>
+                <div class="inline-flex items-center gap-1.5 text-xs font-bold text-asr-sky uppercase tracking-wider mb-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-asr-sky"></span>
+                    Productivity
+                </div>
+                <h3 class="text-base font-bold text-asr-text group-hover:text-asr-sky transition mb-2">
+                    How to Implement Cal Newport's Deep Work Rules on Android
+                </h3>
+                <p class="text-xs text-asr-muted line-clamp-3 leading-relaxed">
+                    Master the 4 rules of Deep Work using ASAR on your Android smartphone. High productivity, zero distraction.
+                </p>
+            </div>
+            <div class="mt-4 pt-4 border-t border-asr-border flex items-center justify-between text-xs text-asr-faint">
+                <span>5 min read</span>
+                <span class="text-asr-sky font-semibold flex items-center gap-1 group-hover:translate-x-1 transition">Read Guide &rarr;</span>
+            </div>
+        </a>
+        
+        <a href="guides/how-to-build-iron-will-mental-toughness.html" class="bg-asr-surface hover:bg-asr-elevated border border-asr-border hover:border-asr-sky/40 rounded-2xl p-6 transition flex flex-col justify-between group">
+            <div>
+                <div class="inline-flex items-center gap-1.5 text-xs font-bold text-asr-sky uppercase tracking-wider mb-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-asr-sky"></span>
+                    Psychology & Focus
+                </div>
+                <h3 class="text-base font-bold text-asr-text group-hover:text-asr-sky transition mb-2">
+                    How to Build Iron Will & Mental Toughness Against Distraction
+                </h3>
+                <p class="text-xs text-asr-muted line-clamp-3 leading-relaxed">
+                    Build unbreakable willpower and mental discipline. How to resist digital urges and conquer procrastination with ASAR.
+                </p>
+            </div>
+            <div class="mt-4 pt-4 border-t border-asr-border flex items-center justify-between text-xs text-asr-faint">
+                <span>5 min read</span>
+                <span class="text-asr-sky font-semibold flex items-center gap-1 group-hover:translate-x-1 transition">Read Guide &rarr;</span>
+            </div>
+        </a>
+        
+        <a href="guides/how-to-cure-brain-fog-from-reels-tiktok.html" class="bg-asr-surface hover:bg-asr-elevated border border-asr-border hover:border-asr-sky/40 rounded-2xl p-6 transition flex flex-col justify-between group">
+            <div>
+                <div class="inline-flex items-center gap-1.5 text-xs font-bold text-asr-sky uppercase tracking-wider mb-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-asr-sky"></span>
+                    Mental Health & Focus
+                </div>
+                <h3 class="text-base font-bold text-asr-text group-hover:text-asr-sky transition mb-2">
+                    How to Cure Brain Fog Caused by Short-Form Video Feeds
+                </h3>
+                <p class="text-xs text-asr-muted line-clamp-3 leading-relaxed">
+                    Struggling with brain fog, short attention spans, and fatigue? How a 7-day social media detox with ASAR clears your mind.
+                </p>
+            </div>
+            <div class="mt-4 pt-4 border-t border-asr-border flex items-center justify-between text-xs text-asr-faint">
+                <span>5 min read</span>
+                <span class="text-asr-sky font-semibold flex items-center gap-1 group-hover:translate-x-1 transition">Read Guide &rarr;</span>
+            </div>
+        </a>
+        
+        <a href="guides/how-to-protect-attention-span-in-2026.html" class="bg-asr-surface hover:bg-asr-elevated border border-asr-border hover:border-asr-sky/40 rounded-2xl p-6 transition flex flex-col justify-between group">
+            <div>
+                <div class="inline-flex items-center gap-1.5 text-xs font-bold text-asr-sky uppercase tracking-wider mb-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-asr-sky"></span>
+                    Mental Health & Focus
+                </div>
+                <h3 class="text-base font-bold text-asr-text group-hover:text-asr-sky transition mb-2">
+                    How to Protect Your Attention Span in the Age of AI & Algorithms
+                </h3>
+                <p class="text-xs text-asr-muted line-clamp-3 leading-relaxed">
+                    Your attention is your most valuable asset. How to defend your cognitive sovereignty in 2026 with ASAR.
+                </p>
+            </div>
+            <div class="mt-4 pt-4 border-t border-asr-border flex items-center justify-between text-xs text-asr-faint">
+                <span>5 min read</span>
+                <span class="text-asr-sky font-semibold flex items-center gap-1 group-hover:translate-x-1 transition">Read Guide &rarr;</span>
+            </div>
+        </a>
+        
+        <a href="guides/how-to-stop-checking-phone-first-thing-morning.html" class="bg-asr-surface hover:bg-asr-elevated border border-asr-border hover:border-asr-sky/40 rounded-2xl p-6 transition flex flex-col justify-between group">
+            <div>
+                <div class="inline-flex items-center gap-1.5 text-xs font-bold text-asr-sky uppercase tracking-wider mb-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-asr-sky"></span>
+                    Digital Wellbeing
+                </div>
+                <h3 class="text-base font-bold text-asr-text group-hover:text-asr-sky transition mb-2">
+                    How to Stop Checking Your Phone First Thing in the Morning
+                </h3>
+                <p class="text-xs text-asr-muted line-clamp-3 leading-relaxed">
+                    Win your mornings. How to block morning phone checking and build a powerful morning routine with ASAR.
+                </p>
+            </div>
+            <div class="mt-4 pt-4 border-t border-asr-border flex items-center justify-between text-xs text-asr-faint">
+                <span>4 min read</span>
+                <span class="text-asr-sky font-semibold flex items-center gap-1 group-hover:translate-x-1 transition">Read Guide &rarr;</span>
+            </div>
+        </a>
+        
+        <a href="guides/how-to-stop-procrastinating-on-thesis-research.html" class="bg-asr-surface hover:bg-asr-elevated border border-asr-border hover:border-asr-sky/40 rounded-2xl p-6 transition flex flex-col justify-between group">
+            <div>
+                <div class="inline-flex items-center gap-1.5 text-xs font-bold text-asr-sky uppercase tracking-wider mb-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-asr-sky"></span>
+                    Study & Exams
+                </div>
+                <h3 class="text-base font-bold text-asr-text group-hover:text-asr-sky transition mb-2">
+                    How to Stop Procrastinating on Thesis & Dissertation Research
+                </h3>
+                <p class="text-xs text-asr-muted line-clamp-3 leading-relaxed">
+                    Academic writing focus guide. How masters and PhD students eliminate procrastination and finish dissertations with ASAR.
+                </p>
+            </div>
+            <div class="mt-4 pt-4 border-t border-asr-border flex items-center justify-between text-xs text-asr-faint">
+                <span>5 min read</span>
+                <span class="text-asr-sky font-semibold flex items-center gap-1 group-hover:translate-x-1 transition">Read Guide &rarr;</span>
+            </div>
+        </a>
+        
+        <a href="guides/how-to-stay-focused-during-online-classes.html" class="bg-asr-surface hover:bg-asr-elevated border border-asr-border hover:border-asr-sky/40 rounded-2xl p-6 transition flex flex-col justify-between group">
+            <div>
+                <div class="inline-flex items-center gap-1.5 text-xs font-bold text-asr-sky uppercase tracking-wider mb-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-asr-sky"></span>
+                    Study & Exams
+                </div>
+                <h3 class="text-base font-bold text-asr-text group-hover:text-asr-sky transition mb-2">
+                    How to Stay Focused During Online Classes & Zoom Lectures
+                </h3>
+                <p class="text-xs text-asr-muted line-clamp-3 leading-relaxed">
+                    Stop browsing your phone during online university lectures. Keep your attention locked on the lecture with ASAR.
+                </p>
+            </div>
+            <div class="mt-4 pt-4 border-t border-asr-border flex items-center justify-between text-xs text-asr-faint">
+                <span>4 min read</span>
+                <span class="text-asr-sky font-semibold flex items-center gap-1 group-hover:translate-x-1 transition">Read Guide &rarr;</span>
+            </div>
+        </a>
+        
+        <a href="guides/how-to-balance-social-life-and-study-discipline.html" class="bg-asr-surface hover:bg-asr-elevated border border-asr-border hover:border-asr-sky/40 rounded-2xl p-6 transition flex flex-col justify-between group">
+            <div>
+                <div class="inline-flex items-center gap-1.5 text-xs font-bold text-asr-sky uppercase tracking-wider mb-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-asr-sky"></span>
+                    Productivity
+                </div>
+                <h3 class="text-base font-bold text-asr-text group-hover:text-asr-sky transition mb-2">
+                    How to Balance Social Life and Intense Study Discipline
+                </h3>
+                <p class="text-xs text-asr-muted line-clamp-3 leading-relaxed">
+                    Work hard, play hard. How to use time-blocking to excel academically while enjoying rich offline relationships.
+                </p>
+            </div>
+            <div class="mt-4 pt-4 border-t border-asr-border flex items-center justify-between text-xs text-asr-faint">
+                <span>5 min read</span>
+                <span class="text-asr-sky font-semibold flex items-center gap-1 group-hover:translate-x-1 transition">Read Guide &rarr;</span>
+            </div>
+        </a>
+        
+        <a href="guides/how-to-regain-deep-focus-after-burnout.html" class="bg-asr-surface hover:bg-asr-elevated border border-asr-border hover:border-asr-sky/40 rounded-2xl p-6 transition flex flex-col justify-between group">
+            <div>
+                <div class="inline-flex items-center gap-1.5 text-xs font-bold text-asr-sky uppercase tracking-wider mb-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-asr-sky"></span>
+                    Mental Health & Focus
+                </div>
+                <h3 class="text-base font-bold text-asr-text group-hover:text-asr-sky transition mb-2">
+                    How to Regain Deep Focus & Energy After Burnout
+                </h3>
+                <p class="text-xs text-asr-muted line-clamp-3 leading-relaxed">
+                    Recover from mental burnout. Gentle focus strategies, mindful breathing, and cognitive rest protocols with ASAR.
+                </p>
+            </div>
+            <div class="mt-4 pt-4 border-t border-asr-border flex items-center justify-between text-xs text-asr-faint">
+                <span>5 min read</span>
+                <span class="text-asr-sky font-semibold flex items-center gap-1 group-hover:translate-x-1 transition">Read Guide &rarr;</span>
+            </div>
+        </a>
+        
+        <a href="guides/how-to-build-a-distraction-free-android-setup.html" class="bg-asr-surface hover:bg-asr-elevated border border-asr-border hover:border-asr-sky/40 rounded-2xl p-6 transition flex flex-col justify-between group">
+            <div>
+                <div class="inline-flex items-center gap-1.5 text-xs font-bold text-asr-sky uppercase tracking-wider mb-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-asr-sky"></span>
+                    Digital Wellbeing
+                </div>
+                <h3 class="text-base font-bold text-asr-text group-hover:text-asr-sky transition mb-2">
+                    How to Build a Distraction-Free Android Smartphone Setup
+                </h3>
+                <p class="text-xs text-asr-muted line-clamp-3 leading-relaxed">
+                    Step-by-step guide to configuring a minimalist, high-productivity Android phone with ASAR as the central focus engine.
+                </p>
+            </div>
+            <div class="mt-4 pt-4 border-t border-asr-border flex items-center justify-between text-xs text-asr-faint">
+                <span>5 min read</span>
+                <span class="text-asr-sky font-semibold flex items-center gap-1 group-hover:translate-x-1 transition">Read Guide &rarr;</span>
+            </div>
+        </a>
+        
+        <a href="guides/the-science-of-dopamine-fasting-and-focus.html" class="bg-asr-surface hover:bg-asr-elevated border border-asr-border hover:border-asr-sky/40 rounded-2xl p-6 transition flex flex-col justify-between group">
+            <div>
+                <div class="inline-flex items-center gap-1.5 text-xs font-bold text-asr-sky uppercase tracking-wider mb-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-asr-sky"></span>
+                    Psychology & Focus
+                </div>
+                <h3 class="text-base font-bold text-asr-text group-hover:text-asr-sky transition mb-2">
+                    The Neuroscience of Dopamine Fasting and Sustained Attention
+                </h3>
+                <p class="text-xs text-asr-muted line-clamp-3 leading-relaxed">
+                    Understand how dopamine receptors downregulate from digital overstimulation and how ASAR restores cognitive sensitivity.
+                </p>
+            </div>
+            <div class="mt-4 pt-4 border-t border-asr-border flex items-center justify-between text-xs text-asr-faint">
+                <span>6 min read</span>
+                <span class="text-asr-sky font-semibold flex items-center gap-1 group-hover:translate-x-1 transition">Read Guide &rarr;</span>
+            </div>
+        </a>
+        
+        <a href="guides/why-strict-mode-is-essential-for-self-control.html" class="bg-asr-surface hover:bg-asr-elevated border border-asr-border hover:border-asr-sky/40 rounded-2xl p-6 transition flex flex-col justify-between group">
+            <div>
+                <div class="inline-flex items-center gap-1.5 text-xs font-bold text-asr-sky uppercase tracking-wider mb-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-asr-sky"></span>
+                    Psychology & Focus
+                </div>
+                <h3 class="text-base font-bold text-asr-text group-hover:text-asr-sky transition mb-2">
+                    Why Strict Mode Is Essential for Human Self-Control
+                </h3>
+                <p class="text-xs text-asr-muted line-clamp-3 leading-relaxed">
+                    Learn why behavioral psychology proves commitment devices (like ASAR Strict Mode) beat raw willpower every time.
+                </p>
+            </div>
+            <div class="mt-4 pt-4 border-t border-asr-border flex items-center justify-between text-xs text-asr-faint">
+                <span>5 min read</span>
+                <span class="text-asr-sky font-semibold flex items-center gap-1 group-hover:translate-x-1 transition">Read Guide &rarr;</span>
+            </div>
+        </a>
+        
+        <a href="guides/how-adaptive-friction-breaks-phone-habits.html" class="bg-asr-surface hover:bg-asr-elevated border border-asr-border hover:border-asr-sky/40 rounded-2xl p-6 transition flex flex-col justify-between group">
+            <div>
+                <div class="inline-flex items-center gap-1.5 text-xs font-bold text-asr-sky uppercase tracking-wider mb-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-asr-sky"></span>
+                    Psychology & Focus
+                </div>
+                <h3 class="text-base font-bold text-asr-text group-hover:text-asr-sky transition mb-2">
+                    How Adaptive Friction Breaks Compulsive Smartphone Habits
+                </h3>
+                <p class="text-xs text-asr-muted line-clamp-3 leading-relaxed">
+                    How escalating time delays (5s → 10s → 20s → 30s) interrupt dopamine loops and extinguish compulsive checking.
+                </p>
+            </div>
+            <div class="mt-4 pt-4 border-t border-asr-border flex items-center justify-between text-xs text-asr-faint">
+                <span>5 min read</span>
+                <span class="text-asr-sky font-semibold flex items-center gap-1 group-hover:translate-x-1 transition">Read Guide &rarr;</span>
+            </div>
+        </a>
+        
+        <a href="guides/understanding-prefrontal-cortex-and-impulse-control.html" class="bg-asr-surface hover:bg-asr-elevated border border-asr-border hover:border-asr-sky/40 rounded-2xl p-6 transition flex flex-col justify-between group">
+            <div>
+                <div class="inline-flex items-center gap-1.5 text-xs font-bold text-asr-sky uppercase tracking-wider mb-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-asr-sky"></span>
+                    Psychology & Focus
+                </div>
+                <h3 class="text-base font-bold text-asr-text group-hover:text-asr-sky transition mb-2">
+                    The Prefrontal Cortex & Digital Impulse Control
+                </h3>
+                <p class="text-xs text-asr-muted line-clamp-3 leading-relaxed">
+                    How stress and fatigue weaken the prefrontal cortex and why external guardrails like ASAR protect your goals.
+                </p>
+            </div>
+            <div class="mt-4 pt-4 border-t border-asr-border flex items-center justify-between text-xs text-asr-faint">
+                <span>5 min read</span>
+                <span class="text-asr-sky font-semibold flex items-center gap-1 group-hover:translate-x-1 transition">Read Guide &rarr;</span>
+            </div>
+        </a>
+        
+        <a href="guides/why-willpower-fails-and-environment-design-wins.html" class="bg-asr-surface hover:bg-asr-elevated border border-asr-border hover:border-asr-sky/40 rounded-2xl p-6 transition flex flex-col justify-between group">
+            <div>
+                <div class="inline-flex items-center gap-1.5 text-xs font-bold text-asr-sky uppercase tracking-wider mb-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-asr-sky"></span>
+                    Psychology & Focus
+                </div>
+                <h3 class="text-base font-bold text-asr-text group-hover:text-asr-sky transition mb-2">
+                    Why Willpower Fails and Environment Design Wins
+                </h3>
+                <p class="text-xs text-asr-muted line-clamp-3 leading-relaxed">
+                    James Clear's Atomic Habits applied to your smartphone. Why designing your digital environment with ASAR beats willpower.
+                </p>
+            </div>
+            <div class="mt-4 pt-4 border-t border-asr-border flex items-center justify-between text-xs text-asr-faint">
+                <span>5 min read</span>
+                <span class="text-asr-sky font-semibold flex items-center gap-1 group-hover:translate-x-1 transition">Read Guide &rarr;</span>
+            </div>
+        </a>
+        
+        <a href="guides/how-short-form-video-alters-attention-span.html" class="bg-asr-surface hover:bg-asr-elevated border border-asr-border hover:border-asr-sky/40 rounded-2xl p-6 transition flex flex-col justify-between group">
+            <div>
+                <div class="inline-flex items-center gap-1.5 text-xs font-bold text-asr-sky uppercase tracking-wider mb-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-asr-sky"></span>
+                    Mental Health & Focus
+                </div>
+                <h3 class="text-base font-bold text-asr-text group-hover:text-asr-sky transition mb-2">
+                    How Short-Form Video Alters Human Attention Spans
+                </h3>
+                <p class="text-xs text-asr-muted line-clamp-3 leading-relaxed">
+                    The physiological impact of TikTok and Reels on working memory, concentration depth, and reading comprehension.
+                </p>
+            </div>
+            <div class="mt-4 pt-4 border-t border-asr-border flex items-center justify-between text-xs text-asr-faint">
+                <span>6 min read</span>
+                <span class="text-asr-sky font-semibold flex items-center gap-1 group-hover:translate-x-1 transition">Read Guide &rarr;</span>
+            </div>
+        </a>
+        
+        <a href="guides/mindful-pausing-vs-instant-gratification.html" class="bg-asr-surface hover:bg-asr-elevated border border-asr-border hover:border-asr-sky/40 rounded-2xl p-6 transition flex flex-col justify-between group">
+            <div>
+                <div class="inline-flex items-center gap-1.5 text-xs font-bold text-asr-sky uppercase tracking-wider mb-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-asr-sky"></span>
+                    Psychology & Focus
+                </div>
+                <h3 class="text-base font-bold text-asr-text group-hover:text-asr-sky transition mb-2">
+                    Mindful Pausing vs Instant Gratification: The 5-Second Rule
+                </h3>
+                <p class="text-xs text-asr-muted line-clamp-3 leading-relaxed">
+                    How inserting a 5-second mindful pause before opening apps activates rational decision-making and reduces screen time by 60%.
+                </p>
+            </div>
+            <div class="mt-4 pt-4 border-t border-asr-border flex items-center justify-between text-xs text-asr-faint">
+                <span>4 min read</span>
+                <span class="text-asr-sky font-semibold flex items-center gap-1 group-hover:translate-x-1 transition">Read Guide &rarr;</span>
+            </div>
+        </a>
+        
+        <a href="guides/the-cost-of-context-switching-in-knowledge-work.html" class="bg-asr-surface hover:bg-asr-elevated border border-asr-border hover:border-asr-sky/40 rounded-2xl p-6 transition flex flex-col justify-between group">
+            <div>
+                <div class="inline-flex items-center gap-1.5 text-xs font-bold text-asr-sky uppercase tracking-wider mb-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-asr-sky"></span>
+                    Productivity
+                </div>
+                <h3 class="text-base font-bold text-asr-text group-hover:text-asr-sky transition mb-2">
+                    The Hidden Cost of Context Switching in Knowledge Work
+                </h3>
+                <p class="text-xs text-asr-muted line-clamp-3 leading-relaxed">
+                    Gloria Mark's research on attention: why it takes 23 minutes to recover from a single interruption and how ASAR fixes it.
+                </p>
+            </div>
+            <div class="mt-4 pt-4 border-t border-asr-border flex items-center justify-between text-xs text-asr-faint">
+                <span>5 min read</span>
+                <span class="text-asr-sky font-semibold flex items-center gap-1 group-hover:translate-x-1 transition">Read Guide &rarr;</span>
+            </div>
+        </a>
+        
+        <a href="guides/how-to-design-friction-against-bad-habits.html" class="bg-asr-surface hover:bg-asr-elevated border border-asr-border hover:border-asr-sky/40 rounded-2xl p-6 transition flex flex-col justify-between group">
+            <div>
+                <div class="inline-flex items-center gap-1.5 text-xs font-bold text-asr-sky uppercase tracking-wider mb-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-asr-sky"></span>
+                    Psychology & Focus
+                </div>
+                <h3 class="text-base font-bold text-asr-text group-hover:text-asr-sky transition mb-2">
+                    How to Design Friction Against Bad Digital Habits
+                </h3>
+                <p class="text-xs text-asr-muted line-clamp-3 leading-relaxed">
+                    Behavioral design principles for smartphone self-control. How to make bad habits difficult and good focus effortless.
+                </p>
+            </div>
+            <div class="mt-4 pt-4 border-t border-asr-border flex items-center justify-between text-xs text-asr-faint">
+                <span>5 min read</span>
+                <span class="text-asr-sky font-semibold flex items-center gap-1 group-hover:translate-x-1 transition">Read Guide &rarr;</span>
+            </div>
+        </a>
+        
+        <a href="guides/how-gamification-and-xp-build-focus-streaks.html" class="bg-asr-surface hover:bg-asr-elevated border border-asr-border hover:border-asr-sky/40 rounded-2xl p-6 transition flex flex-col justify-between group">
+            <div>
+                <div class="inline-flex items-center gap-1.5 text-xs font-bold text-asr-sky uppercase tracking-wider mb-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-asr-sky"></span>
+                    Psychology & Focus
+                </div>
+                <h3 class="text-base font-bold text-asr-text group-hover:text-asr-sky transition mb-2">
+                    How Gamification & XP Build Unbreakable Focus Streaks
+                </h3>
+                <p class="text-xs text-asr-muted line-clamp-3 leading-relaxed">
+                    How ASAR turns mental discipline into an exciting RPG. Earn XP, maintain streaks, and reach the Iron Will rank.
+                </p>
+            </div>
+            <div class="mt-4 pt-4 border-t border-asr-border flex items-center justify-between text-xs text-asr-faint">
+                <span>5 min read</span>
+                <span class="text-asr-sky font-semibold flex items-center gap-1 group-hover:translate-x-1 transition">Read Guide &rarr;</span>
+            </div>
+        </a>
+        
+        <a href="guides/digital-minimalism-guide-for-android-users.html" class="bg-asr-surface hover:bg-asr-elevated border border-asr-border hover:border-asr-sky/40 rounded-2xl p-6 transition flex flex-col justify-between group">
+            <div>
+                <div class="inline-flex items-center gap-1.5 text-xs font-bold text-asr-sky uppercase tracking-wider mb-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-asr-sky"></span>
+                    Digital Wellbeing
+                </div>
+                <h3 class="text-base font-bold text-asr-text group-hover:text-asr-sky transition mb-2">
+                    The Complete Digital Minimalism Guide for Android Users
+                </h3>
+                <p class="text-xs text-asr-muted line-clamp-3 leading-relaxed">
+                    Transform your relationship with technology. A comprehensive blueprint for digital minimalism on Android using ASAR.
+                </p>
+            </div>
+            <div class="mt-4 pt-4 border-t border-asr-border flex items-center justify-between text-xs text-asr-faint">
+                <span>6 min read</span>
+                <span class="text-asr-sky font-semibold flex items-center gap-1 group-hover:translate-x-1 transition">Read Guide &rarr;</span>
+            </div>
+        </a>
+        
+        <a href="guides/how-to-break-the-phone-reflex-in-21-days.html" class="bg-asr-surface hover:bg-asr-elevated border border-asr-border hover:border-asr-sky/40 rounded-2xl p-6 transition flex flex-col justify-between group">
+            <div>
+                <div class="inline-flex items-center gap-1.5 text-xs font-bold text-asr-sky uppercase tracking-wider mb-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-asr-sky"></span>
+                    Psychology & Focus
+                </div>
+                <h3 class="text-base font-bold text-asr-text group-hover:text-asr-sky transition mb-2">
+                    How to Break the Phone-Checking Reflex in 21 Days
+                </h3>
+                <p class="text-xs text-asr-muted line-clamp-3 leading-relaxed">
+                    The 21-day step-by-step habit reset protocol. Rewire subconscious phone urges and reclaim 2+ hours daily.
+                </p>
+            </div>
+            <div class="mt-4 pt-4 border-t border-asr-border flex items-center justify-between text-xs text-asr-faint">
+                <span>5 min read</span>
+                <span class="text-asr-sky font-semibold flex items-center gap-1 group-hover:translate-x-1 transition">Read Guide &rarr;</span>
+            </div>
+        </a>
+        
+        <a href="guides/why-on-device-privacy-matters-for-focus-apps.html" class="bg-asr-surface hover:bg-asr-elevated border border-asr-border hover:border-asr-sky/40 rounded-2xl p-6 transition flex flex-col justify-between group">
+            <div>
+                <div class="inline-flex items-center gap-1.5 text-xs font-bold text-asr-sky uppercase tracking-wider mb-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-asr-sky"></span>
+                    Discipline & Security
+                </div>
+                <h3 class="text-base font-bold text-asr-text group-hover:text-asr-sky transition mb-2">
+                    Why On-Device Privacy Matters for Focus & Screen Time Apps
+                </h3>
+                <p class="text-xs text-asr-muted line-clamp-3 leading-relaxed">
+                    Why your screen time and app usage data should never be uploaded to remote marketing clouds. The ASAR privacy guarantee.
+                </p>
+            </div>
+            <div class="mt-4 pt-4 border-t border-asr-border flex items-center justify-between text-xs text-asr-faint">
+                <span>5 min read</span>
+                <span class="text-asr-sky font-semibold flex items-center gap-1 group-hover:translate-x-1 transition">Read Guide &rarr;</span>
+            </div>
+        </a>
+        
+        <a href="guides/how-to-overcome-adhd-hyperfocus-on-distractions.html" class="bg-asr-surface hover:bg-asr-elevated border border-asr-border hover:border-asr-sky/40 rounded-2xl p-6 transition flex flex-col justify-between group">
+            <div>
+                <div class="inline-flex items-center gap-1.5 text-xs font-bold text-asr-sky uppercase tracking-wider mb-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-asr-sky"></span>
+                    Digital Wellbeing
+                </div>
+                <h3 class="text-base font-bold text-asr-text group-hover:text-asr-sky transition mb-2">
+                    How to Overcome ADHD Hyperfocus on Distractions (Android)
+                </h3>
+                <p class="text-xs text-asr-muted line-clamp-3 leading-relaxed">
+                    ADHD management: how to prevent losing 6 hours to video games or Wikipedia rabbit holes with ASAR strict timers.
+                </p>
+            </div>
+            <div class="mt-4 pt-4 border-t border-asr-border flex items-center justify-between text-xs text-asr-faint">
+                <span>5 min read</span>
+                <span class="text-asr-sky font-semibold flex items-center gap-1 group-hover:translate-x-1 transition">Read Guide &rarr;</span>
+            </div>
+        </a>
+        
+        <a href="guides/complete-guide-to-turning-time-into-progress-with-asar.html" class="bg-asr-surface hover:bg-asr-elevated border border-asr-border hover:border-asr-sky/40 rounded-2xl p-6 transition flex flex-col justify-between group">
+            <div>
+                <div class="inline-flex items-center gap-1.5 text-xs font-bold text-asr-sky uppercase tracking-wider mb-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-asr-sky"></span>
+                    Productivity
+                </div>
+                <h3 class="text-base font-bold text-asr-text group-hover:text-asr-sky transition mb-2">
+                    Complete Guide to Turning Time Into Progress with ASAR (Master Manual)
+                </h3>
+                <p class="text-xs text-asr-muted line-clamp-3 leading-relaxed">
+                    The complete master manual for ASAR. Master Strict Mode, Mindful Pauses, Custom Profiles, Discipline Scores, and Pro features.
+                </p>
+            </div>
+            <div class="mt-4 pt-4 border-t border-asr-border flex items-center justify-between text-xs text-asr-faint">
+                <span>7 min read</span>
+                <span class="text-asr-sky font-semibold flex items-center gap-1 group-hover:translate-x-1 transition">Read Guide &rarr;</span>
+            </div>
+        </a>
+        
+    </div>
+</main>
+
+<!-- Footer -->
+<footer class="border-t border-asr-border bg-asr-surface/40 py-12 px-5">
+    <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6 text-xs text-asr-muted">
+        <div class="flex items-center gap-3">
+            <img src="assets/asar_navbar_brand.png" alt="ASAR" class="h-6 w-auto">
+            <span>&bull; Turn Time Into Progress &bull; &copy; 2026 ASAR</span>
+        </div>
+        <div class="flex flex-wrap items-center gap-6">
+            <a href="features.html" class="hover:text-asr-text transition">Features</a>
+            <a href="pricing.html" class="hover:text-asr-text transition">Pricing</a>
+            <a href="guides.html" class="hover:text-asr-text transition">SEO Hub</a>
+            <a href="privacy.html" class="hover:text-asr-text transition">Privacy Policy</a>
+            <a href="terms.html" class="hover:text-asr-text transition">Terms of Service</a>
+            <a href="refund.html" class="hover:text-asr-text transition">Refunds</a>
+        </div>
+    </div>
+</footer>
+
+<script>
+    lucide.createIcons();
+
+    function filterGuides() {
+        const input = document.getElementById('searchInput').value.toLowerCase();
+        const cards = document.getElementById('guidesGrid').getElementsByTagName('a');
+        for (let i = 0; i < cards.length; i++) {
+            const text = cards[i].innerText.toLowerCase();
+            cards[i].style.display = text.includes(input) ? '' : 'none';
+        }
+    }
+</script>
+</body>
+</html>
