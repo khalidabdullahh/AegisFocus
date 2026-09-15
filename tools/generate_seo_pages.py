@@ -2061,6 +2061,9 @@ def generate_html(page):
 <script>
     lucide.createIcons();
 </script>
+<!-- Adsterra Social Bar & Popunder -->
+<script src="https://pl31353127.profitableratecpmnetwork.com/94/5a/bd/945abde0bde17272b972b965fd957682.js"></script>
+<script src="https://pl31353128.profitableratecpmnetwork.com/29/67/c7/2967c71dc18836947efb8a4fe45eb68e.js"></script>
 </body>
 </html>
 """
@@ -2245,6 +2248,9 @@ def generate_hub_html(pages):
         }}
     }}
 </script>
+<!-- Adsterra Social Bar & Popunder -->
+<script src="https://pl31353127.profitableratecpmnetwork.com/94/5a/bd/945abde0bde17272b972b965fd957682.js"></script>
+<script src="https://pl31353128.profitableratecpmnetwork.com/29/67/c7/2967c71dc18836947efb8a4fe45eb68e.js"></script>
 </body>
 </html>
 """
