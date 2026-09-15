@@ -430,15 +430,28 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;
 -- ─── Automatic User Registration Trigger ─────────────────────────────────────
 CREATE OR REPLACE FUNCTION public.handle_new_user()
 RETURNS TRIGGER AS $$
+DECLARE
+    v_display_name TEXT;
 BEGIN
+    -- Extract display name from metadata (works for Email signup, Google OAuth, etc.)
+    v_display_name := COALESCE(
+        NULLIF(TRIM(NEW.raw_user_meta_data->>'display_name'), ''),
+        NULLIF(TRIM(NEW.raw_user_meta_data->>'full_name'), ''),
+        NULLIF(TRIM(NEW.raw_user_meta_data->>'name'), ''),
+        split_part(NEW.email, '@', 1)
+    );
+
     -- 1. Create Profile
     INSERT INTO public.profiles (id, email, display_name, role)
     VALUES (
         NEW.id,
         NEW.email,
-        COALESCE(NEW.raw_user_meta_data->>'display_name', split_part(NEW.email, '@', 1)),
+        v_display_name,
         'user'
-    ) ON CONFLICT (id) DO NOTHING;
+    ) ON CONFLICT (id) DO UPDATE
+    SET email = EXCLUDED.email,
+        display_name = COALESCE(public.profiles.display_name, EXCLUDED.display_name),
+        updated_at = timezone('utc'::text, now());
 
     -- 2. Create Initial Free Subscription
     INSERT INTO public.subscriptions (user_id, plan_type, status, expiry_epoch_ms)

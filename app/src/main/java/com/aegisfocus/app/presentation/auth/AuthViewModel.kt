@@ -1,5 +1,6 @@
 package com.aegisfocus.app.presentation.auth
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.aegisfocus.app.data.remote.AuthResult
@@ -18,6 +19,8 @@ data class AuthUiState(
     val isLoading: Boolean = false,
     val errorMessage: String? = null,
     val successMessage: String? = null,
+    val isEmailVerificationPending: Boolean = false,
+    val unverifiedEmail: String? = null,
     val currentUser: AuthUser? = null
 )
 
@@ -31,13 +34,21 @@ class AuthViewModel(
     init {
         viewModelScope.launch {
             authService.currentUser.collect { user ->
-                _uiState.value = _uiState.value.copy(currentUser = user)
+                _uiState.value = _uiState.value.copy(
+                    currentUser = user,
+                    isEmailVerificationPending = if (user != null) false else _uiState.value.isEmailVerificationPending
+                )
             }
         }
     }
 
     fun setAuthMode(isSignUp: Boolean) {
-        _uiState.value = _uiState.value.copy(isSignUp = isSignUp, errorMessage = null, successMessage = null)
+        _uiState.value = _uiState.value.copy(
+            isSignUp = isSignUp,
+            errorMessage = null,
+            successMessage = null,
+            isEmailVerificationPending = false
+        )
     }
 
     fun onEmailChanged(email: String) {
@@ -63,12 +74,17 @@ class AuthViewModel(
             return
         }
         if (state.isSignUp && state.displayName.isBlank()) {
-            _uiState.value = state.copy(errorMessage = "Please enter your name.")
+            _uiState.value = state.copy(errorMessage = "Please enter your full name.")
             return
         }
 
         viewModelScope.launch {
-            _uiState.value = _uiState.value.copy(isLoading = true, errorMessage = null, successMessage = null)
+            _uiState.value = _uiState.value.copy(
+                isLoading = true,
+                errorMessage = null,
+                successMessage = null,
+                isEmailVerificationPending = false
+            )
 
             val result = if (state.isSignUp) {
                 authService.signUp(state.email, state.password, state.displayName)
@@ -81,13 +97,52 @@ class AuthViewModel(
                     _uiState.value = _uiState.value.copy(
                         isLoading = false,
                         successMessage = result.message,
-                        currentUser = result.user
+                        currentUser = result.user,
+                        isEmailVerificationPending = false
+                    )
+                }
+                is AuthResult.EmailVerificationRequired -> {
+                    _uiState.value = _uiState.value.copy(
+                        isLoading = false,
+                        isEmailVerificationPending = true,
+                        unverifiedEmail = result.email,
+                        successMessage = result.message
                     )
                 }
                 is AuthResult.Error -> {
                     _uiState.value = _uiState.value.copy(
                         isLoading = false,
                         errorMessage = result.message
+                    )
+                }
+            }
+        }
+    }
+
+    fun resendVerification() {
+        val targetEmail = _uiState.value.unverifiedEmail ?: _uiState.value.email
+        if (targetEmail.isBlank()) return
+
+        viewModelScope.launch {
+            _uiState.value = _uiState.value.copy(isLoading = true, errorMessage = null)
+            val result = authService.resendVerificationEmail(targetEmail)
+            when (result) {
+                is AuthResult.Success -> {
+                    _uiState.value = _uiState.value.copy(
+                        isLoading = false,
+                        successMessage = result.message
+                    )
+                }
+                is AuthResult.Error -> {
+                    _uiState.value = _uiState.value.copy(
+                        isLoading = false,
+                        errorMessage = result.message
+                    )
+                }
+                is AuthResult.EmailVerificationRequired -> {
+                    _uiState.value = _uiState.value.copy(
+                        isLoading = false,
+                        successMessage = result.message
                     )
                 }
             }
@@ -112,8 +167,20 @@ class AuthViewModel(
                         errorMessage = result.message
                     )
                 }
+                is AuthResult.EmailVerificationRequired -> {
+                    _uiState.value = _uiState.value.copy(
+                        isLoading = false,
+                        isEmailVerificationPending = true,
+                        unverifiedEmail = result.email,
+                        successMessage = result.message
+                    )
+                }
             }
         }
+    }
+
+    fun launchBrowserGoogleAuth(context: Context) {
+        authService.launchBrowserGoogleAuth(context)
     }
 
     fun updateDisplayName(newName: String) {
@@ -138,6 +205,7 @@ class AuthViewModel(
             when (res) {
                 is AuthResult.Success -> _uiState.value = _uiState.value.copy(isLoading = false, successMessage = res.message)
                 is AuthResult.Error -> _uiState.value = _uiState.value.copy(isLoading = false, errorMessage = res.message)
+                is AuthResult.EmailVerificationRequired -> _uiState.value = _uiState.value.copy(isLoading = false, successMessage = res.message)
             }
         }
     }
@@ -149,6 +217,7 @@ class AuthViewModel(
             when (res) {
                 is AuthResult.Success -> _uiState.value = _uiState.value.copy(isLoading = false, successMessage = res.message)
                 is AuthResult.Error -> _uiState.value = _uiState.value.copy(isLoading = false, errorMessage = res.message)
+                is AuthResult.EmailVerificationRequired -> _uiState.value = _uiState.value.copy(isLoading = false, successMessage = res.message)
             }
         }
     }
@@ -159,7 +228,11 @@ class AuthViewModel(
 
     fun signOut() {
         authService.signOut()
-        _uiState.value = _uiState.value.copy(currentUser = null, successMessage = "Signed out successfully.")
+        _uiState.value = _uiState.value.copy(
+            currentUser = null,
+            isEmailVerificationPending = false,
+            successMessage = "Signed out successfully."
+        )
     }
 
     fun clearMessages() {

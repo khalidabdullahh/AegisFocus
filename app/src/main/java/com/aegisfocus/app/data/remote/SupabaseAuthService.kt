@@ -1,20 +1,23 @@
 package com.aegisfocus.app.data.remote
 
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.util.Log
 import com.aegisfocus.app.core.di.ServiceLocator
 import com.aegisfocus.app.domain.subscription.SubscriptionPlan
 import com.aegisfocus.app.service.telemetry.DiscordNotifier
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.json.JSONObject
 import java.net.HttpURLConnection
 import java.net.URL
+import java.net.URLDecoder
 
 data class AuthUser(
     val id: String,
@@ -26,11 +29,13 @@ data class AuthUser(
 
 sealed class AuthResult {
     data class Success(val user: AuthUser, val message: String) : AuthResult()
-    data class Error(val message: String) : AuthResult()
+    data class EmailVerificationRequired(val email: String, val message: String) : AuthResult()
+    data class Error(val message: String, val code: Int? = null) : AuthResult()
 }
 
 /**
- * Native Supabase Authentication Service handling SignUp, SignIn, and User Sessions.
+ * Server-authoritative Supabase Authentication Service.
+ * Handles Sign-Up, Sign-In, Google ID-Token & Browser OAuth, Session Persistence, and Token Exchange.
  */
 class SupabaseAuthService(private val context: Context) {
 
@@ -51,7 +56,7 @@ class SupabaseAuthService(private val context: Context) {
         val token = prefs.getString("auth_access_token", null)
         val avatar = prefs.getString("auth_avatar_uri", null)
 
-        if (userId != null && email != null) {
+        if (!userId.isNullOrBlank() && !email.isNullOrBlank() && !token.isNullOrBlank()) {
             val user = AuthUser(id = userId, email = email, displayName = name, accessToken = token, avatarUri = avatar)
             _currentUser.value = user
             grantSuperAdminIfEligible(email)
@@ -62,6 +67,9 @@ class SupabaseAuthService(private val context: Context) {
      * Registers a new account in Supabase Auth.
      */
     suspend fun signUp(email: String, pass: String, displayName: String): AuthResult = withContext(Dispatchers.IO) {
+        val cleanEmail = email.trim().lowercase()
+        val cleanName = displayName.trim()
+
         try {
             val url = URL("${SupabaseConfig.AUTH_ENDPOINT}/signup")
             val conn = url.openConnection() as HttpURLConnection
@@ -69,14 +77,15 @@ class SupabaseAuthService(private val context: Context) {
             conn.setRequestProperty("apikey", SupabaseConfig.ANON_KEY)
             conn.setRequestProperty("Content-Type", "application/json")
             conn.doOutput = true
-            conn.connectTimeout = 8000
-            conn.readTimeout = 8000
+            conn.connectTimeout = 10000
+            conn.readTimeout = 10000
 
             val body = JSONObject().apply {
-                put("email", email.trim().lowercase())
+                put("email", cleanEmail)
                 put("password", pass)
                 put("data", JSONObject().apply {
-                    put("display_name", displayName.trim())
+                    put("display_name", cleanName)
+                    put("full_name", cleanName)
                 })
             }
 
@@ -90,52 +99,55 @@ class SupabaseAuthService(private val context: Context) {
             if (responseCode in 200..299) {
                 val json = JSONObject(respText)
                 val userObj = json.optJSONObject("user") ?: json
-                val userId = userObj.optString("id", "usr_${System.currentTimeMillis()}")
-                val userEmail = userObj.optString("email", email.trim().lowercase())
-                val token = json.optString("access_token", "sess_${System.currentTimeMillis()}")
+                val userId = userObj.optString("id", "")
+                val userEmail = userObj.optString("email", cleanEmail)
+                val token = json.optString("access_token", "")
 
-                val authUser = AuthUser(id = userId, email = userEmail, displayName = displayName.ifBlank { userEmail.substringBefore("@") }, accessToken = token)
-                saveSession(authUser)
+                // Check if session token was returned or if email confirmation is required
+                if (token.isNotBlank() && userId.isNotBlank()) {
+                    val authUser = AuthUser(
+                        id = userId,
+                        email = userEmail,
+                        displayName = cleanName.ifBlank { userEmail.substringBefore("@") },
+                        accessToken = token
+                    )
+                    saveSession(authUser)
 
-                DiscordNotifier.notifyUserAuth(
-                    eventType = "Account Created (Sign Up)",
-                    email = userEmail,
-                    username = authUser.displayName ?: ""
-                )
-
-                AuthResult.Success(authUser, "Account created successfully!")
+                    DiscordNotifier.notifyUserAuth(
+                        eventType = "Account Created (Auto-Confirmed)",
+                        email = userEmail,
+                        username = authUser.displayName ?: ""
+                    )
+                    AuthResult.Success(authUser, "Account created successfully!")
+                } else {
+                    // Supabase requires email verification
+                    DiscordNotifier.notifyUserAuth(
+                        eventType = "Account Created (Verification Sent)",
+                        email = userEmail,
+                        username = cleanName
+                    )
+                    AuthResult.EmailVerificationRequired(
+                        email = cleanEmail,
+                        message = "Verification email sent to $cleanEmail. Please check your inbox and confirm your email before signing in."
+                    )
+                }
             } else {
-                val localUser = AuthUser(
-                    id = "usr_${email.trim().lowercase().hashCode()}",
-                    email = email.trim().lowercase(),
-                    displayName = displayName.ifBlank { email.substringBefore("@") },
-                    accessToken = "local_${System.currentTimeMillis()}"
-                )
-                saveSession(localUser)
-                DiscordNotifier.notifyUserAuth(
-                    eventType = "Account Created (Direct)",
-                    email = localUser.email,
-                    username = localUser.displayName ?: ""
-                )
-                AuthResult.Success(localUser, "Account created successfully!")
+                val errorMsg = parseErrorMessage(respText, responseCode)
+                Log.w(tag, "Supabase Sign Up failed ($responseCode): $errorMsg")
+                AuthResult.Error(errorMsg, responseCode)
             }
         } catch (e: Exception) {
-            Log.e(tag, "Sign up error: ${e.message}", e)
-            val localUser = AuthUser(
-                id = "usr_${email.trim().lowercase().hashCode()}",
-                email = email.trim().lowercase(),
-                displayName = displayName.ifBlank { email.substringBefore("@") },
-                accessToken = "local_${System.currentTimeMillis()}"
-            )
-            saveSession(localUser)
-            AuthResult.Success(localUser, "Account created successfully!")
+            Log.e(tag, "Sign up network error: ${e.message}", e)
+            AuthResult.Error("No internet connection or server timeout. Please check your network and try again.")
         }
     }
 
     /**
-     * Logs into existing Supabase account.
+     * Logs into an existing Supabase account.
      */
     suspend fun signIn(email: String, pass: String): AuthResult = withContext(Dispatchers.IO) {
+        val cleanEmail = email.trim().lowercase()
+
         try {
             val url = URL("${SupabaseConfig.AUTH_ENDPOINT}/token?grant_type=password")
             val conn = url.openConnection() as HttpURLConnection
@@ -143,11 +155,11 @@ class SupabaseAuthService(private val context: Context) {
             conn.setRequestProperty("apikey", SupabaseConfig.ANON_KEY)
             conn.setRequestProperty("Content-Type", "application/json")
             conn.doOutput = true
-            conn.connectTimeout = 8000
-            conn.readTimeout = 8000
+            conn.connectTimeout = 10000
+            conn.readTimeout = 10000
 
             val body = JSONObject().apply {
-                put("email", email.trim().lowercase())
+                put("email", cleanEmail)
                 put("password", pass)
             }
 
@@ -164,42 +176,47 @@ class SupabaseAuthService(private val context: Context) {
                 val userId = userObj.getString("id")
                 val userEmail = userObj.getString("email")
                 val userMeta = userObj.optJSONObject("user_metadata")
-                val name = userMeta?.optString("display_name", "")
+                val name = userMeta?.optString("display_name")
+                    ?: userMeta?.optString("full_name")
+                    ?: userMeta?.optString("name")
+                    ?: userEmail.substringBefore("@")
                 val token = json.getString("access_token")
 
-                val authUser = AuthUser(id = userId, email = userEmail, displayName = name?.ifBlank { userEmail.substringBefore("@") } ?: userEmail.substringBefore("@"), accessToken = token)
+                val authUser = AuthUser(
+                    id = userId,
+                    email = userEmail,
+                    displayName = name.ifBlank { userEmail.substringBefore("@") },
+                    accessToken = token
+                )
                 saveSession(authUser)
 
                 DiscordNotifier.notifyUserAuth(
-                    eventType = "User Logged In (Sign In)",
+                    eventType = "User Signed In",
                     email = userEmail,
                     username = authUser.displayName ?: ""
                 )
 
                 AuthResult.Success(authUser, "Welcome back!")
             } else {
-                val localUser = AuthUser(
-                    id = "usr_${email.trim().lowercase().hashCode()}",
-                    email = email.trim().lowercase(),
-                    displayName = email.substringBefore("@")
-                )
-                saveSession(localUser)
-                AuthResult.Success(localUser, "Signed in successfully!")
+                val errorMsg = parseErrorMessage(respText, responseCode)
+                Log.w(tag, "Supabase Sign In failed ($responseCode): $errorMsg")
+                if (errorMsg.contains("Email not confirmed", ignoreCase = true)) {
+                    AuthResult.EmailVerificationRequired(
+                        email = cleanEmail,
+                        message = "Your email is not verified yet. Please check your inbox for the confirmation link."
+                    )
+                } else {
+                    AuthResult.Error(errorMsg, responseCode)
+                }
             }
         } catch (e: Exception) {
-            Log.e(tag, "Sign in error: ${e.message}", e)
-            val localUser = AuthUser(
-                id = "usr_${email.trim().lowercase().hashCode()}",
-                email = email.trim().lowercase(),
-                displayName = email.substringBefore("@")
-            )
-            saveSession(localUser)
-            AuthResult.Success(localUser, "Signed in successfully!")
+            Log.e(tag, "Sign in network error: ${e.message}", e)
+            AuthResult.Error("No internet connection or server timeout. Please check your connection and try again.")
         }
     }
 
     /**
-     * Signs in or registers a user via Google Sign-In ID Token.
+     * Signs in or registers a user via Google Credential Manager (ID Token).
      */
     suspend fun signInWithGoogle(
         idToken: String,
@@ -214,8 +231,8 @@ class SupabaseAuthService(private val context: Context) {
             conn.setRequestProperty("apikey", SupabaseConfig.ANON_KEY)
             conn.setRequestProperty("Content-Type", "application/json")
             conn.doOutput = true
-            conn.connectTimeout = 8000
-            conn.readTimeout = 8000
+            conn.connectTimeout = 10000
+            conn.readTimeout = 10000
 
             val body = JSONObject().apply {
                 put("provider", "google")
@@ -236,57 +253,166 @@ class SupabaseAuthService(private val context: Context) {
                 val userId = userObj.getString("id")
                 val email = userObj.getString("email")
                 val userMeta = userObj.optJSONObject("user_metadata")
-                val name = userMeta?.optString("full_name") ?: userMeta?.optString("name") ?: displayName ?: ""
+                val name = userMeta?.optString("full_name")
+                    ?: userMeta?.optString("name")
+                    ?: userMeta?.optString("display_name")
+                    ?: displayName
+                    ?: email.substringBefore("@")
                 val token = json.optString("access_token", "")
 
                 val authUser = AuthUser(id = userId, email = email, displayName = name, accessToken = token)
                 saveSession(authUser)
 
                 DiscordNotifier.notifyUserAuth(
-                    eventType = "Google 1-Tap Sign-In",
+                    eventType = "Google Sign-In (ID Token)",
                     email = email,
                     username = name
                 )
 
                 AuthResult.Success(authUser, "Google Sign-In successful!")
             } else {
-                if (!userEmail.isNullOrBlank()) {
-                    val fallbackUser = AuthUser(
-                        id = "google_${userEmail.hashCode()}",
-                        email = userEmail,
-                        displayName = displayName ?: userEmail.substringBefore("@")
-                    )
-                    saveSession(fallbackUser)
-
-                    DiscordNotifier.notifyUserAuth(
-                        eventType = "Google 1-Tap Sign-In (Direct)",
-                        email = userEmail,
-                        username = fallbackUser.displayName ?: ""
-                    )
-
-                    AuthResult.Success(fallbackUser, "Account created and logged in via Google!")
-                } else {
-                    val errJson = try { JSONObject(respText) } catch (e: Exception) { null }
-                    val errorMsg = errJson?.optString("error_description")
-                        ?: errJson?.optString("msg")
-                        ?: errJson?.optString("message")
-                        ?: "Google Sign-In failed ($responseCode)."
-                    AuthResult.Error(errorMsg)
-                }
+                val errorMsg = parseErrorMessage(respText, responseCode)
+                Log.w(tag, "Supabase Google ID-token auth failed ($responseCode): $errorMsg")
+                AuthResult.Error(errorMsg, responseCode)
             }
         } catch (e: Exception) {
             Log.e(tag, "Google Sign-In error: ${e.message}", e)
-            if (!userEmail.isNullOrBlank()) {
-                val fallbackUser = AuthUser(
-                    id = "google_${userEmail.hashCode()}",
-                    email = userEmail,
-                    displayName = displayName ?: userEmail.substringBefore("@")
-                )
-                saveSession(fallbackUser)
-                AuthResult.Success(fallbackUser, "Account created and logged in via Google!")
-            } else {
-                AuthResult.Error("Network error: ${e.localizedMessage}")
+            AuthResult.Error("Network error during Google Sign-In: ${e.localizedMessage}")
+        }
+    }
+
+    /**
+     * Launches browser-based Google OAuth via Supabase `/auth/v1/authorize`.
+     * Redirects back to `aegisfocus://auth-callback`.
+     */
+    fun launchBrowserGoogleAuth(activityContext: Context) {
+        val redirectUri = "aegisfocus://auth-callback"
+        val authUrl = "${SupabaseConfig.AUTH_ENDPOINT}/authorize?provider=google&redirect_to=${Uri.encode(redirectUri)}"
+        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(authUrl)).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        }
+        activityContext.startActivity(intent)
+    }
+
+    /**
+     * Intercepts and parses the incoming deep link from Google / Email OAuth redirect.
+     */
+    suspend fun handleOAuthCallback(uri: Uri): AuthResult = withContext(Dispatchers.IO) {
+        try {
+            // Supabase OAuth returns tokens in URL fragment: #access_token=...&refresh_token=...
+            val fragment = uri.fragment
+            val query = uri.query
+            val params = mutableMapOf<String, String>()
+
+            if (!fragment.isNullOrBlank()) {
+                fragment.split("&").forEach { pair ->
+                    val parts = pair.split("=")
+                    if (parts.size >= 2) {
+                        params[parts[0]] = URLDecoder.decode(parts[1], "UTF-8")
+                    }
+                }
             }
+
+            if (!query.isNullOrBlank()) {
+                query.split("&").forEach { pair ->
+                    val parts = pair.split("=")
+                    if (parts.size >= 2) {
+                        params[parts[0]] = URLDecoder.decode(parts[1], "UTF-8")
+                    }
+                }
+            }
+
+            val accessToken = params["access_token"]
+            val error = params["error_description"] ?: params["error"]
+
+            if (!error.isNullOrBlank()) {
+                return@withContext AuthResult.Error("OAuth error: $error")
+            }
+
+            if (accessToken.isNullOrBlank()) {
+                return@withContext AuthResult.Error("No access token found in OAuth callback.")
+            }
+
+            // Validate token and fetch authentic user profile from Supabase
+            val userUrl = URL("${SupabaseConfig.AUTH_ENDPOINT}/user")
+            val conn = userUrl.openConnection() as HttpURLConnection
+            conn.requestMethod = "GET"
+            conn.setRequestProperty("apikey", SupabaseConfig.ANON_KEY)
+            conn.setRequestProperty("Authorization", "Bearer $accessToken")
+            conn.connectTimeout = 10000
+            conn.readTimeout = 10000
+
+            val respCode = conn.responseCode
+            if (respCode in 200..299) {
+                val respText = conn.inputStream.bufferedReader().use { it.readText() }
+                conn.disconnect()
+
+                val json = JSONObject(respText)
+                val userId = json.getString("id")
+                val email = json.getString("email")
+                val userMeta = json.optJSONObject("user_metadata")
+                val name = userMeta?.optString("full_name")
+                    ?: userMeta?.optString("name")
+                    ?: userMeta?.optString("display_name")
+                    ?: email.substringBefore("@")
+
+                val authUser = AuthUser(id = userId, email = email, displayName = name, accessToken = accessToken)
+                saveSession(authUser)
+
+                DiscordNotifier.notifyUserAuth(
+                    eventType = "OAuth Browser Callback Sign-In",
+                    email = email,
+                    username = name
+                )
+
+                AuthResult.Success(authUser, "Signed in successfully!")
+            } else {
+                conn.disconnect()
+                AuthResult.Error("Failed to verify user session with Supabase ($respCode).")
+            }
+        } catch (e: Exception) {
+            Log.e(tag, "OAuth callback handling failed: ${e.message}", e)
+            AuthResult.Error("Authentication callback error: ${e.localizedMessage}")
+        }
+    }
+
+    /**
+     * Resends email confirmation link.
+     */
+    suspend fun resendVerificationEmail(email: String): AuthResult = withContext(Dispatchers.IO) {
+        val cleanEmail = email.trim().lowercase()
+        try {
+            val url = URL("${SupabaseConfig.AUTH_ENDPOINT}/resend")
+            val conn = url.openConnection() as HttpURLConnection
+            conn.requestMethod = "POST"
+            conn.setRequestProperty("apikey", SupabaseConfig.ANON_KEY)
+            conn.setRequestProperty("Content-Type", "application/json")
+            conn.doOutput = true
+            conn.connectTimeout = 8000
+            conn.readTimeout = 8000
+
+            val body = JSONObject().apply {
+                put("type", "signup")
+                put("email", cleanEmail)
+            }
+            conn.outputStream.use { it.write(body.toString().toByteArray(Charsets.UTF_8)) }
+
+            val responseCode = conn.responseCode
+            val stream = if (responseCode in 200..299) conn.inputStream else conn.errorStream
+            val respText = stream.bufferedReader().use { it.readText() }
+            conn.disconnect()
+
+            if (responseCode in 200..299) {
+                AuthResult.Success(
+                    AuthUser("temp", cleanEmail),
+                    "Verification email has been resent to $cleanEmail. Please check your inbox."
+                )
+            } else {
+                val errorMsg = parseErrorMessage(respText, responseCode)
+                AuthResult.Error(errorMsg, responseCode)
+            }
+        } catch (e: Exception) {
+            AuthResult.Error("Network error: ${e.localizedMessage}")
         }
     }
 
@@ -306,12 +432,14 @@ class SupabaseAuthService(private val context: Context) {
 
     suspend fun updatePassword(newPassword: String): AuthResult = withContext(Dispatchers.IO) {
         val user = _currentUser.value ?: return@withContext AuthResult.Error("No active user session")
+        val token = user.accessToken ?: return@withContext AuthResult.Error("Invalid session token")
+
         try {
             val url = URL("${SupabaseConfig.AUTH_ENDPOINT}/user")
             val conn = url.openConnection() as HttpURLConnection
             conn.requestMethod = "PUT"
             conn.setRequestProperty("apikey", SupabaseConfig.ANON_KEY)
-            conn.setRequestProperty("Authorization", "Bearer ${user.accessToken}")
+            conn.setRequestProperty("Authorization", "Bearer $token")
             conn.setRequestProperty("Content-Type", "application/json")
             conn.doOutput = true
 
@@ -321,19 +449,23 @@ class SupabaseAuthService(private val context: Context) {
             conn.outputStream.use { it.write(body.toString().toByteArray(Charsets.UTF_8)) }
 
             val responseCode = conn.responseCode
+            val stream = if (responseCode in 200..299) conn.inputStream else conn.errorStream
+            val respText = stream.bufferedReader().use { it.readText() }
             conn.disconnect()
 
             if (responseCode in 200..299) {
                 AuthResult.Success(user, "Password updated successfully!")
             } else {
-                AuthResult.Success(user, "Password updated successfully!")
+                val err = parseErrorMessage(respText, responseCode)
+                AuthResult.Error(err, responseCode)
             }
         } catch (e: Exception) {
-            AuthResult.Success(user, "Password updated successfully!")
+            AuthResult.Error("Network error: ${e.localizedMessage}")
         }
     }
 
     suspend fun sendPasswordReset(email: String): AuthResult = withContext(Dispatchers.IO) {
+        val cleanEmail = email.trim().lowercase()
         try {
             val url = URL("${SupabaseConfig.AUTH_ENDPOINT}/recover")
             val conn = url.openConnection() as HttpURLConnection
@@ -343,22 +475,24 @@ class SupabaseAuthService(private val context: Context) {
             conn.doOutput = true
 
             val body = JSONObject().apply {
-                put("email", email.trim().lowercase())
+                put("email", cleanEmail)
             }
             conn.outputStream.use { it.write(body.toString().toByteArray(Charsets.UTF_8)) }
 
             val responseCode = conn.responseCode
+            val stream = if (responseCode in 200..299) conn.inputStream else conn.errorStream
+            val respText = stream.bufferedReader().use { it.readText() }
             conn.disconnect()
 
-            val currentUserVal = _currentUser.value ?: AuthUser("temp", email)
+            val currentUserVal = _currentUser.value ?: AuthUser("temp", cleanEmail)
             if (responseCode in 200..299) {
-                AuthResult.Success(currentUserVal, "Verification / Password reset email sent to $email!")
+                AuthResult.Success(currentUserVal, "Password reset email sent to $cleanEmail!")
             } else {
-                AuthResult.Success(currentUserVal, "Verification / Password reset instructions sent to $email!")
+                val err = parseErrorMessage(respText, responseCode)
+                AuthResult.Error(err, responseCode)
             }
         } catch (e: Exception) {
-            val currentUserVal = _currentUser.value ?: AuthUser("temp", email)
-            AuthResult.Success(currentUserVal, "Verification / Password reset instructions sent to $email!")
+            AuthResult.Error("Network error: ${e.localizedMessage}")
         }
     }
 
@@ -389,6 +523,21 @@ class SupabaseAuthService(private val context: Context) {
                     token = "SUPER_ADMIN_LIFETIME_GRANTED"
                 )
             }
+        }
+    }
+
+    private fun parseErrorMessage(respText: String, code: Int): String {
+        return try {
+            val json = JSONObject(respText)
+            json.optString("error_description",
+                json.optString("msg",
+                    json.optString("message",
+                        json.optString("error", "Request failed with status $code")
+                    )
+                )
+            )
+        } catch (e: Exception) {
+            "Request failed ($code): $respText"
         }
     }
 

@@ -27,11 +27,11 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Key
 import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.filled.MarkEmailRead
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
@@ -61,7 +61,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import java.io.File
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -73,11 +72,6 @@ import androidx.credentials.CustomCredential
 import androidx.credentials.GetCredentialRequest
 import androidx.credentials.exceptions.GetCredentialException
 import com.aegisfocus.app.core.components.AegisPrimaryButton
-import com.aegisfocus.app.data.remote.AuthUser
-import com.aegisfocus.app.data.remote.SupabaseConfig
-import com.google.android.libraries.identity.googleid.GetGoogleIdOption
-import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
-import kotlinx.coroutines.launch
 import com.aegisfocus.app.core.theme.AlertStrict
 import com.aegisfocus.app.core.theme.CyanAccent
 import com.aegisfocus.app.core.theme.DeepSurface
@@ -88,7 +82,13 @@ import com.aegisfocus.app.core.theme.SubtleBorder
 import com.aegisfocus.app.core.theme.TextMuted
 import com.aegisfocus.app.core.theme.TextPrimary
 import com.aegisfocus.app.core.theme.TextSecondary
+import com.aegisfocus.app.data.remote.AuthUser
 import com.aegisfocus.app.data.remote.SupabaseAuthService
+import com.aegisfocus.app.data.remote.SupabaseConfig
+import com.google.android.libraries.identity.googleid.GetGoogleIdOption
+import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
+import kotlinx.coroutines.launch
+import java.io.File
 
 @Composable
 fun AuthScreen(
@@ -98,6 +98,8 @@ fun AuthScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
     var passwordVisible by remember { mutableStateOf(false) }
+    val context = LocalContext.current
+    val coroutineScope = rememberCoroutineScope()
 
     Column(
         modifier = modifier
@@ -137,13 +139,57 @@ fun AuthScreen(
             letterSpacing = (-0.5).sp
         )
         Text(
-            text = if (uiState.isSignUp) "Join ASR and sync your discipline across devices." else "Sign in to access your cloud-synced focus profile.",
+            text = if (uiState.isSignUp) "Join ASAR and sync your focus discipline across all devices." else "Sign in to access your cloud-synced focus profile.",
             fontSize = 13.sp,
             color = TextSecondary,
             modifier = Modifier.padding(top = 4.dp)
         )
 
         Spacer(modifier = Modifier.height(24.dp))
+
+        // Email Verification Pending Banner
+        if (uiState.isEmailVerificationPending) {
+            Surface(
+                shape = RoundedCornerShape(14.dp),
+                color = CyanAccent.copy(alpha = 0.12f),
+                border = BorderStroke(1.dp, CyanAccent),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Column(Modifier.padding(16.dp)) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Icon(Icons.Default.MarkEmailRead, contentDescription = null, tint = CyanAccent, modifier = Modifier.size(24.dp))
+                        Spacer(Modifier.width(10.dp))
+                        Text(
+                            text = "Email Confirmation Sent",
+                            color = CyanAccent,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 15.sp
+                        )
+                    }
+                    Spacer(Modifier.height(8.dp))
+                    Text(
+                        text = "We sent a confirmation link to: ${uiState.unverifiedEmail ?: uiState.email}. Please click the link in your email to activate your account, then return here to Sign In.",
+                        color = TextPrimary,
+                        fontSize = 13.sp,
+                        lineHeight = 18.sp
+                    )
+                    Spacer(Modifier.height(12.dp))
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        TextButton(onClick = { viewModel.resendVerification() }) {
+                            Text("Resend Link ✉️", color = CyanAccent, fontWeight = FontWeight.Bold, fontSize = 12.sp)
+                        }
+                        TextButton(onClick = { viewModel.setAuthMode(false) }) {
+                            Text("Switch to Sign In →", color = EmeraldFocus, fontWeight = FontWeight.Bold, fontSize = 12.sp)
+                        }
+                    }
+                }
+            }
+            Spacer(modifier = Modifier.height(16.dp))
+        }
 
         // Tabs (Sign In / Sign Up)
         TabRow(
@@ -243,26 +289,44 @@ fun AuthScreen(
         // Error Message
         uiState.errorMessage?.let { msg ->
             Spacer(modifier = Modifier.height(12.dp))
-            Text(
-                text = msg,
-                color = AlertStrict,
-                fontSize = 13.sp,
-                fontWeight = FontWeight.Medium
-            )
+            Surface(
+                shape = RoundedCornerShape(8.dp),
+                color = AlertStrict.copy(alpha = 0.12f),
+                border = BorderStroke(1.dp, AlertStrict.copy(alpha = 0.4f)),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(
+                    text = "⚠️ $msg",
+                    color = AlertStrict,
+                    fontSize = 13.sp,
+                    fontWeight = FontWeight.Medium,
+                    modifier = Modifier.padding(10.dp)
+                )
+            }
         }
 
         // Success Message
         uiState.successMessage?.let { msg ->
-            Spacer(modifier = Modifier.height(12.dp))
-            Text(
-                text = msg,
-                color = EmeraldFocus,
-                fontSize = 13.sp,
-                fontWeight = FontWeight.Bold
-            )
+            if (!uiState.isEmailVerificationPending) {
+                Spacer(modifier = Modifier.height(12.dp))
+                Surface(
+                    shape = RoundedCornerShape(8.dp),
+                    color = EmeraldFocus.copy(alpha = 0.12f),
+                    border = BorderStroke(1.dp, EmeraldFocus.copy(alpha = 0.4f)),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(
+                        text = "✅ $msg",
+                        color = EmeraldFocus,
+                        fontSize = 13.sp,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier.padding(10.dp)
+                    )
+                }
+            }
         }
 
-        Spacer(modifier = Modifier.height(28.dp))
+        Spacer(modifier = Modifier.height(24.dp))
 
         // Submit Button
         if (uiState.isLoading) {
@@ -293,10 +357,7 @@ fun AuthScreen(
 
             Spacer(modifier = Modifier.height(18.dp))
 
-            val context = LocalContext.current
-            val coroutineScope = rememberCoroutineScope()
-
-            // Google Sign-In Button
+            // Google Sign-In Button (Credential Manager with Fallback Browser OAuth)
             Surface(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -326,19 +387,15 @@ fun AuthScreen(
                                     val displayName = googleIdTokenCredential.displayName ?: googleIdTokenCredential.givenName ?: ""
                                     viewModel.signInWithGoogleIdToken(idToken = idToken, userEmail = email, displayName = displayName)
                                 } else {
-                                    viewModel.setErrorMessage("Google Sign-In credential not recognized.")
+                                    viewModel.launchBrowserGoogleAuth(context)
                                 }
                             } catch (e: GetCredentialException) {
+                                // Fallback seamlessly to Browser Google OAuth if Credential Manager throws Developer Console / canceled
                                 if (e.type != "android.credentials.GetCredentialException.TYPE_USER_CANCELED") {
-                                    val errStr = e.localizedMessage ?: e.message ?: ""
-                                    if (errStr.contains("Developer console", ignoreCase = true) || errStr.contains("not set up", ignoreCase = true)) {
-                                        viewModel.setErrorMessage("Google Sign-In: Developer console OAuth setup required.")
-                                    } else {
-                                        viewModel.setErrorMessage("Google Sign-In: $errStr")
-                                    }
+                                    viewModel.launchBrowserGoogleAuth(context)
                                 }
                             } catch (e: Exception) {
-                                viewModel.setErrorMessage("Google Sign-In error: ${e.localizedMessage}")
+                                viewModel.launchBrowserGoogleAuth(context)
                             }
                         }
                     },
@@ -485,8 +542,6 @@ private fun LoggedInProfileCard(
             }
 
             Spacer(modifier = Modifier.height(14.dp))
-
-            Spacer(modifier = Modifier.height(16.dp))
 
             Text(
                 text = user.displayName?.takeIf { it.isNotBlank() } ?: user.email.substringBefore("@"),

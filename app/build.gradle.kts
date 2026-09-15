@@ -22,9 +22,31 @@ android {
         }
     }
 
+    signingConfigs {
+        getByName("debug") {
+            val debugKeystore = rootProject.file("debug.keystore")
+            if (debugKeystore.exists()) {
+                storeFile = debugKeystore
+                storePassword = "android"
+                keyAlias = "androiddebugkey"
+                keyPassword = "android"
+            }
+        }
+        create("release") {
+            val releaseKeystore = rootProject.file("release-keystore.jks")
+            if (releaseKeystore.exists()) {
+                storeFile = releaseKeystore
+                storePassword = System.getenv("KEYSTORE_PASSWORD") ?: "asar_secure_pass"
+                keyAlias = System.getenv("KEY_ALIAS") ?: "asar_key"
+                keyPassword = System.getenv("KEY_PASSWORD") ?: "asar_secure_pass"
+            }
+        }
+    }
+
     buildTypes {
         release {
             isMinifyEnabled = false
+            signingConfig = signingConfigs.getByName("release")
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -33,6 +55,7 @@ android {
         debug {
             applicationIdSuffix = ".debug"
             isDebuggable = true
+            signingConfig = signingConfigs.getByName("debug")
         }
     }
 
