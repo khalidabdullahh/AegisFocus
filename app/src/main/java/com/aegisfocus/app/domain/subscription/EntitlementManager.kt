@@ -27,16 +27,24 @@ class EntitlementManager(private val subscriptionDao: SubscriptionDao) {
         return entity.expiryEpochMs == 0L || entity.expiryEpochMs > System.currentTimeMillis()
     }
 
-    // ----- Strict Mode -----
+    // ----- Strict Mode & App Blocking Limits -----
 
-    /** Maximum strict mode session duration in minutes. Free = 180 (3h). Pro = Int.MAX_VALUE (unlimited). */
-    suspend fun maxStrictDurationMinutes(): Int = if (isPro()) Int.MAX_VALUE else 180
+    /** Maximum strict mode session duration in minutes. Free = 120 (2h). Pro = Int.MAX_VALUE (unlimited). */
+    suspend fun maxStrictDurationMinutes(): Int = if (isPro()) Int.MAX_VALUE else 120
 
     /** Returns the selectable strict mode presets for the current tier. */
     suspend fun strictModePresets(): List<Int> = if (isPro()) {
-        listOf(30, 60, 90, 120, 180, 360, 720) // minutes: 30m..12h
+        listOf(15, 30, 60, 90, 120, 180, 240, 360, 720) // minutes: 15m..12h
     } else {
-        listOf(30, 60, 120, 180) // Free: max 3h
+        listOf(15, 30, 60, 90, 120) // Free: max 2h (120 min)
+    }
+
+    /** Maximum number of blocked apps in free tier vs pro tier. Free = 3, Pro = unlimited. */
+    suspend fun maxBlockedApps(): Int = if (isPro()) Int.MAX_VALUE else 3
+
+    /** Whether the user can block additional apps beyond the current count. */
+    suspend fun canBlockMoreApps(currentCount: Int): Boolean {
+        return currentCount < maxBlockedApps()
     }
 
     /** Whether the user can commit a strict session of the given duration. */
@@ -54,8 +62,8 @@ class EntitlementManager(private val subscriptionDao: SubscriptionDao) {
     suspend fun canUseAdvancedSchedules(): Boolean = isPro()
     suspend fun canViewDeepAnalytics(): Boolean = isPro()
 
-    /** Maximum number of focus profiles for this tier. Free = 4, Pro = unlimited. */
-    suspend fun maxProfiles(): Int = if (isPro()) Int.MAX_VALUE else 4
+    /** Maximum number of focus profiles for this tier. Free = 2, Pro = unlimited. */
+    suspend fun maxProfiles(): Int = if (isPro()) Int.MAX_VALUE else 2
 
     /** Persist a new subscription state (called after Play Billing confirms purchase). */
     suspend fun activatePlan(plan: SubscriptionPlan, expiryEpochMs: Long = 0L, token: String = "") {

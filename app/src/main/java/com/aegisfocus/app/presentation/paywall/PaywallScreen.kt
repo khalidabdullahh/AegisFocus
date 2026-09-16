@@ -1,5 +1,6 @@
 package com.aegisfocus.app.presentation.paywall
 
+import android.app.Activity
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -21,31 +22,22 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.HourglassTop
 import androidx.compose.material.icons.filled.Star
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalClipboardManager
-import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -61,7 +53,7 @@ import com.aegisfocus.app.core.theme.SubtleBorder
 import com.aegisfocus.app.core.theme.TextMuted
 import com.aegisfocus.app.core.theme.TextPrimary
 import com.aegisfocus.app.core.theme.TextSecondary
-import com.aegisfocus.app.data.remote.PaymentRequest
+import com.aegisfocus.app.domain.subscription.SubscriptionPlan
 
 @Composable
 fun PaywallScreen(
@@ -70,8 +62,10 @@ fun PaywallScreen(
     modifier: Modifier = Modifier
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    val context = LocalContext.current
+    val activity = context as? Activity
 
-    if (uiState.purchaseSucceeded) {
+    if (uiState.purchaseSucceeded && uiState.currentPlan != SubscriptionPlan.FREE) {
         PurchaseSuccessScreen(onDone = onDismiss)
         return
     }
@@ -106,7 +100,7 @@ fun PaywallScreen(
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 24.dp)
+                .padding(horizontal = 20.dp)
                 .clip(RoundedCornerShape(16.dp))
                 .background(
                     Brush.horizontalGradient(
@@ -114,15 +108,15 @@ fun PaywallScreen(
                     )
                 )
                 .border(1.dp, CyanAccent.copy(alpha = 0.4f), RoundedCornerShape(16.dp))
-                .padding(24.dp),
+                .padding(20.dp),
             contentAlignment = Alignment.Center
         ) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Icon(
                     Icons.Default.Star, contentDescription = null,
-                    tint = CyanAccent, modifier = Modifier.size(40.dp)
+                    tint = CyanAccent, modifier = Modifier.size(36.dp)
                 )
-                Spacer(Modifier.height(12.dp))
+                Spacer(Modifier.height(10.dp))
                 Text(
                     text = "Unlock Full Discipline",
                     color = TextPrimary,
@@ -132,7 +126,7 @@ fun PaywallScreen(
                 )
                 Spacer(Modifier.height(4.dp))
                 Text(
-                    text = "No dark patterns. No tricks. Cancel anytime.",
+                    text = "No ads. No telemetry. Official in-app billing.",
                     color = TextSecondary,
                     fontSize = 13.sp,
                     textAlign = TextAlign.Center
@@ -140,56 +134,22 @@ fun PaywallScreen(
             }
         }
 
-        Spacer(Modifier.height(24.dp))
+        Spacer(Modifier.height(20.dp))
 
-        // Submission success message banner
-        uiState.submissionSuccessMessage?.let { msg ->
-            Surface(
-                shape = RoundedCornerShape(12.dp),
-                color = EmeraldFocus.copy(alpha = 0.15f),
-                border = BorderStroke(1.dp, EmeraldFocus),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 20.dp, vertical = 8.dp)
-            ) {
-                Column(Modifier.padding(16.dp)) {
-                    Text(
-                        text = "Payment Request Submitted",
-                        color = EmeraldFocus,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 15.sp
-                    )
-                    Spacer(Modifier.height(4.dp))
-                    Text(
-                        text = msg,
-                        color = TextPrimary,
-                        fontSize = 13.sp
-                    )
-                }
-            }
-            Spacer(Modifier.height(12.dp))
-        }
-
-        // User's past claims status section
-        if (uiState.myClaims.isNotEmpty()) {
-            UserClaimsSection(claims = uiState.myClaims)
-            Spacer(Modifier.height(20.dp))
-        }
-
-        // Feature comparison
+        // Feature comparison table
         FeatureComparisonTable()
 
-        Spacer(Modifier.height(24.dp))
+        Spacer(Modifier.height(20.dp))
 
         // Plan selection
         Text(
-            text = "Choose your plan",
+            text = "Select In-App Plan (${uiState.storeName})",
             color = TextPrimary,
             fontWeight = FontWeight.SemiBold,
-            fontSize = 16.sp,
+            fontSize = 15.sp,
             modifier = Modifier.padding(horizontal = 20.dp)
         )
-        Spacer(Modifier.height(12.dp))
+        Spacer(Modifier.height(10.dp))
 
         PaywallOption.values().forEach { option ->
             PlanOptionCard(
@@ -200,100 +160,14 @@ fun PaywallScreen(
             Spacer(Modifier.height(8.dp))
         }
 
-        Spacer(Modifier.height(20.dp))
-
-        var showBkashDialog by remember { mutableStateOf(false) }
-        var bkashPhoneInput by remember { mutableStateOf("") }
-        var bkashTrxInput by remember { mutableStateOf("") }
-        val clipboardManager = LocalClipboardManager.current
-
-        val bdtPrice = when (uiState.selectedOption) {
-            PaywallOption.MONTHLY -> "300 BDT"
-            PaywallOption.YEARLY -> "1500 BDT"
-            PaywallOption.LIFETIME -> "2500 BDT"
-            PaywallOption.STUDENT -> "800 BDT"
-        }
-
-        if (showBkashDialog) {
-            AlertDialog(
-                onDismissRequest = { showBkashDialog = false },
-                title = {
-                    Text("💳 Pay via bKash / Nagad", color = TextPrimary, fontWeight = FontWeight.Bold, fontSize = 18.sp)
-                },
-                text = {
-                    Column {
-                        Text(
-                            "1. Send Money / Cash Out $bdtPrice (${uiState.selectedOption.label}) to our bKash/Nagad Personal number:",
-                            fontSize = 12.sp,
-                            color = TextSecondary
-                        )
-                        Spacer(Modifier.height(8.dp))
-                        Surface(
-                            shape = RoundedCornerShape(10.dp),
-                            color = ElevatedSurface,
-                            border = BorderStroke(1.dp, CyanAccent),
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clickable {
-                                    clipboardManager.setText(AnnotatedString("01643526721"))
-                                }
-                        ) {
-                            Row(
-                                modifier = Modifier.padding(12.dp),
-                                horizontalArrangement = Arrangement.SpaceBetween,
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Column {
-                                    Text("BKASH / NAGAD NUMBER (TAP TO COPY):", fontSize = 10.sp, color = TextMuted, fontWeight = FontWeight.Bold)
-                                    Text("01643526721", fontSize = 18.sp, color = CyanAccent, fontWeight = FontWeight.Black)
-                                }
-                                Text("Copy 📋", fontSize = 12.sp, color = EmeraldFocus, fontWeight = FontWeight.Bold)
-                            }
-                        }
-
-                        Spacer(Modifier.height(14.dp))
-                        Text("2. Enter your payment details below to submit claim for verification:", fontSize = 12.sp, color = TextSecondary)
-                        Spacer(Modifier.height(8.dp))
-
-                        OutlinedTextField(
-                            value = bkashPhoneInput,
-                            onValueChange = { bkashPhoneInput = it },
-                            label = { Text("Sender Mobile Number (e.g. 018XXXXXXXX)", color = TextMuted) },
-                            singleLine = true,
-                            modifier = Modifier.fillMaxWidth()
-                        )
-
-                        Spacer(Modifier.height(8.dp))
-
-                        OutlinedTextField(
-                            value = bkashTrxInput,
-                            onValueChange = { bkashTrxInput = it.uppercase() },
-                            label = { Text("Transaction ID (TrxID e.g. 9A2B3C4D)", color = TextMuted) },
-                            singleLine = true,
-                            modifier = Modifier.fillMaxWidth()
-                        )
-                    }
-                },
-                confirmButton = {
-                    AegisPrimaryButton(
-                        text = "Submit Claim for Verification",
-                        onClick = {
-                            viewModel.submitBkashPayment(bkashTrxInput, bkashPhoneInput)
-                            showBkashDialog = false
-                        }
-                    )
-                },
-                dismissButton = {
-                    TextButton(onClick = { showBkashDialog = false }) {
-                        Text("Cancel", color = TextMuted)
-                    }
-                },
-                containerColor = DeepSurface
-            )
-        }
+        Spacer(Modifier.height(16.dp))
 
         // CTA
-        Box(Modifier.padding(horizontal = 20.dp).fillMaxWidth()) {
+        Box(
+            Modifier
+                .padding(horizontal = 20.dp)
+                .fillMaxWidth()
+        ) {
             if (uiState.isLoading) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -302,37 +176,11 @@ fun PaywallScreen(
                     CircularProgressIndicator(color = CyanAccent)
                 }
             } else {
-                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    AegisPrimaryButton(
-                        text = "Continue with ${uiState.selectedOption.label} — ${uiState.selectedOption.price}",
-                        onClick = { viewModel.purchaseSelected() },
-                        modifier = Modifier.fillMaxWidth()
-                    )
-
-                    Surface(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clickable { showBkashDialog = true },
-                        shape = RoundedCornerShape(12.dp),
-                        color = CyanAccent.copy(alpha = 0.15f),
-                        border = BorderStroke(1.dp, CyanAccent)
-                    ) {
-                        Row(
-                            modifier = Modifier.padding(vertical = 12.dp),
-                            horizontalArrangement = Arrangement.Center,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text("💳", fontSize = 16.sp)
-                            Spacer(Modifier.width(8.dp))
-                            Text(
-                                text = "Pay via bKash / Nagad ($bdtPrice)",
-                                color = CyanAccent,
-                                fontSize = 13.sp,
-                                fontWeight = FontWeight.Bold
-                            )
-                        }
-                    }
-                }
+                AegisPrimaryButton(
+                    text = "Subscribe with ${uiState.selectedOption.label} — ${uiState.selectedOption.price}",
+                    onClick = { viewModel.purchaseSelected(activity) },
+                    modifier = Modifier.fillMaxWidth()
+                )
             }
         }
 
@@ -346,213 +194,69 @@ fun PaywallScreen(
             )
         }
 
-        var showRedeemDialog by remember { mutableStateOf(false) }
-        var licenseInput by remember { mutableStateOf("") }
-
-        if (showRedeemDialog) {
-            AlertDialog(
-                onDismissRequest = { showRedeemDialog = false },
-                title = { Text("Redeem Pro License", color = TextPrimary, fontWeight = FontWeight.Bold) },
-                text = {
-                    Column {
-                        Text(
-                            "Enter the license key received after purchasing on our website (bKash / Nagad / Gumroad / Stripe):",
-                            fontSize = 13.sp,
-                            color = TextSecondary
-                        )
-                        Spacer(Modifier.height(12.dp))
-                        OutlinedTextField(
-                            value = licenseInput,
-                            onValueChange = { licenseInput = it.uppercase() },
-                            placeholder = { Text("ASR-LIFE-XXXX-XXXX", color = TextMuted) },
-                            singleLine = true,
-                            modifier = Modifier.fillMaxWidth()
-                        )
-                    }
-                },
-                confirmButton = {
-                    AegisPrimaryButton(
-                        text = "Activate Pro",
-                        onClick = {
-                            viewModel.redeemLicenseKey(licenseInput)
-                            showRedeemDialog = false
-                        }
-                    )
-                },
-                dismissButton = {
-                    TextButton(onClick = { showRedeemDialog = false }) {
-                        Text("Cancel", color = TextMuted)
-                    }
-                },
-                containerColor = DeepSurface
-            )
-        }
-
         Spacer(Modifier.height(12.dp))
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = "Redeem Web License Code",
-                color = CyanAccent,
-                fontSize = 13.sp,
-                fontWeight = FontWeight.SemiBold,
-                modifier = Modifier
-                    .clickable { showRedeemDialog = true }
-                    .padding(8.dp)
-            )
-            Text("•", color = TextMuted, modifier = Modifier.padding(horizontal = 4.dp))
-            Text(
-                text = "Restore Purchases",
-                color = TextMuted,
-                fontSize = 13.sp,
-                modifier = Modifier
-                    .clickable { viewModel.restorePurchases() }
-                    .padding(8.dp)
-            )
-        }
+        Text(
+            text = "Restore Purchases",
+            color = CyanAccent,
+            fontSize = 13.sp,
+            fontWeight = FontWeight.SemiBold,
+            modifier = Modifier
+                .align(Alignment.CenterHorizontally)
+                .clickable { viewModel.restorePurchases() }
+                .padding(8.dp)
+        )
 
         // Legal footer
         Spacer(Modifier.height(8.dp))
         Text(
-            text = "Subscription auto-renews unless cancelled 24h before renewal. No hidden fees.",
+            text = "Purchases are securely processed by ${uiState.storeName}. Auto-renews unless cancelled 24h before renewal.",
             color = TextMuted,
             fontSize = 11.sp,
             textAlign = TextAlign.Center,
-            modifier = Modifier.padding(horizontal = 24.dp).fillMaxWidth()
+            modifier = Modifier
+                .padding(horizontal = 24.dp)
+                .fillMaxWidth()
         )
-    }
-}
-
-@Composable
-private fun UserClaimsSection(claims: List<PaymentRequest>) {
-    Card(
-        modifier = Modifier
-            .padding(horizontal = 20.dp)
-            .fillMaxWidth(),
-        colors = CardDefaults.cardColors(containerColor = DeepSurface),
-        shape = RoundedCornerShape(12.dp),
-        border = BorderStroke(1.dp, SubtleBorder)
-    ) {
-        Column(Modifier.padding(16.dp)) {
-            Text(
-                text = "Your Submitted Claims",
-                color = TextPrimary,
-                fontWeight = FontWeight.Bold,
-                fontSize = 14.sp
-            )
-            Spacer(Modifier.height(8.dp))
-
-            claims.forEach { claim ->
-                val statusColor = when (claim.status.uppercase()) {
-                    "VERIFIED" -> EmeraldFocus
-                    "REJECTED" -> AlertStrict
-                    else -> CyanAccent
-                }
-                val statusText = when (claim.status.uppercase()) {
-                    "VERIFIED" -> "✅ Verified & Active"
-                    "REJECTED" -> "❌ Rejected"
-                    else -> "⏳ Pending Verification"
-                }
-
-                Surface(
-                    shape = RoundedCornerShape(8.dp),
-                    color = ElevatedSurface,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 4.dp)
-                ) {
-                    Column(Modifier.padding(10.dp)) {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text(
-                                text = "TrxID: ${claim.transactionId}",
-                                color = TextPrimary,
-                                fontWeight = FontWeight.SemiBold,
-                                fontSize = 13.sp
-                            )
-                            Text(
-                                text = statusText,
-                                color = statusColor,
-                                fontWeight = FontWeight.Bold,
-                                fontSize = 12.sp
-                            )
-                        }
-                        Spacer(Modifier.height(2.dp))
-                        Text(
-                            text = "${claim.planRequested} • ৳${claim.amount.toInt()} BDT via ${claim.paymentMethod}",
-                            color = TextMuted,
-                            fontSize = 11.sp
-                        )
-                        if (!claim.rejectionReason.isNullOrBlank()) {
-                            Spacer(Modifier.height(4.dp))
-                            Text(
-                                text = "Reason: ${claim.rejectionReason}",
-                                color = AlertStrict,
-                                fontSize = 11.sp
-                            )
-                        }
-                    }
-                }
-            }
-        }
     }
 }
 
 @Composable
 private fun FeatureComparisonTable() {
     val features = listOf(
-        Triple("Core app blocking", true, true),
-        Triple("Focus sessions", true, true),
-        Triple("Schedules (basic)", true, true),
-        Triple("Strict Mode (up to 3h)", true, true),
-        Triple("Mindful pause", true, true),
-        Triple("Discipline Score & Streak", true, true),
-        Triple("Unlimited Strict Mode", false, true),
-        Triple("Advanced schedules", false, true),
-        Triple("Unlimited profiles", false, true),
-        Triple("Website blocking", false, true),
-        Triple("Notification shield", false, true),
-        Triple("Adaptive friction", false, true),
-        Triple("Deep analytics", false, true),
+        Triple("Strict Mode Duration", "Max 2 Hours", "Unlimited"),
+        Triple("Shielded Blocked Apps", "Max 3 Apps", "Unlimited"),
+        Triple("Custom Focus Profiles", "Max 2 Profiles", "Unlimited"),
+        Triple("Website & Domain Blocking", "Basic", "Advanced"),
+        Triple("Notification Shield", "No", "Yes"),
+        Triple("Adaptive 5s→30s Friction", "5s fixed", "Dynamic"),
+        Triple("Automated Looping Routines", "1 Schedule", "Unlimited")
     )
 
     Card(
-        modifier = Modifier.padding(horizontal = 20.dp).fillMaxWidth(),
+        modifier = Modifier
+            .padding(horizontal = 20.dp)
+            .fillMaxWidth(),
         colors = CardDefaults.cardColors(containerColor = DeepSurface),
         shape = RoundedCornerShape(12.dp)
     ) {
         Column(Modifier.padding(16.dp)) {
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
                 Text("Feature", color = TextMuted, fontSize = 12.sp, modifier = Modifier.weight(1f))
-                Text("Free", color = TextSecondary, fontSize = 12.sp, fontWeight = FontWeight.SemiBold, modifier = Modifier.width(40.dp), textAlign = TextAlign.Center)
-                Text("Pro", color = CyanAccent, fontSize = 12.sp, fontWeight = FontWeight.Bold, modifier = Modifier.width(40.dp), textAlign = TextAlign.Center)
+                Text("Free", color = TextSecondary, fontSize = 12.sp, fontWeight = FontWeight.SemiBold, modifier = Modifier.width(70.dp), textAlign = TextAlign.Center)
+                Text("Pro", color = CyanAccent, fontSize = 12.sp, fontWeight = FontWeight.Bold, modifier = Modifier.width(70.dp), textAlign = TextAlign.Center)
             }
             Spacer(Modifier.height(8.dp))
             features.forEach { (name, free, pro) ->
                 Row(
-                    Modifier.fillMaxWidth().padding(vertical = 4.dp),
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 4.dp),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(name, color = TextPrimary, fontSize = 13.sp, modifier = Modifier.weight(1f))
-                    Icon(
-                        if (free) Icons.Default.Check else Icons.Default.Close,
-                        contentDescription = null,
-                        tint = if (free) EmeraldFocus else TextMuted.copy(alpha = 0.4f),
-                        modifier = Modifier.size(16.dp).width(40.dp)
-                    )
-                    Icon(
-                        Icons.Default.Check,
-                        contentDescription = null,
-                        tint = if (pro) CyanAccent else TextMuted.copy(alpha = 0.4f),
-                        modifier = Modifier.size(16.dp).width(40.dp)
-                    )
+                    Text(name, color = TextPrimary, fontSize = 12.sp, modifier = Modifier.weight(1f))
+                    Text(free, color = TextSecondary, fontSize = 11.sp, modifier = Modifier.width(70.dp), textAlign = TextAlign.Center)
+                    Text(pro, color = CyanAccent, fontSize = 11.sp, fontWeight = FontWeight.Bold, modifier = Modifier.width(70.dp), textAlign = TextAlign.Center)
                 }
             }
         }
@@ -578,7 +282,9 @@ private fun PlanOptionCard(
         shape = RoundedCornerShape(12.dp)
     ) {
         Row(
-            modifier = Modifier.fillMaxWidth().padding(16.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -611,12 +317,12 @@ private fun PurchaseSuccessScreen(onDone: () -> Unit) {
         Text("Welcome to Pro!", color = TextPrimary, fontSize = 28.sp, fontWeight = FontWeight.ExtraBold)
         Spacer(Modifier.height(8.dp))
         Text(
-            "Unlimited Strict Mode, website blocking, adaptive friction,\nand deep analytics are now unlocked.",
+            "Unlimited Strict Mode, unlimited app blocking, looping schedules,\nand deep analytics are now active.",
             color = TextSecondary,
-            fontSize = 15.sp,
+            fontSize = 14.sp,
             textAlign = TextAlign.Center
         )
-        Spacer(Modifier.height(40.dp))
+        Spacer(Modifier.height(36.dp))
         AegisPrimaryButton(text = "Start Focusing", onClick = onDone, modifier = Modifier.fillMaxWidth())
     }
 }

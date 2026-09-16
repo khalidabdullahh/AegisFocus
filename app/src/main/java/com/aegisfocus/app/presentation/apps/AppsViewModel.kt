@@ -7,6 +7,7 @@ import com.aegisfocus.app.domain.model.AppInfo
 import com.aegisfocus.app.domain.model.FocusSession
 import com.aegisfocus.app.domain.model.SessionMode
 import com.aegisfocus.app.domain.repository.AppDiscoveryRepository
+import com.aegisfocus.app.domain.subscription.EntitlementManager
 import com.aegisfocus.app.engine.FocusSessionManager
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -21,12 +22,16 @@ data class AppsUiState(
     val selectedCategory: AppCategory? = null,
     val blockedPackages: Set<String> = emptySet(),
     val isStrictLocked: Boolean = false,
-    val isLoading: Boolean = false
+    val isPro: Boolean = false,
+    val maxAllowedApps: Int = 3,
+    val isLoading: Boolean = false,
+    val errorMessage: String? = null
 )
 
 class AppsViewModel(
     private val appDiscoveryRepository: AppDiscoveryRepository,
-    private val focusSessionManager: FocusSessionManager
+    private val focusSessionManager: FocusSessionManager,
+    private val entitlementManager: EntitlementManager
 ) : ViewModel() {
 
     private val _searchQuery = MutableStateFlow("")
@@ -34,6 +39,8 @@ class AppsViewModel(
     private val _allApps = MutableStateFlow<List<AppInfo>>(emptyList())
     private val _blockedPackages = MutableStateFlow<Set<String>>(emptySet())
     private val _isLoading = MutableStateFlow(true)
+    private val _isPro = MutableStateFlow(false)
+    private val _errorMessage = MutableStateFlow<String?>(null)
 
     val uiState: StateFlow<AppsUiState> = combine(
         _allApps,
@@ -41,7 +48,9 @@ class AppsViewModel(
         _selectedCategory,
         _blockedPackages,
         focusSessionManager.activeSession,
-        _isLoading
+        _isLoading,
+        _isPro,
+        _errorMessage
     ) { flows: Array<Any?> ->
         @Suppress("UNCHECKED_CAST")
         val apps = flows[0] as List<AppInfo>
@@ -51,6 +60,8 @@ class AppsViewModel(
         val blocked = flows[3] as Set<String>
         val activeSession = flows[4] as FocusSession?
         val loading = flows[5] as Boolean
+        val pro = flows[6] as Boolean
+        val error = flows[7] as String?
 
         val isStrict = activeSession != null && activeSession.mode == SessionMode.STRICT && !activeSession.isExpired
 
@@ -68,12 +79,33 @@ class AppsViewModel(
             selectedCategory = category,
             blockedPackages = blocked,
             isStrictLocked = isStrict,
-            isLoading = loading
+            isPro = pro,
+            maxAllowedApps = if (pro) Int.MAX_VALUE else 3,
+            isLoading = loading,
+            errorMessage = error
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), AppsUiState())
 
     init {
         loadApps()
+        observeBlockedApps()
+        observeEntitlement()
+    }
+
+    private fun observeBlockedApps() {
+        viewModelScope.launch {
+            appDiscoveryRepository.getBlockedPackageNamesFlow().collect { blocked ->
+                _blockedPackages.value = blocked
+            }
+        }
+    }
+
+    private fun observeEntitlement() {
+        viewModelScope.launch {
+            entitlementManager.activePlan.collect {
+                _isPro.value = entitlementManager.isPro()
+            }
+        }
     }
 
     fun loadApps() {
@@ -81,8 +113,10 @@ class AppsViewModel(
             _isLoading.value = true
             val apps = appDiscoveryRepository.loadInstalledApps()
             val blocked = appDiscoveryRepository.getBlockedPackageNames().toSet()
+            val isPro = entitlementManager.isPro()
             _allApps.value = apps
             _blockedPackages.value = blocked
+            _isPro.value = isPro
             _isLoading.value = false
         }
     }
@@ -101,11 +135,16 @@ class AppsViewModel(
             return // Immutable under Strict Mode
         }
 
-        val updated = _blockedPackages.value.toMutableSet()
-        if (isBlocked) updated.add(packageName) else updated.remove(packageName)
-        _blockedPackages.value = updated
-
         viewModelScope.launch {
+            val isPro = entitlementManager.isPro()
+            val current = _blockedPackages.value
+
+            if (isBlocked && !isPro && current.size >= 3 && !current.contains(packageName)) {
+                _errorMessage.value = "Free plan allows blocking up to 3 apps. Upgrade to Pro for unlimited apps."
+                return@launch
+            }
+
+            _errorMessage.value = null
             appDiscoveryRepository.setAppBlocked(packageName, isBlocked)
         }
     }
@@ -114,11 +153,15 @@ class AppsViewModel(
         val active = focusSessionManager.activeSession.value
         if (active != null && active.mode == SessionMode.STRICT && !active.isExpired) return
 
-        val filteredPkgs = uiState.value.apps.map { it.packageName }
-        val updated = _blockedPackages.value.toMutableSet().apply { addAll(filteredPkgs) }
-        _blockedPackages.value = updated
-
         viewModelScope.launch {
+            val isPro = entitlementManager.isPro()
+            val filteredPkgs = uiState.value.apps.map { it.packageName }
+            if (!isPro && (filteredPkgs.size > 3 || _blockedPackages.value.size + filteredPkgs.size > 3)) {
+                _errorMessage.value = "Free plan allows blocking up to 3 apps. Upgrade to Pro for unlimited apps."
+                return@launch
+            }
+
+            _errorMessage.value = null
             appDiscoveryRepository.setAppsBlocked(filteredPkgs, true)
         }
     }
@@ -128,11 +171,13 @@ class AppsViewModel(
         if (active != null && active.mode == SessionMode.STRICT && !active.isExpired) return
 
         val filteredPkgs = uiState.value.apps.map { it.packageName }
-        val updated = _blockedPackages.value.toMutableSet().apply { removeAll(filteredPkgs.toSet()) }
-        _blockedPackages.value = updated
-
         viewModelScope.launch {
+            _errorMessage.value = null
             appDiscoveryRepository.setAppsBlocked(filteredPkgs, false)
         }
+    }
+
+    fun clearError() {
+        _errorMessage.value = null
     }
 }

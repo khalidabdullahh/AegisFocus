@@ -14,6 +14,8 @@ import com.aegisfocus.app.domain.model.SessionMode
 import com.aegisfocus.app.domain.repository.AppDiscoveryRepository
 import com.aegisfocus.app.domain.repository.ProfileRepository
 import com.aegisfocus.app.domain.repository.SettingsRepository
+import com.aegisfocus.app.domain.subscription.EntitlementManager
+import com.aegisfocus.app.domain.subscription.SubscriptionPlan
 import com.aegisfocus.app.engine.FocusSessionManager
 import com.aegisfocus.app.service.receiver.AegisDeviceAdminReceiver
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -34,6 +36,9 @@ data class FocusUiState(
     val isStrictFrictionPhraseEnabled: Boolean = true,
     val hasDeviceAdminPermission: Boolean = false,
     val isDeviceAdminPromptOpen: Boolean = false,
+    val isPro: Boolean = false,
+    val maxAllowedApps: Int = 3,
+    val maxAllowedMinutes: Int = 120,
     val errorMessage: String? = null
 )
 
@@ -41,7 +46,8 @@ class FocusViewModel(
     private val focusSessionManager: FocusSessionManager,
     private val profileRepository: ProfileRepository,
     private val appDiscoveryRepository: AppDiscoveryRepository,
-    private val settingsRepository: SettingsRepository
+    private val settingsRepository: SettingsRepository,
+    private val entitlementManager: EntitlementManager
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(FocusUiState())
@@ -52,9 +58,38 @@ class FocusViewModel(
 
     init {
         loadInitialData()
+        observePermissionState()
+        observeBlockedApps()
+        observeEntitlements()
+    }
+
+    private fun observePermissionState() {
         viewModelScope.launch {
             settingsRepository.getPermissionStateFlow().collect { perms ->
                 _uiState.value = _uiState.value.copy(hasDeviceAdminPermission = perms.hasDeviceAdminPermission)
+            }
+        }
+    }
+
+    private fun observeBlockedApps() {
+        viewModelScope.launch {
+            appDiscoveryRepository.getBlockedPackageNamesFlow().collect { blockedSet ->
+                _uiState.value = _uiState.value.copy(selectedBlockedPackageNames = blockedSet)
+            }
+        }
+    }
+
+    private fun observeEntitlements() {
+        viewModelScope.launch {
+            entitlementManager.activePlan.collect { plan ->
+                val isPro = entitlementManager.isPro()
+                val maxApps = entitlementManager.maxBlockedApps()
+                val maxMins = entitlementManager.maxStrictDurationMinutes()
+                _uiState.value = _uiState.value.copy(
+                    isPro = isPro,
+                    maxAllowedApps = maxApps,
+                    maxAllowedMinutes = maxMins
+                )
             }
         }
     }
@@ -67,6 +102,9 @@ class FocusViewModel(
             val profiles = profileRepository.getAllProfiles()
             val installed = appDiscoveryRepository.loadInstalledApps()
             val defaultBlocked = appDiscoveryRepository.getBlockedPackageNames().toSet()
+            val isPro = entitlementManager.isPro()
+            val maxApps = entitlementManager.maxBlockedApps()
+            val maxMins = entitlementManager.maxStrictDurationMinutes()
 
             _uiState.value = _uiState.value.copy(
                 selectedDurationMinutes = defaultDuration,
@@ -74,7 +112,10 @@ class FocusViewModel(
                 isStrictFrictionPhraseEnabled = phraseEnabled,
                 profiles = profiles,
                 installedApps = installed,
-                selectedBlockedPackageNames = defaultBlocked
+                selectedBlockedPackageNames = defaultBlocked,
+                isPro = isPro,
+                maxAllowedApps = maxApps,
+                maxAllowedMinutes = maxMins
             )
         }
     }
@@ -87,13 +128,33 @@ class FocusViewModel(
 
     fun setDuration(minutes: Int) {
         if (activeSession.value == null) {
-            _uiState.value = _uiState.value.copy(selectedDurationMinutes = minutes)
+            val state = _uiState.value
+            val isPro = state.isPro
+            val clampedMinutes = if (!isPro && state.selectedMode == SessionMode.STRICT && minutes > 120) {
+                _uiState.value = _uiState.value.copy(
+                    errorMessage = "Free tier Strict Mode is limited to 2 hours (120 min). Upgrade to Pro for unlimited duration."
+                )
+                120
+            } else {
+                minutes
+            }
+            _uiState.value = _uiState.value.copy(selectedDurationMinutes = clampedMinutes)
         }
     }
 
     fun setMode(mode: SessionMode) {
         if (activeSession.value == null) {
-            _uiState.value = _uiState.value.copy(selectedMode = mode)
+            var duration = _uiState.value.selectedDurationMinutes
+            if (mode == SessionMode.STRICT && !_uiState.value.isPro && duration > 120) {
+                duration = 120
+                _uiState.value = _uiState.value.copy(
+                    errorMessage = "Free tier Strict Mode is limited to 2 hours (120 min)."
+                )
+            }
+            _uiState.value = _uiState.value.copy(
+                selectedMode = mode,
+                selectedDurationMinutes = duration
+            )
         }
     }
 
@@ -115,9 +176,15 @@ class FocusViewModel(
 
     fun toggleAppBlocked(packageName: String, isBlocked: Boolean) {
         if (activeSession.value == null) {
-            val current = _uiState.value.selectedBlockedPackageNames.toMutableSet()
-            if (isBlocked) current.add(packageName) else current.remove(packageName)
-            _uiState.value = _uiState.value.copy(selectedBlockedPackageNames = current)
+            val state = _uiState.value
+            val current = state.selectedBlockedPackageNames
+
+            if (isBlocked && !state.isPro && current.size >= 3 && !current.contains(packageName)) {
+                _uiState.value = state.copy(
+                    errorMessage = "Free tier is limited to 3 shielded apps. Upgrade to Pro for unlimited apps."
+                )
+                return
+            }
 
             viewModelScope.launch {
                 appDiscoveryRepository.setAppBlocked(packageName, isBlocked)
@@ -125,8 +192,29 @@ class FocusViewModel(
         }
     }
 
+    fun removeBlockedApp(packageName: String) {
+        toggleAppBlocked(packageName, false)
+    }
+
     fun startFocusSession(skipAdminCheck: Boolean = false) {
         val state = _uiState.value
+
+        // Check Free tier constraints
+        if (state.selectedMode == SessionMode.STRICT && !state.isPro) {
+            if (state.selectedDurationMinutes > 120) {
+                _uiState.value = state.copy(
+                    errorMessage = "Free tier Strict Mode is limited to 2 hours (120 min). Upgrade to Pro for longer sessions."
+                )
+                return
+            }
+            if (state.selectedBlockedPackageNames.size > 3) {
+                _uiState.value = state.copy(
+                    errorMessage = "Free tier allows blocking up to 3 apps. Upgrade to Pro for unlimited apps."
+                )
+                return
+            }
+        }
+
         if (state.selectedMode == SessionMode.STRICT && !state.hasDeviceAdminPermission && !skipAdminCheck) {
             _uiState.value = state.copy(isDeviceAdminPromptOpen = true)
             return

@@ -1,5 +1,8 @@
 package com.aegisfocus.app.presentation.apps
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -19,8 +22,11 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -53,6 +59,7 @@ import com.aegisfocus.app.domain.model.AppCategory
 @Composable
 fun AppsScreen(
     viewModel: AppsViewModel,
+    onNavigateToPaywall: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -80,14 +87,62 @@ fun AppsScreen(
                     letterSpacing = (-0.5).sp
                 )
                 Text(
-                    text = "${uiState.blockedPackages.size} apps selected for discipline",
+                    text = "${uiState.blockedPackages.size} / ${if (uiState.isPro) "∞" else "3"} apps selected • ${if (uiState.isPro) "Pro Tier" else "Free Tier (Max 3)"}",
                     fontSize = 13.sp,
-                    color = TextSecondary
+                    color = if (uiState.isPro) CyanAccent else TextSecondary
                 )
             }
         }
 
-        Spacer(modifier = Modifier.height(16.dp))
+        // Error message banner
+        AnimatedVisibility(
+            visible = uiState.errorMessage != null,
+            enter = fadeIn(),
+            exit = fadeOut()
+        ) {
+            uiState.errorMessage?.let { errorMsg ->
+                Surface(
+                    shape = RoundedCornerShape(12.dp),
+                    color = AlertStrict.copy(alpha = 0.15f),
+                    border = BorderStroke(1.dp, AlertStrict.copy(alpha = 0.4f)),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 12.dp)
+                ) {
+                    Row(
+                        modifier = Modifier.padding(12.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Row(
+                            modifier = Modifier.weight(1f),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Warning,
+                                contentDescription = null,
+                                tint = AlertStrict,
+                                modifier = Modifier.size(18.dp)
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text(
+                                text = errorMsg,
+                                fontSize = 12.sp,
+                                color = TextPrimary
+                            )
+                        }
+                        TextButton(onClick = onNavigateToPaywall) {
+                            Text("Upgrade", color = CyanAccent, fontWeight = FontWeight.Bold, fontSize = 12.sp)
+                        }
+                        IconButton(onClick = { viewModel.clearError() }, modifier = Modifier.size(24.dp)) {
+                            Icon(Icons.Default.Close, contentDescription = "Dismiss", tint = TextMuted, modifier = Modifier.size(16.dp))
+                        }
+                    }
+                }
+            }
+        }
+
+        Spacer(modifier = Modifier.height(14.dp))
 
         // Strict Mode Locked Banner
         if (uiState.isStrictLocked) {

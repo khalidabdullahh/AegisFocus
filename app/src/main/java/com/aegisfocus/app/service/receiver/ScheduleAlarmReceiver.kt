@@ -37,6 +37,8 @@ class ScheduleAlarmReceiver : BroadcastReceiver() {
                             profileId = schedule.profileId
                         )
                     }
+                    // Schedule next alarm for this routine (looping across days)
+                    ScheduleAlarmScheduler.scheduleNextAlarm(context, schedule)
                 }
             } finally {
                 pendingResult.finish()

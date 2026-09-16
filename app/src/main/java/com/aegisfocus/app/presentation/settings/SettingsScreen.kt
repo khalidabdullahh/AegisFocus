@@ -85,7 +85,6 @@ fun SettingsScreen(
     viewModel: SettingsViewModel,
     onNavigateToAuth: () -> Unit = {},
     onNavigateToPaywall: () -> Unit = {},
-    onNavigateToAdminPayment: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -262,36 +261,6 @@ fun SettingsScreen(
                     }
                 }
             }
-        }
-
-        if (user != null && SupabaseAuthService.isSuperAdmin(user.email)) {
-            Spacer(modifier = Modifier.height(12.dp))
-            Surface(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable { onNavigateToAdminPayment() },
-                shape = RoundedCornerShape(12.dp),
-                color = CyanAccent.copy(alpha = 0.12f),
-                border = BorderStroke(1.dp, CyanAccent)
-            ) {
-                Row(
-                    modifier = Modifier.padding(14.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Text("🛡️", fontSize = 18.sp)
-                        Spacer(Modifier.width(10.dp))
-                        Column {
-                            Text("Admin Payment Review Queue", color = CyanAccent, fontWeight = FontWeight.Bold, fontSize = 14.sp)
-                            Text("Approve or reject bKash/Nagad claims", color = TextSecondary, fontSize = 11.sp)
-                        }
-                    }
-                    Text("Review →", color = CyanAccent, fontWeight = FontWeight.Bold, fontSize = 12.sp)
-                }
-            }
-            Spacer(modifier = Modifier.height(12.dp))
-            SuperAdminKeyGeneratorCard()
         }
 
         Spacer(modifier = Modifier.height(12.dp))
@@ -650,13 +619,15 @@ private fun AddScheduleDialog(
     onDismiss: () -> Unit,
     onSave: (Schedule) -> Unit
 ) {
-    var name by remember { mutableStateOf("Deep Work Routine") }
+    var name by remember { mutableStateOf("Daily Deep Work") }
     var startHour by remember { mutableIntStateOf(9) }
     var startMinute by remember { mutableIntStateOf(0) }
-    var endHour by remember { mutableIntStateOf(12) }
+    var endHour by remember { mutableIntStateOf(11) }
     var endMinute by remember { mutableIntStateOf(0) }
-    var isStrict by remember { mutableStateOf(false) }
+    var isStrict by remember { mutableStateOf(true) }
     var daysBitmask by remember { mutableIntStateOf(62) } // Mon - Fri
+
+    val dayNames = listOf("Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat")
 
     BasicAlertDialog(onDismissRequest = onDismiss) {
         Surface(
@@ -665,12 +636,21 @@ private fun AddScheduleDialog(
             border = BorderStroke(1.dp, SubtleBorder),
             modifier = Modifier.fillMaxWidth()
         ) {
-            Column(modifier = Modifier.padding(20.dp)) {
+            Column(
+                modifier = Modifier
+                    .padding(20.dp)
+                    .verticalScroll(rememberScrollState())
+            ) {
                 Text(
-                    text = "Create Focus Routine",
+                    text = "Create Recurring Routine",
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
                     color = TextPrimary
+                )
+                Text(
+                    text = "Runs automatically in background on scheduled days.",
+                    fontSize = 12.sp,
+                    color = TextSecondary
                 )
 
                 Spacer(modifier = Modifier.height(14.dp))
@@ -690,31 +670,202 @@ private fun AddScheduleDialog(
                     modifier = Modifier.fillMaxWidth()
                 )
 
+                Spacer(modifier = Modifier.height(16.dp))
+
+                // Start Time Stepper
+                Text(text = "Start Time", fontSize = 13.sp, color = TextSecondary, fontWeight = FontWeight.SemiBold)
+                Spacer(modifier = Modifier.height(6.dp))
+                Surface(
+                    shape = RoundedCornerShape(12.dp),
+                    color = ElevatedSurface,
+                    border = BorderStroke(1.dp, SubtleBorder),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 12.dp, vertical = 6.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = com.aegisfocus.app.core.common.TimeUtils.formatTimeOfDay(startHour, startMinute),
+                            fontSize = 15.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = CyanAccent
+                        )
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            IconButton(onClick = {
+                                if (startHour > 0) startHour-- else startHour = 23
+                            }) {
+                                Icon(Icons.Default.Remove, contentDescription = "-1h", tint = CyanAccent, modifier = Modifier.size(16.dp))
+                            }
+                            Text("${String.format("%02d", startHour)}h", fontSize = 13.sp, color = TextPrimary)
+                            IconButton(onClick = {
+                                if (startHour < 23) startHour++ else startHour = 0
+                            }) {
+                                Icon(Icons.Default.Add, contentDescription = "+1h", tint = CyanAccent, modifier = Modifier.size(16.dp))
+                            }
+                            Spacer(modifier = Modifier.width(4.dp))
+                            IconButton(onClick = {
+                                startMinute = (startMinute + 15) % 60
+                            }) {
+                                Text("+15m", fontSize = 11.sp, color = CyanAccent, fontWeight = FontWeight.Bold)
+                            }
+                        }
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                // End Time Stepper
+                Text(text = "End Time", fontSize = 13.sp, color = TextSecondary, fontWeight = FontWeight.SemiBold)
+                Spacer(modifier = Modifier.height(6.dp))
+                Surface(
+                    shape = RoundedCornerShape(12.dp),
+                    color = ElevatedSurface,
+                    border = BorderStroke(1.dp, SubtleBorder),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 12.dp, vertical = 6.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = com.aegisfocus.app.core.common.TimeUtils.formatTimeOfDay(endHour, endMinute),
+                            fontSize = 15.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = CyanAccent
+                        )
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            IconButton(onClick = {
+                                if (endHour > 0) endHour-- else endHour = 23
+                            }) {
+                                Icon(Icons.Default.Remove, contentDescription = "-1h", tint = CyanAccent, modifier = Modifier.size(16.dp))
+                            }
+                            Text("${String.format("%02d", endHour)}h", fontSize = 13.sp, color = TextPrimary)
+                            IconButton(onClick = {
+                                if (endHour < 23) endHour++ else endHour = 0
+                            }) {
+                                Icon(Icons.Default.Add, contentDescription = "+1h", tint = CyanAccent, modifier = Modifier.size(16.dp))
+                            }
+                            Spacer(modifier = Modifier.width(4.dp))
+                            IconButton(onClick = {
+                                endMinute = (endMinute + 15) % 60
+                            }) {
+                                Text("+15m", fontSize = 11.sp, color = CyanAccent, fontWeight = FontWeight.Bold)
+                            }
+                        }
+                    }
+                }
+
                 Spacer(modifier = Modifier.height(14.dp))
 
-                Text(
-                    text = "Time: ${String.format("%02d:%02d", startHour, startMinute)} to ${String.format("%02d:%02d", endHour, endMinute)}",
-                    fontSize = 14.sp,
-                    color = CyanAccent,
-                    fontWeight = FontWeight.SemiBold
-                )
+                // Active Days Selector
+                Text(text = "Repeating Days", fontSize = 13.sp, color = TextSecondary, fontWeight = FontWeight.SemiBold)
+                Spacer(modifier = Modifier.height(6.dp))
 
-                Spacer(modifier = Modifier.height(14.dp))
-
+                // Quick preset buttons
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
+                    horizontalArrangement = Arrangement.spacedBy(6.dp)
                 ) {
-                    Text(text = "Strict Mode", fontSize = 14.sp, color = TextPrimary)
-                    Switch(
-                        checked = isStrict,
-                        onCheckedChange = { isStrict = it },
-                        colors = SwitchDefaults.colors(
-                            checkedThumbColor = ObsidianBg,
-                            checkedTrackColor = CyanAccent
+                    Surface(
+                        shape = RoundedCornerShape(8.dp),
+                        color = if (daysBitmask == 127) CyanAccent.copy(alpha = 0.2f) else ElevatedSurface,
+                        border = BorderStroke(1.dp, if (daysBitmask == 127) CyanAccent else SubtleBorder),
+                        modifier = Modifier
+                            .weight(1f)
+                            .clickable { daysBitmask = 127 }
+                    ) {
+                        Text("Everyday", fontSize = 11.sp, textAlign = TextAlign.Center, modifier = Modifier.padding(vertical = 6.dp), color = TextPrimary)
+                    }
+                    Surface(
+                        shape = RoundedCornerShape(8.dp),
+                        color = if (daysBitmask == 62) CyanAccent.copy(alpha = 0.2f) else ElevatedSurface,
+                        border = BorderStroke(1.dp, if (daysBitmask == 62) CyanAccent else SubtleBorder),
+                        modifier = Modifier
+                            .weight(1f)
+                            .clickable { daysBitmask = 62 }
+                    ) {
+                        Text("Mon–Fri", fontSize = 11.sp, textAlign = TextAlign.Center, modifier = Modifier.padding(vertical = 6.dp), color = TextPrimary)
+                    }
+                    Surface(
+                        shape = RoundedCornerShape(8.dp),
+                        color = if (daysBitmask == 65) CyanAccent.copy(alpha = 0.2f) else ElevatedSurface,
+                        border = BorderStroke(1.dp, if (daysBitmask == 65) CyanAccent else SubtleBorder),
+                        modifier = Modifier
+                            .weight(1f)
+                            .clickable { daysBitmask = 65 }
+                    ) {
+                        Text("Weekends", fontSize = 11.sp, textAlign = TextAlign.Center, modifier = Modifier.padding(vertical = 6.dp), color = TextPrimary)
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                // Individual day toggle chips
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    for (i in 0..6) {
+                        val isSelected = (daysBitmask and (1 shl i)) != 0
+                        Surface(
+                            shape = CircleShape,
+                            color = if (isSelected) CyanAccent else ElevatedSurface,
+                            border = BorderStroke(1.dp, if (isSelected) CyanAccent else SubtleBorder),
+                            modifier = Modifier
+                                .size(32.dp)
+                                .clickable {
+                                    daysBitmask = daysBitmask xor (1 shl i)
+                                }
+                        ) {
+                            Box(contentAlignment = Alignment.Center) {
+                                Text(
+                                    text = dayNames[i].take(1),
+                                    fontSize = 11.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    color = if (isSelected) ObsidianBg else TextSecondary
+                                )
+                            }
+                        }
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                // Strict Mode Toggle
+                Surface(
+                    shape = RoundedCornerShape(12.dp),
+                    color = ElevatedSurface,
+                    border = BorderStroke(1.dp, SubtleBorder),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 14.dp, vertical = 10.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Column(modifier = Modifier.weight(1f)) {
+                            Text(text = "Strict Mode Protection", fontSize = 13.sp, fontWeight = FontWeight.Bold, color = TextPrimary)
+                            Text(text = "Automatically locks distracting apps and blocks cancellation during routine.", fontSize = 11.sp, color = TextSecondary)
+                        }
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Switch(
+                            checked = isStrict,
+                            onCheckedChange = { isStrict = it },
+                            colors = SwitchDefaults.colors(
+                                checkedThumbColor = ObsidianBg,
+                                checkedTrackColor = CyanAccent
+                            )
                         )
-                    )
+                    }
                 }
 
                 Spacer(modifier = Modifier.height(20.dp))
@@ -737,13 +888,13 @@ private fun AddScheduleDialog(
                                     startMinute = startMinute,
                                     endHour = endHour,
                                     endMinute = endMinute,
-                                    daysOfWeekBitmask = daysBitmask,
+                                    daysOfWeekBitmask = if (daysBitmask == 0) 127 else daysBitmask,
                                     isStrictMode = isStrict,
                                     isEnabled = true
                                 )
                             )
                         },
-                        modifier = Modifier.width(140.dp)
+                        modifier = Modifier.width(150.dp)
                     )
                 }
             }

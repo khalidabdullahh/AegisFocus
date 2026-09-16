@@ -70,10 +70,9 @@ fun AegisNavHost(
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
-    // অনবোর্ডিং, পে-ওয়াল বা এডমিন স্ক্রিনে বটম বার হাইড রাখা
+    // অনবোর্ডিং বা পে-ওয়াল স্ক্রিনে বটম বার হাইড রাখা
     val showBottomBar = currentRoute != Screen.Onboarding.route &&
-            currentRoute != Screen.Paywall.route &&
-            currentRoute != Screen.AdminPayment.route
+            currentRoute != Screen.Paywall.route
 
     Scaffold(
         modifier = modifier.fillMaxSize(),
@@ -187,13 +186,17 @@ fun AegisNavHost(
                         focusSessionManager = container.focusSessionManager,
                         profileRepository = container.profileRepository,
                         appDiscoveryRepository = container.appDiscoveryRepository,
-                        settingsRepository = container.settingsRepository
+                        settingsRepository = container.settingsRepository,
+                        entitlementManager = container.entitlementManager
                     )
                 }
                 FocusScreen(
                     viewModel = vm,
                     onNavigateToApps = {
                         navController.navigate(Screen.Apps.route)
+                    },
+                    onNavigateToPaywall = {
+                        navController.navigate(Screen.Paywall.route)
                     }
                 )
             }
@@ -202,10 +205,16 @@ fun AegisNavHost(
                 val vm = androidx.lifecycle.viewmodel.compose.viewModel {
                     AppsViewModel(
                         appDiscoveryRepository = container.appDiscoveryRepository,
-                        focusSessionManager = container.focusSessionManager
+                        focusSessionManager = container.focusSessionManager,
+                        entitlementManager = container.entitlementManager
                     )
                 }
-                AppsScreen(viewModel = vm)
+                AppsScreen(
+                    viewModel = vm,
+                    onNavigateToPaywall = {
+                        navController.navigate(Screen.Paywall.route)
+                    }
+                )
             }
 
             composable(Screen.Stats.route) {
@@ -230,8 +239,7 @@ fun AegisNavHost(
                 SettingsScreen(
                     viewModel = vm,
                     onNavigateToAuth = { navController.navigate(Screen.Auth.route) },
-                    onNavigateToPaywall = { navController.navigate(Screen.Paywall.route) },
-                    onNavigateToAdminPayment = { navController.navigate(Screen.AdminPayment.route) }
+                    onNavigateToPaywall = { navController.navigate(Screen.Paywall.route) }
                 )
             }
 
@@ -239,8 +247,7 @@ fun AegisNavHost(
                 val vm = androidx.lifecycle.viewmodel.compose.viewModel {
                     PaywallViewModel(
                         entitlementManager = container.entitlementManager,
-                        playBillingManager = container.playBillingManager,
-                        paymentService = container.supabasePaymentService
+                        storeBillingManager = container.storeBillingManager
                     )
                 }
                 PaywallScreen(
@@ -256,18 +263,6 @@ fun AegisNavHost(
                     )
                 }
                 com.aegisfocus.app.presentation.auth.AuthScreen(
-                    viewModel = vm,
-                    onNavigateBack = { navController.popBackStack() }
-                )
-            }
-
-            composable(Screen.AdminPayment.route) {
-                val vm = androidx.lifecycle.viewmodel.compose.viewModel {
-                    com.aegisfocus.app.presentation.admin.AdminPaymentViewModel(
-                        paymentService = container.supabasePaymentService
-                    )
-                }
-                com.aegisfocus.app.presentation.admin.AdminPaymentScreen(
                     viewModel = vm,
                     onNavigateBack = { navController.popBackStack() }
                 )

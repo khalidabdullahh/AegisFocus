@@ -36,6 +36,12 @@ class AppDiscoveryRepositoryImpl(
         }
     }
 
+    override fun getBlockedPackageNamesFlow(): Flow<Set<String>> {
+        return blockedAppDao.getBlockedAppsFlow().map { entities ->
+            entities.map { it.packageName }.toSet()
+        }
+    }
+
     override suspend fun loadInstalledApps(): List<AppInfo> = withContext(Dispatchers.IO) {
         val launcherIntent = Intent(Intent.ACTION_MAIN, null).apply {
             addCategory(Intent.CATEGORY_LAUNCHER)

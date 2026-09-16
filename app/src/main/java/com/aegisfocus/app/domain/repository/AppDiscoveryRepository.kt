@@ -5,6 +5,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface AppDiscoveryRepository {
     fun getInstalledAppsFlow(): Flow<List<AppInfo>>
+    fun getBlockedPackageNamesFlow(): Flow<Set<String>>
     suspend fun loadInstalledApps(): List<AppInfo>
     suspend fun getBlockedPackageNames(): List<String>
     suspend fun setAppBlocked(packageName: String, isBlocked: Boolean)
