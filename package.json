@@ -3,6 +3,6 @@
   "version": "1.0.0",
   "description": "ASAR - Turn Time Into Progress",
   "scripts": {
-    "build": "echo 'Static HTML build ready'"
+    "build": "node build.js"
   }
 }
