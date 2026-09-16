@@ -8,16 +8,16 @@
     <meta name="google-site-verification" content="sAEZCegxeQIFBoWMIlgFoe7OhUQ6kkp0AQWkDvS3AFA">
     <link rel="canonical" href="https://bproductive.vercel.app">
 
-    <!-- ── ASR Identity ──────────────────────────────────────────── -->
-    <title>ASAR — Turn Time Into Progress</title>
-    <meta name="description" content="ASAR is a focus and digital discipline system that helps you protect your attention, control distracting apps, and turn focused time into meaningful progress.">
-    <meta name="keywords" content="focus app, productivity, distraction blocker, deep work, strict mode, screen time, digital discipline">
-    <meta name="author" content="ASR">
+    <!-- ── ASAR Identity ──────────────────────────────────────────── -->
+    <title>ASAR — Turn Time Into Progress | Unbreakable Android App Blocker &amp; Focus System</title>
+    <meta name="description" content="ASAR is an advanced on-device digital discipline and focus system for Android. Block distracting apps, activate unbypassable Strict Mode, automate recurring routines, and build unbreakable habits with 100% local-first privacy.">
+    <meta name="keywords" content="ASAR, focus app, productivity, app blocker, strict mode, unbypassable app blocker, screen time tracker, digital discipline, deep work, pomodoro, local first focus, adhd focus app">
+    <meta name="author" content="Khalid Abdullah">
     <meta name="theme-color" content="#0A0D14">
 
     <!-- ── Open Graph ──────────────────────────────────────────────── -->
-    <meta property="og:title" content="ASAR — Turn Time Into Progress">
-    <meta property="og:description" content="Protect your attention. Control distracting apps. Build real discipline. ASAR is a local-first focus system for Android.">
+    <meta property="og:title" content="ASAR — Turn Time Into Progress | Unbreakable Focus System">
+    <meta property="og:description" content="Protect your attention. Control distracting apps. Build real discipline. ASAR is a local-first, unbypassable focus system for Android.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://bproductive.vercel.app">
     <meta property="og:image" content="https://bproductive.vercel.app/og.png">
@@ -25,7 +25,7 @@
     <!-- ── Twitter / X Card ────────────────────────────────────────── -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="ASAR — Turn Time Into Progress">
-    <meta name="twitter:description" content="Protect your attention. Control distracting apps. Build real discipline.">
+    <meta name="twitter:description" content="Protect your attention. Control distracting apps. Build real discipline with on-device local privacy.">
     <meta name="twitter:image" content="https://bproductive.vercel.app/og.png">
 
     <!-- ── Favicon (New Monogram SVG) ──────────────────────────── -->
@@ -71,7 +71,7 @@
 
     <style>
         /* Scrollbars */
-        ::-webkit-scrollbar { width: 4px; height: 4px; }
+        ::-webkit-scrollbar { width: 5px; height: 5px; }
         ::-webkit-scrollbar-track { background: #0A0D14; }
         ::-webkit-scrollbar-thumb { background: #1E2D45; border-radius: 4px; }
         ::-webkit-scrollbar-thumb:hover { background: #38BDF8; }
@@ -84,29 +84,30 @@
         }
 
         /* Glows */
-        .glow-sky  { box-shadow: 0 0 30px rgba(56, 189, 248, 0.12); }
-        .glow-red  { box-shadow: 0 0 30px rgba(248, 113, 113, 0.18); }
+        .glow-sky     { box-shadow: 0 0 35px rgba(56, 189, 248, 0.15); }
+        .glow-emerald { box-shadow: 0 0 35px rgba(16, 185, 129, 0.15); }
+        .glow-red     { box-shadow: 0 0 35px rgba(248, 113, 113, 0.20); }
 
         /* Gradient text */
         .text-gradient {
-            background: linear-gradient(135deg, #38BDF8 0%, #818CF8 100%);
+            background: linear-gradient(135deg, #38BDF8 0%, #818CF8 50%, #34D399 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
 
-        /* Toast */
+        /* Toast animation */
         @keyframes slideUp {
             from { transform: translateY(20px); opacity: 0; }
             to   { transform: translateY(0);    opacity: 1; }
         }
         .toast-enter { animation: slideUp 0.3s ease forwards; }
 
-        /* Subtle grid background on hero */
+        /* Subtle grid background */
         .hero-grid {
             background-image:
-                linear-gradient(rgba(56,189,248,0.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(56,189,248,0.03) 1px, transparent 1px);
+                linear-gradient(rgba(56,189,248,0.035) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(56,189,248,0.035) 1px, transparent 1px);
             background-size: 40px 40px;
         }
 
@@ -119,46 +120,66 @@
     </style>
 </head>
 
-<!-- ═══════════════════════════════════════════════════════════════════
-     ASAR — Turn Time Into Progress
-     Single-file: Marketing landing page + Interactive app simulator
-════════════════════════════════════════════════════════════════════ -->
 <body class="bg-asr-bg text-asr-text font-sans antialiased"
       x-data="asrApp()"
       x-init="initApp()">
 
 <!-- ══════════════════════════════════════════════════════════════════
+     TOP ANNOUNCEMENT BAR
+════════════════════════════════════════════════════════════════════ -->
+<div class="bg-gradient-to-r from-asr-elevated via-asr-surface to-asr-elevated border-b border-asr-border/80 text-xs py-2 px-4 text-center text-asr-muted flex items-center justify-center gap-2">
+    <span class="inline-block w-2 h-2 rounded-full bg-asr-emerald animate-pulse"></span>
+    <span><strong>ASAR v1.0.0 is Live:</strong> Unbreakable Strict Mode, Loopable Routines &amp; 100% On-Device Privacy.</span>
+    <a href="https://github.com/khalidabdullahh/AegisFocus/releases/latest/download/ASAR-Latest.apk" class="text-asr-sky hover:underline font-bold ml-1 flex items-center gap-0.5">Download Free APK &rarr;</a>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════
      NAVIGATION
 ════════════════════════════════════════════════════════════════════ -->
-<header class="fixed top-0 left-0 right-0 z-50 border-b border-asr-border/60 backdrop-blur-xl bg-asr-bg/80">
-    <div class="max-w-6xl mx-auto px-5 sm:px-8 h-14 flex items-center justify-between">
+<header class="sticky top-0 z-50 border-b border-asr-border/60 backdrop-blur-xl bg-asr-bg/85 transition-all">
+    <div class="max-w-6xl mx-auto px-5 sm:px-8 h-16 flex items-center justify-between">
 
-        <!-- Logo -->
-        <a href="#" class="flex items-center group">
-            <img src="assets/asar_navbar_brand.png" alt="ASAR — Be Productive" class="h-8 sm:h-9 w-auto object-contain">
+        <!-- Logo & Brand -->
+        <a href="#" class="flex items-center gap-3 group">
+            <div class="w-9 h-9 rounded-xl bg-asr-elevated border border-asr-border flex items-center justify-center group-hover:border-asr-sky/50 transition">
+                <svg width="20" height="20" viewBox="0 0 28 28" fill="none">
+                    <path d="M9 20L14 8L19 20" stroke="#38BDF8" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M10.8 16.5H17.2" stroke="#38BDF8" stroke-width="2.0" stroke-linecap="round"/>
+                </svg>
+            </div>
+            <div>
+                <span class="font-extrabold text-lg tracking-tight text-asr-text">ASAR</span>
+                <span class="hidden sm:inline-block text-[10px] text-asr-sky font-semibold ml-1.5 px-1.5 py-0.5 rounded bg-asr-sky/10 border border-asr-sky/20">FOCUS</span>
+            </div>
         </a>
 
-        <!-- Nav Links (desktop) -->
-        <nav class="hidden md:flex items-center gap-7 text-sm font-medium text-asr-muted">
-            <a href="features.html" class="hover:text-asr-text transition">Features</a>
-            <a href="pricing.html" class="hover:text-asr-text transition">Pricing</a>
-            <a href="about.html" class="hover:text-asr-text transition">Philosophy</a>
-            <a href="guides.html" class="hover:text-asr-text transition">Guides &amp; Hub</a>
-            <a href="privacy.html" class="hover:text-asr-text transition">Privacy</a>
-            <a href="#simulator" class="hover:text-asr-text transition">Simulator</a>
+        <!-- Desktop Navigation Links -->
+        <nav class="hidden lg:flex items-center gap-6 text-xs font-semibold text-asr-muted">
+            <a href="#how-it-works" class="hover:text-asr-text transition">How It Works</a>
+            <a href="#features" class="hover:text-asr-text transition">Features</a>
+            <a href="#use-cases" class="hover:text-asr-text transition">Use Cases</a>
+            <a href="#comparison" class="hover:text-asr-text transition">Comparison</a>
+            <a href="#simulator" class="hover:text-asr-text transition text-asr-sky flex items-center gap-1">
+                <i data-lucide="play" class="w-3.5 h-3.5"></i> Live Demo
+            </a>
+            <a href="#pricing" class="hover:text-asr-text transition">Pricing</a>
+            <a href="#faq" class="hover:text-asr-text transition">FAQ</a>
+            <a href="guides.html" class="hover:text-asr-text transition flex items-center gap-1 text-asr-emerald">
+                <i data-lucide="book-open" class="w-3.5 h-3.5"></i> Guides
+            </a>
         </nav>
 
-        <!-- CTA -->
+        <!-- CTA Buttons -->
         <div class="flex items-center gap-3">
             <a href="https://github.com/khalidabdullahh/AegisFocus/releases/latest/download/ASAR-Latest.apk"
                download="ASAR-Latest.apk"
-               class="bg-asr-emerald hover:bg-asr-emerald/90 text-asr-bg text-xs sm:text-sm font-bold px-3.5 py-1.5 rounded-lg transition flex items-center gap-1.5">
-                <i data-lucide="download" class="w-3.5 h-3.5"></i>
-                Download APK
+               class="bg-asr-emerald hover:bg-asr-emerald/90 text-asr-bg text-xs sm:text-sm font-bold px-3.5 py-2 rounded-xl transition shadow-md shadow-asr-emerald/20 flex items-center gap-1.5">
+                <i data-lucide="download" class="w-4 h-4"></i>
+                <span>Get APK</span>
             </a>
             <a href="#simulator"
-               class="hidden sm:inline-flex bg-asr-sky/10 hover:bg-asr-sky/20 border border-asr-sky/30 text-asr-sky text-sm font-semibold px-4 py-1.5 rounded-lg transition">
-                Try Demo
+               class="hidden sm:inline-flex bg-asr-sky/10 hover:bg-asr-sky/20 border border-asr-sky/30 text-asr-sky text-xs sm:text-sm font-semibold px-4 py-2 rounded-xl transition">
+                Try Simulator
             </a>
         </div>
     </div>
@@ -166,224 +187,372 @@
 
 
 <!-- ══════════════════════════════════════════════════════════════════
-     HERO
+     HERO SECTION
 ════════════════════════════════════════════════════════════════════ -->
-<section class="hero-grid min-h-screen flex flex-col items-center justify-center pt-14 px-5 text-center relative overflow-hidden">
+<section class="hero-grid min-h-[90vh] flex flex-col items-center justify-center pt-8 pb-16 px-5 text-center relative overflow-hidden">
 
-    <!-- Ambient glow circles -->
-    <div class="absolute -top-40 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-asr-sky/5 rounded-full blur-3xl pointer-events-none"></div>
-    <div class="absolute top-1/2 -left-40 w-[400px] h-[400px] bg-asr-emerald/5 rounded-full blur-3xl pointer-events-none"></div>
+    <!-- Ambient background glows -->
+    <div class="absolute -top-40 left-1/2 -translate-x-1/2 w-[700px] h-[700px] bg-asr-sky/6 rounded-full blur-3xl pointer-events-none"></div>
+    <div class="absolute top-1/2 -left-40 w-[450px] h-[450px] bg-asr-emerald/5 rounded-full blur-3xl pointer-events-none"></div>
+    <div class="absolute top-1/3 -right-40 w-[450px] h-[450px] bg-asr-red/5 rounded-full blur-3xl pointer-events-none"></div>
 
-    <div class="max-w-4xl mx-auto z-10 py-16 sm:py-24">
+    <div class="max-w-4xl mx-auto z-10 py-10 sm:py-16">
 
-        <!-- Badge -->
-        <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-asr-sky/30 bg-asr-sky/5 text-asr-sky text-xs font-semibold mb-8 tracking-wide">
-            <span class="w-1.5 h-1.5 rounded-full bg-asr-sky animate-pulse"></span>
-            ASAR v1.0.0 is Live &bull; Pure On-Device Discipline
+        <!-- Top Pill Badge -->
+        <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-asr-sky/30 bg-asr-sky/10 text-asr-sky text-xs font-bold mb-8 tracking-wide">
+            <i data-lucide="shield-check" class="w-3.5 h-3.5"></i>
+            <span>The Anti-Dopamine Focus System for Android</span>
         </div>
 
-        <!-- Headline -->
-        <h1 class="text-5xl sm:text-6xl md:text-7xl font-black tracking-tight leading-[1.05]">
-            Turn Time Into
-            <span class="text-gradient block mt-1">Progress.</span>
+        <!-- Main Headline -->
+        <h1 class="text-4xl sm:text-6xl md:text-7xl font-black tracking-tight leading-[1.08]">
+            Turn Your Time Into
+            <span class="text-gradient block mt-1.5">Unbreakable Progress.</span>
         </h1>
 
         <!-- Sub-copy -->
-        <p class="mt-6 text-base sm:text-lg text-asr-muted max-w-xl mx-auto leading-relaxed">
-            ASAR helps you protect your attention, control distracting apps, and build the discipline to do the work that actually matters.
+        <p class="mt-6 text-base sm:text-lg text-asr-muted max-w-2xl mx-auto leading-relaxed">
+            Protect your attention from dopamine traps. Lock down distracting apps with unbypassable Strict Mode, automate recurring deep work routines, and reclaim up to <strong>3 hours every day</strong>.
         </p>
 
-        <!-- CTAs -->
-        <div class="flex flex-col sm:flex-row items-center justify-center gap-3 mt-10">
+        <!-- CTAs Grid -->
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-3.5 mt-10">
             <a href="https://github.com/khalidabdullahh/AegisFocus/releases/latest/download/ASAR-Latest.apk" download="ASAR-Latest.apk"
-               class="w-full sm:w-auto bg-asr-emerald hover:bg-asr-emerald/90 text-asr-bg font-bold text-sm px-7 py-3.5 rounded-xl transition shadow-lg shadow-asr-emerald/20 flex items-center justify-center gap-2">
-                <i data-lucide="download" class="w-4 h-4"></i>
-                Download Android APK (v1.0.0)
+               class="w-full sm:w-auto bg-asr-emerald hover:bg-asr-emerald/90 text-asr-bg font-extrabold text-sm px-8 py-4 rounded-xl transition shadow-xl shadow-asr-emerald/25 flex items-center justify-center gap-2 group">
+                <i data-lucide="download" class="w-4 h-4 group-hover:-translate-y-0.5 transition"></i>
+                <span>Download Android APK (Free v1.0.0)</span>
             </a>
             <a href="#simulator"
-               class="w-full sm:w-auto bg-asr-sky hover:bg-asr-sky/90 text-asr-bg font-bold text-sm px-7 py-3.5 rounded-xl transition shadow-lg shadow-asr-sky/20 flex items-center justify-center gap-2">
+               class="w-full sm:w-auto bg-asr-sky hover:bg-asr-sky/90 text-asr-bg font-bold text-sm px-8 py-4 rounded-xl transition shadow-xl shadow-asr-sky/20 flex items-center justify-center gap-2">
                 <i data-lucide="play" class="w-4 h-4 fill-current"></i>
-                Try Interactive Demo
+                <span>Try Live App Simulator</span>
             </a>
             <a href="https://github.com/khalidabdullahh/AegisFocus"
                target="_blank"
-               class="w-full sm:w-auto bg-asr-surface hover:bg-asr-elevated border border-asr-border text-asr-text font-semibold text-sm px-7 py-3.5 rounded-xl transition flex items-center justify-center gap-2">
+               class="w-full sm:w-auto bg-asr-surface hover:bg-asr-elevated border border-asr-border text-asr-text font-semibold text-sm px-6 py-4 rounded-xl transition flex items-center justify-center gap-2">
                 <i data-lucide="github" class="w-4 h-4"></i>
-                View on GitHub
+                <span>GitHub Source</span>
             </a>
         </div>
 
-        <!-- Social proof micro stats -->
-        <div class="flex items-center justify-center gap-8 mt-12 text-xs text-asr-faint">
-            <div class="flex flex-col items-center gap-1">
-                <span class="text-xl font-bold text-asr-text">100%</span>
-                <span>On-Device</span>
+        <!-- Social proof / Trust Stats -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-14 max-w-3xl mx-auto text-left">
+            <div class="bg-asr-surface/70 border border-asr-border/80 rounded-2xl p-4">
+                <div class="text-2xl font-black text-asr-text">100%</div>
+                <div class="text-xs font-semibold text-asr-muted mt-0.5">On-Device Privacy</div>
+                <div class="text-[11px] text-asr-faint mt-1">Zero cloud tracking</div>
             </div>
-            <div class="w-px h-8 bg-asr-border"></div>
-            <div class="flex flex-col items-center gap-1">
-                <span class="text-xl font-bold text-asr-text">0</span>
-                <span>Cloud servers</span>
+            <div class="bg-asr-surface/70 border border-asr-border/80 rounded-2xl p-4">
+                <div class="text-2xl font-black text-asr-sky">Zero</div>
+                <div class="text-xs font-semibold text-asr-muted mt-0.5">Bypass Loopholes</div>
+                <div class="text-[11px] text-asr-faint mt-1">Anti-uninstall locked</div>
             </div>
-            <div class="w-px h-8 bg-asr-border"></div>
-            <div class="flex flex-col items-center gap-1">
-                <span class="text-xl font-bold text-asr-text">Free</span>
-                <span>Core features</span>
+            <div class="bg-asr-surface/70 border border-asr-border/80 rounded-2xl p-4">
+                <div class="text-2xl font-black text-asr-emerald">Auto</div>
+                <div class="text-xs font-semibold text-asr-muted mt-0.5">Repeating Routines</div>
+                <div class="text-[11px] text-asr-faint mt-1">Scheduled daily focus</div>
             </div>
-        </div>
-    </div>
-
-    <!-- Scroll hint -->
-    <div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 text-asr-faint text-xs animate-bounce">
-        <i data-lucide="chevron-down" class="w-4 h-4"></i>
-    </div>
-</section>
-
-
-<!-- ══════════════════════════════════════════════════════════════════
-     PROBLEM STATEMENT
-════════════════════════════════════════════════════════════════════ -->
-<section class="py-24 px-5 max-w-4xl mx-auto text-center reveal" id="problem">
-    <p class="text-asr-faint text-xs font-bold tracking-widest uppercase mb-4">The Problem</p>
-    <h2 class="text-3xl sm:text-4xl font-bold text-asr-text leading-tight">
-        Your phone is designed to<br class="hidden sm:block"> steal your attention.
-    </h2>
-    <p class="mt-5 text-asr-muted text-base max-w-2xl mx-auto leading-relaxed">
-        Every notification, every feed, every autoplay video is engineered to pull you away from what matters. The average person unlocks their phone over 150 times a day. Most of that time disappears into nothing.
-    </p>
-
-    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-12 text-left">
-        <div class="bg-asr-surface border border-asr-border rounded-2xl p-5">
-            <div class="text-3xl font-black text-asr-red">4.2h</div>
-            <div class="text-sm font-semibold text-asr-text mt-1">Average daily screen time</div>
-            <div class="text-xs text-asr-faint mt-1">Most of it unintentional</div>
-        </div>
-        <div class="bg-asr-surface border border-asr-border rounded-2xl p-5">
-            <div class="text-3xl font-black text-asr-red">23m</div>
-            <div class="text-sm font-semibold text-asr-text mt-1">To regain focus after interruption</div>
-            <div class="text-xs text-asr-faint mt-1">University of California study</div>
-        </div>
-        <div class="bg-asr-surface border border-asr-border rounded-2xl p-5">
-            <div class="text-3xl font-black text-asr-red">150+</div>
-            <div class="text-sm font-semibold text-asr-text mt-1">Daily phone unlocks</div>
-            <div class="text-xs text-asr-faint mt-1">Most triggered by habit, not intent</div>
+            <div class="bg-asr-surface/70 border border-asr-border/80 rounded-2xl p-4">
+                <div class="text-2xl font-black text-asr-text">Free</div>
+                <div class="text-xs font-semibold text-asr-muted mt-0.5">Core Foundation</div>
+                <div class="text-[11px] text-asr-faint mt-1">Up to 2h Strict Mode</div>
+            </div>
         </div>
     </div>
 </section>
 
 
 <!-- ══════════════════════════════════════════════════════════════════
-     SOLUTION STATEMENT
+     THE PROBLEM: THE MODERN ATTENTION CRISIS
 ════════════════════════════════════════════════════════════════════ -->
-<section class="py-16 px-5 max-w-3xl mx-auto text-center reveal">
-    <p class="text-asr-faint text-xs font-bold tracking-widest uppercase mb-4">The ASR Answer</p>
-    <h2 class="text-3xl sm:text-4xl font-bold text-asr-text">
-        A system that protects your attention<br class="hidden sm:block"> so your time goes where you choose.
-    </h2>
-    <p class="mt-5 text-asr-muted text-base max-w-2xl mx-auto leading-relaxed">
-        ASR is not about doing more. It's about doing what matters — with full attention, without distraction, in the time you have.
-    </p>
-</section>
-
-
-<!-- ══════════════════════════════════════════════════════════════════
-     FEATURES
-════════════════════════════════════════════════════════════════════ -->
-<section id="features" class="py-20 px-5 max-w-6xl mx-auto reveal">
-    <div class="text-center mb-14">
-        <p class="text-asr-faint text-xs font-bold tracking-widest uppercase mb-3">Features</p>
-        <h2 class="text-3xl sm:text-4xl font-bold text-asr-text">Everything you need to stay focused.</h2>
+<section class="py-20 px-5 max-w-5xl mx-auto reveal" id="problem">
+    <div class="text-center max-w-3xl mx-auto">
+        <p class="text-asr-red text-xs font-bold tracking-widest uppercase mb-3 flex items-center justify-center gap-1.5">
+            <i data-lucide="alert-triangle" class="w-3.5 h-3.5"></i> The Attention Crisis
+        </p>
+        <h2 class="text-3xl sm:text-4xl font-extrabold text-asr-text leading-tight">
+            Your attention is being weaponized against your future.
+        </h2>
+        <p class="mt-4 text-asr-muted text-sm sm:text-base leading-relaxed">
+            Modern social feeds, algorithmically engineered short videos, and push notifications are designed by hundreds of behavioral engineers to keep your dopamine loop active. Willpower alone cannot compete against a multi-billion dollar algorithm.
+        </p>
     </div>
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-
-        <!-- Focus Sessions -->
-        <div class="bg-asr-surface border border-asr-border rounded-2xl p-6 hover:border-asr-sky/40 transition group">
-            <div class="w-10 h-10 bg-asr-sky/10 rounded-xl flex items-center justify-center mb-4 group-hover:bg-asr-sky/20 transition">
-                <i data-lucide="hourglass" class="w-5 h-5 text-asr-sky"></i>
-            </div>
-            <h3 class="font-bold text-asr-text">Focus Sessions</h3>
-            <p class="text-asr-muted text-sm mt-2 leading-relaxed">Set a clear intention, choose your duration, and commit. Circular countdown timer tracks every second.</p>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mt-12">
+        <div class="bg-asr-surface border border-asr-border rounded-2xl p-6 relative overflow-hidden">
+            <div class="text-4xl font-black text-asr-red">4.8h</div>
+            <div class="text-base font-bold text-asr-text mt-2">Average Daily Screen Time</div>
+            <p class="text-xs text-asr-muted mt-2 leading-relaxed">
+                Over 33 hours every week disappear into mindless doomscrolling on TikTok, Reels, YouTube Shorts, and feeds.
+            </p>
+            <div class="text-[10px] text-asr-faint font-semibold uppercase tracking-wider mt-4">Data: DataReportal Global Report</div>
         </div>
 
-        <!-- App Blocking -->
-        <div class="bg-asr-surface border border-asr-border rounded-2xl p-6 hover:border-asr-sky/40 transition group">
-            <div class="w-10 h-10 bg-asr-sky/10 rounded-xl flex items-center justify-center mb-4 group-hover:bg-asr-sky/20 transition">
-                <i data-lucide="shield-ban" class="w-5 h-5 text-asr-sky"></i>
-            </div>
-            <h3 class="font-bold text-asr-text">Real App Blocking</h3>
-            <p class="text-asr-muted text-sm mt-2 leading-relaxed">Uses Android's Accessibility API to detect and block distracting apps the moment they open. No workarounds.</p>
+        <div class="bg-asr-surface border border-asr-border rounded-2xl p-6 relative overflow-hidden">
+            <div class="text-4xl font-black text-asr-red">23m</div>
+            <div class="text-base font-bold text-asr-text mt-2">Lost per Interruption</div>
+            <p class="text-xs text-asr-muted mt-2 leading-relaxed">
+                University of California research shows it takes an average of 23 minutes and 15 seconds to regain deep flow state after a single phone ping.
+            </p>
+            <div class="text-[10px] text-asr-faint font-semibold uppercase tracking-wider mt-4">Research: UC Irvine Attention Study</div>
         </div>
 
-        <!-- Strict Mode -->
-        <div class="bg-asr-surface border border-asr-border rounded-2xl p-6 hover:border-asr-red/40 transition group">
-            <div class="w-10 h-10 bg-asr-red/10 rounded-xl flex items-center justify-center mb-4 group-hover:bg-asr-red/20 transition">
-                <i data-lucide="lock" class="w-5 h-5 text-asr-red"></i>
-            </div>
-            <h3 class="font-bold text-asr-text">Strict Mode</h3>
-            <p class="text-asr-muted text-sm mt-2 leading-relaxed">Commit to immutable rules. During Strict Mode, blocked apps and session parameters cannot be changed. Free: up to 3h.</p>
+        <div class="bg-asr-surface border border-asr-border rounded-2xl p-6 relative overflow-hidden">
+            <div class="text-4xl font-black text-asr-red">150+</div>
+            <div class="text-base font-bold text-asr-text mt-2">Daily Unconscious Phone Unlocks</div>
+            <p class="text-xs text-asr-muted mt-2 leading-relaxed">
+                Most phone pickups happen out of sub-conscious habit and boredom reflex rather than conscious intent or necessity.
+            </p>
+            <div class="text-[10px] text-asr-faint font-semibold uppercase tracking-wider mt-4">Metric: Habitual Loop Analytics</div>
         </div>
-
-        <!-- Mindful Pause -->
-        <div class="bg-asr-surface border border-asr-border rounded-2xl p-6 hover:border-asr-sky/40 transition group">
-            <div class="w-10 h-10 bg-asr-sky/10 rounded-xl flex items-center justify-center mb-4 group-hover:bg-asr-sky/20 transition">
-                <i data-lucide="brain" class="w-5 h-5 text-asr-sky"></i>
-            </div>
-            <h3 class="font-bold text-asr-text">Mindful Pause</h3>
-            <p class="text-asr-muted text-sm mt-2 leading-relaxed">Before a blocked app opens, a 5-second breathing moment appears. A prompt asks: why are you opening this?</p>
-        </div>
-
-        <!-- Discipline Score -->
-        <div class="bg-asr-surface border border-asr-border rounded-2xl p-6 hover:border-asr-emerald/40 transition group">
-            <div class="w-10 h-10 bg-asr-emerald/10 rounded-xl flex items-center justify-center mb-4 group-hover:bg-asr-emerald/20 transition">
-                <i data-lucide="sparkles" class="w-5 h-5 text-asr-emerald"></i>
-            </div>
-            <h3 class="font-bold text-asr-text">Discipline Score</h3>
-            <p class="text-asr-muted text-sm mt-2 leading-relaxed">A transparent 10–100 score built from your actual behavior: sessions, streaks, block attempts, and exits. No hidden math.</p>
-        </div>
-
-        <!-- Local-First Privacy -->
-        <div class="bg-asr-surface border border-asr-border rounded-2xl p-6 hover:border-asr-emerald/40 transition group">
-            <div class="w-10 h-10 bg-asr-emerald/10 rounded-xl flex items-center justify-center mb-4 group-hover:bg-asr-emerald/20 transition">
-                <i data-lucide="shield-check" class="w-5 h-5 text-asr-emerald"></i>
-            </div>
-            <h3 class="font-bold text-asr-text">100% On-Device Privacy</h3>
-            <p class="text-asr-muted text-sm mt-2 leading-relaxed">No servers. No cloud. No account required. All your data lives in a local SQLite database on your phone — and nowhere else.</p>
-        </div>
-
     </div>
 </section>
 
 
 <!-- ══════════════════════════════════════════════════════════════════
-     FOUR PILLARS
+     HOW ASAR WORKS (3-STEP SYSTEM)
 ════════════════════════════════════════════════════════════════════ -->
-<section id="pillars" class="py-24 px-5 bg-asr-surface border-y border-asr-border reveal">
+<section id="how-it-works" class="py-24 px-5 bg-asr-surface border-y border-asr-border reveal">
     <div class="max-w-6xl mx-auto">
-        <div class="text-center mb-14">
-            <p class="text-asr-faint text-xs font-bold tracking-widest uppercase mb-3">ASR Philosophy</p>
-            <h2 class="text-3xl sm:text-4xl font-bold text-asr-text">Built on four principles.</h2>
+        <div class="text-center mb-16">
+            <p class="text-asr-sky text-xs font-bold tracking-widest uppercase mb-3">How ASAR Works</p>
+            <h2 class="text-3xl sm:text-4xl font-extrabold text-asr-text">A 3-Step Behavioral Defense System</h2>
+            <p class="text-asr-muted text-sm mt-3 max-w-xl mx-auto">
+                ASAR replaces weak willpower with structural friction and unbreakable guardrails.
+            </p>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-            <div class="text-center p-6">
-                <div class="text-4xl font-black text-asr-sky/30 mb-3">01</div>
-                <h3 class="font-bold text-asr-text text-lg">Time</h3>
-                <p class="text-asr-muted text-sm mt-2 leading-relaxed">Your time is finite. Every moment spent without intention is gone. ASAR helps you know where your time goes.</p>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 relative">
+            <!-- Step 1 -->
+            <div class="bg-asr-bg border border-asr-border rounded-2xl p-7 flex flex-col justify-between hover:border-asr-sky/40 transition">
+                <div>
+                    <div class="w-12 h-12 rounded-xl bg-asr-sky/10 border border-asr-sky/20 flex items-center justify-center text-asr-sky font-black text-xl mb-5">
+                        01
+                    </div>
+                    <h3 class="text-lg font-bold text-asr-text">Select Shields &amp; Routines</h3>
+                    <p class="text-sm text-asr-muted mt-3 leading-relaxed">
+                        Pick your distracting applications (social media, video streaming, mobile games) or configure automated weekly routines (e.g. 9 AM–12 PM Mon–Fri).
+                    </p>
+                </div>
+                <div class="mt-6 pt-4 border-t border-asr-border/60 flex items-center gap-2 text-xs text-asr-sky font-semibold">
+                    <i data-lucide="check-circle" class="w-4 h-4"></i> Live reactive app chips
+                </div>
             </div>
-            <div class="text-center p-6">
-                <div class="text-4xl font-black text-asr-sky/30 mb-3">02</div>
-                <h3 class="font-bold text-asr-text text-lg">Focus</h3>
-                <p class="text-asr-muted text-sm mt-2 leading-relaxed">Attention is your most valuable resource. Distraction is the enemy. ASR builds a wall between you and what steals your focus.</p>
+
+            <!-- Step 2 -->
+            <div class="bg-asr-bg border border-asr-border rounded-2xl p-7 flex flex-col justify-between hover:border-asr-sky/40 transition">
+                <div>
+                    <div class="w-12 h-12 rounded-xl bg-asr-red/10 border border-asr-red/20 flex items-center justify-center text-asr-red font-black text-xl mb-5">
+                        02
+                    </div>
+                    <h3 class="text-lg font-bold text-asr-text">Lock In with Strict Mode</h3>
+                    <p class="text-sm text-asr-muted mt-3 leading-relaxed">
+                        Choose your duration and commit. Under Strict Mode, Device Administrator protection prevents changing rules, force-closing, or uninstalling until the timer expires.
+                    </p>
+                </div>
+                <div class="mt-6 pt-4 border-t border-asr-border/60 flex items-center gap-2 text-xs text-asr-red font-semibold">
+                    <i data-lucide="lock" class="w-4 h-4"></i> Zero bypass loopholes
+                </div>
             </div>
-            <div class="text-center p-6">
-                <div class="text-4xl font-black text-asr-sky/30 mb-3">03</div>
-                <h3 class="font-bold text-asr-text text-lg">Discipline</h3>
-                <p class="text-asr-muted text-sm mt-2 leading-relaxed">Motivation fluctuates. Systems hold. ASAR gives you structure that works even when willpower doesn't.</p>
+
+            <!-- Step 3 -->
+            <div class="bg-asr-bg border border-asr-border rounded-2xl p-7 flex flex-col justify-between hover:border-asr-sky/40 transition">
+                <div>
+                    <div class="w-12 h-12 rounded-xl bg-asr-emerald/10 border border-asr-emerald/20 flex items-center justify-center text-asr-emerald font-black text-xl mb-5">
+                        03
+                    </div>
+                    <h3 class="text-lg font-bold text-asr-text">Reclaim Discipline &amp; Flow</h3>
+                    <p class="text-sm text-asr-muted mt-3 leading-relaxed">
+                        Build deep work streaks, earn XP, and watch your transparent Discipline Score climb from 10 to 100 with zero cloud telemetry.
+                    </p>
+                </div>
+                <div class="mt-6 pt-4 border-t border-asr-border/60 flex items-center gap-2 text-xs text-asr-emerald font-semibold">
+                    <i data-lucide="trending-up" class="w-4 h-4"></i> Real behavioral transformation
+                </div>
             </div>
-            <div class="text-center p-6">
-                <div class="text-4xl font-black text-asr-sky/30 mb-3">04</div>
-                <h3 class="font-bold text-asr-text text-lg">Progress</h3>
-                <p class="text-asr-muted text-sm mt-2 leading-relaxed">Focused time should produce something. ASR tracks your discipline and helps you see real, cumulative progress.</p>
+        </div>
+    </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════════════════════════════
+     DEEP DIVE: CORE ARCHITECTURAL FEATURES
+════════════════════════════════════════════════════════════════════ -->
+<section id="features" class="py-24 px-5 max-w-6xl mx-auto reveal">
+    <div class="text-center mb-16">
+        <p class="text-asr-sky text-xs font-bold tracking-widest uppercase mb-3">Architectural Pillars</p>
+        <h2 class="text-3xl sm:text-4xl font-extrabold text-asr-text">Engineered for Uncompromising Focus</h2>
+        <p class="text-asr-muted text-sm mt-3 max-w-xl mx-auto">
+            Every feature in ASAR is built ground-up on Android's native APIs for maximum reliability and absolute privacy.
+        </p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+        <!-- 1. Strict Mode Anti-Uninstall -->
+        <div class="bg-asr-surface border border-asr-border rounded-2xl p-7 hover:border-asr-red/40 transition group">
+            <div class="w-12 h-12 bg-asr-red/10 border border-asr-red/20 rounded-xl flex items-center justify-center mb-5 group-hover:bg-asr-red/20 transition text-asr-red">
+                <i data-lucide="shield-alert" class="w-6 h-6"></i>
+            </div>
+            <div class="flex items-center gap-2">
+                <h3 class="font-bold text-lg text-asr-text">Unbreakable Strict Mode</h3>
+                <span class="bg-asr-red/10 text-asr-red text-[10px] font-bold px-2 py-0.5 rounded">CORE</span>
+            </div>
+            <p class="text-asr-muted text-sm mt-3 leading-relaxed">
+                When Strict Mode is active, ASAR engages Android Device Administration. You cannot uninstall the app, cancel sessions impulsively, or disable accessibility until the timer finishes.
+            </p>
+            <ul class="mt-4 space-y-1.5 text-xs text-asr-faint">
+                <li class="flex items-center gap-1.5"><span class="text-asr-red font-bold">&bull;</span> Free tier: up to 2 hours &amp; 3 apps</li>
+                <li class="flex items-center gap-1.5"><span class="text-asr-red font-bold">&bull;</span> Pro tier: up to 12h / unlimited</li>
+            </ul>
+        </div>
+
+        <!-- 2. Recurring Scheduled Routines -->
+        <div class="bg-asr-surface border border-asr-border rounded-2xl p-7 hover:border-asr-sky/40 transition group">
+            <div class="w-12 h-12 bg-asr-sky/10 border border-asr-sky/20 rounded-xl flex items-center justify-center mb-5 group-hover:bg-asr-sky/20 transition text-asr-sky">
+                <i data-lucide="calendar-check" class="w-6 h-6"></i>
+            </div>
+            <div class="flex items-center gap-2">
+                <h3 class="font-bold text-lg text-asr-text">Automated Looping Routines</h3>
+                <span class="bg-asr-sky/10 text-asr-sky text-[10px] font-bold px-2 py-0.5 rounded">NEW</span>
+            </div>
+            <p class="text-asr-muted text-sm mt-3 leading-relaxed">
+                Define recurring focus blocks (e.g. 9:00 AM–12:00 PM every weekday). Android AlarmManager exact scheduling triggers Strict Mode automatically across weeks without daily setup.
+            </p>
+            <ul class="mt-4 space-y-1.5 text-xs text-asr-faint">
+                <li class="flex items-center gap-1.5"><span class="text-asr-sky font-bold">&bull;</span> Day-of-week bitmask engine</li>
+                <li class="flex items-center gap-1.5"><span class="text-asr-sky font-bold">&bull;</span> Background WorkManager watchdog</li>
+            </ul>
+        </div>
+
+        <!-- 3. Adaptive Friction & Mindful Pause -->
+        <div class="bg-asr-surface border border-asr-border rounded-2xl p-7 hover:border-asr-emerald/40 transition group">
+            <div class="w-12 h-12 bg-asr-emerald/10 border border-asr-emerald/20 rounded-xl flex items-center justify-center mb-5 group-hover:bg-asr-emerald/20 transition text-asr-emerald">
+                <i data-lucide="brain" class="w-6 h-6"></i>
+            </div>
+            <div class="flex items-center gap-2">
+                <h3 class="font-bold text-lg text-asr-text">Adaptive Psychological Friction</h3>
+                <span class="bg-asr-emerald/10 text-asr-emerald text-[10px] font-bold px-2 py-0.5 rounded">PRO</span>
+            </div>
+            <p class="text-asr-muted text-sm mt-3 leading-relaxed">
+                Opening blocked apps triggers a calming breathing countdown and an intention prompt: <em>"Why are you opening this?"</em> Repeated attempts escalate delay from 5s up to 30s.
+            </p>
+            <ul class="mt-4 space-y-1.5 text-xs text-asr-faint">
+                <li class="flex items-center gap-1.5"><span class="text-asr-emerald font-bold">&bull;</span> Breaks automatic reflex loops</li>
+                <li class="flex items-center gap-1.5"><span class="text-asr-emerald font-bold">&bull;</span> Mindful reason logging</li>
+            </ul>
+        </div>
+
+        <!-- 4. 100% On-Device Privacy -->
+        <div class="bg-asr-surface border border-asr-border rounded-2xl p-7 hover:border-asr-emerald/40 transition group">
+            <div class="w-12 h-12 bg-asr-emerald/10 border border-asr-emerald/20 rounded-xl flex items-center justify-center mb-5 group-hover:bg-asr-emerald/20 transition text-asr-emerald">
+                <i data-lucide="lock" class="w-6 h-6"></i>
+            </div>
+            <div class="flex items-center gap-2">
+                <h3 class="font-bold text-lg text-asr-text">100% On-Device Privacy</h3>
+                <span class="bg-asr-emerald/10 text-asr-emerald text-[10px] font-bold px-2 py-0.5 rounded">ZERO CLOUD</span>
+            </div>
+            <p class="text-asr-muted text-sm mt-3 leading-relaxed">
+                No accounts required. No server calls. All focus logs, usage stats, and app lists live in a local SQLite Room database on your phone and nowhere else in the world.
+            </p>
+            <ul class="mt-4 space-y-1.5 text-xs text-asr-faint">
+                <li class="flex items-center gap-1.5"><span class="text-asr-emerald font-bold">&bull;</span> Zero advertising telemetry</li>
+                <li class="flex items-center gap-1.5"><span class="text-asr-emerald font-bold">&bull;</span> Works 100% offline in Airplane Mode</li>
+            </ul>
+        </div>
+
+        <!-- 5. Transparent Discipline Score -->
+        <div class="bg-asr-surface border border-asr-border rounded-2xl p-7 hover:border-asr-sky/40 transition group">
+            <div class="w-12 h-12 bg-asr-sky/10 border border-asr-sky/20 rounded-xl flex items-center justify-center mb-5 group-hover:bg-asr-sky/20 transition text-asr-sky">
+                <i data-lucide="sparkles" class="w-6 h-6"></i>
+            </div>
+            <div class="flex items-center gap-2">
+                <h3 class="font-bold text-lg text-asr-text">Discipline Score &amp; XP</h3>
+                <span class="bg-asr-sky/10 text-asr-sky text-[10px] font-bold px-2 py-0.5 rounded">GAMIFIED</span>
+            </div>
+            <p class="text-asr-muted text-sm mt-3 leading-relaxed">
+                A transparent 10–100 behavioral score. Base 80 + consistency (+10) + streak (+5) minus penalties for block attempts and emergency breakouts. Level up from Starter to Iron Will.
+            </p>
+            <ul class="mt-4 space-y-1.5 text-xs text-asr-faint">
+                <li class="flex items-center gap-1.5"><span class="text-asr-sky font-bold">&bull;</span> Documented transparent formula</li>
+                <li class="flex items-center gap-1.5"><span class="text-asr-sky font-bold">&bull;</span> Unlockable achievement badges</li>
+            </ul>
+        </div>
+
+        <!-- 6. Live Reactive App Selector -->
+        <div class="bg-asr-surface border border-asr-border rounded-2xl p-7 hover:border-asr-sky/40 transition group">
+            <div class="w-12 h-12 bg-asr-sky/10 border border-asr-sky/20 rounded-xl flex items-center justify-center mb-5 group-hover:bg-asr-sky/20 transition text-asr-sky">
+                <i data-lucide="layout-grid" class="w-6 h-6"></i>
+            </div>
+            <div class="flex items-center gap-2">
+                <h3 class="font-bold text-lg text-asr-text">Live Reactive App Shields</h3>
+                <span class="bg-asr-sky/10 text-asr-sky text-[10px] font-bold px-2 py-0.5 rounded">INSTANT</span>
+            </div>
+            <p class="text-asr-muted text-sm mt-3 leading-relaxed">
+                See all shielded apps live in real-time before starting your focus session. Quick-add suggestions, one-tap removal chips, and instant category filters make setup effortless.
+            </p>
+            <ul class="mt-4 space-y-1.5 text-xs text-asr-faint">
+                <li class="flex items-center gap-1.5"><span class="text-asr-sky font-bold">&bull;</span> Live Jetpack Compose StateFlow</li>
+                <li class="flex items-center gap-1.5"><span class="text-asr-sky font-bold">&bull;</span> One-tap remove/add chips</li>
+            </ul>
+        </div>
+
+    </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════════════════════════════
+     WHO IS ASAR FOR? (PERSONAS / USE CASES)
+════════════════════════════════════════════════════════════════════ -->
+<section id="use-cases" class="py-24 px-5 bg-asr-surface border-y border-asr-border reveal">
+    <div class="max-w-6xl mx-auto">
+        <div class="text-center mb-16">
+            <p class="text-asr-sky text-xs font-bold tracking-widest uppercase mb-3">Tailored Discipline</p>
+            <h2 class="text-3xl sm:text-4xl font-extrabold text-asr-text">Built For Those Who Value Their Time</h2>
+            <p class="text-asr-muted text-sm mt-3 max-w-xl mx-auto">
+                Discover how individuals in high-focus disciplines use ASAR to outperform distractions.
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+            <!-- Persona 1: Developers -->
+            <div class="bg-asr-bg border border-asr-border rounded-2xl p-6">
+                <div class="text-3xl mb-3">💻</div>
+                <h3 class="font-bold text-base text-asr-text">Software Engineers</h3>
+                <div class="text-xs text-asr-sky font-semibold mt-1">Deep Flow Retention</div>
+                <p class="text-xs text-asr-muted mt-3 leading-relaxed">
+                    Block YouTube, Slack, Twitter, and Reddit during coding blocks. Maintain mental context without breaking complex problem-solving architectures.
+                </p>
+            </div>
+
+            <!-- Persona 2: Students -->
+            <div class="bg-asr-bg border border-asr-border rounded-2xl p-6">
+                <div class="text-3xl mb-3">🎓</div>
+                <h3 class="font-bold text-base text-asr-text">Students &amp; Aspirants</h3>
+                <div class="text-xs text-asr-emerald font-semibold mt-1">Exam &amp; Study Marathons</div>
+                <p class="text-xs text-asr-muted mt-3 leading-relaxed">
+                    Preparing for BCS, Medical, SAT, or University finals? Lock down short-form video reels and games for 2–4 hours of uninterrupted reading.
+                </p>
+            </div>
+
+            <!-- Persona 3: ADHD -->
+            <div class="bg-asr-bg border border-asr-border rounded-2xl p-6">
+                <div class="text-3xl mb-3">🧠</div>
+                <h3 class="font-bold text-base text-asr-text">ADHD &amp; Dopamine Reset</h3>
+                <div class="text-xs text-asr-sky font-semibold mt-1">Friction &amp; Accountability</div>
+                <p class="text-xs text-asr-muted mt-3 leading-relaxed">
+                    When impulse control is hard, ASAR provides external structure with adaptive friction, countdown delays, and visual streak trackers.
+                </p>
+            </div>
+
+            <!-- Persona 4: Sleep / Wellness -->
+            <div class="bg-asr-bg border border-asr-border rounded-2xl p-6">
+                <div class="text-3xl mb-3">🌙</div>
+                <h3 class="font-bold text-base text-asr-text">Night Calm &amp; Sleep</h3>
+                <div class="text-xs text-asr-red font-semibold mt-1">Revenge Procrastination Cure</div>
+                <p class="text-xs text-asr-muted mt-3 leading-relaxed">
+                    Set a routine from 10:30 PM to 7:00 AM every night. ASAR locks all social media automatically so your brain can wind down for deep sleep.
+                </p>
             </div>
         </div>
     </div>
@@ -397,8 +566,8 @@
     <div class="max-w-6xl mx-auto">
         <div class="text-center mb-12">
             <p class="text-asr-faint text-xs font-bold tracking-widest uppercase mb-3">Interactive Preview</p>
-            <h2 class="text-3xl sm:text-4xl font-bold text-asr-text">Try ASR right now.</h2>
-            <p class="text-asr-muted text-sm mt-3 max-w-lg mx-auto">This is the actual app experience — interactive, real-time, no install needed.</p>
+            <h2 class="text-3xl sm:text-4xl font-bold text-asr-text">Experience ASAR In Your Browser</h2>
+            <p class="text-asr-muted text-sm mt-3 max-w-lg mx-auto">This simulator runs the exact state machine and logic powering the native Android application.</p>
         </div>
 
         <div class="flex flex-col items-center">
@@ -407,12 +576,12 @@
             <div class="flex items-center gap-3 mb-5 flex-wrap justify-center">
                 <div class="flex items-center gap-2 bg-asr-surface border border-asr-border px-3.5 py-1.5 rounded-lg text-xs">
                     <span class="w-2 h-2 rounded-full bg-asr-emerald animate-pulse"></span>
-                    <span class="font-semibold text-asr-muted">ASR Live Demo</span>
+                    <span class="font-semibold text-asr-muted">ASAR On-Device Demo</span>
                 </div>
                 <button @click="simulateOpenBlockedApp()"
                         class="bg-asr-red/10 hover:bg-asr-red/20 border border-asr-red/30 text-asr-red px-3.5 py-1.5 rounded-lg text-xs font-semibold transition flex items-center gap-1.5">
                     <i data-lucide="shield-alert" class="w-3.5 h-3.5"></i>
-                    Simulate Block
+                    Simulate Distraction Attempt
                 </button>
             </div>
 
@@ -447,7 +616,6 @@
                                 <h1 class="text-xl font-bold text-asr-text tracking-tight" x-text="greeting"></h1>
                             </div>
                             <div class="w-9 h-9 rounded-full bg-asr-elevated border border-asr-border flex items-center justify-center">
-                                <!-- ASR mini mark -->
                                 <svg width="18" height="18" viewBox="0 0 28 28" fill="none">
                                     <path d="M9 20L14 8L19 20" stroke="#38BDF8" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
                                     <path d="M10.8 16.5H17.2" stroke="#38BDF8" stroke-width="1.8" stroke-linecap="round"/>
@@ -578,7 +746,7 @@
                                     <div class="flex items-center justify-between text-xs mb-2">
                                         <span class="font-bold text-asr-text flex items-center gap-1.5">
                                             <i data-lucide="shield-ban" class="w-3.5 h-3.5 text-asr-red"></i>
-                                            Blocked Apps
+                                            Shielded Apps
                                         </span>
                                         <span class="text-asr-sky font-semibold" x-text="selectedApps.length + ' apps'"></span>
                                     </div>
@@ -595,7 +763,7 @@
                                         <div>
                                             <div class="bg-asr-surface border border-asr-border rounded-xl p-3 text-left flex items-center gap-2.5 text-xs text-asr-faint mb-2">
                                                 <i data-lucide="lock" class="w-4 h-4 shrink-0"></i>
-                                                <span>Rules are immutable until completion to protect your attention.</span>
+                                                <span>Rules are locked until completion to protect your flow.</span>
                                             </div>
                                             <button @click="openEmergencyModal()"
                                                     class="w-full h-10 bg-transparent hover:bg-asr-red/10 border border-asr-red/40 text-asr-red font-semibold rounded-xl text-xs transition">
@@ -621,7 +789,7 @@
 
                                 <!-- Goal input -->
                                 <div class="mt-4">
-                                    <label class="text-xs text-asr-muted font-medium">What's your intention?</label>
+                                    <label class="text-xs text-asr-muted font-medium">Session Goal</label>
                                     <input type="text" x-model="sessionGoal"
                                            class="w-full bg-asr-surface border border-asr-border rounded-xl px-3.5 py-2.5 text-sm text-asr-text focus:outline-none focus:border-asr-sky mt-1 transition">
                                 </div>
@@ -655,55 +823,30 @@
                                                 class="py-2 rounded-xl border text-sm font-bold transition"
                                                 :class="durationMinutes === 90 ? 'bg-asr-elevated border-asr-sky text-asr-sky' : 'bg-asr-surface border-asr-border text-asr-text'">90m</button>
                                     </div>
-                                    <div class="bg-asr-surface border border-asr-border rounded-xl p-2.5 mt-2 flex items-center justify-between text-xs">
-                                        <span class="text-asr-muted">Custom:</span>
-                                        <div class="flex items-center gap-3">
-                                            <button @click="if(durationMinutes > 5) durationMinutes -= 5" class="w-7 h-7 bg-asr-elevated rounded-lg text-asr-sky font-bold">−</button>
-                                            <span class="font-bold text-asr-text" x-text="durationMinutes + 'm'"></span>
-                                            <button @click="durationMinutes += 5" class="w-7 h-7 bg-asr-elevated rounded-lg text-asr-sky font-bold">+</button>
-                                        </div>
-                                    </div>
                                 </div>
 
-                                <!-- Mode -->
+                                <!-- Mode toggle -->
                                 <div class="mt-4">
-                                    <label class="text-xs text-asr-muted font-medium">Mode</label>
+                                    <label class="text-xs text-asr-muted font-medium">Discipline Mode</label>
                                     <div class="grid grid-cols-2 gap-2 mt-1.5">
                                         <div @click="activeMode = 'NORMAL'"
-                                             class="cursor-pointer border rounded-xl p-3 transition"
-                                             :class="activeMode === 'NORMAL' ? 'bg-asr-elevated border-asr-sky' : 'bg-asr-surface border-asr-border'">
-                                            <div class="flex items-center gap-1.5 text-xs font-bold" :class="activeMode === 'NORMAL' ? 'text-asr-sky' : 'text-asr-text'">
-                                                <i data-lucide="shield" class="w-3.5 h-3.5"></i> Normal
-                                            </div>
-                                            <p class="text-[10px] text-asr-faint mt-1">Flexible — can exit anytime</p>
+                                             class="cursor-pointer border rounded-xl p-2.5 text-center transition"
+                                             :class="activeMode === 'NORMAL' ? 'bg-asr-elevated border-asr-sky text-asr-sky' : 'bg-asr-surface border-asr-border text-asr-muted'">
+                                            <div class="text-xs font-bold">Normal</div>
+                                            <div class="text-[10px]">Gentle mindful pause</div>
                                         </div>
                                         <div @click="activeMode = 'STRICT'"
-                                             class="cursor-pointer border rounded-xl p-3 transition"
-                                             :class="activeMode === 'STRICT' ? 'bg-asr-elevated border-asr-red' : 'bg-asr-surface border-asr-border'">
-                                            <div class="flex items-center gap-1.5 text-xs font-bold" :class="activeMode === 'STRICT' ? 'text-asr-red' : 'text-asr-text'">
-                                                <i data-lucide="lock" class="w-3.5 h-3.5"></i> Strict
-                                            </div>
-                                            <p class="text-[10px] text-asr-faint mt-1">Immutable — no easy exit</p>
+                                             class="cursor-pointer border rounded-xl p-2.5 text-center transition"
+                                             :class="activeMode === 'STRICT' ? 'bg-asr-elevated border-asr-red text-asr-red' : 'bg-asr-surface border-asr-border text-asr-muted'">
+                                            <div class="text-xs font-bold">Strict Mode</div>
+                                            <div class="text-[10px]">Unbreakable lock</div>
                                         </div>
                                     </div>
-                                </div>
-
-                                <!-- Apps link -->
-                                <div @click="currentTab = 'apps'"
-                                     class="cursor-pointer bg-asr-surface border border-asr-border rounded-xl p-3.5 mt-4 flex items-center justify-between">
-                                    <div class="flex items-center gap-2.5">
-                                        <i data-lucide="layout-grid" class="w-4 h-4 text-asr-sky"></i>
-                                        <div>
-                                            <div class="text-xs font-bold text-asr-text">Blocked Apps</div>
-                                            <div class="text-[10px] text-asr-muted" x-text="selectedApps.length + ' apps configured'"></div>
-                                        </div>
-                                    </div>
-                                    <i data-lucide="chevron-right" class="w-4 h-4 text-asr-faint"></i>
                                 </div>
 
                                 <button @click="startSession()"
-                                        class="w-full h-12 bg-asr-sky hover:bg-asr-sky/90 active:scale-[0.98] text-asr-bg font-bold text-sm tracking-wide rounded-2xl transition mt-5 shadow-lg shadow-asr-sky/20">
-                                    START SESSION
+                                        class="w-full h-12 bg-asr-sky hover:bg-asr-sky/90 text-asr-bg font-bold text-sm tracking-wide rounded-2xl mt-6 transition-all shadow-lg shadow-asr-sky/20">
+                                    COMMITTED FOCUS START
                                 </button>
                             </div>
                         </template>
@@ -714,51 +857,31 @@
                     <section x-show="currentTab === 'apps'"
                              x-transition:enter="transition ease-out duration-200"
                              x-transition:enter-start="opacity-0 translate-y-1">
-                        <h1 class="text-xl font-bold text-asr-text tracking-tight">Block Apps</h1>
-                        <p class="text-xs text-asr-muted" x-text="selectedApps.length + ' apps configured for blocking'"></p>
-
-                        <template x-if="isSessionActive && activeMode === 'STRICT'">
-                            <div class="bg-asr-red/10 border border-asr-red/30 rounded-xl p-2.5 text-xs text-asr-red flex items-center gap-2 mt-3">
-                                <i data-lucide="lock" class="w-4 h-4 shrink-0"></i>
-                                <span>Strict Mode Active — app list locked.</span>
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <h1 class="text-xl font-bold text-asr-text tracking-tight">Shielded Apps</h1>
+                                <p class="text-xs text-asr-muted" x-text="selectedApps.length + ' / 3 selected (Free tier)'"></p>
                             </div>
-                        </template>
-
-                        <div class="mt-3 relative">
-                            <i data-lucide="search" class="w-4 h-4 text-asr-faint absolute left-3 top-2.5"></i>
-                            <input type="text" x-model="appSearchQuery" placeholder="Search apps..."
-                                   class="w-full bg-asr-surface border border-asr-border rounded-xl pl-9 pr-3.5 py-2 text-xs text-asr-text focus:outline-none focus:border-asr-sky transition">
                         </div>
 
-                        <div class="flex gap-1.5 overflow-x-auto py-2.5 mt-1 text-xs">
-                            <template x-for="cat in ['ALL','SOCIAL','ENTERTAINMENT','GAMES']" :key="cat">
-                                <button @click="selectedCategory = cat"
-                                        class="px-2.5 py-1 rounded-lg border text-[11px] shrink-0 transition"
-                                        :class="selectedCategory === cat ? 'bg-asr-elevated border-asr-sky text-asr-sky font-bold' : 'bg-asr-surface border-asr-border text-asr-muted'"
-                                        x-text="cat === 'ALL' ? 'All' : cat.charAt(0) + cat.slice(1).toLowerCase()">
-                                </button>
-                            </template>
-                        </div>
-
-                        <div class="space-y-2 mt-1">
-                            <template x-for="app in filteredApps" :key="app.pkg">
-                                <div @click="toggleApp(app.name)"
-                                     class="bg-asr-surface border border-asr-border hover:border-asr-sky/40 rounded-xl p-3 flex items-center justify-between cursor-pointer transition"
-                                     :class="isAppSelected(app.name) ? 'bg-asr-elevated border-asr-sky/40' : ''">
-                                    <div class="flex items-center gap-3">
-                                        <div class="w-8 h-8 rounded-full bg-asr-elevated border border-asr-border flex items-center justify-center text-sm font-bold text-asr-sky"
+                        <!-- App list -->
+                        <div class="space-y-2 mt-4">
+                            <template x-for="app in installedAppsList" :key="app.pkg">
+                                <div class="bg-asr-surface border border-asr-border rounded-xl p-3 flex items-center justify-between transition"
+                                     :class="isAppSelected(app.name) ? 'border-asr-sky/40 bg-asr-elevated' : ''">
+                                    <div class="flex items-center gap-2.5">
+                                        <div class="w-7 h-7 rounded-lg bg-asr-border flex items-center justify-center text-xs font-bold text-asr-text"
                                              x-text="app.name.charAt(0)"></div>
                                         <div>
                                             <div class="text-xs font-bold text-asr-text" x-text="app.name"></div>
-                                            <div class="text-[10px] text-asr-faint" x-text="app.category"></div>
+                                            <div class="text-[10px] text-asr-muted" x-text="app.category"></div>
                                         </div>
                                     </div>
-                                    <div class="w-4 h-4 rounded border-2 flex items-center justify-center transition"
-                                         :class="isAppSelected(app.name) ? 'bg-asr-sky border-asr-sky' : 'border-asr-border'">
-                                        <svg x-show="isAppSelected(app.name)" class="w-2.5 h-2.5" viewBox="0 0 10 10" fill="none">
-                                            <path d="M1.5 5L4 7.5L8.5 2.5" stroke="#0A0D14" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                        </svg>
-                                    </div>
+                                    <button @click="toggleApp(app.name)"
+                                            class="w-6 h-6 rounded-lg border flex items-center justify-center transition text-xs"
+                                            :class="isAppSelected(app.name) ? 'bg-asr-sky border-asr-sky text-asr-bg font-bold' : 'border-asr-border text-transparent'">
+                                        ✓
+                                    </button>
                                 </div>
                             </template>
                         </div>
@@ -769,39 +892,12 @@
                     <section x-show="currentTab === 'stats'"
                              x-transition:enter="transition ease-out duration-200"
                              x-transition:enter-start="opacity-0 translate-y-1">
-                        <h1 class="text-xl font-bold text-asr-text tracking-tight">Analytics</h1>
-                        <p class="text-xs text-asr-muted">Local, private behavioral tracking.</p>
+                        <h1 class="text-xl font-bold text-asr-text tracking-tight">Focus Analytics</h1>
+                        <p class="text-xs text-asr-muted">Transparent 100% on-device discipline metrics.</p>
 
-                        <!-- Score breakdown -->
+                        <!-- 7-day pattern -->
                         <div class="bg-asr-surface border border-asr-border rounded-2xl p-4 mt-4">
-                            <h2 class="text-xs font-bold text-asr-text mb-3">Discipline Score Breakdown</h2>
-                            <div class="flex items-end gap-2">
-                                <div class="text-4xl font-black" :class="disciplineScore >= 80 ? 'text-asr-emerald' : 'text-asr-sky'" x-text="disciplineScore"></div>
-                                <div class="text-asr-faint text-sm mb-1">/100</div>
-                            </div>
-                            <div class="space-y-2 mt-3">
-                                <div class="flex justify-between text-xs">
-                                    <span class="text-asr-muted">Base</span>
-                                    <span class="font-bold text-asr-text">+80</span>
-                                </div>
-                                <div class="flex justify-between text-xs">
-                                    <span class="text-asr-muted">Streak bonus</span>
-                                    <span class="font-bold text-asr-emerald">+5</span>
-                                </div>
-                                <div class="flex justify-between text-xs">
-                                    <span class="text-asr-muted">Goal met</span>
-                                    <span class="font-bold text-asr-emerald">+5</span>
-                                </div>
-                                <div class="flex justify-between text-xs">
-                                    <span class="text-asr-muted">Distraction penalty</span>
-                                    <span class="font-bold text-asr-red">-6</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- 7-day chart -->
-                        <div class="bg-asr-surface border border-asr-border rounded-2xl p-4 mt-4">
-                            <h2 class="text-xs font-bold text-asr-text mb-3">7-Day Pattern</h2>
+                            <h2 class="text-xs font-bold text-asr-text mb-3">7-Day Discipline Pattern</h2>
                             <div class="flex items-end justify-between h-24 pt-2">
                                 <template x-for="d in weeklyData" :key="d.day">
                                     <div class="flex flex-col items-center gap-1.5 flex-1">
@@ -821,7 +917,7 @@
 
                         <!-- Top distractions -->
                         <div class="bg-asr-surface border border-asr-border rounded-2xl p-4 mt-4">
-                            <h2 class="text-xs font-bold text-asr-text mb-3">Top Distractions</h2>
+                            <h2 class="text-xs font-bold text-asr-text mb-3">Top Intercepted Apps</h2>
                             <div class="space-y-3">
                                 <template x-for="d in topDistractions" :key="d.name">
                                     <div>
@@ -843,8 +939,8 @@
                     <section x-show="currentTab === 'settings'"
                              x-transition:enter="transition ease-out duration-200"
                              x-transition:enter-start="opacity-0 translate-y-1">
-                        <h1 class="text-xl font-bold text-asr-text tracking-tight">Settings</h1>
-                        <p class="text-xs text-asr-muted">Permissions, guardrails, and preferences.</p>
+                        <h1 class="text-xl font-bold text-asr-text tracking-tight">Settings &amp; Guardrails</h1>
+                        <p class="text-xs text-asr-muted">Permissions, strict mode protection, and routines.</p>
 
                         <!-- Permissions -->
                         <div class="mt-4 space-y-2">
@@ -854,7 +950,7 @@
                                     <i data-lucide="bar-chart-2" class="w-4 h-4 text-asr-sky"></i>
                                     <div>
                                         <div class="font-bold text-asr-text">Usage Access</div>
-                                        <div class="text-[10px] text-asr-muted">Screen time & analytics</div>
+                                        <div class="text-[10px] text-asr-muted">On-device analytics</div>
                                     </div>
                                 </div>
                                 <span class="bg-asr-emerald/10 text-asr-emerald text-[10px] font-bold px-2 py-0.5 rounded">GRANTED</span>
@@ -871,37 +967,13 @@
                             </div>
                             <div class="bg-asr-surface border border-asr-border rounded-xl p-3 flex items-center justify-between text-xs">
                                 <div class="flex items-center gap-2.5">
-                                    <i data-lucide="bell" class="w-4 h-4 text-asr-sky"></i>
+                                    <i data-lucide="shield" class="w-4 h-4 text-asr-red"></i>
                                     <div>
-                                        <div class="font-bold text-asr-text">Notifications</div>
-                                        <div class="text-[10px] text-asr-muted">Timer alerts</div>
+                                        <div class="font-bold text-asr-text">Device Administrator</div>
+                                        <div class="text-[10px] text-asr-muted">Anti-uninstall lock</div>
                                     </div>
                                 </div>
-                                <span class="bg-asr-emerald/10 text-asr-emerald text-[10px] font-bold px-2 py-0.5 rounded">ALLOWED</span>
-                            </div>
-                        </div>
-
-                        <!-- Strict Mode Preferences -->
-                        <div class="bg-asr-surface border border-asr-border rounded-2xl p-4 mt-5 space-y-4">
-                            <h2 class="text-xs font-bold text-asr-text">Strict Mode Preferences</h2>
-                            <div class="flex items-center justify-between text-xs">
-                                <div>
-                                    <div class="font-semibold text-asr-text">Emergency Exit Delay</div>
-                                    <div class="text-[10px] text-asr-muted">Mindful pause cooldown</div>
-                                </div>
-                                <select x-model="emergencyCooldown"
-                                        class="bg-asr-elevated border border-asr-border rounded px-2 py-1 text-xs text-asr-sky font-bold">
-                                    <option value="5">5 seconds</option>
-                                    <option value="10">10 seconds</option>
-                                    <option value="15">15 seconds</option>
-                                </select>
-                            </div>
-                            <div class="flex items-center justify-between text-xs border-t border-asr-border pt-3">
-                                <div>
-                                    <div class="font-semibold text-asr-text">Require Mindful Phrase</div>
-                                    <div class="text-[10px] text-asr-muted">Type to confirm exit</div>
-                                </div>
-                                <input type="checkbox" checked class="w-4 h-4 accent-sky-400">
+                                <span class="bg-asr-emerald/10 text-asr-emerald text-[10px] font-bold px-2 py-0.5 rounded">ENABLED</span>
                             </div>
                         </div>
 
@@ -909,26 +981,11 @@
                         <div class="bg-asr-surface border border-asr-emerald/20 rounded-2xl p-3.5 mt-5 flex items-start gap-3">
                             <i data-lucide="shield-check" class="w-5 h-5 text-asr-emerald shrink-0 mt-0.5"></i>
                             <div>
-                                <div class="text-xs font-bold text-asr-text">100% On-Device Privacy</div>
+                                <div class="text-xs font-bold text-asr-text">100% Local SQLite Guarantee</div>
                                 <p class="text-[10px] text-asr-muted mt-0.5 leading-relaxed">
-                                    ASR runs strictly on-device using a local SQLite database. No servers, no tracking, zero cloud data. Your behavior stays on your phone.
+                                    ASAR never sends telemetry or usage logs to remote servers. All calculations and records remain exclusively on your device.
                                 </p>
                             </div>
-                        </div>
-
-                        <!-- About -->
-                        <div class="mt-5 text-center">
-                            <div class="flex items-center justify-center gap-2 mb-1">
-                                <svg width="16" height="16" viewBox="0 0 28 28" fill="none">
-                                    <path d="M9 20L14 8L19 20" stroke="#38BDF8" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
-                                    <path d="M10.8 16.5H17.2" stroke="#38BDF8" stroke-width="1.8" stroke-linecap="round"/>
-                                </svg>
-                                <span class="text-xs font-bold text-asr-text">ASR</span>
-                            </div>
-                            <p class="text-[10px] text-asr-faint">Turn Time Into Progress</p>
-                            <a href="https://github.com/khalidabdullahh/AegisFocus"
-                               target="_blank"
-                               class="text-[10px] text-asr-sky mt-1 block">github.com/khalidabdullahh/ASR-TurnTimeIntoProgress</a>
                         </div>
                     </section>
 
@@ -958,11 +1015,11 @@
                             <i data-lucide="shield-ban" class="w-10 h-10 text-asr-red"></i>
                         </div>
                         <span class="bg-asr-red/10 border border-asr-red/30 text-asr-red text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider mt-4">
-                            FOCUS ACTIVE
+                            FOCUS GUARD ACTIVE
                         </span>
                         <h2 class="text-2xl font-bold text-asr-text mt-4">Pause. Breathe.</h2>
                         <p class="text-xs text-asr-muted mt-2 leading-relaxed px-4">
-                            "<span x-text="simulatedBlockedAppName"></span>" is blocked during your focus session. Return to what matters.
+                            "<span x-text="simulatedBlockedAppName"></span>" is shielded during your focus commitment. Return to what truly matters.
                         </p>
                         <div class="bg-asr-surface border border-asr-border rounded-xl px-4 py-2 mt-5 text-xs text-asr-sky font-bold">
                             Remaining: <span x-text="formatTime(remainingSeconds)"></span>
@@ -972,11 +1029,7 @@
                     <div class="w-full space-y-2 mb-6">
                         <button @click="showInterventionOverlay = false; currentTab = 'home'"
                                 class="w-full py-3.5 bg-asr-sky text-asr-bg font-bold text-xs rounded-xl shadow-lg">
-                            Return to Focus
-                        </button>
-                        <button @click="showInterventionOverlay = false; currentTab = 'focus'"
-                                class="w-full py-3 bg-transparent border border-asr-border text-asr-muted font-semibold text-xs rounded-xl">
-                            View Timer
+                            Return to Deep Work
                         </button>
                     </div>
                 </div>
@@ -989,7 +1042,7 @@
                         <i data-lucide="alert-triangle" class="w-10 h-10 text-asr-red mx-auto"></i>
                         <h3 class="text-base font-bold text-asr-text mt-3">Emergency Exit</h3>
                         <p class="text-xs text-asr-muted mt-1 leading-relaxed">
-                            Breaking focus breaks your streak. Type the phrase below to confirm:
+                            Breaking focus prematurely records an emergency event and resets your streak.
                         </p>
                         <p class="text-xs font-bold text-asr-red mt-3 bg-asr-bg py-1.5 rounded-lg">"I choose to break focus"</p>
                         <input type="text" x-model="emergencyTypedPhrase"
@@ -1012,7 +1065,7 @@
                 <!-- Session Complete Toast -->
                 <div x-show="showToast" x-cloak
                      class="absolute bottom-20 left-4 right-4 z-50 bg-asr-emerald text-asr-bg text-xs font-bold px-4 py-3 rounded-xl text-center toast-enter shadow-lg">
-                    🎉 Session complete! Discipline streak extended.
+                    🎉 Focus session complete! Discipline score updated.
                 </div>
 
             </div><!-- /phone shell -->
@@ -1022,44 +1075,126 @@
 
 
 <!-- ══════════════════════════════════════════════════════════════════
-     PRICING
+     COMPREHENSIVE COMPARISON TABLE (ASAR VS OTHERS)
 ════════════════════════════════════════════════════════════════════ -->
-<section id="pricing" class="py-24 px-5 bg-asr-surface border-y border-asr-border reveal">
-    <div class="max-w-4xl mx-auto">
-        <div class="text-center mb-12">
-            <p class="text-asr-faint text-xs font-bold tracking-widest uppercase mb-3">Pricing</p>
-            <h2 class="text-3xl sm:text-4xl font-bold text-asr-text">Honest pricing. No tricks.</h2>
-            <p class="text-asr-muted text-sm mt-3">Core protection is free. Pro unlocks the advanced layers.</p>
+<section id="comparison" class="py-24 px-5 bg-asr-surface border-y border-asr-border reveal">
+    <div class="max-w-5xl mx-auto">
+        <div class="text-center mb-14">
+            <p class="text-asr-sky text-xs font-bold tracking-widest uppercase mb-3">Honest Comparison</p>
+            <h2 class="text-3xl sm:text-4xl font-extrabold text-asr-text">How ASAR Compares to Alternatives</h2>
+            <p class="text-asr-muted text-sm mt-3 max-w-xl mx-auto">
+                Compare ASAR against legacy screen-time apps, basic timers, and overpriced cloud blockers.
+            </p>
         </div>
 
-        <!-- Pricing Cards Grid: All 5 Distinct Plans -->
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse text-xs sm:text-sm">
+                <thead>
+                    <tr class="border-b border-asr-border text-asr-faint">
+                        <th class="py-4 px-4 font-bold text-xs uppercase tracking-wider">Capability / Feature</th>
+                        <th class="py-4 px-4 font-extrabold text-asr-sky text-center bg-asr-sky/5 rounded-t-xl">ASAR</th>
+                        <th class="py-4 px-4 font-semibold text-center text-asr-muted">Opal</th>
+                        <th class="py-4 px-4 font-semibold text-center text-asr-muted">Freedom</th>
+                        <th class="py-4 px-4 font-semibold text-center text-asr-muted">Forest</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-asr-border/60 text-asr-muted">
+                    <tr>
+                        <td class="py-3.5 px-4 font-semibold text-asr-text">Unbypassable Strict Mode (Anti-Uninstall)</td>
+                        <td class="py-3.5 px-4 text-center font-bold text-asr-emerald bg-asr-sky/5">✓ Yes (Device Admin)</td>
+                        <td class="py-3.5 px-4 text-center text-asr-faint">Partial</td>
+                        <td class="py-3.5 px-4 text-center text-asr-faint">Limited on Android</td>
+                        <td class="py-3.5 px-4 text-center text-asr-red">✕ No</td>
+                    </tr>
+                    <tr>
+                        <td class="py-3.5 px-4 font-semibold text-asr-text">100% On-Device Privacy (Zero Cloud Telemetry)</td>
+                        <td class="py-3.5 px-4 text-center font-bold text-asr-emerald bg-asr-sky/5">✓ Yes (Local SQLite)</td>
+                        <td class="py-3.5 px-4 text-center text-asr-red">✕ Cloud Dependent</td>
+                        <td class="py-3.5 px-4 text-center text-asr-red">✕ Cloud Sync</td>
+                        <td class="py-3.5 px-4 text-center text-asr-faint">Account Required</td>
+                    </tr>
+                    <tr>
+                        <td class="py-3.5 px-4 font-semibold text-asr-text">Automated Recurring Routines (Looping)</td>
+                        <td class="py-3.5 px-4 text-center font-bold text-asr-emerald bg-asr-sky/5">✓ Built-in</td>
+                        <td class="py-3.5 px-4 text-center text-asr-emerald">✓ Yes</td>
+                        <td class="py-3.5 px-4 text-center text-asr-emerald">✓ Yes</td>
+                        <td class="py-3.5 px-4 text-center text-asr-red">✕ Manual Only</td>
+                    </tr>
+                    <tr>
+                        <td class="py-3.5 px-4 font-semibold text-asr-text">Adaptive Escalating Friction (5s &rarr; 30s)</td>
+                        <td class="py-3.5 px-4 text-center font-bold text-asr-emerald bg-asr-sky/5">✓ Yes</td>
+                        <td class="py-3.5 px-4 text-center text-asr-faint">Basic Delay</td>
+                        <td class="py-3.5 px-4 text-center text-asr-red">✕ No</td>
+                        <td class="py-3.5 px-4 text-center text-asr-red">✕ No</td>
+                    </tr>
+                    <tr>
+                        <td class="py-3.5 px-4 font-semibold text-asr-text">Transparent Discipline Score &amp; XP Engine</td>
+                        <td class="py-3.5 px-4 text-center font-bold text-asr-emerald bg-asr-sky/5">✓ Open Formula</td>
+                        <td class="py-3.5 px-4 text-center text-asr-faint">Proprietary Focus Score</td>
+                        <td class="py-3.5 px-4 text-center text-asr-red">✕ No</td>
+                        <td class="py-3.5 px-4 text-center text-asr-faint">Virtual Trees</td>
+                    </tr>
+                    <tr>
+                        <td class="py-3.5 px-4 font-semibold text-asr-text">Free Tier Offering</td>
+                        <td class="py-3.5 px-4 text-center font-bold text-asr-emerald bg-asr-sky/5">✓ Up to 2h Strict Mode</td>
+                        <td class="py-3.5 px-4 text-center text-asr-red">✕ Very Restricted</td>
+                        <td class="py-3.5 px-4 text-center text-asr-red">✕ Trial Only</td>
+                        <td class="py-3.5 px-4 text-center text-asr-faint">Freemium Ads</td>
+                    </tr>
+                    <tr class="font-bold text-asr-text">
+                        <td class="py-4 px-4">Pro Annual Pricing</td>
+                        <td class="py-4 px-4 text-center text-asr-sky text-base bg-asr-sky/10 rounded-b-xl">$19.99 / year</td>
+                        <td class="py-4 px-4 text-center text-asr-red">$99.99 / year</td>
+                        <td class="py-4 px-4 text-center text-asr-red">$39.99 / year</td>
+                        <td class="py-4 px-4 text-center text-asr-muted">$4.99 + Coins</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════════════════════════════
+     PRICING SECTION (HONEST, TRANSPARENT MULTI-STORE BILLING)
+════════════════════════════════════════════════════════════════════ -->
+<section id="pricing" class="py-24 px-5 reveal">
+    <div class="max-w-5xl mx-auto">
+        <div class="text-center mb-14">
+            <p class="text-asr-sky text-xs font-bold tracking-widest uppercase mb-3">Simple &amp; Honest Pricing</p>
+            <h2 class="text-3xl sm:text-4xl font-extrabold text-asr-text">Invest in Your Focus. No Dark Patterns.</h2>
+            <p class="text-asr-muted text-sm mt-3 max-w-lg mx-auto">
+                Core local protection is forever free. Pro unlocks unlimited durations, advanced routines, and adaptive friction.
+            </p>
+        </div>
+
+        <!-- Pricing Cards Grid: All 4 Main Plans -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
             
-            <!-- 1. Free Tier -->
-            <div class="bg-asr-bg border border-asr-border rounded-2xl p-6 flex flex-col justify-between hover:border-asr-sky/30 transition">
+            <!-- 1. Free Plan -->
+            <div class="bg-asr-surface border border-asr-border rounded-2xl p-6 flex flex-col justify-between hover:border-asr-sky/30 transition">
                 <div>
-                    <div class="text-asr-faint text-[10px] font-bold tracking-widest uppercase mb-1">Free Tier</div>
+                    <div class="text-asr-faint text-[10px] font-bold tracking-widest uppercase mb-1">Free Forever</div>
                     <div class="text-3xl font-black text-asr-text">$0</div>
-                    <div class="text-asr-faint text-xs mt-0.5">Forever free</div>
+                    <div class="text-asr-faint text-xs mt-0.5">No credit card required</div>
                     <p class="text-xs text-asr-muted mt-3 leading-relaxed">
-                        Core local focus &amp; app blocking protection.
+                        Essential on-device protection for building daily habits.
                     </p>
                     <ul class="mt-5 space-y-2 text-xs">
-                        <li class="flex items-center gap-2 text-asr-muted"><span class="text-asr-emerald font-bold">✓</span> Core app blocking</li>
-                        <li class="flex items-center gap-2 text-asr-muted"><span class="text-asr-emerald font-bold">✓</span> Focus sessions &amp; timer</li>
-                        <li class="flex items-center gap-2 text-asr-muted"><span class="text-asr-emerald font-bold">✓</span> Strict Mode (up to 3h)</li>
+                        <li class="flex items-center gap-2 text-asr-muted"><span class="text-asr-emerald font-bold">✓</span> Core app blocker</li>
+                        <li class="flex items-center gap-2 text-asr-muted"><span class="text-asr-emerald font-bold">✓</span> Strict Mode (max 2h &amp; 3 apps)</li>
                         <li class="flex items-center gap-2 text-asr-muted"><span class="text-asr-emerald font-bold">✓</span> Mindful pause prompt</li>
-                        <li class="flex items-center gap-2 text-asr-muted"><span class="text-asr-emerald font-bold">✓</span> Discipline Score &amp; Streak</li>
-                        <li class="flex items-center gap-2 text-asr-muted"><span class="text-asr-emerald font-bold">✓</span> 100% on-device SQLite</li>
+                        <li class="flex items-center gap-2 text-asr-muted"><span class="text-asr-emerald font-bold">✓</span> Basic scheduled routines</li>
+                        <li class="flex items-center gap-2 text-asr-muted"><span class="text-asr-emerald font-bold">✓</span> 100% Local SQLite storage</li>
                     </ul>
                 </div>
-                <a href="#simulator" class="mt-6 w-full block text-center py-2.5 bg-asr-elevated hover:bg-asr-border text-asr-text font-bold text-xs rounded-xl transition">
-                    Start Free
+                <a href="https://github.com/khalidabdullahh/AegisFocus/releases/latest/download/ASAR-Latest.apk" class="mt-6 w-full block text-center py-3 bg-asr-elevated hover:bg-asr-border text-asr-text font-bold text-xs rounded-xl transition">
+                    Get Free APK
                 </a>
             </div>
 
             <!-- 2. Pro Monthly -->
-            <div class="bg-asr-bg border border-asr-border rounded-2xl p-6 flex flex-col justify-between hover:border-asr-sky/40 transition">
+            <div class="bg-asr-surface border border-asr-border rounded-2xl p-6 flex flex-col justify-between hover:border-asr-sky/40 transition">
                 <div>
                     <div class="text-asr-sky text-[10px] font-bold tracking-widest uppercase mb-1">Pro Monthly</div>
                     <div class="flex items-baseline gap-1">
@@ -1068,25 +1203,25 @@
                     </div>
                     <div class="text-asr-faint text-xs mt-0.5">Cancel anytime</div>
                     <p class="text-xs text-asr-muted mt-3 leading-relaxed">
-                        Flexible monthly discipline with all Pro capabilities.
+                        Flexible month-to-month discipline with all Pro features unlocked.
                     </p>
                     <ul class="mt-5 space-y-2 text-xs">
-                        <li class="flex items-center gap-2 text-asr-muted"><span class="text-asr-sky font-bold">✓</span> Unlimited Strict Mode</li>
-                        <li class="flex items-center gap-2 text-asr-muted"><span class="text-asr-sky font-bold">✓</span> Website &amp; domain blocker</li>
-                        <li class="flex items-center gap-2 text-asr-muted"><span class="text-asr-sky font-bold">✓</span> Notification shield</li>
-                        <li class="flex items-center gap-2 text-asr-muted"><span class="text-asr-sky font-bold">✓</span> Adaptive friction (5s→30s)</li>
-                        <li class="flex items-center gap-2 text-asr-muted"><span class="text-asr-sky font-bold">✓</span> Unlimited profiles &amp; routines</li>
+                        <li class="flex items-center gap-2 text-asr-muted"><span class="text-asr-sky font-bold">✓</span> Unlimited Strict Mode duration</li>
+                        <li class="flex items-center gap-2 text-asr-muted"><span class="text-asr-sky font-bold">✓</span> Unlimited shielded apps</li>
+                        <li class="flex items-center gap-2 text-asr-muted"><span class="text-asr-sky font-bold">✓</span> Adaptive friction (5s&rarr;30s)</li>
+                        <li class="flex items-center gap-2 text-asr-muted"><span class="text-asr-sky font-bold">✓</span> Unlimited recurring routines</li>
+                        <li class="flex items-center gap-2 text-asr-muted"><span class="text-asr-sky font-bold">✓</span> Deep usage analytics</li>
                     </ul>
                 </div>
-                <a href="#simulator" class="mt-6 w-full block text-center py-2.5 bg-asr-elevated hover:bg-asr-border text-asr-text font-bold text-xs rounded-xl transition">
-                    Choose Monthly
+                <a href="#simulator" class="mt-6 w-full block text-center py-3 bg-asr-elevated hover:bg-asr-border text-asr-text font-bold text-xs rounded-xl transition">
+                    Start Monthly
                 </a>
             </div>
 
             <!-- 3. Pro Yearly (Featured) -->
-            <div class="bg-asr-bg border-2 border-asr-sky/60 rounded-2xl p-6 flex flex-col justify-between relative overflow-hidden shadow-xl shadow-asr-sky/10">
+            <div class="bg-asr-surface border-2 border-asr-sky rounded-2xl p-6 flex flex-col justify-between relative overflow-hidden shadow-2xl shadow-asr-sky/15">
                 <div class="absolute top-3 right-3 bg-asr-sky text-asr-bg text-[9px] font-extrabold px-2 py-0.5 rounded-full uppercase tracking-wider">
-                    BEST VALUE
+                    MOST POPULAR
                 </div>
                 <div>
                     <div class="text-asr-sky text-[10px] font-bold tracking-widest uppercase mb-1">Pro Yearly</div>
@@ -1094,61 +1229,61 @@
                         <span class="text-3xl font-black text-asr-text">$19.99</span>
                         <span class="text-asr-faint text-xs">/yr</span>
                     </div>
-                    <div class="text-asr-sky text-xs font-semibold mt-0.5">Only $1.67 / month</div>
+                    <div class="text-asr-sky text-xs font-semibold mt-0.5">Just $1.67 / month (Save 45%)</div>
                     <p class="text-xs text-asr-muted mt-3 leading-relaxed">
-                        Our most popular annual plan. Save 45% over monthly.
+                        The ultimate high-discipline commitment for serious progress.
                     </p>
                     <ul class="mt-5 space-y-2 text-xs">
-                        <li class="flex items-center gap-2 text-asr-muted"><span class="text-asr-sky font-bold">✓</span> Everything in Pro</li>
-                        <li class="flex items-center gap-2 text-asr-muted"><span class="text-asr-sky font-bold">✓</span> Unlimited Strict Mode (6h–24h)</li>
-                        <li class="flex items-center gap-2 text-asr-muted"><span class="text-asr-sky font-bold">✓</span> Domain &amp; website shield</li>
-                        <li class="flex items-center gap-2 text-asr-muted"><span class="text-asr-sky font-bold">✓</span> Notification suppression</li>
-                        <li class="flex items-center gap-2 text-asr-muted"><span class="text-asr-sky font-bold">✓</span> Deep analytics &amp; stats</li>
+                        <li class="flex items-center gap-2 text-asr-muted"><span class="text-asr-sky font-bold">✓</span> All Pro features included</li>
+                        <li class="flex items-center gap-2 text-asr-muted"><span class="text-asr-sky font-bold">✓</span> Unlimited Strict Mode &amp; apps</li>
+                        <li class="flex items-center gap-2 text-asr-muted"><span class="text-asr-sky font-bold">✓</span> Notification Shield service</li>
+                        <li class="flex items-center gap-2 text-asr-muted"><span class="text-asr-sky font-bold">✓</span> Unlimited automated schedules</li>
+                        <li class="flex items-center gap-2 text-asr-muted"><span class="text-asr-sky font-bold">✓</span> Priority updates &amp; support</li>
                     </ul>
                 </div>
-                <a href="#simulator" class="mt-6 w-full block text-center py-2.5 bg-asr-sky hover:bg-asr-sky/90 text-asr-bg font-bold text-xs rounded-xl transition shadow-md shadow-asr-sky/20">
-                    Get Pro Yearly
+                <a href="#simulator" class="mt-6 w-full block text-center py-3 bg-asr-sky hover:bg-asr-sky/90 text-asr-bg font-extrabold text-xs rounded-xl transition shadow-lg shadow-asr-sky/25">
+                    Unlock Pro Yearly
                 </a>
             </div>
 
             <!-- 4. Lifetime Pro -->
-            <div class="bg-asr-bg border border-asr-border rounded-2xl p-6 flex flex-col justify-between hover:border-asr-sky/40 transition">
+            <div class="bg-asr-surface border border-asr-border rounded-2xl p-6 flex flex-col justify-between hover:border-asr-sky/40 transition">
                 <div class="inline-block self-end bg-asr-elevated border border-asr-border text-asr-muted text-[9px] font-bold px-2 py-0.5 rounded-full mb-1">
                     ONE-TIME
                 </div>
                 <div>
-                    <div class="text-asr-text text-[10px] font-bold tracking-widest uppercase mb-1">Lifetime Pro</div>
+                    <div class="text-asr-text text-[10px] font-bold tracking-widest uppercase mb-1">Lifetime License</div>
                     <div class="text-3xl font-black text-asr-text">$49.99</div>
-                    <div class="text-asr-faint text-xs mt-0.5">Pay once · Keep forever</div>
+                    <div class="text-asr-faint text-xs mt-0.5">Pay once · Own forever</div>
                     <p class="text-xs text-asr-muted mt-3 leading-relaxed">
-                        Lifetime license with all current and future Pro updates included.
+                        Perpetual license for life. Never pay another subscription fee.
                     </p>
                     <ul class="mt-5 space-y-2 text-xs">
-                        <li class="flex items-center gap-2 text-asr-muted"><span class="text-asr-sky font-bold">✓</span> Full Pro lifetime access</li>
-                        <li class="flex items-center gap-2 text-asr-muted"><span class="text-asr-sky font-bold">✓</span> Zero recurring fees forever</li>
-                        <li class="flex items-center gap-2 text-asr-muted"><span class="text-asr-sky font-bold">✓</span> Priority support &amp; updates</li>
-                        <li class="flex items-center gap-2 text-asr-muted"><span class="text-asr-sky font-bold">✓</span> All upcoming Pro features</li>
+                        <li class="flex items-center gap-2 text-asr-muted"><span class="text-asr-sky font-bold">✓</span> Full Lifetime Pro access</li>
+                        <li class="flex items-center gap-2 text-asr-muted"><span class="text-asr-sky font-bold">✓</span> Zero recurring charges</li>
+                        <li class="flex items-center gap-2 text-asr-muted"><span class="text-asr-sky font-bold">✓</span> All future updates &amp; features</li>
+                        <li class="flex items-center gap-2 text-asr-muted"><span class="text-asr-sky font-bold">✓</span> Lifetime multi-store sync</li>
                     </ul>
                 </div>
-                <a href="#simulator" class="mt-6 w-full block text-center py-2.5 bg-asr-elevated hover:bg-asr-border text-asr-text font-bold text-xs rounded-xl transition">
+                <a href="#simulator" class="mt-6 w-full block text-center py-3 bg-asr-elevated hover:bg-asr-border text-asr-text font-bold text-xs rounded-xl transition">
                     Buy Lifetime
                 </a>
             </div>
 
         </div>
 
-        <!-- 5. Student Discount Banner -->
-        <div class="mt-5 bg-asr-bg border border-asr-border rounded-2xl p-5 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <!-- Student Discount Banner -->
+        <div class="mt-6 bg-asr-surface border border-asr-border rounded-2xl p-5 flex flex-col sm:flex-row items-center justify-between gap-4">
             <div class="flex items-center gap-3.5 text-left">
-                <div class="w-10 h-10 rounded-xl bg-asr-sky/10 border border-asr-sky/20 flex items-center justify-center text-asr-sky shrink-0">
+                <div class="w-10 h-10 rounded-xl bg-asr-emerald/10 border border-asr-emerald/20 flex items-center justify-center text-asr-emerald shrink-0">
                     <i data-lucide="graduation-cap" class="w-5 h-5"></i>
                 </div>
                 <div>
                     <div class="flex items-center gap-2">
                         <span class="font-bold text-sm text-asr-text">Student Pro Plan — $9.99 / year</span>
-                        <span class="bg-asr-emerald/10 text-asr-emerald text-[10px] font-bold px-2 py-0.5 rounded">50% OFF</span>
+                        <span class="bg-asr-emerald/10 text-asr-emerald text-[10px] font-bold px-2 py-0.5 rounded">50% STUDENT DISCOUNT</span>
                     </div>
-                    <p class="text-xs text-asr-muted mt-0.5">Special discounted annual plan for high school &amp; university students.</p>
+                    <p class="text-xs text-asr-muted mt-0.5">Special subsidized annual plan for high school, college, and university students.</p>
                 </div>
             </div>
             <a href="pricing.html" class="shrink-0 text-xs font-bold text-asr-sky hover:underline flex items-center gap-1">
@@ -1160,42 +1295,189 @@
 
 
 <!-- ══════════════════════════════════════════════════════════════════
-     FINAL CTA
+     FREQUENTLY ASKED QUESTIONS (FAQ)
 ════════════════════════════════════════════════════════════════════ -->
-<section class="py-28 px-5 text-center reveal">
+<section id="faq" class="py-24 px-5 bg-asr-surface border-y border-asr-border reveal"
+         x-data="{ activeFaq: null }">
+    <div class="max-w-4xl mx-auto">
+        <div class="text-center mb-16">
+            <p class="text-asr-sky text-xs font-bold tracking-widest uppercase mb-3">Got Questions?</p>
+            <h2 class="text-3xl sm:text-4xl font-extrabold text-asr-text">Frequently Asked Questions</h2>
+            <p class="text-asr-muted text-sm mt-3 max-w-xl mx-auto">
+                Everything you need to know about ASAR, privacy, strict mode, and scheduling.
+            </p>
+        </div>
+
+        <div class="space-y-4">
+            <!-- FAQ 1 -->
+            <div class="bg-asr-bg border border-asr-border rounded-2xl overflow-hidden transition">
+                <button @click="activeFaq = (activeFaq === 1 ? null : 1)"
+                        class="w-full p-5 text-left flex items-center justify-between font-bold text-sm sm:text-base text-asr-text">
+                    <span>How is ASAR really unbypassable during Strict Mode?</span>
+                    <i data-lucide="chevron-down" class="w-4 h-4 text-asr-muted transition-transform" :class="activeFaq === 1 ? 'rotate-180 text-asr-sky' : ''"></i>
+                </button>
+                <div x-show="activeFaq === 1" x-collapse class="px-5 pb-5 text-xs sm:text-sm text-asr-muted leading-relaxed border-t border-asr-border/50 pt-3">
+                    ASAR utilizes Android's native <strong>Device Policy Manager (Device Administrator)</strong> and Accessibility APIs. When Strict Mode is active, Android blocks the uninstallation of the app, prevents changing blocked app lists, and disables canceling the session until the timer completes.
+                </div>
+            </div>
+
+            <!-- FAQ 2 -->
+            <div class="bg-asr-bg border border-asr-border rounded-2xl overflow-hidden transition">
+                <button @click="activeFaq = (activeFaq === 2 ? null : 2)"
+                        class="w-full p-5 text-left flex items-center justify-between font-bold text-sm sm:text-base text-asr-text">
+                    <span>Does ASAR track or upload my app usage to cloud servers?</span>
+                    <i data-lucide="chevron-down" class="w-4 h-4 text-asr-muted transition-transform" :class="activeFaq === 2 ? 'rotate-180 text-asr-sky' : ''"></i>
+                </button>
+                <div x-show="activeFaq === 2" x-collapse class="px-5 pb-5 text-xs sm:text-sm text-asr-muted leading-relaxed border-t border-asr-border/50 pt-3">
+                    <strong>Absolutely not.</strong> ASAR is strictly local-first. All your focus sessions, app shields, daily goals, and discipline scores live exclusively inside a local Room SQLite database on your device. We have zero analytics servers and no account is required.
+                </div>
+            </div>
+
+            <!-- FAQ 3 -->
+            <div class="bg-asr-bg border border-asr-border rounded-2xl overflow-hidden transition">
+                <button @click="activeFaq = (activeFaq === 3 ? null : 3)"
+                        class="w-full p-5 text-left flex items-center justify-between font-bold text-sm sm:text-base text-asr-text">
+                    <span>What are the limits on the Free tier?</span>
+                    <i data-lucide="chevron-down" class="w-4 h-4 text-asr-muted transition-transform" :class="activeFaq === 3 ? 'rotate-180 text-asr-sky' : ''"></i>
+                </button>
+                <div x-show="activeFaq === 3" x-collapse class="px-5 pb-5 text-xs sm:text-sm text-asr-muted leading-relaxed border-t border-asr-border/50 pt-3">
+                    The Free tier gives you full core focus sessions, mindful pauses, 100% on-device privacy, and Strict Mode sessions up to <strong>2 hours (120 minutes)</strong> with up to <strong>3 shielded apps</strong>. Pro tier unlocks unlimited durations (up to 12h/unlimited), unlimited apps, and adaptive friction.
+                </div>
+            </div>
+
+            <!-- FAQ 4 -->
+            <div class="bg-asr-bg border border-asr-border rounded-2xl overflow-hidden transition">
+                <button @click="activeFaq = (activeFaq === 4 ? null : 4)"
+                        class="w-full p-5 text-left flex items-center justify-between font-bold text-sm sm:text-base text-asr-text">
+                    <span>How do Recurring Focus Routines work?</span>
+                    <i data-lucide="chevron-down" class="w-4 h-4 text-asr-muted transition-transform" :class="activeFaq === 4 ? 'rotate-180 text-asr-sky' : ''"></i>
+                </button>
+                <div x-show="activeFaq === 4" x-collapse class="px-5 pb-5 text-xs sm:text-sm text-asr-muted leading-relaxed border-t border-asr-border/50 pt-3">
+                    You can configure automated routines in Settings (e.g. 9:00 AM to 12:00 PM on Monday through Friday). ASAR's background <code>ScheduleAlarmScheduler</code> schedules exact system alarms to start Strict Mode automatically and loops indefinitely across weeks until you toggle it off.
+                </div>
+            </div>
+
+            <!-- FAQ 5 -->
+            <div class="bg-asr-bg border border-asr-border rounded-2xl overflow-hidden transition">
+                <button @click="activeFaq = (activeFaq === 5 ? null : 5)"
+                        class="w-full p-5 text-left flex items-center justify-between font-bold text-sm sm:text-base text-asr-text">
+                    <span>Does ASAR drain battery life in the background?</span>
+                    <i data-lucide="chevron-down" class="w-4 h-4 text-asr-muted transition-transform" :class="activeFaq === 5 ? 'rotate-180 text-asr-sky' : ''"></i>
+                </button>
+                <div x-show="activeFaq === 5" x-collapse class="px-5 pb-5 text-xs sm:text-sm text-asr-muted leading-relaxed border-t border-asr-border/50 pt-3">
+                    No. Unlike VPN-based blockers that route your network traffic through background processes, ASAR uses Android's lightweight event-driven Accessibility and Usage Stats listeners which sleep when not triggered, consuming less than 1% battery per day.
+                </div>
+            </div>
+
+            <!-- FAQ 6 -->
+            <div class="bg-asr-bg border border-asr-border rounded-2xl overflow-hidden transition">
+                <button @click="activeFaq = (activeFaq === 6 ? null : 6)"
+                        class="w-full p-5 text-left flex items-center justify-between font-bold text-sm sm:text-base text-asr-text">
+                    <span>What happens in an actual emergency during Strict Mode?</span>
+                    <i data-lucide="chevron-down" class="w-4 h-4 text-asr-muted transition-transform" :class="activeFaq === 6 ? 'rotate-180 text-asr-sky' : ''"></i>
+                </button>
+                <div x-show="activeFaq === 6" x-collapse class="px-5 pb-5 text-xs sm:text-sm text-asr-muted leading-relaxed border-t border-asr-border/50 pt-3">
+                    ASAR provides a mindful <strong>Emergency Breakout</strong> mechanism with cooling friction: you must complete a countdown cooldown and type a deliberate confirmation phrase (<em>"I choose to break focus"</em>). It logs an emergency exit in your Discipline analytics to preserve conscious accountability.
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════════════════════════════
+     KNOWLEDGE HUB & GUIDES SHOWCASE
+════════════════════════════════════════════════════════════════════ -->
+<section class="py-24 px-5 max-w-6xl mx-auto reveal">
+    <div class="flex flex-col sm:flex-row items-start sm:items-end justify-between mb-12 gap-4">
+        <div>
+            <p class="text-asr-sky text-xs font-bold tracking-widest uppercase mb-2">Knowledge Base &amp; SEO Hub</p>
+            <h2 class="text-3xl sm:text-4xl font-extrabold text-asr-text">Deep Guides on Digital Discipline</h2>
+        </div>
+        <a href="guides.html" class="text-xs font-bold text-asr-sky hover:underline flex items-center gap-1">
+            Browse all 25+ Guides <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+        </a>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <a href="guides/best-app-blocker-you-cannot-bypass.html" class="bg-asr-surface border border-asr-border rounded-2xl p-6 hover:border-asr-sky/40 transition group flex flex-col justify-between">
+            <div>
+                <span class="text-[10px] font-bold text-asr-red uppercase tracking-wider bg-asr-red/10 px-2 py-0.5 rounded">Security &amp; Strict Mode</span>
+                <h3 class="font-bold text-base text-asr-text mt-3 group-hover:text-asr-sky transition">Best App Blocker You Cannot Bypass on Android</h3>
+                <p class="text-xs text-asr-muted mt-2 leading-relaxed">
+                    Why standard screen time apps fail, how bypass loopholes work, and how Device Admin solves impulsive app usage.
+                </p>
+            </div>
+            <div class="mt-4 pt-3 border-t border-asr-border/60 text-xs font-semibold text-asr-sky flex items-center gap-1">
+                Read Guide &rarr;
+            </div>
+        </a>
+
+        <a href="guides/best-app-blocker-for-android-2026.html" class="bg-asr-surface border border-asr-border rounded-2xl p-6 hover:border-asr-sky/40 transition group flex flex-col justify-between">
+            <div>
+                <span class="text-[10px] font-bold text-asr-sky uppercase tracking-wider bg-asr-sky/10 px-2 py-0.5 rounded">2026 Benchmark</span>
+                <h3 class="font-bold text-base text-asr-text mt-3 group-hover:text-asr-sky transition">Top 10 Android App Blockers Reviewed &amp; Ranked</h3>
+                <p class="text-xs text-asr-muted mt-2 leading-relaxed">
+                    A comprehensive technical breakdown comparing Opal, Freedom, Forest, StayFree, and ASAR.
+                </p>
+            </div>
+            <div class="mt-4 pt-3 border-t border-asr-border/60 text-xs font-semibold text-asr-sky flex items-center gap-1">
+                Read Guide &rarr;
+            </div>
+        </a>
+
+        <a href="guides/best-adhd-friendly-app-blocker.html" class="bg-asr-surface border border-asr-border rounded-2xl p-6 hover:border-asr-sky/40 transition group flex flex-col justify-between">
+            <div>
+                <span class="text-[10px] font-bold text-asr-emerald uppercase tracking-wider bg-asr-emerald/10 px-2 py-0.5 rounded">ADHD &amp; Neurodiversity</span>
+                <h3 class="font-bold text-base text-asr-text mt-3 group-hover:text-asr-sky transition">ADHD-Friendly Screen Time &amp; Friction Systems</h3>
+                <p class="text-xs text-asr-muted mt-2 leading-relaxed">
+                    How tactile friction, countdown pauses, and automated routines support neurodivergent focus.
+                </p>
+            </div>
+            <div class="mt-4 pt-3 border-t border-asr-border/60 text-xs font-semibold text-asr-sky flex items-center gap-1">
+                Read Guide &rarr;
+            </div>
+        </a>
+    </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════════════════════════════
+     FINAL CALL TO ACTION
+════════════════════════════════════════════════════════════════════ -->
+<section class="py-28 px-5 text-center bg-gradient-to-b from-asr-bg via-asr-surface to-asr-bg border-t border-asr-border reveal">
     <div class="max-w-2xl mx-auto">
-        <!-- ASR mark large -->
-        <svg class="mx-auto mb-6" width="48" height="48" viewBox="0 0 28 28" fill="none">
-            <rect width="28" height="28" rx="7" fill="#111827"/>
-            <path d="M9 20L14 8L19 20" stroke="#38BDF8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M10.5 16.5H17.5" stroke="#38BDF8" stroke-width="1.5" stroke-linecap="round"/>
-        </svg>
+        <div class="w-14 h-14 rounded-2xl bg-asr-elevated border border-asr-sky/40 flex items-center justify-center mx-auto mb-6 glow-sky">
+            <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+                <path d="M9 20L14 8L19 20" stroke="#38BDF8" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M10.8 16.5H17.2" stroke="#38BDF8" stroke-width="1.8" stroke-linecap="round"/>
+            </svg>
+        </div>
 
         <h2 class="text-4xl sm:text-5xl font-black text-asr-text leading-tight">
-            Time is always<br>moving.
+            Take Control of Your Time.<br>Starting Today.
         </h2>
-        <p class="text-asr-muted text-base mt-5 max-w-lg mx-auto leading-relaxed">
-            Every moment that passes becomes part of your past. ASAR helps you choose where your attention goes — so that the time you spend actually becomes something.
+        <p class="text-asr-muted text-sm sm:text-base mt-5 max-w-lg mx-auto leading-relaxed">
+            Every minute saved from mindless feeds is a minute invested in your career, health, relationships, and craft.
         </p>
 
-        <div class="flex flex-col sm:flex-row items-center justify-center gap-3 mt-10">
-            <a href="#simulator"
-               class="w-full sm:w-auto bg-asr-sky hover:bg-asr-sky/90 text-asr-bg font-bold text-sm px-8 py-3.5 rounded-xl transition shadow-lg shadow-asr-sky/20 flex items-center justify-center gap-2">
-                <i data-lucide="play" class="w-4 h-4 fill-current"></i>
-                Try the Demo
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-3.5 mt-10">
+            <a href="https://github.com/khalidabdullahh/AegisFocus/releases/latest/download/ASAR-Latest.apk" download="ASAR-Latest.apk"
+               class="w-full sm:w-auto bg-asr-emerald hover:bg-asr-emerald/90 text-asr-bg font-extrabold text-sm px-8 py-4 rounded-xl transition shadow-xl shadow-asr-emerald/25 flex items-center justify-center gap-2">
+                <i data-lucide="download" class="w-4 h-4"></i>
+                Download Free Android APK
             </a>
-            <a href="https://github.com/khalidabdullahh/AegisFocus"
-               target="_blank"
-               class="w-full sm:w-auto bg-asr-surface hover:bg-asr-elevated border border-asr-border text-asr-text font-semibold text-sm px-8 py-3.5 rounded-xl transition flex items-center justify-center gap-2">
-                <i data-lucide="github" class="w-4 h-4"></i>
-                GitHub
+            <a href="#simulator"
+               class="w-full sm:w-auto bg-asr-sky hover:bg-asr-sky/90 text-asr-bg font-bold text-sm px-8 py-4 rounded-xl transition shadow-xl shadow-asr-sky/20 flex items-center justify-center gap-2">
+                <i data-lucide="play" class="w-4 h-4 fill-current"></i>
+                Try Web Simulator
             </a>
         </div>
     </div>
 </section>
 
 
-<!-- ── Sponsored / Native Ads Section ── -->
+<!-- ── Sponsored / Native Ads Section (Preserved) ── -->
 <section class="py-8 px-5 bg-asr-bg border-t border-asr-border">
     <div class="max-w-4xl mx-auto text-center">
         <div class="text-[10px] uppercase font-bold tracking-widest text-asr-faint mb-3">Sponsored Content</div>
@@ -1204,73 +1486,81 @@
     </div>
 </section>
 
+
 <!-- ══════════════════════════════════════════════════════════════════
      FOOTER
 ════════════════════════════════════════════════════════════════════ -->
 <footer class="border-t border-asr-border bg-asr-surface">
-    <div class="max-w-6xl mx-auto px-5 sm:px-8 py-10">
-        <div class="flex flex-col sm:flex-row items-start justify-between gap-8">
+    <div class="max-w-6xl mx-auto px-5 sm:px-8 py-12">
+        <div class="flex flex-col md:flex-row items-start justify-between gap-10">
 
-            <!-- Brand & Author Info -->
-            <div>
+            <!-- Brand & Creator Info -->
+            <div class="max-w-sm">
                 <div class="flex items-center gap-2.5 mb-3">
-                    <svg width="24" height="24" viewBox="0 0 28 28" fill="none">
-                        <rect width="28" height="28" rx="7" fill="#0F172A"/>
-                        <path d="M9 20L14 8L19 20" stroke="#38BDF8" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
-                        <path d="M10.8 16.5H17.2" stroke="#38BDF8" stroke-width="1.8" stroke-linecap="round"/>
-                    </svg>
-                    <span class="font-bold text-asr-text">ASR</span>
+                    <div class="w-8 h-8 rounded-lg bg-asr-elevated border border-asr-border flex items-center justify-center">
+                        <svg width="18" height="18" viewBox="0 0 28 28" fill="none">
+                            <path d="M9 20L14 8L19 20" stroke="#38BDF8" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M10.8 16.5H17.2" stroke="#38BDF8" stroke-width="1.8" stroke-linecap="round"/>
+                        </svg>
+                    </div>
+                    <span class="font-extrabold text-lg text-asr-text">ASAR</span>
                 </div>
-                <p class="text-asr-faint text-xs max-w-xs leading-relaxed">
-                    Turn Time Into Progress.<br>
-                    Crafted with focus by <a href="https://github.com/khalidabdullahh" target="_blank" class="text-asr-sky hover:underline font-semibold">Khalid Abdullah</a>.
+                <p class="text-asr-faint text-xs leading-relaxed">
+                    Turn Time Into Progress. A local-first, privacy-respecting focus system for Android designed to help you build unbreakable habits.
                 </p>
-                <div class="mt-3 flex items-center gap-2">
-                    <a href="https://github.com/khalidabdullahh" target="_blank" class="text-[11px] bg-asr-elevated border border-asr-border px-2.5 py-1 rounded text-asr-muted hover:text-asr-sky transition flex items-center gap-1.5">
+                <div class="mt-4 flex items-center gap-2">
+                    <a href="https://github.com/khalidabdullahh" target="_blank" class="text-xs bg-asr-elevated border border-asr-border px-3 py-1.5 rounded-lg text-asr-muted hover:text-asr-sky transition flex items-center gap-1.5 font-semibold">
                         <i data-lucide="github" class="w-3.5 h-3.5"></i> @khalidabdullahh
                     </a>
                 </div>
             </div>
 
-            <!-- Multi-page Links -->
-            <div class="grid grid-cols-2 gap-8 text-sm">
+            <!-- Multi-page Links Navigation -->
+            <div class="grid grid-cols-2 sm:grid-cols-3 gap-8 text-xs w-full md:w-auto">
                 <div>
-                    <div class="text-asr-text font-semibold mb-3 text-xs uppercase tracking-wider">Product</div>
-                    <ul class="space-y-2 text-asr-faint text-xs">
-                        <li><a href="features.html" class="hover:text-asr-text transition">Features</a></li>
-                        <li><a href="pricing.html" class="hover:text-asr-text transition">Pricing</a></li>
-                        <li><a href="about.html" class="hover:text-asr-text transition">Philosophy</a></li>
-                        <li><a href="privacy.html" class="hover:text-asr-text transition">Privacy Policy</a>
-                        <li><a href="terms.html" class="hover:text-asr-text transition">Terms of Service</a></li>
-                        <li><a href="refund.html" class="hover:text-asr-text transition">Privacy Policy</a></li>
+                    <div class="text-asr-text font-bold mb-3 uppercase tracking-wider text-[11px]">Product &amp; Features</div>
+                    <ul class="space-y-2.5 text-asr-faint">
+                        <li><a href="features.html" class="hover:text-asr-text transition">Feature Matrix</a></li>
+                        <li><a href="pricing.html" class="hover:text-asr-text transition">Pricing Plans</a></li>
+                        <li><a href="about.html" class="hover:text-asr-text transition">Philosophy &amp; Ethics</a></li>
+                        <li><a href="#simulator" class="hover:text-asr-text transition">Live App Demo</a></li>
                     </ul>
                 </div>
                 <div>
-                    <div class="text-asr-text font-semibold mb-3 text-xs uppercase tracking-wider">Developer &amp; Code</div>
-                    <ul class="space-y-2 text-asr-faint text-xs">
-                        <li><a href="https://github.com/khalidabdullahh/AegisFocus" target="_blank" class="hover:text-asr-text transition flex items-center gap-1"><i data-lucide="git-branch" class="w-3 h-3"></i> Repository</a></li>
-                        <li><a href="https://github.com/khalidabdullahh" target="_blank" class="hover:text-asr-text transition flex items-center gap-1"><i data-lucide="user" class="w-3 h-3"></i> Khalid Abdullah</a></li>
-                        <li><a href="#simulator" class="hover:text-asr-text transition">Live Simulator</a></li>
+                    <div class="text-asr-text font-bold mb-3 uppercase tracking-wider text-[11px]">Guides &amp; Hub</div>
+                    <ul class="space-y-2.5 text-asr-faint">
+                        <li><a href="guides.html" class="hover:text-asr-text transition">Productivity Hub</a></li>
+                        <li><a href="guides/best-app-blocker-you-cannot-bypass.html" class="hover:text-asr-text transition">Unbypassable Blocker</a></li>
+                        <li><a href="guides/best-adhd-friendly-app-blocker.html" class="hover:text-asr-text transition">ADHD Focus Guide</a></li>
+                        <li><a href="guides/best-app-blocker-for-android-2026.html" class="hover:text-asr-text transition">2026 Reviews</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <div class="text-asr-text font-bold mb-3 uppercase tracking-wider text-[11px]">Legal &amp; Source</div>
+                    <ul class="space-y-2.5 text-asr-faint">
+                        <li><a href="privacy.html" class="hover:text-asr-text transition">Privacy Policy</a></li>
+                        <li><a href="terms.html" class="hover:text-asr-text transition">Terms of Service</a></li>
+                        <li><a href="refund.html" class="hover:text-asr-text transition">Refund Policy</a></li>
+                        <li><a href="https://github.com/khalidabdullahh/AegisFocus" target="_blank" class="hover:text-asr-text transition flex items-center gap-1"><i data-lucide="git-branch" class="w-3 h-3"></i> GitHub Repo</a></li>
                     </ul>
                 </div>
             </div>
         </div>
 
-        <div class="border-t border-asr-border mt-8 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-asr-faint">
-            <span>© 2025 ASAR — Turn Time Into Progress. Designed &amp; Developed by <a href="https://github.com/khalidabdullahh" target="_blank" class="text-asr-sky hover:underline">Khalid Abdullah</a>.</span>
-            <span>100% Local-First · Open Source</span>
+        <div class="border-t border-asr-border mt-10 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-asr-faint">
+            <span>&copy; 2025–2026 ASAR — Turn Time Into Progress. Designed &amp; Engineered by <a href="https://github.com/khalidabdullahh" target="_blank" class="text-asr-sky hover:underline font-semibold">Khalid Abdullah</a>.</span>
+            <span>100% Local-First &bull; Open Source on GitHub</span>
         </div>
     </div>
 </footer>
 
 
 <!-- ══════════════════════════════════════════════════════════════════
-     ALPINE.JS APPLICATION LOGIC
+     ALPINE.JS STATE LOGIC (PRESERVED & ENHANCED)
 ════════════════════════════════════════════════════════════════════ -->
 <script>
     function asrApp() {
         return {
-            // ── Navigation ─────────────────────────────────────
             currentTab: 'home',
             navTabs: [
                 { id: 'home',     label: 'Home',     icon: 'shield' },
@@ -1280,7 +1570,6 @@
                 { id: 'settings', label: 'Settings', icon: 'settings' },
             ],
 
-            // ── Session State ───────────────────────────────────
             isSessionActive:  false,
             sessionGoal:      'Deep Focus',
             durationMinutes:  25,
@@ -1288,24 +1577,20 @@
             activeMode:       'NORMAL',
             timerInterval:    null,
 
-            // ── Dashboard Stats ─────────────────────────────────
             streakDays:             4,
             disciplineScore:        84,
             focusTimeToday:         '1h 15m',
             screenTimeToday:        '2h 40m',
             sessionsCompletedCount: 2,
 
-            // ── Time & Greeting ─────────────────────────────────
             currentTimeStr: '09:41',
             todayDateStr:   '',
             greeting:       'Good Morning',
 
-            // ── Apps ────────────────────────────────────────────
             selectedApps:    ['YouTube', 'Instagram', 'TikTok', 'X (Twitter)', 'Reddit'],
             appSearchQuery:  '',
             selectedCategory: 'ALL',
 
-            // ── Overlays ────────────────────────────────────────
             showInterventionOverlay: false,
             simulatedBlockedAppName: 'YouTube',
             showEmergencyModal:      false,
@@ -1315,7 +1600,6 @@
             emergencyCooldown:       5,
             showToast:               false,
 
-            // ── Focus Profiles ──────────────────────────────────
             profiles: [
                 { name: 'Deep Work',   duration: 50,  mode: 'STRICT' },
                 { name: 'Study',       duration: 25,  mode: 'NORMAL' },
@@ -1323,7 +1607,6 @@
                 { name: 'Quick Reset', duration: 15,  mode: 'NORMAL' },
             ],
 
-            // ── Apps List ───────────────────────────────────────
             installedAppsList: [
                 { name: 'YouTube',     category: 'ENTERTAINMENT', pkg: 'com.google.android.youtube' },
                 { name: 'Instagram',   category: 'SOCIAL',        pkg: 'com.instagram.android' },
@@ -1337,7 +1620,6 @@
                 { name: 'Candy Crush', category: 'GAMES',         pkg: 'com.king.candycrushsaga' },
             ],
 
-            // ── Analytics Data ──────────────────────────────────
             weeklyData: [
                 { day: 'Mon', focus: 75,  screen: 180 },
                 { day: 'Tue', focus: 100, screen: 150 },
@@ -1354,7 +1636,6 @@
                 { name: 'Reddit',      time: '15m',    percent: 20 },
             ],
 
-            // ── Init ────────────────────────────────────────────
             initApp() {
                 this.updateGreeting();
                 this.todayDateStr = new Date().toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
@@ -1364,7 +1645,6 @@
                 }, 1000);
                 setTimeout(() => lucide.createIcons(), 120);
 
-                // Scroll reveal
                 const observer = new IntersectionObserver((entries) => {
                     entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
                 }, { threshold: 0.1 });
@@ -1378,7 +1658,6 @@
                 else             this.greeting = 'Good Evening';
             },
 
-            // ── Session Control ─────────────────────────────────
             applyProfile(p) {
                 this.sessionGoal     = p.name;
                 this.durationMinutes = p.duration;
@@ -1432,7 +1711,6 @@
                 this.isSessionActive = false;
             },
 
-            // ── Emergency Exit ──────────────────────────────────
             openEmergencyModal() {
                 this.showEmergencyModal    = true;
                 this.emergencyCountdown    = parseInt(this.emergencyCooldown) || 5;
@@ -1452,7 +1730,6 @@
                 this.disciplineScore = Math.max(10, this.disciplineScore - 8);
             },
 
-            // ── Block Simulation ────────────────────────────────
             simulateOpenBlockedApp() {
                 if (!this.isSessionActive) { this.startQuickSession(25, 'NORMAL'); }
                 this.simulatedBlockedAppName = this.selectedApps[0] || 'Instagram';
@@ -1460,7 +1737,6 @@
                 setTimeout(() => lucide.createIcons(), 60);
             },
 
-            // ── App List ────────────────────────────────────────
             toggleApp(appName) {
                 if (this.isSessionActive && this.activeMode === 'STRICT') return;
                 if (this.selectedApps.includes(appName)) {
@@ -1480,17 +1756,18 @@
                 });
             },
 
-            // ── Utilities ───────────────────────────────────────
             formatTime(totalSec) {
                 const m = Math.floor(totalSec / 60);
                 const s = totalSec % 60;
-                return `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
-        }
+                return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+            }
+        };
     }
 </script>
 
-<!-- Adsterra Social Bar & Popunder -->
+<!-- ── Additional Ad / Monetization Scripts (Preserved) ── -->
 <script src="https://pl31353127.profitableratecpmnetwork.com/94/5a/bd/945abde0bde17272b972b965fd957682.js"></script>
 <script src="https://pl31353128.profitableratecpmnetwork.com/29/67/c7/2967c71dc18836947efb8a4fe45eb68e.js"></script>
+
 </body>
 </html>
