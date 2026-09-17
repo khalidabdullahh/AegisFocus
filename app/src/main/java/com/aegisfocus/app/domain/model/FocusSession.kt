@@ -18,6 +18,9 @@ data class FocusSession(
     val isExpired: Boolean
         get() = System.currentTimeMillis() >= endEpochMs
 
+    val isStrictMode: Boolean
+        get() = mode == SessionMode.STRICT
+
     val progressFraction: Float
         get() {
             val totalDurationMs = durationMinutes * 60 * 1000L

@@ -693,10 +693,10 @@ private fun ActiveFocusScreen(
 
             Surface(
                 shape = RoundedCornerShape(20.dp),
-                color = if (session.isStrictMode) AlertStrict.copy(alpha = 0.15f) else CyanAccent.copy(alpha = 0.15f),
+                color = if (session.mode == SessionMode.STRICT) AlertStrict.copy(alpha = 0.15f) else CyanAccent.copy(alpha = 0.15f),
                 border = BorderStroke(
                     1.dp,
-                    if (session.isStrictMode) AlertStrict.copy(alpha = 0.4f) else CyanAccent.copy(alpha = 0.4f)
+                    if (session.mode == SessionMode.STRICT) AlertStrict.copy(alpha = 0.4f) else CyanAccent.copy(alpha = 0.4f)
                 )
             ) {
                 Row(
@@ -704,17 +704,17 @@ private fun ActiveFocusScreen(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Icon(
-                        imageVector = if (session.isStrictMode) Icons.Default.Lock else Icons.Default.Star,
+                        imageVector = if (session.mode == SessionMode.STRICT) Icons.Default.Lock else Icons.Default.Star,
                         contentDescription = null,
-                        tint = if (session.isStrictMode) AlertStrict else CyanAccent,
+                        tint = if (session.mode == SessionMode.STRICT) AlertStrict else CyanAccent,
                         modifier = Modifier.size(16.dp)
                     )
                     Spacer(modifier = Modifier.width(6.dp))
                     Text(
-                        text = if (session.isStrictMode) "STRICT MODE ACTIVE" else "FOCUS SESSION ACTIVE",
+                        text = if (session.mode == SessionMode.STRICT) "STRICT MODE ACTIVE" else "FOCUS SESSION ACTIVE",
                         fontSize = 12.sp,
                         fontWeight = FontWeight.Bold,
-                        color = if (session.isStrictMode) AlertStrict else CyanAccent,
+                        color = if (session.mode == SessionMode.STRICT) AlertStrict else CyanAccent,
                         letterSpacing = 1.sp
                     )
                 }
