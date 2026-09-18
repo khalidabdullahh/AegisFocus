@@ -31,6 +31,7 @@ const itemsToCopy = [
   'terms.html',
   'refund.html',
   'guides.html',
+  '_headers',
   'googlefizlBwqvFqvA47dXrpi7GA3AOoU08X4Xrz-o9q7nONU.html',
   'assets',
   'guides',

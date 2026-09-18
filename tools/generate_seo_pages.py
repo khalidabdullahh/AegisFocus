@@ -2061,9 +2061,6 @@ def generate_html(page):
 <script>
     lucide.createIcons();
 </script>
-<!-- Adsterra Social Bar & Popunder -->
-<script src="https://pl31353127.profitableratecpmnetwork.com/94/5a/bd/945abde0bde17272b972b965fd957682.js"></script>
-<script src="https://pl31353128.profitableratecpmnetwork.com/29/67/c7/2967c71dc18836947efb8a4fe45eb68e.js"></script>
 </body>
 </html>
 """
@@ -2210,12 +2207,6 @@ def generate_hub_html(pages):
         {cards_html}
     </div>
 
-    <!-- Sponsored / Native Banner Ad -->
-    <section class="bg-asr-surface/30 border border-asr-border/80 rounded-2xl p-6 mt-12 text-center max-w-4xl mx-auto w-full">
-        <div class="text-[10px] uppercase font-bold tracking-widest text-asr-faint mb-3">Sponsored Content</div>
-        <script async="async" data-cfasync="false" src="https://pl31353126.profitableratecpmnetwork.com/13b0285b4df0e56464b0c0b2074ecbb4/invoke.js"></script>
-        <div id="container-13b0285b4df0e56464b0c0b2074ecbb4" class="min-h-[90px] flex justify-center items-center"></div>
-    </section>
 </main>
 
 <!-- Footer -->
@@ -2248,9 +2239,6 @@ def generate_hub_html(pages):
         }}
     }}
 </script>
-<!-- Adsterra Social Bar & Popunder -->
-<script src="https://pl31353127.profitableratecpmnetwork.com/94/5a/bd/945abde0bde17272b972b965fd957682.js"></script>
-<script src="https://pl31353128.profitableratecpmnetwork.com/29/67/c7/2967c71dc18836947efb8a4fe45eb68e.js"></script>
 </body>
 </html>
 """

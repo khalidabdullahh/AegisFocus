@@ -1,0 +1,9 @@
+/ASAR-Latest.apk
+  Content-Type: application/vnd.android.package-archive
+  Content-Disposition: attachment; filename="ASAR-Latest.apk"
+  Cache-Control: public, max-age=3600
+
+/*.apk
+  Content-Type: application/vnd.android.package-archive
+  Content-Disposition: attachment
+  Cache-Control: public, max-age=3600
