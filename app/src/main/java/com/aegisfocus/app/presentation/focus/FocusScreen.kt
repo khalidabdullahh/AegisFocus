@@ -781,7 +781,7 @@ private fun ActiveFocusScreen(
             modifier = Modifier.fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            if (session.isStrictMode) {
+            if (session.mode == SessionMode.STRICT) {
                 Surface(
                     shape = RoundedCornerShape(12.dp),
                     color = AlertStrict.copy(alpha = 0.1f),

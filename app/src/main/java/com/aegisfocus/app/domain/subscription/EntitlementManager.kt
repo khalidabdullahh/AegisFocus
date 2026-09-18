@@ -29,14 +29,14 @@ class EntitlementManager(private val subscriptionDao: SubscriptionDao) {
 
     // ----- Strict Mode & App Blocking Limits -----
 
-    /** Maximum strict mode session duration in minutes. Free = 120 (2h). Pro = Int.MAX_VALUE (unlimited). */
-    suspend fun maxStrictDurationMinutes(): Int = if (isPro()) Int.MAX_VALUE else 120
+    /** Maximum strict mode session duration in minutes. Free = 180 (3h). Pro = Int.MAX_VALUE (unlimited). */
+    suspend fun maxStrictDurationMinutes(): Int = if (isPro()) Int.MAX_VALUE else 180
 
     /** Returns the selectable strict mode presets for the current tier. */
     suspend fun strictModePresets(): List<Int> = if (isPro()) {
         listOf(15, 30, 60, 90, 120, 180, 240, 360, 720) // minutes: 15m..12h
     } else {
-        listOf(15, 30, 60, 90, 120) // Free: max 2h (120 min)
+        listOf(15, 30, 60, 90, 120, 180) // Free: max 3h (180 min)
     }
 
     /** Maximum number of blocked apps in free tier vs pro tier. Free = 3, Pro = unlimited. */
@@ -62,8 +62,8 @@ class EntitlementManager(private val subscriptionDao: SubscriptionDao) {
     suspend fun canUseAdvancedSchedules(): Boolean = isPro()
     suspend fun canViewDeepAnalytics(): Boolean = isPro()
 
-    /** Maximum number of focus profiles for this tier. Free = 2, Pro = unlimited. */
-    suspend fun maxProfiles(): Int = if (isPro()) Int.MAX_VALUE else 2
+    /** Maximum number of focus profiles for this tier. Free = 4, Pro = unlimited. */
+    suspend fun maxProfiles(): Int = if (isPro()) Int.MAX_VALUE else 4
 
     /** Persist a new subscription state (called after Play Billing confirms purchase). */
     suspend fun activatePlan(plan: SubscriptionPlan, expiryEpochMs: Long = 0L, token: String = "") {
