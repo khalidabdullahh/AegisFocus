@@ -9,7 +9,7 @@ import re
 
 OUTPUT_DIR = "/Users/khalidabdullah/AntiGravity/aegis-focus/guides"
 BASE_URL = "https://bproductive.vercel.app"
-APK_DOWNLOAD_URL = "https://github.com/khalidabdullahh/AegisFocus/releases/latest/download/ASAR-Latest.apk"
+APK_DOWNLOAD_URL = "ASAR-Latest.apk"
 
 PAGES = [
     # ─── Cluster 1: App & Distraction Blockers (25 Pages) ───────────────────
