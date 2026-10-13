@@ -12,3 +12,9 @@
 !ASAR-v1.0.0.apk
 !ASAR-Latest.apk
 /dist
+
+# Keystores & sensitive properties
+*.jks
+*.keystore
+local.properties
+
