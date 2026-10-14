@@ -47,15 +47,23 @@ jobs:
           mkdir -p release-assets
           cp "$APK_FILE" release-assets/AegisFocus-Latest.apk
           cp "$APK_FILE" release-assets/AegisFocus-v1.1.0.apk
-          if [ -f "releases/AegisFocus-v1.0.0-Release.apk" ]; then
-            cp releases/AegisFocus-v1.0.0-Release.apk release-assets/AegisFocus-v1.0.0.apk
+          if [ -f "Barakah-Release.apk" ]; then
+            cp Barakah-Release.apk release-assets/Barakah-Latest.apk
+            cp Barakah-Release.apk release-assets/Barakah-v1.0.5.apk
+          fi
+          if [ -f "ASAR-Latest.apk" ]; then
+            cp ASAR-Latest.apk release-assets/ASAR-Latest.apk
+            cp ASAR-Latest.apk release-assets/ASAR-v1.0.0.apk
+          elif [ -f "releases/ASAR-v1.0.0-Release.apk" ]; then
+            cp releases/ASAR-v1.0.0-Release.apk release-assets/ASAR-Latest.apk
+            cp releases/ASAR-v1.0.0-Release.apk release-assets/ASAR-v1.0.0.apk
           fi
           ls -lh release-assets/
 
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: AegisFocus-Release-APKs
+          name: AegisFocus-All-Release-APKs
           path: release-assets/*.apk
           retention-days: 30
           if-no-files-found: error
@@ -65,27 +73,39 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           tag_name: latest
-          name: "Aegis Focus (Latest Release)"
+          name: "Aegis Focus (Latest Release & Archive)"
           body: |
-            ## 🛡️ Aegis Focus — Unbreakable Digital Discipline & Focus
-            
-            ### ✨ Highlights:
-            - 🛡️ **100% Offline & Private**: Zero cloud tracking. All focus logs and rules live purely on your physical device.
-            - 🔒 **Unbypassable Strict Mode**: Device Administrator lock prevents tampering, killing accessibility, or uninstallation during active focus.
-            - 🧘 **Mindful Pause & Adaptive Friction**: 5s-30s escalating breathing delays break compulsive phone habits.
-            - 🔑 **Cryptographic Offline License Engine**: Built-in HMAC SHA-256 license validator (`AEGIS-12M-XXXX-XXXX`).
-            - 🔐 **Secured Super Admin Mobile Panel**: Embedded mobile license generator unlocked via master key `6924923086`.
-            
+            ## 🛡️ Aegis Focus — Complete Release Archive
+
+            Download current and previous versions of Aegis Focus, Barakah Focus, and ASAR Focus:
+
             ---
-            ### 📥 Download APKs:
-            * **[AegisFocus-Latest.apk](https://github.com/khalidabdullahh/AegisFocus/releases/latest/download/AegisFocus-Latest.apk)** *(Recommended)*
-            * **[AegisFocus-v1.1.0.apk](https://github.com/khalidabdullahh/AegisFocus/releases/latest/download/AegisFocus-v1.1.0.apk)** *(v1.1.0)*
-            * **[AegisFocus-v1.0.0.apk](https://github.com/khalidabdullahh/AegisFocus/releases/latest/download/AegisFocus-v1.0.0.apk)** *(Legacy v1.0.0)*
+            ### 📥 Aegis Focus (Current - Recommended)
+            * **[AegisFocus-Latest.apk](https://github.com/khalidabdullahh/AegisFocus/releases/latest/download/AegisFocus-Latest.apk)** *(v1.1.0 Latest • AdBlock DNS + Shorts Blocker + Monk Shield)*
+            * **[AegisFocus-v1.1.0.apk](https://github.com/khalidabdullahh/AegisFocus/releases/latest/download/AegisFocus-v1.1.0.apk)** *(v1.1.0 Tagged)*
+
+            ---
+            ### 🌙 Barakah Focus (Special Bengali / Spiritual Edition)
+            * **[Barakah-Latest.apk](https://github.com/khalidabdullahh/AegisFocus/releases/latest/download/Barakah-Latest.apk)** *(v1.0.5 • Dual Slogan + Apple Typography)*
+            * **[Barakah-v1.0.5.apk](https://github.com/khalidabdullahh/AegisFocus/releases/latest/download/Barakah-v1.0.5.apk)** *(v1.0.5 Tagged)*
+
+            ---
+            ### ⚡ ASAR Focus (Legacy Foundation Edition)
+            * **[ASAR-Latest.apk](https://github.com/khalidabdullahh/AegisFocus/releases/latest/download/ASAR-Latest.apk)** *(v1.0.0 Legacy Foundation)*
+            * **[ASAR-v1.0.0.apk](https://github.com/khalidabdullahh/AegisFocus/releases/latest/download/ASAR-v1.0.0.apk)** *(v1.0.0 Tagged)*
+
+            ---
+            ### 🔒 Integrity & Security:
+            * All builds are signed with official keystores and 100% on-device private.
+            * Master Super Admin key for offline key generator: `6924923086`.
           draft: false
           prerelease: false
           files: |
             release-assets/AegisFocus-Latest.apk
             release-assets/AegisFocus-v1.1.0.apk
-            release-assets/AegisFocus-v1.0.0.apk
+            release-assets/Barakah-Latest.apk
+            release-assets/Barakah-v1.0.5.apk
+            release-assets/ASAR-Latest.apk
+            release-assets/ASAR-v1.0.0.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

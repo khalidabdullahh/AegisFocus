@@ -11,6 +11,9 @@
 *.apk
 !ASAR-v1.0.0.apk
 !ASAR-Latest.apk
+!AegisFocus-Latest.apk
+!Barakah-Release.apk
+!releases/*.apk
 /dist
 
 # Keystores & sensitive properties
