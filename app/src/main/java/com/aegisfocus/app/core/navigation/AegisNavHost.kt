@@ -105,9 +105,7 @@ fun AegisNavHost(
                                 },
                                 selected = isSelected,
                                 onClick = {
-                                    if (screen.route == Screen.Settings.route && currentRoute == Screen.Auth.route) {
-                                        navController.popBackStack(Screen.Settings.route, false)
-                                    } else if (currentRoute != screen.route) {
+                                    if (currentRoute != screen.route) {
                                         navController.navigate(screen.route) {
                                             popUpTo(navController.graph.findStartDestination().id) {
                                                 saveState = true
@@ -233,12 +231,11 @@ fun AegisNavHost(
                     SettingsViewModel(
                         settingsRepository = container.settingsRepository,
                         scheduleRepository = container.scheduleRepository,
-                        authService = container.supabaseAuthService
+                        entitlementManager = container.entitlementManager
                     )
                 }
                 SettingsScreen(
                     viewModel = vm,
-                    onNavigateToAuth = { navController.navigate(Screen.Auth.route) },
                     onNavigateToPaywall = { navController.navigate(Screen.Paywall.route) }
                 )
             }
@@ -253,18 +250,6 @@ fun AegisNavHost(
                 PaywallScreen(
                     viewModel = vm,
                     onDismiss = { navController.popBackStack() }
-                )
-            }
-
-            composable(Screen.Auth.route) {
-                val vm = androidx.lifecycle.viewmodel.compose.viewModel {
-                    com.aegisfocus.app.presentation.auth.AuthViewModel(
-                        authService = container.supabaseAuthService
-                    )
-                }
-                com.aegisfocus.app.presentation.auth.AuthScreen(
-                    viewModel = vm,
-                    onNavigateBack = { navController.popBackStack() }
                 )
             }
         }

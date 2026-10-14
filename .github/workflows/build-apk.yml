@@ -45,14 +45,17 @@ jobs:
           fi
           echo "✅ APK successfully generated at: $APK_FILE"
           mkdir -p release-assets
-          cp "$APK_FILE" release-assets/ASAR-Latest.apk
-          cp "$APK_FILE" release-assets/ASAR-v1.0.0.apk
+          cp "$APK_FILE" release-assets/AegisFocus-Latest.apk
+          cp "$APK_FILE" release-assets/AegisFocus-v1.1.0.apk
+          if [ -f "releases/AegisFocus-v1.0.0-Release.apk" ]; then
+            cp releases/AegisFocus-v1.0.0-Release.apk release-assets/AegisFocus-v1.0.0.apk
+          fi
           ls -lh release-assets/
 
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ASAR-Latest-APK
+          name: AegisFocus-Release-APKs
           path: release-assets/*.apk
           retention-days: 30
           if-no-files-found: error
@@ -62,24 +65,27 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           tag_name: latest
-          name: "ASAR Focus v1.0.0 (Latest Release)"
+          name: "Aegis Focus (Latest Release)"
           body: |
-            ## 🚀 ASAR (Aegis Focus) Android Release
+            ## 🛡️ Aegis Focus — Unbreakable Digital Discipline & Focus
             
-            ### ✨ What's New:
-            - 🛡️ **Server-Authoritative Payment Queue**: bKash & Nagad instant TrxID submission & admin 1-tap activation.
-            - 🔒 **Super Admin Portal**: Review and verify payment claims directly inside the app.
-            - 💎 **Encrypted Licensing**: Server-validated license key generation and redemption.
-            - ⚡ **Offline Discipline Guardrails**: Anti-tamper strict mode, focus XP level system, and distraction blocker.
-            - 🔔 **Discord Telemetry Relay**: Real-time event notifications via secure Supabase Edge Function.
+            ### ✨ Highlights:
+            - 🛡️ **100% Offline & Private**: Zero cloud tracking. All focus logs and rules live purely on your physical device.
+            - 🔒 **Unbypassable Strict Mode**: Device Administrator lock prevents tampering, killing accessibility, or uninstallation during active focus.
+            - 🧘 **Mindful Pause & Adaptive Friction**: 5s-30s escalating breathing delays break compulsive phone habits.
+            - 🔑 **Cryptographic Offline License Engine**: Built-in HMAC SHA-256 license validator (`AEGIS-12M-XXXX-XXXX`).
+            - 🔐 **Secured Super Admin Mobile Panel**: Embedded mobile license generator unlocked via master key `6924923086`.
             
             ---
-            ### 📥 Download & Install
-            Click **[`ASAR-Latest.apk`](https://github.com/khalidabdullahh/AegisFocus/releases/latest/download/ASAR-Latest.apk)** below to install on your Android device.
+            ### 📥 Download APKs:
+            * **[AegisFocus-Latest.apk](https://github.com/khalidabdullahh/AegisFocus/releases/latest/download/AegisFocus-Latest.apk)** *(Recommended)*
+            * **[AegisFocus-v1.1.0.apk](https://github.com/khalidabdullahh/AegisFocus/releases/latest/download/AegisFocus-v1.1.0.apk)** *(v1.1.0)*
+            * **[AegisFocus-v1.0.0.apk](https://github.com/khalidabdullahh/AegisFocus/releases/latest/download/AegisFocus-v1.0.0.apk)** *(Legacy v1.0.0)*
           draft: false
           prerelease: false
           files: |
-            release-assets/ASAR-Latest.apk
-            release-assets/ASAR-v1.0.0.apk
+            release-assets/AegisFocus-Latest.apk
+            release-assets/AegisFocus-v1.1.0.apk
+            release-assets/AegisFocus-v1.0.0.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

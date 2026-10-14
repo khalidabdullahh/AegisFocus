@@ -144,11 +144,29 @@ class SettingsRepositoryImpl(
         prefs.edit().putBoolean(KEY_ONBOARDING_DONE, completed).apply()
     }
 
+    override fun isShortsBlockerEnabled(): Boolean {
+        return prefs.getBoolean(KEY_SHORTS_BLOCKER_ENABLED, true)
+    }
+
+    override fun setShortsBlockerEnabled(enabled: Boolean) {
+        prefs.edit().putBoolean(KEY_SHORTS_BLOCKER_ENABLED, enabled).apply()
+    }
+
+    override fun isGrayscaleFatigueEnabled(): Boolean {
+        return prefs.getBoolean(KEY_GRAYSCALE_FATIGUE_ENABLED, false)
+    }
+
+    override fun setGrayscaleFatigueEnabled(enabled: Boolean) {
+        prefs.edit().putBoolean(KEY_GRAYSCALE_FATIGUE_ENABLED, enabled).apply()
+    }
+
     companion object {
         private const val KEY_DEFAULT_DURATION = "default_focus_duration"
         private const val KEY_EMERGENCY_COOLDOWN = "emergency_cooldown_seconds"
         private const val KEY_STRICT_FRICTION_PHRASE = "strict_friction_phrase"
         private const val KEY_DARK_THEME = "dark_theme"
         private const val KEY_ONBOARDING_DONE = "onboarding_done"
+        private const val KEY_SHORTS_BLOCKER_ENABLED = "shorts_blocker_enabled"
+        private const val KEY_GRAYSCALE_FATIGUE_ENABLED = "grayscale_fatigue_enabled"
     }
 }

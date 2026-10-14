@@ -1,6 +1,6 @@
-# 🛡️ ASR / Aegis-Focus — সম্পূর্ণ কোডবেজ গাইড ও বিশ্লেষণ (Code Guide)
+# 🛡️ Barakah — সম্পূর্ণ কোডবেজ গাইড ও বিশ্লেষণ (Code Guide)
 
-স্বাগতম! এই গাইডটি **ASR / Aegis-Focus** প্রোডাক্টিভিটি স্যুট এবং অ্যান্ড্রয়েড অ্যাপের সমস্ত আর্কিটেকচার, ব্যাকগ্রাউন্ড সার্ভিস ও ব্লকিং মেকানিজম সহজে বোঝার জন্য তৈরি করা হয়েছে।
+স্বাগতম! এই গাইডটি **Barakah** প্রোডাক্টিভিটি স্যুট এবং অ্যান্ড্রয়েড অ্যাপের সমস্ত আর্কিটেকচার, ব্যাকগ্রাউন্ড সার্ভিস ও ব্লকিং মেকানিজম সহজে বোঝার জন্য তৈরি করা হয়েছে।
 
 ---
 
@@ -8,11 +8,12 @@
 
 | ফাইল পাথ | মূল ভূমিকা | কী কাজ করে? |
 | :--- | :--- | :--- |
-| [`about.html`](file:///Users/khalidabdullah/AntiGravity/aegis-focus/about.html) | **ওয়েব ল্যান্ডিং পেজ** | ASR ফিলোসফি ও ব্র্যান্ড শোকেস (Time, Attention, Discipline)। |
+| [`index.html`](file:///Users/khalidabdullah/AntiGravity/aegis-focus/index.html) | **ওয়েব ল্যান্ডিং পেজ** | Barakah ফিলোসফি ও ব্র্যান্ড শোকেস (Protect Your Time. Multiply Barakah.)। |
 | [`AegisApplication.kt`](file:///Users/khalidabdullah/AntiGravity/aegis-focus/app/src/main/java/com/aegisfocus/app/AegisApplication.kt) | **অ্যাপ এন্ট্রি পয়েন্ট** | নোটিফিকেশন চ্যানেল তৈরি ও ব্যাকগ্রাউন্ড `WorkManager` শুরু করে। |
+| [`OnboardingScreen.kt`](file:///Users/khalidabdullah/AntiGravity/aegis-focus/app/src/main/java/com/aegisfocus/app/presentation/onboarding/OnboardingScreen.kt) | **ম্যান্ডেটরি পারমিশন গেট** | Usage Access, Accessibility ও Notification ছাড়া ড্যাশবোর্ডে প্রবেশ আটকায়। |
 | [`AegisNavHost.kt`](file:///Users/khalidabdullah/AntiGravity/aegis-focus/app/src/main/java/com/aegisfocus/app/core/navigation/AegisNavHost.kt) | **UI নেভিগেশন গ্রাফ** | Home, Focus, Apps, Stats এবং Settings স্ক্রিনের রাউটিং নিয়ন্ত্রণ করে। |
-| [`TimeUtils.kt`](file:///Users/khalidabdullah/AntiGravity/aegis-focus/app/src/main/java/com/aegisfocus/app/core/common/TimeUtils.kt) | **টাইমার ইউটিলিটি** | সেশনের বাকি সময় (যেমন: 25:00) ও মোট ঘণ্টার হিসাব প্রদর্শন করে। |
-| [`AegisDatabase.kt`](file:///Users/khalidabdullah/AntiGravity/aegis-focus/app/src/data/local/AegisDatabase.kt) | **লোকাল ডাটাবেস (Room)** | ব্লকড অ্যাপস তালিকা ও ফোকাস হিস্ট্রি সংরক্ষণ করে। |
+| [`LicenseKeyValidator.kt`](file:///Users/khalidabdullah/AntiGravity/aegis-focus/app/src/main/java/com/aegisfocus/app/data/license/LicenseKeyValidator.kt) | **অফলাইন লাইসেন্স ও সুপার অ্যাডমিন** | HMAC SHA-256 কোড ভ্যালিডেশন ও সিক্রেট পাসওয়ার্ড (`6924923086`) দিয়ে কী তৈরি। |
+| [`AegisDatabase.kt`](file:///Users/khalidabdullah/AntiGravity/aegis-focus/app/src/main/java/com/aegisfocus/app/data/local/AegisDatabase.kt) | **১০০% লোকাল ডাটাবেস (Room)** | ব্লকড অ্যাপস তালিকা, সেশন ও ডিসিপ্লিন হিস্ট্রি ডিভাইস মেমরিতে সংরক্ষণ করে। |
 
 ---
 
@@ -23,9 +24,9 @@ graph TD
     A["ইউজার ফোকাস সেশন চালু করে (যেমন: 25 মিনিট)"] --> B["AegisApplication: ব্যাকগ্রাউন্ড ট্র্যাকার সচল করে"]
     B --> C["ইউজার কোনো রেস্ট্রিক্টেড অ্যাপ ওপেন করে"]
     C --> D{"অ্যাপটি কি Blocked List-এ আছে?"}
-    D -- হ্যাঁ --> E["Aegis Blocking Overlay স্ক্রিন দেখায় ও ডিস্ট্রাকশন ঠেকায়"]
+    D -- হ্যাঁ --> E["Barakah Blocking Overlay স্ক্রিন দেখায় ও ৫ সেকেন্ড পজ দেয়"]
     D -- না --> F["স্বাভাবিকভাবে অ্যাপ চলতে দেয়"]
-    E --> G["সেশন শেষ হলে সফল ফোকাস হিস্ট্রি ডাটাবেসে সেভ হয়"]
+    E --> G["সেশন শেষ হলে সফল ফোকাস হিস্ট্রি লোকাল ডাটাবেসে সেভ হয়"]
 ```
 
 ---
@@ -39,16 +40,15 @@ graph TD
   2. হাই-প্রায়োরিটি নোটিফিকেশন চ্যানেল তৈরি করে (যাতে ফোকাস চলাকালে টাইমার দেখা যায়)।
   3. `DailyUsageSnapshotWorker` এবং `ScheduleCheckWorker` ব্যাকগ্রাউন্ড টাস্ক শিডিউল করে।
 
-### খ. `TimeUtils.kt`
-- 📌 **উদ্দেশ্য:** সময়কে মানুষের পড়ার উপযোগী ফরম্যাটে আনা।
+### খ. `LicenseKeyValidator.kt` & Super Admin Generator
+- 📌 **উদ্দেশ্য:** ১০০% অফলাইন লাইসেন্স কোড তৈরি ও ভেরিফাই করা।
 - ⚙️ **লজিক:**
-  - `formatRemainingMillis(1500000)` $\rightarrow$ `"25:00"`
-  - `formatMinutesHuman(150)` $\rightarrow$ `"2h 30m"`
+  - `BARAKAH-12M-XXXX-XXXX` অথবা `BARAKAH-LIFETIME-XXXX-XXXX`
+  - সুপার অ্যাডমিন পাসওয়ার্ড: `6924923086`
 
 ---
 
 ## 🛠️ ৪. কীভাবে টেস্ট ও বিল্ড করবেন (Build & Test)
-১. অ্যান্ড্রয়েড স্টুডিও (Android Studio)-তে `aegis-focus` ফোল্ডারটি ওপেন করুন।  
-২. `Gradle Sync` সম্পন্ন হতে দিন।  
-৩. এমুলেটর বা রিয়েল ডিভাইসে `Run app` দিন।  
-৪. ফিলোসফি ওয়েব পেজ দেখতে `about.html` ফাইলটি যেকোনো ব্রাউজারে ডাবল ক্লিক করে খুলুন।
+১. টার্মিনালে `./gradlew test` চালিয়ে সব ইউনিট টেস্ট যাচাই করুন।  
+২. `./gradlew assembleRelease` চালিয়ে সাইন করা প্রোডাকশন APK তৈরি করুন।  
+৩. ল্যান্ডিং পেজ দেখতে `index.html` যেকোনো ব্রাউজারে খুলুন।

@@ -8,14 +8,18 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.provider.Settings
+import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.aegisfocus.app.data.remote.AuthUser
+import com.aegisfocus.app.data.local.entity.SubscriptionEntity
 import com.aegisfocus.app.data.remote.SupabaseAuthService
 import com.aegisfocus.app.domain.model.PermissionState
 import com.aegisfocus.app.domain.model.Schedule
 import com.aegisfocus.app.domain.repository.ScheduleRepository
 import com.aegisfocus.app.domain.repository.SettingsRepository
+import com.aegisfocus.app.domain.subscription.EntitlementManager
+import com.aegisfocus.app.domain.subscription.LicenseKeyValidator
+import com.aegisfocus.app.domain.subscription.SubscriptionPlan
 import com.aegisfocus.app.service.receiver.AegisDeviceAdminReceiver
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -32,24 +36,64 @@ data class SettingsUiState(
     val isDarkTheme: Boolean = true,
     val schedules: List<Schedule> = emptyList(),
     val isAddScheduleDialogOpen: Boolean = false,
-    val currentUser: AuthUser? = null
+    val isRedeemDialogOpen: Boolean = false,
+    val redeemError: String? = null,
+    val redeemSuccess: String? = null,
+    val isAdminMode: Boolean = false,
+    val isPasswordPromptOpen: Boolean = false,
+    val adminPasswordError: String? = null,
+    val activePlan: SubscriptionPlan = SubscriptionPlan.FREE,
+    val daysRemaining: Long = 0L,
+    val isShortsBlockerEnabled: Boolean = true,
+    val isGrayscaleFatigueEnabled: Boolean = false
+)
+
+private data class SettingsLocalDialogState(
+    val isAddScheduleOpen: Boolean = false,
+    val isRedeemDialogOpen: Boolean = false,
+    val redeemError: String? = null,
+    val redeemSuccess: String? = null,
+    val isAdminMode: Boolean = false,
+    val isPasswordPromptOpen: Boolean = false,
+    val adminPasswordError: String? = null
 )
 
 class SettingsViewModel(
     private val settingsRepository: SettingsRepository,
     private val scheduleRepository: ScheduleRepository,
-    private val authService: SupabaseAuthService
+    private val entitlementManager: EntitlementManager? = null,
+    private val authService: SupabaseAuthService? = null
 ) : ViewModel() {
 
     private val _schedules = MutableStateFlow<List<Schedule>>(emptyList())
-    private val _isAddScheduleOpen = MutableStateFlow(false)
+    private val _localState = MutableStateFlow(SettingsLocalDialogState())
+    private var adminTapCount = 0
+
+    private val activePlanFlow: StateFlow<SubscriptionPlan> = entitlementManager?.activePlan?.stateIn(
+        viewModelScope, SharingStarted.Eagerly, SubscriptionPlan.FREE
+    ) ?: MutableStateFlow(SubscriptionPlan.FREE)
+
+    private val subEntityFlow: StateFlow<SubscriptionEntity?> = entitlementManager?.subscriptionEntity?.stateIn(
+        viewModelScope, SharingStarted.Eagerly, null
+    ) ?: MutableStateFlow(null)
+
+    private val subDataFlow = combine(activePlanFlow, subEntityFlow) { plan, entity ->
+        val remaining = if (entity != null && entity.expiryEpochMs > System.currentTimeMillis()) {
+            val diffMs = entity.expiryEpochMs - System.currentTimeMillis()
+            (diffMs / (24L * 60 * 60 * 1000)).coerceAtLeast(1)
+        } else {
+            0L
+        }
+        plan to remaining
+    }
 
     val uiState: StateFlow<SettingsUiState> = combine(
         settingsRepository.getPermissionStateFlow(),
         _schedules,
-        _isAddScheduleOpen,
-        authService.currentUser
-    ) { perms, scheds, addOpen, user ->
+        subDataFlow,
+        _localState
+    ) { perms, scheds, subData, local ->
+        val (plan, remaining) = subData
         SettingsUiState(
             permissions = perms,
             defaultDurationMinutes = settingsRepository.getDefaultFocusDurationMinutes(),
@@ -57,10 +101,29 @@ class SettingsViewModel(
             isStrictFrictionPhraseEnabled = settingsRepository.isStrictModeFrictionPhraseEnabled(),
             isDarkTheme = settingsRepository.isDarkTheme(),
             schedules = scheds,
-            isAddScheduleDialogOpen = addOpen,
-            currentUser = user
+            isAddScheduleDialogOpen = local.isAddScheduleOpen,
+            isRedeemDialogOpen = local.isRedeemDialogOpen,
+            redeemError = local.redeemError,
+            redeemSuccess = local.redeemSuccess,
+            isAdminMode = local.isAdminMode,
+            isPasswordPromptOpen = local.isPasswordPromptOpen,
+            adminPasswordError = local.adminPasswordError,
+            activePlan = plan,
+            daysRemaining = remaining,
+            isShortsBlockerEnabled = settingsRepository.isShortsBlockerEnabled(),
+            isGrayscaleFatigueEnabled = settingsRepository.isGrayscaleFatigueEnabled()
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), SettingsUiState())
+
+    fun toggleShortsBlocker(enabled: Boolean) {
+        settingsRepository.setShortsBlockerEnabled(enabled)
+        refreshPermissions()
+    }
+
+    fun toggleGrayscaleFatigue(enabled: Boolean) {
+        settingsRepository.setGrayscaleFatigueEnabled(enabled)
+        refreshPermissions()
+    }
 
     init {
         refreshPermissions()
@@ -103,20 +166,113 @@ class SettingsViewModel(
     fun addSchedule(schedule: Schedule) {
         viewModelScope.launch {
             scheduleRepository.saveSchedule(schedule)
-            _isAddScheduleOpen.value = false
+            _localState.value = _localState.value.copy(isAddScheduleOpen = false)
         }
     }
 
     fun openAddScheduleDialog() {
-        _isAddScheduleOpen.value = true
+        _localState.value = _localState.value.copy(isAddScheduleOpen = true)
     }
 
     fun closeAddScheduleDialog() {
-        _isAddScheduleOpen.value = false
+        _localState.value = _localState.value.copy(isAddScheduleOpen = false)
     }
 
-    fun updateDisplayName(newName: String) {
-        authService.updateDisplayName(newName)
+    fun openRedeemDialog() {
+        _localState.value = _localState.value.copy(
+            isRedeemDialogOpen = true,
+            redeemError = null,
+            redeemSuccess = null
+        )
+    }
+
+    fun closeRedeemDialog() {
+        _localState.value = _localState.value.copy(
+            isRedeemDialogOpen = false,
+            redeemError = null,
+            redeemSuccess = null
+        )
+    }
+
+    fun redeemLicenseKey(rawKey: String) {
+        val key = rawKey.trim().uppercase()
+        if (key.isBlank()) {
+            _localState.value = _localState.value.copy(redeemError = "Please enter a valid license key.")
+            return
+        }
+
+        val result = LicenseKeyValidator.validateKey(key)
+        if (!result.isValid) {
+            _localState.value = _localState.value.copy(redeemError = result.message)
+            return
+        }
+
+        viewModelScope.launch {
+            try {
+                val expiryMs = if (result.durationDays > 0) {
+                    System.currentTimeMillis() + result.durationDays.toLong() * 24 * 60 * 60 * 1000
+                } else {
+                    0L
+                }
+                entitlementManager?.activatePlan(result.plan, expiryMs, key)
+                _localState.value = _localState.value.copy(
+                    redeemSuccess = result.message,
+                    redeemError = null
+                )
+            } catch (e: Exception) {
+                _localState.value = _localState.value.copy(
+                    redeemError = "Activation failed: ${e.message}"
+                )
+            }
+        }
+    }
+
+    fun onVersionTapped(context: Context? = null) {
+        if (_localState.value.isAdminMode) {
+            _localState.value = _localState.value.copy(isAdminMode = false)
+            adminTapCount = 0
+            if (context != null) {
+                Toast.makeText(context, "Super Admin Mode Deactivated", Toast.LENGTH_SHORT).show()
+            }
+            return
+        }
+
+        adminTapCount++
+        if (adminTapCount >= 5) {
+            _localState.value = _localState.value.copy(
+                isPasswordPromptOpen = true,
+                adminPasswordError = null
+            )
+            adminTapCount = 0
+        } else if (adminTapCount >= 2 && context != null) {
+            val remaining = 5 - adminTapCount
+            Toast.makeText(context, "Tap $remaining more times for Admin Mode", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    fun closeAdminPasswordPrompt() {
+        _localState.value = _localState.value.copy(
+            isPasswordPromptOpen = false,
+            adminPasswordError = null
+        )
+    }
+
+    fun verifyAdminPassword(password: String, context: Context? = null) {
+        val trimmed = password.trim()
+        if (trimmed == "6924923086") {
+            _localState.value = _localState.value.copy(
+                isAdminMode = true,
+                isPasswordPromptOpen = false,
+                adminPasswordError = null
+            )
+            if (context != null) {
+                Toast.makeText(context, "👑 Super Admin Mode Unlocked!", Toast.LENGTH_SHORT).show()
+            }
+        } else {
+            _localState.value = _localState.value.copy(
+                adminPasswordError = "Incorrect password. Access denied."
+            )
+        }
     }
 
     // Direct Platform Intent Openers

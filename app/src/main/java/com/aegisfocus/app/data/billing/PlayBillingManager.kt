@@ -134,8 +134,8 @@ class PlayBillingManager(
      */
     fun launchPurchase(activity: Activity, plan: SubscriptionPlan, onResult: (Boolean, String?) -> Unit) {
         val productId = when (plan) {
-            SubscriptionPlan.PRO_MONTHLY -> PRODUCT_MONTHLY
-            SubscriptionPlan.PRO_YEARLY -> PRODUCT_YEARLY
+            SubscriptionPlan.PRO_1_MONTH, SubscriptionPlan.PRO_MONTHLY -> PRODUCT_MONTHLY
+            SubscriptionPlan.PRO_3_MONTHS, SubscriptionPlan.PRO_6_MONTHS, SubscriptionPlan.PRO_12_MONTHS, SubscriptionPlan.PRO_YEARLY -> PRODUCT_YEARLY
             SubscriptionPlan.STUDENT_YEARLY -> PRODUCT_STUDENT
             SubscriptionPlan.LIFETIME -> PRODUCT_LIFETIME
             SubscriptionPlan.FREE -> return
@@ -146,8 +146,10 @@ class PlayBillingManager(
             // Fallback for demo/offline testing: simulate instant activation
             scope.launch {
                 val expiryMs = when (plan) {
-                    SubscriptionPlan.PRO_MONTHLY -> System.currentTimeMillis() + 30L * 24 * 60 * 60 * 1000
-                    SubscriptionPlan.PRO_YEARLY, SubscriptionPlan.STUDENT_YEARLY -> System.currentTimeMillis() + 365L * 24 * 60 * 60 * 1000
+                    SubscriptionPlan.PRO_1_MONTH, SubscriptionPlan.PRO_MONTHLY -> System.currentTimeMillis() + 30L * 24 * 60 * 60 * 1000
+                    SubscriptionPlan.PRO_3_MONTHS -> System.currentTimeMillis() + 90L * 24 * 60 * 60 * 1000
+                    SubscriptionPlan.PRO_6_MONTHS -> System.currentTimeMillis() + 180L * 24 * 60 * 60 * 1000
+                    SubscriptionPlan.PRO_12_MONTHS, SubscriptionPlan.PRO_YEARLY, SubscriptionPlan.STUDENT_YEARLY -> System.currentTimeMillis() + 365L * 24 * 60 * 60 * 1000
                     SubscriptionPlan.LIFETIME -> 0L
                     else -> 0L
                 }

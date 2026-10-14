@@ -1,22 +1,22 @@
-# Google Play Store Listing — ASR
+# Google Play Store Listing — Barakah
 
 ---
 
 ## 🏷️ App Title (Max 30 chars)
-`ASAR — Turn Time Into Progress`
+`Barakah — Focus & App Blocker`
 
 ---
 
 ## 📝 Short Description (Max 80 chars)
-`Protect your attention. Block distracting apps. Build unbreakable discipline.`
+`Protect your time. Multiply Barakah. Stop doomscrolling with mindful focus.`
 
 ---
 
 ## 📄 Full Description (Formatted for Play Store Console)
 
-**Take control of your digital attention. ASR is the next-generation focus and digital discipline app designed to turn distraction into real progress.**
+**Protect your time. Multiply Barakah. Barakah is the next-generation focus and digital discipline app designed to break unconscious phone habits and turn distraction into real progress.**
 
-Most app blockers rely on weak reminders that you easily swipe away. ASR is engineered with real psychological and technical discipline mechanisms: from **Strict Mode tamper protection** to **5-second mindful breathing friction**, giving you the focus structure you need to accomplish your most important goals.
+Most app blockers rely on weak reminders that you easily swipe away. Barakah is engineered with real psychological and technical discipline mechanisms: from **Strict Mode tamper protection** to **5-second mindful breathing friction**, giving you the focus structure you need to accomplish your most important goals.
 
 ---
 
@@ -48,11 +48,11 @@ Most app blockers rely on weak reminders that you easily swipe away. ASR is engi
 ---
 
 ### 🛡️ ACCESSIBILITY SERVICE & PERMISSION DISCLOSURE:
-ASAR uses Android's AccessibilityService API and UsageStats API strictly to detect foreground app launches during your active focus sessions and display the blocking intervention. ASR **never** reads keystrokes, personal messages, web content, or sensitive user data.
+Barakah uses Android's AccessibilityService API and UsageStats API strictly to detect foreground app launches during your active focus sessions and display the blocking intervention. Barakah **never** reads keystrokes, personal messages, web content, or sensitive user data.
 
 ---
 
 ### 🌐 Links & Resources:
 * **Developer**: Khalid Abdullah ([@khalidabdullahh](https://github.com/khalidabdullahh))
-* **Privacy Policy**: [https://khalidabdullahh.github.io/ASR-TurnTimeIntoProgress/privacy.html](https://khalidabdullahh.github.io/ASR-TurnTimeIntoProgress/privacy.html)
 * **Website**: [https://bproductive.vercel.app](https://bproductive.vercel.app)
+* **Privacy Policy**: [https://bproductive.vercel.app/privacy.html](https://bproductive.vercel.app/privacy.html)

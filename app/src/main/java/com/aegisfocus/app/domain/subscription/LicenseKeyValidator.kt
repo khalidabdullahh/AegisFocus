@@ -30,8 +30,8 @@ object LicenseKeyValidator {
         }
 
         val parts = cleanKey.split("-")
-        if (parts.size != 4 || (parts[0] != "ASAR" && parts[0] != "ASR")) {
-            return ValidationResult(isValid = false, message = "Invalid key format. Expected: ASAR-XXXX-XXXX-XXXX")
+        if (parts.size != 4 || (parts[0] != "AEGIS" && parts[0] != "BARAKAH" && parts[0] != "ASAR" && parts[0] != "ASR")) {
+            return ValidationResult(isValid = false, message = "Invalid key format. Expected: AEGIS-XXXX-XXXX-XXXX")
         }
 
         val tier = parts[1]
@@ -54,19 +54,20 @@ object LicenseKeyValidator {
         }
 
         return when (tier) {
-            "LIFE" -> ValidationResult(isValid = true, plan = SubscriptionPlan.LIFETIME, durationDays = 0, message = "Lifetime Pro Activated!")
-            "YEAR" -> ValidationResult(isValid = true, plan = SubscriptionPlan.PRO_YEARLY, durationDays = 365, message = "1-Year Pro Activated!")
-            "MNTH" -> ValidationResult(isValid = true, plan = SubscriptionPlan.PRO_MONTHLY, durationDays = 30, message = "1-Month Pro Activated!")
-            "STUD" -> ValidationResult(isValid = true, plan = SubscriptionPlan.STUDENT_YEARLY, durationDays = 365, message = "Student Pro Activated!")
-            "VIP"  -> ValidationResult(isValid = true, plan = SubscriptionPlan.LIFETIME, durationDays = 0, message = "VIP Lifetime Pro Activated!")
-            else   -> ValidationResult(isValid = false, message = "Unknown license tier.")
+            "1M", "MNTH"   -> ValidationResult(isValid = true, plan = SubscriptionPlan.PRO_1_MONTH, durationDays = 30, message = "1-Month Pro Activated!")
+            "3M"           -> ValidationResult(isValid = true, plan = SubscriptionPlan.PRO_3_MONTHS, durationDays = 90, message = "3-Month Pro Activated!")
+            "6M"           -> ValidationResult(isValid = true, plan = SubscriptionPlan.PRO_6_MONTHS, durationDays = 180, message = "6-Month Pro Activated!")
+            "12M", "YEAR"  -> ValidationResult(isValid = true, plan = SubscriptionPlan.PRO_12_MONTHS, durationDays = 365, message = "12-Month Pro Activated!")
+            "LIFE", "VIP"  -> ValidationResult(isValid = true, plan = SubscriptionPlan.LIFETIME, durationDays = 0, message = "Lifetime Pro Activated!")
+            "STUD"         -> ValidationResult(isValid = true, plan = SubscriptionPlan.STUDENT_YEARLY, durationDays = 365, message = "Student Pro Activated!")
+            else           -> ValidationResult(isValid = false, message = "Unknown license tier: $tier")
         }
     }
 
     fun generateKey(tier: String = "LIFE"): String {
         val payload = "%04X".format((1000..9999).random())
         val sig = computeChecksum("$tier-$payload-$SECRET_SALT")
-        return "ASAR-$tier-$payload-$sig"
+        return "AEGIS-$tier-$payload-$sig"
     }
 
     private fun computeChecksum(input: String): String {

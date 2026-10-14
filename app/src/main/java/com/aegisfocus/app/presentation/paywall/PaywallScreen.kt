@@ -18,16 +18,23 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.ContentPaste
+import androidx.compose.material.icons.filled.Key
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -37,8 +44,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -64,6 +76,8 @@ fun PaywallScreen(
     val uiState by viewModel.uiState.collectAsState()
     val context = LocalContext.current
     val activity = context as? Activity
+    val clipboardManager = LocalClipboardManager.current
+    val focusManager = LocalFocusManager.current
 
     if (uiState.purchaseSucceeded && uiState.currentPlan != SubscriptionPlan.FREE) {
         PurchaseSuccessScreen(onDone = onDismiss)
@@ -126,7 +140,7 @@ fun PaywallScreen(
                 )
                 Spacer(Modifier.height(4.dp))
                 Text(
-                    text = "No ads. No telemetry. Official in-app billing.",
+                    text = "No ads. 100% On-Device Privacy. Instant Activation.",
                     color = TextSecondary,
                     fontSize = 13.sp,
                     textAlign = TextAlign.Center
@@ -136,14 +150,114 @@ fun PaywallScreen(
 
         Spacer(Modifier.height(20.dp))
 
-        // Feature comparison table
-        FeatureComparisonTable()
+        // Redeem License Key Section (Direct Activation)
+        Card(
+            modifier = Modifier
+                .padding(horizontal = 20.dp)
+                .fillMaxWidth(),
+            colors = CardDefaults.cardColors(containerColor = DeepSurface),
+            shape = RoundedCornerShape(16.dp),
+            border = BorderStroke(1.dp, CyanAccent.copy(alpha = 0.4f))
+        ) {
+            Column(Modifier.padding(16.dp)) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    Icon(Icons.Default.Key, contentDescription = null, tint = CyanAccent, modifier = Modifier.size(20.dp))
+                    Text(
+                        text = "Redeem License Code",
+                        color = TextPrimary,
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+
+                Spacer(Modifier.height(6.dp))
+                Text(
+                    text = "Enter the 16-character license key received after purchasing via bKash / Nagad / Direct seller:",
+                    color = TextSecondary,
+                    fontSize = 12.sp,
+                    lineHeight = 16.sp
+                )
+
+                Spacer(Modifier.height(12.dp))
+
+                OutlinedTextField(
+                    value = uiState.licenseKeyInput,
+                    onValueChange = { viewModel.onLicenseKeyChange(it.uppercase()) },
+                    modifier = Modifier.fillMaxWidth(),
+                    placeholder = {
+                        Text("AEGIS-12M-XXXX-XXXX", color = TextMuted, fontSize = 13.sp, fontFamily = FontFamily.Monospace)
+                    },
+                    trailingIcon = {
+                        IconButton(onClick = {
+                            clipboardManager.getText()?.text?.let {
+                                viewModel.onLicenseKeyChange(it.trim().uppercase())
+                            }
+                        }) {
+                            Icon(Icons.Default.ContentPaste, contentDescription = "Paste", tint = CyanAccent)
+                        }
+                    },
+                    singleLine = true,
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedBorderColor = CyanAccent,
+                        unfocusedBorderColor = SubtleBorder,
+                        focusedTextColor = TextPrimary,
+                        unfocusedTextColor = TextPrimary,
+                        cursorColor = CyanAccent
+                    ),
+                    shape = RoundedCornerShape(10.dp),
+                    keyboardOptions = KeyboardOptions(
+                        capitalization = KeyboardCapitalization.Characters,
+                        imeAction = ImeAction.Done
+                    ),
+                    keyboardActions = KeyboardActions(
+                        onDone = {
+                            focusManager.clearFocus()
+                            viewModel.redeemLicenseKey()
+                        }
+                    )
+                )
+
+                if (uiState.redeemErrorMessage != null) {
+                    Spacer(Modifier.height(6.dp))
+                    Text(
+                        text = "⚠ ${uiState.redeemErrorMessage}",
+                        color = AlertStrict,
+                        fontSize = 12.sp
+                    )
+                }
+
+                if (uiState.redeemSuccessMessage != null) {
+                    Spacer(Modifier.height(6.dp))
+                    Text(
+                        text = "✓ ${uiState.redeemSuccessMessage}",
+                        color = EmeraldFocus,
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+
+                Spacer(Modifier.height(12.dp))
+
+                AegisPrimaryButton(
+                    text = if (uiState.isRedeeming) "Activating..." else "Activate Pro Key ⚡",
+                    onClick = {
+                        focusManager.clearFocus()
+                        viewModel.redeemLicenseKey()
+                    },
+                    enabled = uiState.licenseKeyInput.isNotBlank() && !uiState.isRedeeming,
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
+        }
 
         Spacer(Modifier.height(20.dp))
 
-        // Plan selection
+        // Subscription Plans
         Text(
-            text = "Select In-App Plan (${uiState.storeName})",
+            text = "Subscription Packages",
             color = TextPrimary,
             fontWeight = FontWeight.SemiBold,
             fontSize = 15.sp,
@@ -162,54 +276,42 @@ fun PaywallScreen(
 
         Spacer(Modifier.height(16.dp))
 
-        // CTA
-        Box(
-            Modifier
+        // Feature comparison table
+        FeatureComparisonTable()
+
+        Spacer(Modifier.height(20.dp))
+
+        // How to buy license guide
+        Card(
+            modifier = Modifier
                 .padding(horizontal = 20.dp)
-                .fillMaxWidth()
+                .fillMaxWidth(),
+            colors = CardDefaults.cardColors(containerColor = DeepSurface),
+            shape = RoundedCornerShape(12.dp),
+            border = BorderStroke(1.dp, SubtleBorder)
         ) {
-            if (uiState.isLoading) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Center
-                ) {
-                    CircularProgressIndicator(color = CyanAccent)
-                }
-            } else {
-                AegisPrimaryButton(
-                    text = "Subscribe with ${uiState.selectedOption.label} — ${uiState.selectedOption.price}",
-                    onClick = { viewModel.purchaseSelected(activity) },
-                    modifier = Modifier.fillMaxWidth()
+            Column(Modifier.padding(16.dp)) {
+                Text(
+                    text = "💡 How to get a License Code?",
+                    color = CyanAccent,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 14.sp
+                )
+                Spacer(Modifier.height(6.dp))
+                Text(
+                    text = "1. Choose your preferred plan above (1, 3, 6, or 12 Months).\n2. Send the subscription fee via bKash / Nagad / Bank to the authorized seller.\n3. You will immediately receive your unique activation code.\n4. Paste the code above to activate instant Pro access!",
+                    color = TextSecondary,
+                    fontSize = 12.sp,
+                    lineHeight = 18.sp
                 )
             }
         }
 
-        uiState.errorMessage?.let { msg ->
-            Spacer(Modifier.height(8.dp))
-            Text(
-                text = msg,
-                color = AlertStrict,
-                fontSize = 13.sp,
-                modifier = Modifier.padding(horizontal = 20.dp)
-            )
-        }
+        Spacer(Modifier.height(16.dp))
 
-        Spacer(Modifier.height(12.dp))
+        // Privacy note
         Text(
-            text = "Restore Purchases",
-            color = CyanAccent,
-            fontSize = 13.sp,
-            fontWeight = FontWeight.SemiBold,
-            modifier = Modifier
-                .align(Alignment.CenterHorizontally)
-                .clickable { viewModel.restorePurchases() }
-                .padding(8.dp)
-        )
-
-        // Legal footer
-        Spacer(Modifier.height(8.dp))
-        Text(
-            text = "Purchases are securely processed by ${uiState.storeName}. Auto-renews unless cancelled 24h before renewal.",
+            text = "100% Offline Cryptographic Verification • No Account or Remote Database Required",
             color = TextMuted,
             fontSize = 11.sp,
             textAlign = TextAlign.Center,
@@ -293,8 +395,8 @@ private fun PlanOptionCard(
                 Text(option.perMonth, color = TextMuted, fontSize = 12.sp)
             }
             Column(horizontalAlignment = Alignment.End) {
-                Text(option.price, color = if (isSelected) CyanAccent else TextPrimary, fontWeight = FontWeight.Bold, fontSize = 18.sp)
-                if (option == PaywallOption.YEARLY) {
+                Text(option.price, color = if (isSelected) CyanAccent else TextPrimary, fontWeight = FontWeight.Bold, fontSize = 16.sp)
+                if (option == PaywallOption.MONTH_12) {
                     Text("BEST VALUE", color = EmeraldFocus, fontSize = 10.sp, fontWeight = FontWeight.Bold)
                 }
             }

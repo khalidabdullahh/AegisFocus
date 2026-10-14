@@ -11,25 +11,33 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
+import com.aegisfocus.app.domain.subscription.LicenseKeyValidator
+
 data class PaywallUiState(
     val currentPlan: SubscriptionPlan = SubscriptionPlan.FREE,
-    val selectedOption: PaywallOption = PaywallOption.YEARLY,
+    val selectedOption: PaywallOption = PaywallOption.MONTH_12,
     val isLoading: Boolean = false,
+    val isRedeeming: Boolean = false,
     val purchaseSucceeded: Boolean = false,
     val errorMessage: String? = null,
-    val storeName: String = "Google Play"
+    val redeemSuccessMessage: String? = null,
+    val redeemErrorMessage: String? = null,
+    val licenseKeyInput: String = "",
+    val storeName: String = "Direct APK / License Key"
 )
 
 enum class PaywallOption(
     val label: String,
     val price: String,
     val perMonth: String,
-    val planType: SubscriptionPlan
+    val planType: SubscriptionPlan,
+    val durationDays: Int
 ) {
-    MONTHLY("Monthly", "$2.99", "$2.99/mo", SubscriptionPlan.PRO_MONTHLY),
-    YEARLY("Yearly", "$19.99", "$1.67/mo", SubscriptionPlan.PRO_YEARLY),
-    LIFETIME("Lifetime", "$49.99", "One-time", SubscriptionPlan.LIFETIME),
-    STUDENT("Student Yearly", "$9.99", "$0.83/mo", SubscriptionPlan.STUDENT_YEARLY)
+    MONTH_1("1 Month Pro", "৳150 / $1.99", "30 Days Access", SubscriptionPlan.PRO_1_MONTH, 30),
+    MONTH_3("3 Months Pro", "৳350 / $4.49", "90 Days Access", SubscriptionPlan.PRO_3_MONTHS, 90),
+    MONTH_6("6 Months Pro", "৳600 / $7.99", "180 Days Access", SubscriptionPlan.PRO_6_MONTHS, 180),
+    MONTH_12("12 Months (1 Year)", "৳999 / $12.99", "365 Days • Best Value", SubscriptionPlan.PRO_12_MONTHS, 365),
+    LIFETIME("Lifetime Pro", "৳1999 / $24.99", "Permanent Access", SubscriptionPlan.LIFETIME, 0)
 }
 
 class PaywallViewModel(
@@ -39,7 +47,7 @@ class PaywallViewModel(
 
     private val _uiState = MutableStateFlow(
         PaywallUiState(
-            storeName = storeBillingManager?.currentStore?.displayName ?: "Google Play"
+            storeName = storeBillingManager?.currentStore?.displayName ?: "Direct APK / License Key"
         )
     )
     val uiState: StateFlow<PaywallUiState> = _uiState.asStateFlow()
@@ -59,8 +67,60 @@ class PaywallViewModel(
         _uiState.value = _uiState.value.copy(selectedOption = option)
     }
 
+    fun onLicenseKeyChange(newKey: String) {
+        _uiState.value = _uiState.value.copy(
+            licenseKeyInput = newKey,
+            redeemErrorMessage = null,
+            redeemSuccessMessage = null
+        )
+    }
+
     /**
-     * Initiates official Store In-App Purchase flow (Google Play / Samsung / Amazon).
+     * Offline Cryptographic License Key Redemption (Instant, 100% On-Device, No DB).
+     */
+    fun redeemLicenseKey(rawKey: String? = null) {
+        val key = (rawKey ?: _uiState.value.licenseKeyInput).trim().uppercase()
+        if (key.isBlank()) {
+            _uiState.value = _uiState.value.copy(redeemErrorMessage = "Please enter a valid license key.")
+            return
+        }
+
+        _uiState.value = _uiState.value.copy(isRedeeming = true, redeemErrorMessage = null, redeemSuccessMessage = null)
+
+        val result = LicenseKeyValidator.validateKey(key)
+        if (!result.isValid) {
+            _uiState.value = _uiState.value.copy(
+                isRedeeming = false,
+                redeemErrorMessage = result.message
+            )
+            return
+        }
+
+        viewModelScope.launch {
+            try {
+                val expiryMs = if (result.durationDays > 0) {
+                    System.currentTimeMillis() + result.durationDays.toLong() * 24 * 60 * 60 * 1000
+                } else {
+                    0L // Lifetime
+                }
+                entitlementManager.activatePlan(result.plan, expiryMs, key)
+                _uiState.value = _uiState.value.copy(
+                    isRedeeming = false,
+                    purchaseSucceeded = true,
+                    redeemSuccessMessage = result.message,
+                    licenseKeyInput = ""
+                )
+            } catch (e: Exception) {
+                _uiState.value = _uiState.value.copy(
+                    isRedeeming = false,
+                    redeemErrorMessage = "Activation failed: ${e.message}"
+                )
+            }
+        }
+    }
+
+    /**
+     * Initiates official Store In-App Purchase flow (if store configured) or local activation fallback.
      */
     fun purchaseSelected(activity: Activity? = null) {
         val option = _uiState.value.selectedOption
@@ -78,13 +138,12 @@ class PaywallViewModel(
             // Local activation fallback
             viewModelScope.launch {
                 try {
-                    val expiryMs = when (option.planType) {
-                        SubscriptionPlan.PRO_MONTHLY -> System.currentTimeMillis() + 30L * 24 * 60 * 60 * 1000
-                        SubscriptionPlan.PRO_YEARLY, SubscriptionPlan.STUDENT_YEARLY -> System.currentTimeMillis() + 365L * 24 * 60 * 60 * 1000
-                        SubscriptionPlan.LIFETIME -> 0L
-                        else -> 0L
+                    val expiryMs = if (option.durationDays > 0) {
+                        System.currentTimeMillis() + option.durationDays.toLong() * 24 * 60 * 60 * 1000
+                    } else {
+                        0L
                     }
-                    entitlementManager.activatePlan(option.planType, expiryMs, "store_activated_token")
+                    entitlementManager.activatePlan(option.planType, expiryMs, "local_activated")
                     _uiState.value = _uiState.value.copy(isLoading = false, purchaseSucceeded = true)
                 } catch (e: Exception) {
                     _uiState.value = _uiState.value.copy(
@@ -120,6 +179,6 @@ class PaywallViewModel(
     }
 
     fun clearError() {
-        _uiState.value = _uiState.value.copy(errorMessage = null)
+        _uiState.value = _uiState.value.copy(errorMessage = null, redeemErrorMessage = null)
     }
 }

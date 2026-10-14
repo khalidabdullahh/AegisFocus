@@ -62,6 +62,35 @@ class OnboardingViewModel(
         settingsRepository.setOnboardingCompleted(true)
     }
 
+    fun openUsageAccessSettings(context: Context) {
+        val intent = Intent(android.provider.Settings.ACTION_USAGE_ACCESS_SETTINGS).apply {
+            if (context !is Activity) flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        }
+        runCatching { context.startActivity(intent) }
+    }
+
+    fun openAccessibilitySettings(context: Context) {
+        val intent = Intent(android.provider.Settings.ACTION_ACCESSIBILITY_SETTINGS).apply {
+            if (context !is Activity) flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        }
+        runCatching { context.startActivity(intent) }
+    }
+
+    fun openNotificationSettings(context: Context) {
+        val intent = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            Intent(android.provider.Settings.ACTION_APP_NOTIFICATION_SETTINGS).apply {
+                putExtra(android.provider.Settings.EXTRA_APP_PACKAGE, context.packageName)
+                if (context !is Activity) flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            }
+        } else {
+            Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+                data = android.net.Uri.parse("package:${context.packageName}")
+                if (context !is Activity) flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            }
+        }
+        runCatching { context.startActivity(intent) }
+    }
+
     fun openDeviceAdminSettings(context: Context) {
         val adminComponent = ComponentName(context, AegisDeviceAdminReceiver::class.java)
         val intent = Intent(DevicePolicyManager.ACTION_ADD_DEVICE_ADMIN).apply {

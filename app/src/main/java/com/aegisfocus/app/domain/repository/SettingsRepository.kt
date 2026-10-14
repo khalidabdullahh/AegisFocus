@@ -16,4 +16,8 @@ interface SettingsRepository {
     fun setDarkTheme(isDark: Boolean)
     fun isOnboardingCompleted(): Boolean
     fun setOnboardingCompleted(completed: Boolean)
+    fun isShortsBlockerEnabled(): Boolean
+    fun setShortsBlockerEnabled(enabled: Boolean)
+    fun isGrayscaleFatigueEnabled(): Boolean
+    fun setGrayscaleFatigueEnabled(enabled: Boolean)
 }

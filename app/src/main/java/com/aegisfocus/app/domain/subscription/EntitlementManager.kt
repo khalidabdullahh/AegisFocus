@@ -11,6 +11,9 @@ import kotlinx.coroutines.flow.map
  */
 class EntitlementManager(private val subscriptionDao: SubscriptionDao) {
 
+    /** Observe raw subscription entity for expiry calculations. */
+    val subscriptionEntity: Flow<SubscriptionEntity?> = subscriptionDao.observeSubscription()
+
     /** Observe active plan as a Flow for reactive UI updates. */
     val activePlan: Flow<SubscriptionPlan> = subscriptionDao.observeSubscription().map { entity ->
         entity?.toSubscriptionPlan() ?: SubscriptionPlan.FREE

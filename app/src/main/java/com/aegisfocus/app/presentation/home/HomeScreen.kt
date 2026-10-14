@@ -170,6 +170,92 @@ fun HomeScreen(
             }
         }
 
+        Spacer(modifier = Modifier.height(12.dp))
+
+        // ─── Monk Mode Aegis Shield Evolution Card ───────────────────────────
+        val shieldTier = com.aegisfocus.app.domain.motivation.ShieldTier.fromStreak(uiState.currentStreak)
+        Surface(
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(16.dp),
+            color = DeepSurface,
+            border = BorderStroke(1.dp, androidx.compose.ui.graphics.Color(shieldTier.accentHex).copy(alpha = 0.5f))
+        ) {
+            Row(
+                modifier = Modifier.padding(16.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(14.dp),
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Surface(
+                        shape = CircleShape,
+                        color = androidx.compose.ui.graphics.Color(shieldTier.accentHex).copy(alpha = 0.15f),
+                        border = BorderStroke(1.dp, androidx.compose.ui.graphics.Color(shieldTier.accentHex).copy(alpha = 0.6f)),
+                        modifier = Modifier.size(46.dp)
+                    ) {
+                        Box(contentAlignment = Alignment.Center) {
+                            Text(
+                                text = when (shieldTier) {
+                                    com.aegisfocus.app.domain.motivation.ShieldTier.BRONZE -> "🥉"
+                                    com.aegisfocus.app.domain.motivation.ShieldTier.SILVER -> "🥈"
+                                    com.aegisfocus.app.domain.motivation.ShieldTier.GOLD -> "🥇"
+                                    com.aegisfocus.app.domain.motivation.ShieldTier.OBSIDIAN -> "💎"
+                                },
+                                fontSize = 22.sp
+                            )
+                        }
+                    }
+
+                    Column {
+                        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                            Text(
+                                text = shieldTier.title,
+                                color = androidx.compose.ui.graphics.Color(shieldTier.accentHex),
+                                fontSize = 15.sp,
+                                fontWeight = FontWeight.Black
+                            )
+                            Surface(
+                                shape = RoundedCornerShape(4.dp),
+                                color = EmeraldFocus.copy(alpha = 0.2f)
+                            ) {
+                                Text(
+                                    text = "MONK SHIELD",
+                                    color = EmeraldFocus,
+                                    fontSize = 9.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    modifier = Modifier.padding(horizontal = 4.dp, vertical = 1.dp)
+                                )
+                            }
+                        }
+                        Spacer(Modifier.height(2.dp))
+                        Text(
+                            text = shieldTier.description,
+                            color = TextSecondary,
+                            fontSize = 12.sp,
+                            maxLines = 1
+                        )
+                    }
+                }
+
+                Column(horizontalAlignment = Alignment.End) {
+                    Text(
+                        text = "100%",
+                        color = EmeraldFocus,
+                        fontSize = 13.sp,
+                        fontWeight = FontWeight.ExtraBold
+                    )
+                    Text(
+                        text = "Durability",
+                        color = TextMuted,
+                        fontSize = 10.sp
+                    )
+                }
+            }
+        }
+
         // Pro upgrade nudge (only for Free users)
         if (!uiState.isPro) {
             Spacer(Modifier.height(10.dp))

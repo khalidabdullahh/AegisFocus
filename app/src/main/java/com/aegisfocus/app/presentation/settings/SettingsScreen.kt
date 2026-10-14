@@ -59,10 +59,12 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import java.io.File
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import com.aegisfocus.app.R
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.aegisfocus.app.core.components.AegisOutlinedButton
@@ -79,14 +81,21 @@ import com.aegisfocus.app.core.theme.SubtleBorder
 import com.aegisfocus.app.core.theme.TextMuted
 import com.aegisfocus.app.core.theme.TextPrimary
 import com.aegisfocus.app.core.theme.TextSecondary
+import com.aegisfocus.app.core.theme.AlertStrict
 import com.aegisfocus.app.data.remote.SupabaseAuthService
+import androidx.compose.material.icons.filled.ContentPaste
+import androidx.compose.material.icons.filled.Key
+import androidx.compose.material.icons.filled.Lock
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.foundation.text.KeyboardOptions
 import com.aegisfocus.app.domain.model.Schedule
 import com.aegisfocus.app.domain.subscription.LicenseKeyValidator
+import com.aegisfocus.app.domain.subscription.SubscriptionPlan
 
 @Composable
 fun SettingsScreen(
     viewModel: SettingsViewModel,
-    onNavigateToAuth: () -> Unit = {},
     onNavigateToPaywall: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
@@ -115,167 +124,21 @@ fun SettingsScreen(
             letterSpacing = (-0.5).sp
         )
         Text(
-            text = "Permissions, cloud sync, and discipline rules.",
+            text = "Permissions, focus habits, and discipline rules.",
             fontSize = 13.sp,
             color = TextSecondary
         )
 
         Spacer(modifier = Modifier.height(18.dp))
 
-        // Account & Cloud Sync Card
-        val user = uiState.currentUser
-        if (user == null) {
-            Surface(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable { onNavigateToAuth() },
-                shape = RoundedCornerShape(16.dp),
-                color = DeepSurface,
-                border = BorderStroke(1.dp, CyanAccent.copy(alpha = 0.3f))
-            ) {
-                Row(
-                    modifier = Modifier.padding(16.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                        Box(
-                            modifier = Modifier
-                                .size(44.dp)
-                                .clip(RoundedCornerShape(12.dp))
-                                .background(CyanAccent.copy(alpha = 0.15f)),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Icon(Icons.Default.Security, contentDescription = null, tint = CyanAccent, modifier = Modifier.size(24.dp))
-                        }
-                        Column {
-                            Text("Account & Cloud Sync", color = TextPrimary, fontWeight = FontWeight.Bold, fontSize = 15.sp)
-                            Text("Sign in to backup & sync your focus stats", color = TextSecondary, fontSize = 12.sp)
-                        }
-                    }
-                    Surface(
-                        shape = RoundedCornerShape(20.dp),
-                        color = CyanAccent.copy(alpha = 0.15f),
-                        border = BorderStroke(1.dp, CyanAccent)
-                    ) {
-                        Text(
-                            text = "Sign In",
-                            color = CyanAccent,
-                            fontSize = 12.sp,
-                            fontWeight = FontWeight.Bold,
-                            modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
-                        )
-                    }
-                }
-            }
-        } else {
-            Surface(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable { onNavigateToAuth() },
-                shape = RoundedCornerShape(16.dp),
-                color = DeepSurface,
-                border = BorderStroke(1.dp, CyanAccent.copy(alpha = 0.4f))
-            ) {
-                Row(
-                    modifier = Modifier.padding(16.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(12.dp),
-                        modifier = Modifier.weight(1f)
-                    ) {
-                        val avatarBitmap = remember(user.avatarUri) {
-                            user.avatarUri?.let { path ->
-                                try {
-                                    val file = File(path)
-                                    if (file.exists()) {
-                                        BitmapFactory.decodeFile(file.absolutePath)?.asImageBitmap()
-                                    } else null
-                                } catch (e: Exception) { null }
-                            }
-                        }
-
-                        val initial = user.displayName?.firstOrNull()?.uppercaseChar()
-                            ?: user.email.firstOrNull()?.uppercaseChar()
-                            ?: 'A'
-                        Box(
-                            modifier = Modifier
-                                .size(48.dp)
-                                .clip(CircleShape)
-                                .background(CyanAccent.copy(alpha = 0.2f))
-                                .border(BorderStroke(1.5.dp, CyanAccent), CircleShape),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            if (avatarBitmap != null) {
-                                Image(
-                                    bitmap = avatarBitmap,
-                                    contentDescription = "Avatar",
-                                    contentScale = ContentScale.Crop,
-                                    modifier = Modifier.fillMaxSize()
-                                )
-                            } else {
-                                Text(
-                                    text = initial.toString(),
-                                    color = CyanAccent,
-                                    fontSize = 20.sp,
-                                    fontWeight = FontWeight.ExtraBold
-                                )
-                            }
-                        }
-
-                        Column {
-                            Text(
-                                text = user.displayName?.takeIf { it.isNotBlank() } ?: user.email.substringBefore("@"),
-                                color = TextPrimary,
-                                fontWeight = FontWeight.Bold,
-                                fontSize = 16.sp
-                            )
-                            Text(
-                                text = user.email,
-                                color = TextSecondary,
-                                fontSize = 12.sp
-                            )
-                            Spacer(modifier = Modifier.height(2.dp))
-                            val isSuper = SupabaseAuthService.isSuperAdmin(user.email)
-                            Text(
-                                text = if (isSuper) "👑 Super Admin • Lifetime Pro" else "✓ Cloud Sync Active",
-                                color = if (isSuper) CyanAccent else EmeraldFocus,
-                                fontSize = 11.sp,
-                                fontWeight = FontWeight.Bold
-                            )
-                        }
-                    }
-
-                    Surface(
-                        shape = RoundedCornerShape(20.dp),
-                        color = ElevatedSurface,
-                        border = BorderStroke(1.dp, SubtleBorder)
-                    ) {
-                        Text(
-                            text = "Edit Profile",
-                            color = TextPrimary,
-                            fontSize = 12.sp,
-                            fontWeight = FontWeight.Bold,
-                            modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
-                        )
-                    }
-                }
-            }
-        }
-
-        Spacer(modifier = Modifier.height(12.dp))
-
-        // Aegis Pro Membership Card
+        // Aegis Focus Pro Card
         Surface(
             modifier = Modifier
                 .fillMaxWidth()
-                .clickable { onNavigateToPaywall() },
+                .clickable(onClick = onNavigateToPaywall),
             shape = RoundedCornerShape(16.dp),
             color = DeepSurface,
-            border = BorderStroke(1.dp, CyanAccent.copy(alpha = 0.5f))
+            border = BorderStroke(1.dp, if (uiState.activePlan != SubscriptionPlan.FREE) EmeraldFocus.copy(alpha = 0.6f) else CyanAccent.copy(alpha = 0.5f))
         ) {
             Row(
                 modifier = Modifier.padding(16.dp),
@@ -291,34 +154,92 @@ fun SettingsScreen(
                         modifier = Modifier
                             .size(44.dp)
                             .clip(RoundedCornerShape(12.dp))
-                            .background(CyanAccent.copy(alpha = 0.2f)),
+                            .background(if (uiState.activePlan != SubscriptionPlan.FREE) EmeraldFocus.copy(alpha = 0.2f) else CyanAccent.copy(alpha = 0.2f)),
                         contentAlignment = Alignment.Center
                     ) {
                         Icon(
                             imageVector = Icons.Default.Star,
                             contentDescription = null,
-                            tint = CyanAccent,
+                            tint = if (uiState.activePlan != SubscriptionPlan.FREE) EmeraldFocus else CyanAccent,
                             modifier = Modifier.size(24.dp)
                         )
                     }
                     Column {
-                        Text("Aegis Pro Membership", color = TextPrimary, fontWeight = FontWeight.Bold, fontSize = 15.sp)
-                        Text("Unlimited Strict Mode, Website Blocking & Analytics", color = TextSecondary, fontSize = 11.sp)
+                        val isProActive = uiState.activePlan != SubscriptionPlan.FREE
+                        Text(
+                            text = if (isProActive) "👑 ${uiState.activePlan.displayName}" else "Aegis Focus Pro",
+                            color = TextPrimary,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 15.sp
+                        )
+                        Text(
+                            text = if (isProActive) {
+                                if (uiState.activePlan == SubscriptionPlan.LIFETIME) "Permanent Lifetime Access • Active"
+                                else "${uiState.daysRemaining} days remaining • Active"
+                            } else {
+                                "Unlimited Strict Mode, Website Blocking & Analytics"
+                            },
+                            color = if (isProActive) EmeraldFocus else TextSecondary,
+                            fontSize = 11.sp,
+                            fontWeight = if (isProActive) FontWeight.SemiBold else FontWeight.Normal
+                        )
                     }
                 }
                 Surface(
+                    onClick = onNavigateToPaywall,
                     shape = RoundedCornerShape(20.dp),
-                    color = CyanAccent,
-                    border = BorderStroke(1.dp, CyanAccent)
+                    color = if (uiState.activePlan != SubscriptionPlan.FREE) EmeraldFocus.copy(alpha = 0.15f) else CyanAccent,
+                    border = BorderStroke(1.dp, if (uiState.activePlan != SubscriptionPlan.FREE) EmeraldFocus else CyanAccent)
                 ) {
+                    Box(
+                        contentAlignment = Alignment.Center,
+                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 10.dp)
+                    ) {
+                        Text(
+                            text = if (uiState.activePlan != SubscriptionPlan.FREE) "Manage" else "Upgrade",
+                            color = if (uiState.activePlan != SubscriptionPlan.FREE) EmeraldFocus else ObsidianBg,
+                            fontSize = 13.sp,
+                            fontWeight = FontWeight.Black
+                        )
+                    }
+                }
+            }
+        }
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        // Quick Redeem License Button Card
+        Surface(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable { viewModel.openRedeemDialog() },
+            shape = RoundedCornerShape(14.dp),
+            color = ElevatedSurface,
+            border = BorderStroke(1.dp, SubtleBorder)
+        ) {
+            Row(
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
+                    Icon(Icons.Default.Key, contentDescription = null, tint = CyanAccent, modifier = Modifier.size(18.dp))
                     Text(
-                        text = "Upgrade",
-                        color = ObsidianBg,
-                        fontSize = 12.sp,
-                        fontWeight = FontWeight.Black,
-                        modifier = Modifier.padding(horizontal = 14.dp, vertical = 6.dp)
+                        text = "Have a License Code? Redeem Here",
+                        color = TextPrimary,
+                        fontSize = 13.sp,
+                        fontWeight = FontWeight.SemiBold
                     )
                 }
+                Text(
+                    text = "Redeem ⚡",
+                    color = CyanAccent,
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.Bold
+                )
             }
         }
 
@@ -478,6 +399,242 @@ fun SettingsScreen(
                         )
                     )
                 }
+
+                Spacer(modifier = Modifier.height(18.dp))
+
+                // 🎬 Surgical Shorts / Reels Blocker Toggle
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Column(modifier = Modifier.weight(1f)) {
+                        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                            Text(
+                                text = "Block Shorts & Reels",
+                                fontSize = 15.sp,
+                                fontWeight = FontWeight.SemiBold,
+                                color = TextPrimary
+                            )
+                            Surface(
+                                shape = RoundedCornerShape(4.dp),
+                                color = EmeraldFocus.copy(alpha = 0.2f)
+                            ) {
+                                Text(
+                                    text = "SURGICAL",
+                                    color = EmeraldFocus,
+                                    fontSize = 9.sp,
+                                    fontWeight = FontWeight.Black,
+                                    modifier = Modifier.padding(horizontal = 5.dp, vertical = 2.dp)
+                                )
+                            }
+                        }
+                        Text(
+                            text = "Auto-blocks YouTube Shorts & Instagram Reels without blocking the full app",
+                            fontSize = 12.sp,
+                            color = TextSecondary
+                        )
+                    }
+
+                    Switch(
+                        checked = uiState.isShortsBlockerEnabled,
+                        onCheckedChange = { viewModel.toggleShortsBlocker(it) },
+                        colors = SwitchDefaults.colors(
+                            checkedThumbColor = ObsidianBg,
+                            checkedTrackColor = EmeraldFocus,
+                            uncheckedThumbColor = TextMuted,
+                            uncheckedTrackColor = DeepSurface
+                        )
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(18.dp))
+
+                // 🌓 Scroll Fatigue & Grayscale Detox
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Column(modifier = Modifier.weight(1f)) {
+                        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                            Text(
+                                text = "Scroll Fatigue Grayscale",
+                                fontSize = 15.sp,
+                                fontWeight = FontWeight.SemiBold,
+                                color = TextPrimary
+                            )
+                            Surface(
+                                shape = RoundedCornerShape(4.dp),
+                                color = CyanAccent.copy(alpha = 0.2f)
+                            ) {
+                                Text(
+                                    text = "DETOX",
+                                    color = CyanAccent,
+                                    fontSize = 9.sp,
+                                    fontWeight = FontWeight.Black,
+                                    modifier = Modifier.padding(horizontal = 5.dp, vertical = 2.dp)
+                                )
+                            }
+                        }
+                        Text(
+                            text = "Turn screen monochrome during excessive scrolling to kill dopamine attraction",
+                            fontSize = 12.sp,
+                            color = TextSecondary
+                        )
+                    }
+
+                    Switch(
+                        checked = uiState.isGrayscaleFatigueEnabled,
+                        onCheckedChange = { isChecked ->
+                            viewModel.toggleGrayscaleFatigue(isChecked)
+                            if (isChecked) {
+                                try {
+                                    val intent = android.content.Intent("android.settings.COLOR_CORRECTION_SETTINGS")
+                                    context.startActivity(intent)
+                                } catch (e: Exception) {
+                                    try {
+                                        val intent = android.content.Intent(android.provider.Settings.ACTION_ACCESSIBILITY_SETTINGS)
+                                        context.startActivity(intent)
+                                    } catch (e2: Exception) {
+                                        android.widget.Toast.makeText(context, "Open Accessibility Settings to enable Grayscale", android.widget.Toast.LENGTH_SHORT).show()
+                                    }
+                                }
+                            }
+                        },
+                        colors = SwitchDefaults.colors(
+                            checkedThumbColor = ObsidianBg,
+                            checkedTrackColor = CyanAccent,
+                            uncheckedThumbColor = TextMuted,
+                            uncheckedTrackColor = DeepSurface
+                        )
+                    )
+                }
+            }
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // 🛡️ AdBlocker Assistant Card (1-Tap Deep Link + Auto-Copy)
+        Surface(
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(16.dp),
+            color = DeepSurface,
+            border = BorderStroke(1.dp, SubtleBorder)
+        ) {
+            Column(modifier = Modifier.padding(16.dp)) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(10.dp),
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Surface(
+                            shape = RoundedCornerShape(10.dp),
+                            color = CyanAccent.copy(alpha = 0.15f),
+                            modifier = Modifier.size(38.dp)
+                        ) {
+                            Box(contentAlignment = Alignment.Center) {
+                                Text("🛡️", fontSize = 18.sp)
+                            }
+                        }
+                        Column {
+                            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                                Text(
+                                    text = "System-Wide AdBlocker",
+                                    fontSize = 15.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    color = TextPrimary
+                                )
+                                Surface(
+                                    shape = RoundedCornerShape(4.dp),
+                                    color = EmeraldFocus.copy(alpha = 0.2f)
+                                ) {
+                                    Text(
+                                        text = "PRIVATE DNS",
+                                        color = EmeraldFocus,
+                                        fontSize = 9.sp,
+                                        fontWeight = FontWeight.Black,
+                                        modifier = Modifier.padding(horizontal = 4.dp, vertical = 1.dp)
+                                    )
+                                }
+                            }
+                            Text(
+                                text = "Blocks 99% of in-app ads & trackers across your entire device with 0 battery drain.",
+                                fontSize = 12.sp,
+                                color = TextSecondary
+                            )
+                        }
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(14.dp))
+
+                Surface(
+                    shape = RoundedCornerShape(10.dp),
+                    color = ElevatedSurface,
+                    border = BorderStroke(1.dp, SubtleBorder),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Row(
+                        modifier = Modifier.padding(12.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Column {
+                            Text(
+                                text = "Recommended AdBlock DNS Host:",
+                                fontSize = 10.sp,
+                                color = TextMuted
+                            )
+                            Text(
+                                text = "dns.adguard-dns.com",
+                                fontSize = 13.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = CyanAccent,
+                                fontFamily = androidx.compose.ui.text.font.FontFamily.Monospace
+                            )
+                        }
+
+                        Surface(
+                            modifier = Modifier.clickable {
+                                // 1. Copy DNS hostname to clipboard
+                                val clipboard = context.getSystemService(android.content.Context.CLIPBOARD_SERVICE) as? android.content.ClipboardManager
+                                val clip = android.content.ClipData.newPlainText("Private DNS", "dns.adguard-dns.com")
+                                clipboard?.setPrimaryClip(clip)
+
+                                android.widget.Toast.makeText(context, "✅ 'dns.adguard-dns.com' copied! Paste into Private DNS.", android.widget.Toast.LENGTH_LONG).show()
+
+                                // 2. Launch system Network & Internet / Private DNS Settings
+                                try {
+                                    val intent = android.content.Intent("android.settings.NETWORK_OPERATOR_SETTINGS")
+                                    context.startActivity(intent)
+                                } catch (e: Exception) {
+                                    try {
+                                        val intent = android.content.Intent(android.provider.Settings.ACTION_WIRELESS_SETTINGS)
+                                        context.startActivity(intent)
+                                    } catch (e2: Exception) {
+                                        context.startActivity(android.content.Intent(android.provider.Settings.ACTION_SETTINGS))
+                                    }
+                                }
+                            },
+                            shape = RoundedCornerShape(8.dp),
+                            color = CyanAccent,
+                        ) {
+                            Text(
+                                text = "Auto-Copy & Open ⚙️",
+                                color = ObsidianBg,
+                                fontSize = 12.sp,
+                                fontWeight = FontWeight.Black,
+                                modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp)
+                            )
+                        }
+                    }
+                }
             }
         }
 
@@ -573,7 +730,9 @@ fun SettingsScreen(
 
         // About & Version Info
         Surface(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable { viewModel.onVersionTapped(context) },
             shape = RoundedCornerShape(16.dp),
             color = DeepSurface,
             border = BorderStroke(1.dp, SubtleBorder)
@@ -591,18 +750,23 @@ fun SettingsScreen(
                 Spacer(modifier = Modifier.width(12.dp))
                 Column {
                     Text(
-                        text = "Aegis Focus • v1.0.0",
+                        text = "Aegis Focus • v1.1.0",
                         fontSize = 14.sp,
                         fontWeight = FontWeight.SemiBold,
                         color = TextPrimary
                     )
                     Text(
-                        text = "Digital Discipline & Focus Architecture",
+                        text = stringResource(R.string.about_subtitle),
                         fontSize = 11.sp,
                         color = TextMuted
                     )
                 }
             }
+        }
+
+        if (uiState.isAdminMode) {
+            Spacer(modifier = Modifier.height(16.dp))
+            SuperAdminKeyGeneratorCard()
         }
 
         Spacer(modifier = Modifier.height(36.dp))
@@ -612,6 +776,23 @@ fun SettingsScreen(
         AddScheduleDialog(
             onDismiss = { viewModel.closeAddScheduleDialog() },
             onSave = { schedule -> viewModel.addSchedule(schedule) }
+        )
+    }
+
+    if (uiState.isRedeemDialogOpen) {
+        RedeemLicenseDialog(
+            errorMessage = uiState.redeemError,
+            successMessage = uiState.redeemSuccess,
+            onDismiss = { viewModel.closeRedeemDialog() },
+            onRedeem = { key -> viewModel.redeemLicenseKey(key) }
+        )
+    }
+
+    if (uiState.isPasswordPromptOpen) {
+        AdminPasswordPromptDialog(
+            errorMessage = uiState.adminPasswordError,
+            onDismiss = { viewModel.closeAdminPasswordPrompt() },
+            onVerify = { pin -> viewModel.verifyAdminPassword(pin, context) }
         )
     }
 }
@@ -908,7 +1089,7 @@ private fun AddScheduleDialog(
 @Composable
 private fun SuperAdminKeyGeneratorCard() {
     var generatedKey by remember { mutableStateOf("") }
-    var selectedTier by remember { mutableStateOf("LIFE") }
+    var selectedTier by remember { mutableStateOf("12M") }
     val clipboardManager = LocalClipboardManager.current
 
     Surface(
@@ -934,18 +1115,26 @@ private fun SuperAdminKeyGeneratorCard() {
             Spacer(modifier = Modifier.height(4.dp))
 
             Text(
-                text = "Generate cryptographic Pro license keys for bKash / Nagad / Direct customers:",
+                text = "Generate cryptographic Pro license keys for bKash / Nagad / Direct customers (100% Offline):",
                 fontSize = 11.sp,
                 color = TextSecondary
             )
 
             Spacer(modifier = Modifier.height(12.dp))
 
+            val tiers = listOf(
+                "1M" to "1 Month",
+                "3M" to "3 Mos",
+                "6M" to "6 Mos",
+                "12M" to "1 Year",
+                "LIFE" to "Lifetime"
+            )
+
             Row(
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                horizontalArrangement = Arrangement.spacedBy(6.dp),
                 modifier = Modifier.fillMaxWidth()
             ) {
-                listOf("LIFE" to "Lifetime Pro", "YEAR" to "1-Year Pro", "MNTH" to "1-Month").forEach { (tier, label) ->
+                tiers.forEach { (tier, label) ->
                     val isSel = selectedTier == tier
                     Surface(
                         modifier = Modifier
@@ -958,7 +1147,7 @@ private fun SuperAdminKeyGeneratorCard() {
                         Text(
                             text = label,
                             color = if (isSel) CyanAccent else TextMuted,
-                            fontSize = 11.sp,
+                            fontSize = 10.sp,
                             fontWeight = FontWeight.Bold,
                             textAlign = TextAlign.Center,
                             modifier = Modifier.padding(vertical = 8.dp)
@@ -996,7 +1185,7 @@ private fun SuperAdminKeyGeneratorCard() {
                     ) {
                         Column {
                             Text("KEY (TAP TO COPY):", fontSize = 10.sp, color = TextMuted, fontWeight = FontWeight.Bold)
-                            Text(generatedKey, fontSize = 16.sp, color = EmeraldFocus, fontWeight = FontWeight.Black, letterSpacing = 1.sp)
+                            Text(generatedKey, fontSize = 15.sp, color = EmeraldFocus, fontWeight = FontWeight.Black, letterSpacing = 1.sp)
                         }
                         Text("Copy 📋", fontSize = 12.sp, color = CyanAccent, fontWeight = FontWeight.Bold)
                     }
@@ -1005,3 +1194,221 @@ private fun SuperAdminKeyGeneratorCard() {
         }
     }
 }
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun RedeemLicenseDialog(
+    errorMessage: String?,
+    successMessage: String?,
+    onDismiss: () -> Unit,
+    onRedeem: (String) -> Unit
+) {
+    var keyInput by remember { mutableStateOf("") }
+    val clipboardManager = LocalClipboardManager.current
+
+    BasicAlertDialog(onDismissRequest = onDismiss) {
+        Surface(
+            shape = RoundedCornerShape(20.dp),
+            color = DeepSurface,
+            border = BorderStroke(1.dp, CyanAccent.copy(alpha = 0.4f)),
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Column(
+                modifier = Modifier.padding(20.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Icon(Icons.Default.Key, contentDescription = null, tint = CyanAccent, modifier = Modifier.size(32.dp))
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = "Redeem Pro License",
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = TextPrimary
+                )
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(
+                    text = "Enter the 16-character license key to instantly unlock Aegis Pro:",
+                    fontSize = 12.sp,
+                    color = TextSecondary,
+                    textAlign = TextAlign.Center
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                OutlinedTextField(
+                    value = keyInput,
+                    onValueChange = { keyInput = it.uppercase() },
+                    modifier = Modifier.fillMaxWidth(),
+                    placeholder = {
+                        Text("AEGIS-12M-XXXX-XXXX", color = TextMuted, fontSize = 13.sp)
+                    },
+                    trailingIcon = {
+                        IconButton(onClick = {
+                            clipboardManager.getText()?.text?.let {
+                                keyInput = it.trim().uppercase()
+                            }
+                        }) {
+                            Icon(Icons.Default.ContentPaste, contentDescription = "Paste", tint = CyanAccent)
+                        }
+                    },
+                    singleLine = true,
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedBorderColor = CyanAccent,
+                        unfocusedBorderColor = SubtleBorder,
+                        focusedTextColor = TextPrimary,
+                        unfocusedTextColor = TextPrimary,
+                        cursorColor = CyanAccent
+                    ),
+                    shape = RoundedCornerShape(10.dp)
+                )
+
+                if (errorMessage != null) {
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(
+                        text = "⚠ $errorMessage",
+                        color = AlertStrict,
+                        fontSize = 12.sp,
+                        textAlign = TextAlign.Center
+                    )
+                }
+
+                if (successMessage != null) {
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(
+                        text = "✓ $successMessage",
+                        color = EmeraldFocus,
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.Bold,
+                        textAlign = TextAlign.Center
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(20.dp))
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.End
+                ) {
+                    TextButton(onClick = onDismiss) {
+                        Text(if (successMessage != null) "Done" else "Cancel", color = TextSecondary)
+                    }
+                    Spacer(modifier = Modifier.width(8.dp))
+                    if (successMessage == null) {
+                        AegisPrimaryButton(
+                            text = "Activate",
+                            onClick = { onRedeem(keyInput) },
+                            enabled = keyInput.isNotBlank(),
+                            modifier = Modifier.width(110.dp)
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun AdminPasswordPromptDialog(
+    errorMessage: String?,
+    onDismiss: () -> Unit,
+    onVerify: (String) -> Unit
+) {
+    var password by remember { mutableStateOf("") }
+
+    BasicAlertDialog(onDismissRequest = onDismiss) {
+        Surface(
+            shape = RoundedCornerShape(20.dp),
+            color = DeepSurface,
+            border = BorderStroke(1.dp, CyanAccent.copy(alpha = 0.5f)),
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Column(
+                modifier = Modifier.padding(22.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Box(
+                    modifier = Modifier
+                        .size(52.dp)
+                        .clip(CircleShape)
+                        .background(CyanAccent.copy(alpha = 0.15f)),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Lock,
+                        contentDescription = null,
+                        tint = CyanAccent,
+                        modifier = Modifier.size(28.dp)
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(14.dp))
+
+                Text(
+                    text = "Super Admin Security",
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = TextPrimary
+                )
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(
+                    text = "Enter the 10-digit master password to unlock the offline license generator.",
+                    fontSize = 12.sp,
+                    color = TextSecondary,
+                    textAlign = TextAlign.Center
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                OutlinedTextField(
+                    value = password,
+                    onValueChange = { password = it },
+                    label = { Text("Master Password", color = TextSecondary) },
+                    visualTransformation = PasswordVisualTransformation(),
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.NumberPassword),
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedTextColor = TextPrimary,
+                        unfocusedTextColor = TextPrimary,
+                        focusedBorderColor = CyanAccent,
+                        unfocusedBorderColor = SubtleBorder
+                    ),
+                    shape = RoundedCornerShape(12.dp),
+                    singleLine = true,
+                    modifier = Modifier.fillMaxWidth()
+                )
+
+                if (errorMessage != null) {
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(
+                        text = "⚠ $errorMessage",
+                        color = AlertStrict,
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.SemiBold
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(20.dp))
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
+                    TextButton(
+                        onClick = onDismiss,
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Text("Cancel", color = TextSecondary)
+                    }
+
+                    AegisPrimaryButton(
+                        text = "Unlock",
+                        onClick = { onVerify(password) },
+                        enabled = password.isNotBlank(),
+                        modifier = Modifier.weight(1f)
+                    )
+                }
+            }
+        }
+    }
+}
+

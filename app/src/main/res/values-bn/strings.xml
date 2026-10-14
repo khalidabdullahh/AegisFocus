@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Aegis Focus</string>
+    <string name="app_slogan">অনর্থক স্ক্রলিং থামান, মনোযোগ সুরক্ষিত করুন।</string>
+    <string name="onboarding_subtitle">অনর্থক অ্যাপ ওপেন করার তাড়না থামিয়ে আপনার মনকে গভীর কাজের জন্য প্রস্তুত করে Aegis Focus।</string>
+    <string name="about_subtitle">ডিজিটাল ডিসিপ্লিন ও আত্মনিয়ন্ত্রণ (১০০% অফলাইন)</string>
+    <string name="accessibility_service_description">Aegis Focus এক্সেসিবিলিটি সার্ভিস ব্যবহারের মাধ্যমে ফোকাস সেশনে নিষিদ্ধ বা ক্ষতিকর অ্যাপ ওপেন হওয়া প্রতিরোধ করে।</string>
+    <string name="notification_channel_timer_name">চলমান ফোকাস সেশন</string>
+    <string name="notification_channel_timer_desc">ফোকাস টাইমার ও কাউন্টডাউন স্ট্যাটাস নোটিফিকেশনে দেখায়।</string>
+    <string name="notification_channel_reminders_name">সেশন শিডিউল ও রিমাইন্ডার</string>
+    <string name="notification_channel_reminders_desc">দৈনিক ফোকাস শিডিউল এবং রিমাইন্ডার সম্পর্কিত নোটিফিকেশন।</string>
+</resources>

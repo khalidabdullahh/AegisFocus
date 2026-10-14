@@ -29,18 +29,18 @@ def generate_key(tier: str, label: str = None) -> str:
         payload = "".join(random.choices(string.ascii_uppercase + string.digits, k=4))
     
     checksum = compute_checksum(tier, payload)
-    return f"ASAR-{tier}-{payload}-{checksum}"
+    return f"BARAKAH-{tier}-{payload}-{checksum}"
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Generate ASR License Keys")
-    parser.add_argument("--tier", choices=["LIFE", "YEAR", "MNTH", "STUD", "VIP"], default="LIFE", help="License tier")
+    parser = argparse.ArgumentParser(description="Generate Barakah License Keys")
+    parser.add_argument("--tier", choices=["1M", "3M", "6M", "12M", "LIFE", "YEAR", "MNTH", "STUD", "VIP"], default="12M", help="License tier (1M, 3M, 6M, 12M, LIFE)")
     parser.add_argument("--count", type=int, default=1, help="Number of keys to generate")
     parser.add_argument("--customer", type=str, default=None, help="Customer name / tag")
 
     args = parser.parse_args()
 
     print("=" * 50)
-    print(f"  ASR PRO LICENSE KEY GENERATOR — Tier: {args.tier}")
+    print(f"  BARAKAH PRO LICENSE KEY GENERATOR — Tier: {args.tier}")
     print("=" * 50)
 
     for i in range(args.count):
@@ -48,4 +48,4 @@ if __name__ == "__main__":
         print(f"  Key #{i+1}:  {key}")
 
     print("=" * 50)
-    print("✓ Ready to send to customer! Customer enters key in ASR app -> Pro is instantly unlocked.")
+    print("✓ Ready to send to customer! Customer enters key in Barakah app -> Pro is instantly unlocked.")

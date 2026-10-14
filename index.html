@@ -10,28 +10,31 @@
     <link rel="canonical" href="https://bproductive.vercel.app">
 
     <!-- ── ASAR Identity ──────────────────────────────────────────── -->
-    <title>ASAR — Turn Time Into Progress | Unbreakable Android App Blocker &amp; Focus System</title>
-    <meta name="description" content="ASAR is an advanced on-device digital discipline and focus system for Android. Block distracting apps, activate unbypassable Strict Mode, automate recurring routines, and build unbreakable habits with 100% local-first privacy.">
+    <title>Aegis Focus — Unbreakable Digital Discipline & Focus | Unbreakable Android App Blocker &amp; Focus System</title>
+    <meta name="description" content="Aegis Focus is an advanced on-device digital discipline and focus system for Android. Block distracting apps, activate unbypassable Strict Mode, automate recurring routines, and build unbreakable habits with 100% local-first privacy.">
     <meta name="keywords" content="ASAR, focus app, productivity, app blocker, strict mode, unbypassable app blocker, screen time tracker, digital discipline, deep work, pomodoro, local first focus, adhd focus app">
     <meta name="author" content="Khalid Abdullah">
     <meta name="theme-color" content="#0A0D14">
 
     <!-- ── Open Graph ──────────────────────────────────────────────── -->
-    <meta property="og:title" content="ASAR — Turn Time Into Progress | Unbreakable Focus System">
-    <meta property="og:description" content="Protect your attention. Control distracting apps. Build real discipline. ASAR is a local-first, unbypassable focus system for Android.">
+    <meta property="og:title" content="Aegis Focus — Unbreakable Digital Discipline & Focus | Unbreakable Focus System">
+    <meta property="og:description" content="Protect your attention. Control distracting apps. Build real discipline. Aegis Focus is a local-first, unbypassable focus system for Android.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://bproductive.vercel.app">
     <meta property="og:image" content="https://bproductive.vercel.app/og.png">
 
     <!-- ── Twitter / X Card ────────────────────────────────────────── -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="ASAR — Turn Time Into Progress">
+    <meta name="twitter:title" content="Aegis Focus — Unbreakable Digital Discipline & Focus">
     <meta name="twitter:description" content="Protect your attention. Control distracting apps. Build real discipline with on-device local privacy.">
     <meta name="twitter:image" content="https://bproductive.vercel.app/og.png">
 
-    <!-- ── Favicon ────────────────────────────────────────────────── -->
+        <!-- ── Favicon ────────────────────────────────────────────────── -->
+    <link rel="shortcut icon" href="favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16x16.png">
     <link rel="icon" type="image/png" href="assets/favicon.png">
-    <link rel="apple-touch-icon" href="assets/asar_logo.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
 
     <!-- ── Google Fonts: Inter ─────────────────────────────────────── -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -132,7 +135,7 @@
 <div class="bg-gradient-to-r from-asr-elevated via-asr-surface to-asr-elevated border-b border-asr-border/80 text-xs py-2 px-4 text-center text-asr-muted flex items-center justify-center gap-2">
     <span class="inline-block w-2 h-2 rounded-full bg-asr-emerald animate-pulse"></span>
     <span><strong>ASAR v1.0.0 is Live:</strong> Unbreakable Strict Mode, Loopable Routines &amp; 100% On-Device Privacy.</span>
-    <a href="ASAR-Latest.apk" class="text-asr-sky hover:underline font-bold ml-1 flex items-center gap-0.5">Download Free APK &rarr;</a>
+    <a href="Aegis Focus-Release.apk" class="text-asr-sky hover:underline font-bold ml-1 flex items-center gap-0.5">Download Free APK &rarr;</a>
 </div>
 
 <!-- ══════════════════════════════════════════════════════════════════
@@ -142,12 +145,13 @@
     <div class="max-w-6xl mx-auto px-5 sm:px-8 h-16 flex items-center justify-between">
 
         <!-- Logo & Brand -->
-        <a href="#" class="flex items-center gap-3 group">
+                <!-- Logo & Brand -->
+        <a href="index.html" class="flex items-center gap-3 group">
             <div class="w-9 h-9 rounded-xl bg-asr-elevated border border-asr-border flex items-center justify-center p-1.5 group-hover:border-asr-sky/50 transition overflow-hidden">
-                <img src="assets/asr_logo_transparent_white.png" alt="ASAR Logo" class="w-full h-full object-contain">
+                <img src="assets/aegis_logo.png" alt="Aegis Focus Logo" class="w-full h-full object-contain">
             </div>
             <div>
-                <span class="font-extrabold text-lg tracking-tight text-asr-text">ASAR</span>
+                <span class="font-extrabold text-lg tracking-tight text-asr-text">Aegis Focus</span>
                 <span class="hidden sm:inline-block text-[10px] text-asr-sky font-semibold ml-1.5 px-1.5 py-0.5 rounded bg-asr-sky/10 border border-asr-sky/20">FOCUS</span>
             </div>
         </a>
@@ -170,14 +174,20 @@
 
         <!-- CTA Buttons -->
         <div class="flex items-center gap-3">
-            <a href="ASAR-Latest.apk"
-               download="ASAR-Latest.apk"
+            <a href="AegisFocus-Latest.apk"
+               download="AegisFocus-Latest.apk"
                class="bg-asr-emerald hover:bg-asr-emerald/90 text-asr-bg text-xs sm:text-sm font-bold px-3.5 py-2 rounded-xl transition shadow-md shadow-asr-emerald/20 flex items-center gap-1.5">
                 <i data-lucide="download" class="w-4 h-4"></i>
                 <span>Get APK</span>
             </a>
+            <button type="button"
+                    @click="showVersionModal = true"
+                    class="hidden sm:inline-flex bg-asr-sky/10 hover:bg-asr-sky/20 border border-asr-sky/30 text-asr-sky text-xs sm:text-sm font-semibold px-3.5 py-2 rounded-xl transition items-center gap-1.5">
+                <i data-lucide="layers" class="w-3.5 h-3.5"></i>
+                <span>Releases</span>
+            </button>
             <a href="#simulator"
-               class="hidden sm:inline-flex bg-asr-sky/10 hover:bg-asr-sky/20 border border-asr-sky/30 text-asr-sky text-xs sm:text-sm font-semibold px-4 py-2 rounded-xl transition">
+               class="hidden md:inline-flex bg-asr-elevated hover:bg-asr-border border border-asr-border text-asr-text text-xs sm:text-sm font-semibold px-4 py-2 rounded-xl transition">
                 Try Simulator
             </a>
         </div>
@@ -200,38 +210,76 @@
         <!-- Top Pill Badge -->
         <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-asr-sky/30 bg-asr-sky/10 text-asr-sky text-xs font-bold mb-8 tracking-wide">
             <i data-lucide="shield-check" class="w-3.5 h-3.5"></i>
-            <span>The Anti-Dopamine Focus System for Android</span>
+            <span>The 100% Offline Digital Discipline & Focus Shield</span>
         </div>
 
         <!-- Main Headline -->
         <h1 class="text-4xl sm:text-6xl md:text-7xl font-black tracking-tight leading-[1.08]">
-            Turn Your Time Into
-            <span class="text-gradient block mt-1.5">Unbreakable Progress.</span>
+            Protect Your Attention.
+            <span class="text-gradient block mt-1.5">Unbreakable Digital Discipline.</span>
         </h1>
 
-        <!-- Sub-copy -->
-        <p class="mt-6 text-base sm:text-lg text-asr-muted max-w-2xl mx-auto leading-relaxed">
-            Protect your attention from dopamine traps. Lock down distracting apps with unbypassable Strict Mode, automate recurring deep work routines, and reclaim up to <strong>3 hours every day</strong>.
+        <!-- Bengali Slogan & Subtitle -->
+        <p class="mt-4 text-xl sm:text-2xl font-bold text-asr-text tracking-tight max-w-2xl mx-auto" style="letter-spacing: -0.02em; line-height: 1.4;">
+            অনর্থক স্ক্রলিং থামান, মনোযোগ সুরক্ষিত করুন।
+        </p>
+        <p class="mt-3 text-sm sm:text-base text-asr-muted max-w-2xl mx-auto leading-relaxed">
+            Mindful friction to break unconscious phone addiction, lock down dopamine traps with unbypassable Strict Mode, and reclaim deep focus with 100% on-device offline privacy.
         </p>
 
-        <!-- CTAs Grid -->
-        <div class="flex flex-col sm:flex-row items-center justify-center gap-3.5 mt-10">
-            <a href="ASAR-Latest.apk" download="ASAR-Latest.apk"
+        <!-- CTAs Grid with Direct Download & Version Picker -->
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-3.5 mt-9">
+            <!-- Primary Download Button -->
+            <a href="AegisFocus-Latest.apk" download="AegisFocus-Latest.apk"
                class="w-full sm:w-auto bg-asr-emerald hover:bg-asr-emerald/90 text-asr-bg font-extrabold text-sm px-8 py-4 rounded-xl transition shadow-xl shadow-asr-emerald/25 flex items-center justify-center gap-2 group">
                 <i data-lucide="download" class="w-4 h-4 group-hover:-translate-y-0.5 transition"></i>
-                <span>Download Android APK (Free v1.0.0)</span>
+                <span>Download Latest APK (v1.1.0)</span>
             </a>
+
+            <!-- All Versions / Releases Trigger Button -->
+            <button type="button"
+                    @click="showVersionModal = true"
+                    class="w-full sm:w-auto bg-asr-surface hover:bg-asr-elevated border border-asr-sky/40 text-asr-sky font-bold text-sm px-6 py-4 rounded-xl transition flex items-center justify-center gap-2">
+                <i data-lucide="archive" class="w-4 h-4"></i>
+                <span>All Releases &amp; Old APKs</span>
+            </button>
+
+            <!-- Simulator Button -->
             <a href="#simulator"
-               class="w-full sm:w-auto bg-asr-sky hover:bg-asr-sky/90 text-asr-bg font-bold text-sm px-8 py-4 rounded-xl transition shadow-xl shadow-asr-sky/20 flex items-center justify-center gap-2">
+               class="w-full sm:w-auto bg-asr-elevated hover:bg-asr-border text-asr-text font-bold text-sm px-6 py-4 rounded-xl transition flex items-center justify-center gap-2">
                 <i data-lucide="play" class="w-4 h-4 fill-current"></i>
-                <span>Try Live App Simulator</span>
+                <span>Live Demo</span>
             </a>
+
+            <!-- GitHub Source -->
             <a href="https://github.com/khalidabdullahh/AegisFocus"
                target="_blank"
-               class="w-full sm:w-auto bg-asr-surface hover:bg-asr-elevated border border-asr-border text-asr-text font-semibold text-sm px-6 py-4 rounded-xl transition flex items-center justify-center gap-2">
+               class="w-full sm:w-auto bg-asr-surface hover:bg-asr-elevated border border-asr-border text-asr-text font-semibold text-sm px-5 py-4 rounded-xl transition flex items-center justify-center gap-2">
                 <i data-lucide="github" class="w-4 h-4"></i>
-                <span>GitHub Source</span>
+                <span>GitHub</span>
             </a>
+        </div>
+
+        <!-- Google Play Protect Installation Tip -->
+        <div class="mt-6 max-w-2xl mx-auto bg-asr-surface/90 border border-asr-sky/30 rounded-2xl p-4 text-left shadow-lg backdrop-blur-md">
+            <div class="flex items-start gap-3">
+                <div class="p-2 rounded-xl bg-asr-sky/10 text-asr-sky mt-0.5 shrink-0">
+                    <i data-lucide="info" class="w-5 h-5"></i>
+                </div>
+                <div>
+                    <h4 class="text-xs sm:text-sm font-bold text-asr-text flex items-center gap-2">
+                        <span>How to Install APK on Android (Play Protect Notice)</span>
+                        <span class="text-[10px] bg-asr-sky/20 text-asr-sky px-2 py-0.5 rounded-full font-semibold">1-Tap Tip</span>
+                    </h4>
+                    <p class="text-xs text-asr-muted mt-1 leading-relaxed">
+                        If Google Play Protect shows a popup (<em>"Unrecognised app"</em> or <em>"Blocked by Play Protect"</em>), simply tap:
+                        <strong class="text-asr-sky font-semibold">"More details" (অতিরিক্ত তথ্য)</strong> ➔ <strong class="text-asr-emerald font-semibold">"Install anyway" (যেকোনোভাবে ইনস্টল করুন)</strong>.
+                    </p>
+                    <p class="text-[11px] text-asr-faint mt-1.5">
+                        🛡️ <em>Why this happens:</em> Aegis Focus is 100% offline and standalone. Sideloaded APKs requiring Accessibility and Device Admin triggers standard Android security warnings until indexed on the Play Store.
+                    </p>
+                </div>
+            </div>
         </div>
 
         <!-- Social proof / Trust Stats -->
@@ -309,15 +357,15 @@
 
 
 <!-- ══════════════════════════════════════════════════════════════════
-     HOW ASAR WORKS (3-STEP SYSTEM)
+     HOW BARAKAH WORKS (3-STEP SYSTEM)
 ════════════════════════════════════════════════════════════════════ -->
 <section id="how-it-works" class="py-24 px-5 bg-asr-surface border-y border-asr-border reveal">
     <div class="max-w-6xl mx-auto">
         <div class="text-center mb-16">
-            <p class="text-asr-sky text-xs font-bold tracking-widest uppercase mb-3">How ASAR Works</p>
+            <p class="text-asr-sky text-xs font-bold tracking-widest uppercase mb-3">How Aegis Focus Works</p>
             <h2 class="text-3xl sm:text-4xl font-extrabold text-asr-text">A 3-Step Behavioral Defense System</h2>
             <p class="text-asr-muted text-sm mt-3 max-w-xl mx-auto">
-                ASAR replaces weak willpower with structural friction and unbreakable guardrails.
+                Aegis Focus replaces weak willpower with structural friction and unbreakable guardrails.
             </p>
         </div>
 
@@ -382,7 +430,7 @@
         <p class="text-asr-sky text-xs font-bold tracking-widest uppercase mb-3">Architectural Pillars</p>
         <h2 class="text-3xl sm:text-4xl font-extrabold text-asr-text">Engineered for Uncompromising Focus</h2>
         <p class="text-asr-muted text-sm mt-3 max-w-xl mx-auto">
-            Every feature in ASAR is built ground-up on Android's native APIs for maximum reliability and absolute privacy.
+            Every feature in Aegis Focus is built ground-up on Android's native APIs for maximum reliability and absolute privacy.
         </p>
     </div>
 
@@ -501,7 +549,7 @@
 
 
 <!-- ══════════════════════════════════════════════════════════════════
-     WHO IS ASAR FOR? (PERSONAS / USE CASES)
+     WHO IS BARAKAH FOR? (PERSONAS / USE CASES)
 ════════════════════════════════════════════════════════════════════ -->
 <section id="use-cases" class="py-24 px-5 bg-asr-surface border-y border-asr-border reveal">
     <div class="max-w-6xl mx-auto">
@@ -565,7 +613,7 @@
     <div class="max-w-6xl mx-auto">
         <div class="text-center mb-12">
             <p class="text-asr-faint text-xs font-bold tracking-widest uppercase mb-3">Interactive Preview</p>
-            <h2 class="text-3xl sm:text-4xl font-bold text-asr-text">Experience ASAR In Your Browser</h2>
+            <h2 class="text-3xl sm:text-4xl font-bold text-asr-text">Experience Aegis Focus In Your Browser</h2>
             <p class="text-asr-muted text-sm mt-3 max-w-lg mx-auto">This simulator runs the exact state machine and logic powering the native Android application.</p>
         </div>
 
@@ -1080,7 +1128,7 @@
     <div class="max-w-5xl mx-auto">
         <div class="text-center mb-14">
             <p class="text-asr-sky text-xs font-bold tracking-widest uppercase mb-3">Honest Comparison</p>
-            <h2 class="text-3xl sm:text-4xl font-extrabold text-asr-text">How ASAR Compares to Alternatives</h2>
+            <h2 class="text-3xl sm:text-4xl font-extrabold text-asr-text">How Aegis Focus Compares to Alternatives</h2>
             <p class="text-asr-muted text-sm mt-3 max-w-xl mx-auto">
                 Compare ASAR against legacy screen-time apps, basic timers, and overpriced cloud blockers.
             </p>
@@ -1187,7 +1235,7 @@
                         <li class="flex items-center gap-2 text-asr-muted"><span class="text-asr-emerald font-bold">✓</span> 100% Local SQLite storage</li>
                     </ul>
                 </div>
-                <a href="ASAR-Latest.apk" class="mt-6 w-full block text-center py-3 bg-asr-elevated hover:bg-asr-border text-asr-text font-bold text-xs rounded-xl transition">
+                <a href="Aegis Focus-Release.apk" class="mt-6 w-full block text-center py-3 bg-asr-elevated hover:bg-asr-border text-asr-text font-bold text-xs rounded-xl transition">
                     Get Free APK
                 </a>
             </div>
@@ -1328,7 +1376,7 @@
                     <i data-lucide="chevron-down" class="w-4 h-4 text-asr-muted transition-transform" :class="activeFaq === 2 ? 'rotate-180 text-asr-sky' : ''"></i>
                 </button>
                 <div x-show="activeFaq === 2" x-collapse class="px-5 pb-5 text-xs sm:text-sm text-asr-muted leading-relaxed border-t border-asr-border/50 pt-3">
-                    <strong>Absolutely not.</strong> ASAR is strictly local-first. All your focus sessions, app shields, daily goals, and discipline scores live exclusively inside a local Room SQLite database on your device. We have zero analytics servers and no account is required.
+                    <strong>Absolutely not.</strong> Aegis Focus is strictly local-first. All your focus sessions, app shields, daily goals, and discipline scores live exclusively inside a local Room SQLite database on your device. We have zero analytics servers and no account is required.
                 </div>
             </div>
 
@@ -1461,7 +1509,7 @@
         </p>
 
         <div class="flex flex-col sm:flex-row items-center justify-center gap-3.5 mt-10">
-            <a href="ASAR-Latest.apk" download="ASAR-Latest.apk"
+            <a href="Aegis Focus-Release.apk" download="Aegis Focus-Release.apk"
                class="w-full sm:w-auto bg-asr-emerald hover:bg-asr-emerald/90 text-asr-bg font-extrabold text-sm px-8 py-4 rounded-xl transition shadow-xl shadow-asr-emerald/25 flex items-center justify-center gap-2">
                 <i data-lucide="download" class="w-4 h-4"></i>
                 Download Free Android APK
@@ -1488,14 +1536,14 @@
 
             <!-- Brand & Creator Info -->
             <div class="max-w-sm">
-                <div class="flex items-center gap-2.5 mb-3">
+                                <div class="flex items-center gap-2.5 mb-3">
                     <div class="w-8 h-8 rounded-lg bg-asr-elevated border border-asr-border flex items-center justify-center p-1 overflow-hidden">
-                        <img src="assets/asr_logo_transparent_white.png" alt="ASAR Logo" class="w-full h-full object-contain">
+                        <img src="assets/aegis_logo.png" alt="Aegis Focus Logo" class="w-full h-full object-contain">
                     </div>
-                    <span class="font-extrabold text-lg text-asr-text">ASAR</span>
+                    <span class="font-extrabold text-lg text-asr-text">Aegis Focus</span>
                 </div>
                 <p class="text-asr-faint text-xs leading-relaxed">
-                    Turn Time Into Progress. A local-first, privacy-respecting focus system for Android designed to help you build unbreakable habits.
+                    Unbreakable Digital Discipline. Protect Your Attention.. A local-first, privacy-respecting focus system for Android designed to help you build unbreakable habits.
                 </p>
                 <div class="mt-4 flex items-center gap-2">
                     <a href="https://github.com/khalidabdullahh" target="_blank" class="text-xs bg-asr-elevated border border-asr-border px-3 py-1.5 rounded-lg text-asr-muted hover:text-asr-sky transition flex items-center gap-1.5 font-semibold">
@@ -1537,12 +1585,113 @@
         </div>
 
         <div class="border-t border-asr-border mt-10 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-asr-faint">
-            <span>&copy; 2025–2026 ASAR — Turn Time Into Progress. Designed &amp; Engineered by <a href="https://github.com/khalidabdullahh" target="_blank" class="text-asr-sky hover:underline font-semibold">Khalid Abdullah</a>.</span>
+            <span>&copy; 2025–2026 Aegis Focus — Unbreakable Digital Discipline & Focus. Designed &amp; Engineered by <a href="https://github.com/khalidabdullahh" target="_blank" class="text-asr-sky hover:underline font-semibold">Khalid Abdullah</a>.</span>
             <span>100% Local-First &bull; Open Source on GitHub</span>
         </div>
     </div>
 </footer>
 
+<!-- ══════════════════════════════════════════════════════════════════
+     ALL RELEASES & OLD VERSIONS MODAL
+════════════════════════════════════════════════════════════════════ -->
+<div x-show="showVersionModal"
+     x-cloak
+     class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md transition-all"
+     @keydown.escape.window="showVersionModal = false">
+    <div class="bg-asr-surface border border-asr-border rounded-2xl max-w-xl w-full p-6 sm:p-7 shadow-2xl relative overflow-hidden"
+         @click.away="showVersionModal = false">
+        
+        <!-- Header -->
+        <div class="flex items-center justify-between pb-4 border-b border-asr-border/70">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-asr-elevated border border-asr-border flex items-center justify-center p-2">
+                    <img src="assets/aegis_logo.png" alt="Aegis Focus" class="w-full h-full object-contain">
+                </div>
+                <div>
+                    <h3 class="text-lg font-extrabold text-asr-text flex items-center gap-2">
+                        <span>Aegis Focus APK Archives</span>
+                        <span class="text-[10px] bg-asr-emerald/20 text-asr-emerald px-2 py-0.5 rounded-full font-bold">Official</span>
+                    </h3>
+                    <p class="text-xs text-asr-muted mt-0.5">Download current or previous production releases</p>
+                </div>
+            </div>
+            <button @click="showVersionModal = false" class="p-1.5 rounded-lg text-asr-muted hover:text-asr-text hover:bg-asr-elevated transition">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+        </div>
+
+        <!-- Release List -->
+        <div class="mt-5 space-y-3.5 max-h-[60vh] overflow-y-auto pr-1">
+            
+            <!-- v1.1.0 (Latest Recommended) -->
+            <div class="p-4 rounded-xl bg-asr-elevated/80 border border-asr-emerald/40 hover:border-asr-emerald transition flex items-center justify-between gap-4">
+                <div class="space-y-1">
+                    <div class="flex items-center gap-2">
+                        <span class="font-extrabold text-sm text-asr-text">Aegis Focus v1.1.0</span>
+                        <span class="text-[10px] font-bold bg-asr-emerald text-asr-bg px-2 py-0.5 rounded-full">LATEST</span>
+                        <span class="text-[11px] text-asr-faint">Oct 2026</span>
+                    </div>
+                    <p class="text-xs text-asr-muted leading-relaxed">
+                        Rebranded identity, offline license key validator, password-secured Super Admin (`6924923086`), strict permission gate, zero telemetry.
+                    </p>
+                    <div class="text-[10px] text-asr-faint font-mono">
+                        SHA256: dda036fb86db8397...c7b3d292 &bull; 13 MB
+                    </div>
+                </div>
+                <div class="shrink-0 flex flex-col gap-1.5">
+                    <a href="AegisFocus-Latest.apk" download="AegisFocus-Latest.apk"
+                       class="bg-asr-emerald hover:bg-asr-emerald/90 text-asr-bg text-xs font-extrabold px-3.5 py-2 rounded-lg transition flex items-center gap-1.5 shadow-md">
+                        <i data-lucide="download" class="w-3.5 h-3.5"></i>
+                        <span>Download</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- v1.0.0 (Legacy Production) -->
+            <div class="p-4 rounded-xl bg-asr-surface border border-asr-border hover:border-asr-sky/40 transition flex items-center justify-between gap-4">
+                <div class="space-y-1">
+                    <div class="flex items-center gap-2">
+                        <span class="font-bold text-sm text-asr-text">Aegis Focus v1.0.0 (Legacy)</span>
+                        <span class="text-[10px] font-semibold bg-asr-elevated text-asr-muted px-2 py-0.5 rounded-full">INITIAL RELEASE</span>
+                    </div>
+                    <p class="text-xs text-asr-muted leading-relaxed">
+                        Foundation release with core accessibility blocking, device admin protection, adaptive friction, and discipline analytics.
+                    </p>
+                    <div class="text-[10px] text-asr-faint font-mono">
+                        SHA256: 9051c347337dfd8d...515146a163 &bull; 13 MB
+                    </div>
+                </div>
+                <div class="shrink-0 flex flex-col gap-1.5">
+                    <a href="releases/AegisFocus-v1.0.0-Release.apk" download="AegisFocus-v1.0.0-Release.apk"
+                       class="bg-asr-elevated hover:bg-asr-border text-asr-text text-xs font-semibold px-3.5 py-2 rounded-lg transition flex items-center gap-1.5 border border-asr-border">
+                        <i data-lucide="download" class="w-3.5 h-3.5"></i>
+                        <span>v1.0.0</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- GitHub Releases Direct Link -->
+            <div class="p-3.5 rounded-xl bg-asr-surface/50 border border-dashed border-asr-border flex items-center justify-between text-xs">
+                <div class="flex items-center gap-2 text-asr-muted">
+                    <i data-lucide="github" class="w-4 h-4 text-asr-text"></i>
+                    <span>Looking for raw CI/CD artifacts or release tags?</span>
+                </div>
+                <a href="https://github.com/khalidabdullahh/AegisFocus/releases" target="_blank"
+                   class="text-asr-sky hover:underline font-semibold flex items-center gap-1">
+                    <span>GitHub Releases</span>
+                    <i data-lucide="external-link" class="w-3 h-3"></i>
+                </a>
+            </div>
+
+        </div>
+
+        <div class="mt-5 pt-3 border-t border-asr-border/60 flex items-center justify-between text-xs text-asr-faint">
+            <span>🛡️ All APKs signed with official production keys</span>
+            <button @click="showVersionModal = false" class="text-asr-muted hover:text-asr-text font-semibold">Close</button>
+        </div>
+
+    </div>
+</div>
 
 <!-- ══════════════════════════════════════════════════════════════════
      ALPINE.JS STATE LOGIC (PRESERVED & ENHANCED)
@@ -1550,6 +1699,7 @@
 <script>
     function asrApp() {
         return {
+            showVersionModal: false,
             currentTab: 'home',
             navTabs: [
                 { id: 'home',     label: 'Home',     icon: 'shield' },

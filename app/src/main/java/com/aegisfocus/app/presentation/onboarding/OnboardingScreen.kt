@@ -44,10 +44,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.aegisfocus.app.R
 import com.aegisfocus.app.core.components.AegisPrimaryButton
 import com.aegisfocus.app.core.theme.CyanAccent
 import com.aegisfocus.app.core.theme.DeepSurface
@@ -110,25 +112,18 @@ fun OnboardingScreen(
                 1 -> OnboardingStep2()
                 else -> OnboardingStep3(
                     permissions = uiState.permissions,
-                    onConfigureUsage = {
-                        val intent = Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS).apply {
-                            if (context !is Activity) flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                        }
-                        runCatching { context.startActivity(intent) }
-                    },
-                    onConfigureAccessibility = {
-                        val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS).apply {
-                            if (context !is Activity) flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                        }
-                        runCatching { context.startActivity(intent) }
-                    },
-                    onConfigureDeviceAdmin = {
-                        viewModel.openDeviceAdminSettings(context)
-                    },
+                    onConfigureUsage = { viewModel.openUsageAccessSettings(context) },
+                    onConfigureAccessibility = { viewModel.openAccessibilitySettings(context) },
+                    onConfigureNotification = { viewModel.openNotificationSettings(context) },
+                    onConfigureDeviceAdmin = { viewModel.openDeviceAdminSettings(context) },
                     onRefresh = { viewModel.refreshPermissions() }
                 )
             }
         }
+
+        val hasRequiredPermissions = uiState.permissions.hasAccessibilityService &&
+                uiState.permissions.hasUsageAccess &&
+                uiState.permissions.hasNotificationPermission
 
         // Bottom Navigation Buttons
         Row(
@@ -145,16 +140,23 @@ fun OnboardingScreen(
             }
 
             AegisPrimaryButton(
-                text = if (uiState.currentPage == 2) "ENTER AEGIS" else "CONTINUE",
+                text = when {
+                    uiState.currentPage < 2 -> "CONTINUE"
+                    hasRequiredPermissions -> "ENTER AEGIS FOCUS"
+                    else -> "GRANT ALL PERMISSIONS"
+                },
+                enabled = uiState.currentPage < 2 || hasRequiredPermissions,
                 onClick = {
                     if (uiState.currentPage == 2) {
-                        viewModel.completeOnboarding()
-                        onComplete()
+                        if (hasRequiredPermissions) {
+                            viewModel.completeOnboarding()
+                            onComplete()
+                        }
                     } else {
                         viewModel.nextPage()
                     }
                 },
-                modifier = Modifier.width(170.dp)
+                modifier = Modifier.width(if (uiState.currentPage == 2 && !hasRequiredPermissions) 220.dp else 170.dp)
             )
         }
     }
@@ -185,17 +187,19 @@ private fun OnboardingStep1() {
         Spacer(modifier = Modifier.height(28.dp))
 
         Text(
-            text = "Reclaim Your Attention",
-            fontSize = 24.sp,
+            text = stringResource(R.string.app_slogan),
+            fontSize = 22.sp,
             fontWeight = FontWeight.Bold,
             color = TextPrimary,
-            textAlign = TextAlign.Center
+            textAlign = TextAlign.Center,
+            letterSpacing = (-0.3).sp,
+            lineHeight = 32.sp
         )
 
         Spacer(modifier = Modifier.height(12.dp))
 
         Text(
-            text = "Aegis Focus provides deliberate friction against compulsive app opening, training your mind for sustained deep work and calm clarity.",
+            text = stringResource(R.string.onboarding_subtitle),
             fontSize = 14.sp,
             color = TextSecondary,
             textAlign = TextAlign.Center,
@@ -253,6 +257,7 @@ private fun OnboardingStep3(
     permissions: com.aegisfocus.app.domain.model.PermissionState,
     onConfigureUsage: () -> Unit,
     onConfigureAccessibility: () -> Unit,
+    onConfigureNotification: () -> Unit,
     onConfigureDeviceAdmin: () -> Unit,
     onRefresh: () -> Unit
 ) {
@@ -261,7 +266,7 @@ private fun OnboardingStep3(
         modifier = Modifier.fillMaxWidth()
     ) {
         Text(
-            text = "Configure Shield Guardrails",
+            text = "Grant Required Permissions",
             fontSize = 22.sp,
             fontWeight = FontWeight.Bold,
             color = TextPrimary,
@@ -271,23 +276,23 @@ private fun OnboardingStep3(
         Spacer(modifier = Modifier.height(6.dp))
 
         Text(
-            text = "Aegis runs 100% locally. Grant these legitimate permissions to enable real-time app shielding and anti-uninstall protection.",
-            fontSize = 13.sp,
+            text = "To safeguard your focus and block distractions, Aegis Focus requires the following permissions. All data stays 100% on your device.",
+            fontSize = 12.sp,
             color = TextSecondary,
             textAlign = TextAlign.Center
         )
 
-        Spacer(modifier = Modifier.height(20.dp))
+        Spacer(modifier = Modifier.height(16.dp))
 
-        // Usage Access Card
+        // Usage Access Card (Required)
         Surface(
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(14.dp),
             color = DeepSurface,
-            border = BorderStroke(1.dp, SubtleBorder)
+            border = BorderStroke(1.dp, if (permissions.hasUsageAccess) EmeraldFocus.copy(alpha = 0.5f) else SubtleBorder)
         ) {
             Row(
-                modifier = Modifier.padding(14.dp),
+                modifier = Modifier.padding(12.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
@@ -300,8 +305,12 @@ private fun OnboardingStep3(
                     )
                     Spacer(modifier = Modifier.width(10.dp))
                     Column {
-                        Text("Usage Access", fontSize = 14.sp, fontWeight = FontWeight.Bold, color = TextPrimary)
-                        Text("Tracks screen time & distraction", fontSize = 11.sp, color = TextSecondary)
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Text("Usage Access", fontSize = 13.sp, fontWeight = FontWeight.Bold, color = TextPrimary)
+                            Spacer(modifier = Modifier.width(6.dp))
+                            Text("REQUIRED", fontSize = 9.sp, fontWeight = FontWeight.Bold, color = if (permissions.hasUsageAccess) EmeraldFocus else CyanAccent)
+                        }
+                        Text("Tracks screen time & distraction apps", fontSize = 11.sp, color = TextSecondary)
                     }
                 }
                 if (!permissions.hasUsageAccess) {
@@ -316,17 +325,17 @@ private fun OnboardingStep3(
             }
         }
 
-        Spacer(modifier = Modifier.height(10.dp))
+        Spacer(modifier = Modifier.height(8.dp))
 
-        // Accessibility Service Card
+        // Accessibility Service Card (Required)
         Surface(
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(14.dp),
             color = DeepSurface,
-            border = BorderStroke(1.dp, SubtleBorder)
+            border = BorderStroke(1.dp, if (permissions.hasAccessibilityService) EmeraldFocus.copy(alpha = 0.5f) else SubtleBorder)
         ) {
             Row(
-                modifier = Modifier.padding(14.dp),
+                modifier = Modifier.padding(12.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
@@ -339,8 +348,12 @@ private fun OnboardingStep3(
                     )
                     Spacer(modifier = Modifier.width(10.dp))
                     Column {
-                        Text("Accessibility Service", fontSize = 14.sp, fontWeight = FontWeight.Bold, color = TextPrimary)
-                        Text("Instant real-time app blocking", fontSize = 11.sp, color = TextSecondary)
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Text("Accessibility Service", fontSize = 13.sp, fontWeight = FontWeight.Bold, color = TextPrimary)
+                            Spacer(modifier = Modifier.width(6.dp))
+                            Text("REQUIRED", fontSize = 9.sp, fontWeight = FontWeight.Bold, color = if (permissions.hasAccessibilityService) EmeraldFocus else CyanAccent)
+                        }
+                        Text("Real-time blocking of restricted apps", fontSize = 11.sp, color = TextSecondary)
                     }
                 }
                 if (!permissions.hasAccessibilityService) {
@@ -355,17 +368,60 @@ private fun OnboardingStep3(
             }
         }
 
-        Spacer(modifier = Modifier.height(10.dp))
+        Spacer(modifier = Modifier.height(8.dp))
 
-        // Anti-Uninstall Device Admin Card
+        // Notification Access Card (Required)
         Surface(
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(14.dp),
             color = DeepSurface,
-            border = BorderStroke(1.dp, SubtleBorder)
+            border = BorderStroke(1.dp, if (permissions.hasNotificationPermission) EmeraldFocus.copy(alpha = 0.5f) else SubtleBorder)
         ) {
             Row(
-                modifier = Modifier.padding(14.dp),
+                modifier = Modifier.padding(12.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.weight(1f)) {
+                    Icon(
+                        imageVector = if (permissions.hasNotificationPermission) Icons.Default.CheckCircle else Icons.Default.Notifications,
+                        contentDescription = null,
+                        tint = if (permissions.hasNotificationPermission) EmeraldFocus else CyanAccent,
+                        modifier = Modifier.size(24.dp)
+                    )
+                    Spacer(modifier = Modifier.width(10.dp))
+                    Column {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Text("Notification Permission", fontSize = 13.sp, fontWeight = FontWeight.Bold, color = TextPrimary)
+                            Spacer(modifier = Modifier.width(6.dp))
+                            Text("REQUIRED", fontSize = 9.sp, fontWeight = FontWeight.Bold, color = if (permissions.hasNotificationPermission) EmeraldFocus else CyanAccent)
+                        }
+                        Text("Live timer status and discipline alarms", fontSize = 11.sp, color = TextSecondary)
+                    }
+                }
+                if (!permissions.hasNotificationPermission) {
+                    Button(
+                        onClick = onConfigureNotification,
+                        shape = RoundedCornerShape(8.dp),
+                        colors = ButtonDefaults.buttonColors(containerColor = CyanAccent, contentColor = ObsidianBg)
+                    ) {
+                        Text("Allow", fontSize = 11.sp, fontWeight = FontWeight.Bold)
+                    }
+                }
+            }
+        }
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        // Anti-Uninstall Device Admin Card (Optional)
+        Surface(
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(14.dp),
+            color = DeepSurface,
+            border = BorderStroke(1.dp, if (permissions.hasDeviceAdminPermission) EmeraldFocus.copy(alpha = 0.5f) else SubtleBorder)
+        ) {
+            Row(
+                modifier = Modifier.padding(12.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
@@ -378,15 +434,19 @@ private fun OnboardingStep3(
                     )
                     Spacer(modifier = Modifier.width(10.dp))
                     Column {
-                        Text("Anti-Uninstall Admin", fontSize = 14.sp, fontWeight = FontWeight.Bold, color = TextPrimary)
-                        Text("Prevents uninstall during Strict Mode", fontSize = 11.sp, color = TextSecondary)
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Text("Anti-Uninstall Admin", fontSize = 13.sp, fontWeight = FontWeight.Bold, color = TextPrimary)
+                            Spacer(modifier = Modifier.width(6.dp))
+                            Text("RECOMMENDED", fontSize = 9.sp, fontWeight = FontWeight.Normal, color = TextMuted)
+                        }
+                        Text("Prevents deleting app during Strict Mode", fontSize = 11.sp, color = TextSecondary)
                     }
                 }
                 if (!permissions.hasDeviceAdminPermission) {
                     Button(
                         onClick = onConfigureDeviceAdmin,
                         shape = RoundedCornerShape(8.dp),
-                        colors = ButtonDefaults.buttonColors(containerColor = CyanAccent, contentColor = ObsidianBg)
+                        colors = ButtonDefaults.buttonColors(containerColor = ElevatedSurface, contentColor = CyanAccent)
                     ) {
                         Text("Activate", fontSize = 11.sp, fontWeight = FontWeight.Bold)
                     }
