@@ -20,4 +20,8 @@ interface SettingsRepository {
     fun setShortsBlockerEnabled(enabled: Boolean)
     fun isGrayscaleFatigueEnabled(): Boolean
     fun setGrayscaleFatigueEnabled(enabled: Boolean)
+    fun isAdBlockerVpnEnabled(): Boolean
+    fun setAdBlockerVpnEnabled(enabled: Boolean)
+    fun getDailyFocusGoalMinutes(): Int
+    fun setDailyFocusGoalMinutes(minutes: Int)
 }

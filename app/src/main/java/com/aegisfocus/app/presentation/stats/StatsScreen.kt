@@ -25,6 +25,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowUpward
 import androidx.compose.material.icons.filled.Bolt
 import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material.icons.filled.HourglassTop
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.PhoneAndroid
@@ -67,6 +68,7 @@ import com.aegisfocus.app.core.theme.TextSecondary
 @Composable
 fun StatsScreen(
     viewModel: StatsViewModel,
+    onNavigateToGoals: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -90,10 +92,10 @@ fun StatsScreen(
             Column {
                 Text(
                     text = "Discipline Analytics",
-                    fontSize = 26.sp,
-                    fontWeight = FontWeight.Black,
+                    fontSize = 22.sp,
+                    fontWeight = FontWeight.Bold,
                     color = TextPrimary,
-                    letterSpacing = (-0.5).sp
+                    letterSpacing = (-0.3).sp
                 )
                 Text(
                     text = "Turn Time Into Progress",
@@ -198,6 +200,75 @@ fun StatsScreen(
                     accentColor = CyanAccent,
                     modifier = Modifier.weight(1f)
                 )
+            }
+
+            Spacer(modifier = Modifier.height(18.dp))
+
+            // 🎯 Goals & Consistency Calendar Shortcut
+            Surface(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable { onNavigateToGoals() },
+                shape = RoundedCornerShape(14.dp),
+                color = DeepSurface,
+                border = BorderStroke(1.dp, SubtleBorder)
+            ) {
+                Row(
+                    modifier = Modifier.padding(14.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(10.dp),
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Surface(
+                            shape = RoundedCornerShape(8.dp),
+                            color = EmeraldFocus.copy(alpha = 0.15f),
+                            modifier = Modifier.size(34.dp)
+                        ) {
+                            Box(contentAlignment = Alignment.Center) {
+                                Text("📅", fontSize = 16.sp)
+                            }
+                        }
+                        Column {
+                            Text(
+                                text = "Monthly Goals & Consistency",
+                                fontSize = 13.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = TextPrimary
+                            )
+                            Text(
+                                text = "View green & red habit calendar • Set target",
+                                fontSize = 11.sp,
+                                color = TextSecondary
+                            )
+                        }
+                    }
+
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Surface(
+                            shape = RoundedCornerShape(4.dp),
+                            color = EmeraldFocus.copy(alpha = 0.2f)
+                        ) {
+                            Text(
+                                text = "VIEW CALENDAR",
+                                color = EmeraldFocus,
+                                fontSize = 9.sp,
+                                fontWeight = FontWeight.Black,
+                                modifier = Modifier.padding(horizontal = 4.dp, vertical = 2.dp)
+                            )
+                        }
+                        Spacer(modifier = Modifier.width(4.dp))
+                        Icon(
+                            imageVector = Icons.Default.ChevronRight,
+                            contentDescription = null,
+                            tint = TextMuted,
+                            modifier = Modifier.size(16.dp)
+                        )
+                    }
+                }
             }
 
             Spacer(modifier = Modifier.height(28.dp))

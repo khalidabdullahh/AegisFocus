@@ -76,7 +76,21 @@
             android:exported="false">
             <property
                 android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
-                android:value="Persistent real-time focus session timer and discipline enforcement" />
+                android:value="Maintains countdown timer and persistent notification for active focus sessions" />
+        </service>
+
+        <!-- On-Device 1-Tap AdBlocker DNS VPN Service -->
+        <service
+            android:name=".service.vpn.AegisAdBlockerVpnService"
+            android:permission="android.permission.BIND_VPN_SERVICE"
+            android:foregroundServiceType="specialUse"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.net.VpnService" />
+            </intent-filter>
+            <property
+                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="On-device local DNS filtering to block ads and malicious trackers" />
         </service>
 
         <!-- Device Restart & Boot Session Recovery Receiver -->

@@ -98,7 +98,7 @@ class AppContainer(private val context: Context) {
         StartFocusSessionUseCase(focusSessionRepository, appDiscoveryRepository)
     }
     val endFocusSessionUseCase by lazy {
-        EndFocusSessionUseCase(focusSessionRepository, usageStatsRepository)
+        EndFocusSessionUseCase(focusSessionRepository, usageStatsRepository, dailyGoalDao, settingsRepository)
     }
     val emergencyExitUseCase by lazy {
         EmergencyExitUseCase(focusSessionRepository)

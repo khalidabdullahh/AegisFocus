@@ -160,6 +160,22 @@ class SettingsRepositoryImpl(
         prefs.edit().putBoolean(KEY_GRAYSCALE_FATIGUE_ENABLED, enabled).apply()
     }
 
+    override fun isAdBlockerVpnEnabled(): Boolean {
+        return prefs.getBoolean(KEY_ADBLOCKER_VPN_ENABLED, false)
+    }
+
+    override fun setAdBlockerVpnEnabled(enabled: Boolean) {
+        prefs.edit().putBoolean(KEY_ADBLOCKER_VPN_ENABLED, enabled).apply()
+    }
+
+    override fun getDailyFocusGoalMinutes(): Int {
+        return prefs.getInt(KEY_DAILY_FOCUS_GOAL_MINUTES, 120)
+    }
+
+    override fun setDailyFocusGoalMinutes(minutes: Int) {
+        prefs.edit().putInt(KEY_DAILY_FOCUS_GOAL_MINUTES, minutes).apply()
+    }
+
     companion object {
         private const val KEY_DEFAULT_DURATION = "default_focus_duration"
         private const val KEY_EMERGENCY_COOLDOWN = "emergency_cooldown_seconds"
@@ -168,5 +184,7 @@ class SettingsRepositoryImpl(
         private const val KEY_ONBOARDING_DONE = "onboarding_done"
         private const val KEY_SHORTS_BLOCKER_ENABLED = "shorts_blocker_enabled"
         private const val KEY_GRAYSCALE_FATIGUE_ENABLED = "grayscale_fatigue_enabled"
+        private const val KEY_ADBLOCKER_VPN_ENABLED = "adblocker_vpn_enabled"
+        private const val KEY_DAILY_FOCUS_GOAL_MINUTES = "daily_focus_goal_minutes"
     }
 }

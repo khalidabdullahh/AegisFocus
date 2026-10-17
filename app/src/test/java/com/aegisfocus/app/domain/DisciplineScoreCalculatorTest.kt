@@ -36,6 +36,8 @@ class FakeDailyGoalDao : DailyGoalDao {
     override suspend fun upsertGoal(goal: DailyGoalEntity) { goalForToday = goal }
     override suspend fun getGoalForDate(dateKey: String): DailyGoalEntity? = goalForToday
     override fun getRecentGoals(): Flow<List<DailyGoalEntity>> = flowOf(emptyList())
+    override fun getGoalsForMonth(yearMonthPrefix: String): Flow<List<DailyGoalEntity>> = flowOf(emptyList())
+    override suspend fun getGoalsListForMonth(yearMonthPrefix: String): List<DailyGoalEntity> = emptyList()
     override suspend fun addFocusMinutes(dateKey: String, minutes: Int, nowMs: Long) {}
     override suspend fun incrementSessions(dateKey: String, nowMs: Long) {}
     override suspend fun markGoalMet(dateKey: String, nowMs: Long) {}

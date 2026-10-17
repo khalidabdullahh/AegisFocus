@@ -19,6 +19,7 @@ val EmeraldFocus = Color(0xFF10B981)
 val AmberWarning = Color(0xFFF59E0B)
 val AlertStrict = Color(0xFFEF4444)
 val AlertStrictDark = Color(0xFF991B1B)
+val CrimsonDanger = Color(0xFFEF4444)
 
 // Gradients / Surfaces
 val CardGlow = Color(0x1A00E5FF)

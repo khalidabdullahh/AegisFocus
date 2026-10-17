@@ -35,6 +35,9 @@ interface FocusSessionDao {
     @Query("SELECT * FROM focus_sessions WHERE startEpochMs >= :startEpochMs AND startEpochMs <= :endEpochMs ORDER BY startEpochMs DESC")
     suspend fun getSessionsInRange(startEpochMs: Long, endEpochMs: Long): List<FocusSessionEntity>
 
+    @Query("SELECT * FROM focus_sessions WHERE startEpochMs >= :startEpochMs AND startEpochMs <= :endEpochMs ORDER BY startEpochMs DESC")
+    fun getSessionsInRangeFlow(startEpochMs: Long, endEpochMs: Long): Flow<List<FocusSessionEntity>>
+
     @Query("SELECT * FROM focus_sessions WHERE status = 'COMPLETED' AND startEpochMs >= :sinceEpochMs")
     suspend fun getCompletedSessionsSince(sinceEpochMs: Long): List<FocusSessionEntity>
 

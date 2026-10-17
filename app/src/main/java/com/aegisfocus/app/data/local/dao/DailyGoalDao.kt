@@ -19,6 +19,12 @@ interface DailyGoalDao {
     @Query("SELECT * FROM daily_goals ORDER BY dateKey DESC LIMIT 30")
     fun getRecentGoals(): Flow<List<DailyGoalEntity>>
 
+    @Query("SELECT * FROM daily_goals WHERE dateKey LIKE :yearMonthPrefix || '%' ORDER BY dateKey ASC")
+    fun getGoalsForMonth(yearMonthPrefix: String): Flow<List<DailyGoalEntity>>
+
+    @Query("SELECT * FROM daily_goals WHERE dateKey LIKE :yearMonthPrefix || '%' ORDER BY dateKey ASC")
+    suspend fun getGoalsListForMonth(yearMonthPrefix: String): List<DailyGoalEntity>
+
     @Query("UPDATE daily_goals SET achievedFocusMinutes = achievedFocusMinutes + :minutes, updatedAtEpochMs = :nowMs WHERE dateKey = :dateKey")
     suspend fun addFocusMinutes(dateKey: String, minutes: Int, nowMs: Long = System.currentTimeMillis())
 

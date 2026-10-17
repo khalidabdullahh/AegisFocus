@@ -63,6 +63,13 @@ sealed class Screen(
         unselectedIcon = Icons.Outlined.Security
     )
 
+    data object Goals : Screen(
+        route = "goals",
+        title = "Goals",
+        selectedIcon = Icons.Filled.BarChart,
+        unselectedIcon = Icons.Outlined.BarChart
+    )
+
     object Paywall : Screen("paywall", "Paywall", Icons.Filled.Security, Icons.Outlined.Security)
 }
 

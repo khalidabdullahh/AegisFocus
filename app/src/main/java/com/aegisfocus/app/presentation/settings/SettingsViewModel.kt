@@ -45,7 +45,8 @@ data class SettingsUiState(
     val activePlan: SubscriptionPlan = SubscriptionPlan.FREE,
     val daysRemaining: Long = 0L,
     val isShortsBlockerEnabled: Boolean = true,
-    val isGrayscaleFatigueEnabled: Boolean = false
+    val isGrayscaleFatigueEnabled: Boolean = false,
+    val isAdBlockerVpnEnabled: Boolean = false
 )
 
 private data class SettingsLocalDialogState(
@@ -111,7 +112,8 @@ class SettingsViewModel(
             activePlan = plan,
             daysRemaining = remaining,
             isShortsBlockerEnabled = settingsRepository.isShortsBlockerEnabled(),
-            isGrayscaleFatigueEnabled = settingsRepository.isGrayscaleFatigueEnabled()
+            isGrayscaleFatigueEnabled = settingsRepository.isGrayscaleFatigueEnabled(),
+            isAdBlockerVpnEnabled = settingsRepository.isAdBlockerVpnEnabled()
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), SettingsUiState())
 
@@ -122,6 +124,16 @@ class SettingsViewModel(
 
     fun toggleGrayscaleFatigue(enabled: Boolean) {
         settingsRepository.setGrayscaleFatigueEnabled(enabled)
+        refreshPermissions()
+    }
+
+    fun toggleAdBlockerVpn(enabled: Boolean, context: Context) {
+        settingsRepository.setAdBlockerVpnEnabled(enabled)
+        if (enabled) {
+            com.aegisfocus.app.service.vpn.AegisAdBlockerVpnService.start(context)
+        } else {
+            com.aegisfocus.app.service.vpn.AegisAdBlockerVpnService.stop(context)
+        }
         refreshPermissions()
     }
 

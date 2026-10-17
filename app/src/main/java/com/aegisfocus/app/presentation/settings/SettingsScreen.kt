@@ -1,5 +1,9 @@
 package com.aegisfocus.app.presentation.settings
 
+import android.app.Activity
+import android.net.VpnService
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import android.graphics.BitmapFactory
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
@@ -103,6 +107,17 @@ fun SettingsScreen(
     val context = LocalContext.current
     val scrollState = rememberScrollState()
 
+    val vpnLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            viewModel.toggleAdBlockerVpn(true, context)
+            android.widget.Toast.makeText(context, "🛡️ Aegis AdBlocker Activated!", android.widget.Toast.LENGTH_SHORT).show()
+        } else {
+            android.widget.Toast.makeText(context, "VPN Permission required for automatic AdBlocker", android.widget.Toast.LENGTH_SHORT).show()
+        }
+    }
+
     LaunchedEffect(Unit) {
         viewModel.refreshPermissions()
     }
@@ -118,10 +133,10 @@ fun SettingsScreen(
 
         Text(
             text = "Settings & Guardrails",
-            fontSize = 28.sp,
+            fontSize = 22.sp,
             fontWeight = FontWeight.Bold,
             color = TextPrimary,
-            letterSpacing = (-0.5).sp
+            letterSpacing = (-0.3).sp
         )
         Text(
             text = "Permissions, focus habits, and discipline rules.",
@@ -515,12 +530,12 @@ fun SettingsScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // 🛡️ AdBlocker Assistant Card (1-Tap Deep Link + Auto-Copy)
+        // 🛡️ 1-Tap Automatic AdBlocker Card
         Surface(
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(16.dp),
             color = DeepSurface,
-            border = BorderStroke(1.dp, SubtleBorder)
+            border = BorderStroke(1.dp, if (uiState.isAdBlockerVpnEnabled) EmeraldFocus.copy(alpha = 0.4f) else SubtleBorder)
         ) {
             Column(modifier = Modifier.padding(16.dp)) {
                 Row(
@@ -535,11 +550,11 @@ fun SettingsScreen(
                     ) {
                         Surface(
                             shape = RoundedCornerShape(10.dp),
-                            color = CyanAccent.copy(alpha = 0.15f),
+                            color = if (uiState.isAdBlockerVpnEnabled) EmeraldFocus.copy(alpha = 0.15f) else CyanAccent.copy(alpha = 0.15f),
                             modifier = Modifier.size(38.dp)
                         ) {
                             Box(contentAlignment = Alignment.Center) {
-                                Text("🛡️", fontSize = 18.sp)
+                                Text(if (uiState.isAdBlockerVpnEnabled) "🛡️" else "🛡️", fontSize = 18.sp)
                             }
                         }
                         Column {
@@ -552,11 +567,11 @@ fun SettingsScreen(
                                 )
                                 Surface(
                                     shape = RoundedCornerShape(4.dp),
-                                    color = EmeraldFocus.copy(alpha = 0.2f)
+                                    color = if (uiState.isAdBlockerVpnEnabled) EmeraldFocus.copy(alpha = 0.2f) else DeepSurface
                                 ) {
                                     Text(
-                                        text = "PRIVATE DNS",
-                                        color = EmeraldFocus,
+                                        text = if (uiState.isAdBlockerVpnEnabled) "ACTIVE" else "1-TAP DNS",
+                                        color = if (uiState.isAdBlockerVpnEnabled) EmeraldFocus else TextMuted,
                                         fontSize = 9.sp,
                                         fontWeight = FontWeight.Black,
                                         modifier = Modifier.padding(horizontal = 4.dp, vertical = 1.dp)
@@ -564,15 +579,39 @@ fun SettingsScreen(
                                 }
                             }
                             Text(
-                                text = "Blocks 99% of in-app ads & trackers across your entire device with 0 battery drain.",
+                                text = "Blocks 99% of in-app ads, popups & trackers system-wide with zero battery drain.",
                                 fontSize = 12.sp,
                                 color = TextSecondary
                             )
                         }
                     }
+
+                    Switch(
+                        checked = uiState.isAdBlockerVpnEnabled,
+                        onCheckedChange = { isChecked ->
+                            if (isChecked) {
+                                val vpnIntent = android.net.VpnService.prepare(context)
+                                if (vpnIntent != null) {
+                                    vpnLauncher.launch(vpnIntent)
+                                } else {
+                                    viewModel.toggleAdBlockerVpn(true, context)
+                                    android.widget.Toast.makeText(context, "🛡️ Aegis AdBlocker Activated!", android.widget.Toast.LENGTH_SHORT).show()
+                                }
+                            } else {
+                                viewModel.toggleAdBlockerVpn(false, context)
+                                android.widget.Toast.makeText(context, "AdBlocker Deactivated", android.widget.Toast.LENGTH_SHORT).show()
+                            }
+                        },
+                        colors = SwitchDefaults.colors(
+                            checkedThumbColor = ObsidianBg,
+                            checkedTrackColor = EmeraldFocus,
+                            uncheckedThumbColor = TextMuted,
+                            uncheckedTrackColor = DeepSurface
+                        )
+                    )
                 }
 
-                Spacer(modifier = Modifier.height(14.dp))
+                Spacer(modifier = Modifier.height(12.dp))
 
                 Surface(
                     shape = RoundedCornerShape(10.dp),
@@ -580,58 +619,59 @@ fun SettingsScreen(
                     border = BorderStroke(1.dp, SubtleBorder),
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    Row(
-                        modifier = Modifier.padding(12.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Column {
-                            Text(
-                                text = "Recommended AdBlock DNS Host:",
-                                fontSize = 10.sp,
-                                color = TextMuted
-                            )
-                            Text(
-                                text = "dns.adguard-dns.com",
-                                fontSize = 13.sp,
-                                fontWeight = FontWeight.Bold,
-                                color = CyanAccent,
-                                fontFamily = androidx.compose.ui.text.font.FontFamily.Monospace
-                            )
-                        }
-
-                        Surface(
-                            modifier = Modifier.clickable {
-                                // 1. Copy DNS hostname to clipboard
-                                val clipboard = context.getSystemService(android.content.Context.CLIPBOARD_SERVICE) as? android.content.ClipboardManager
-                                val clip = android.content.ClipData.newPlainText("Private DNS", "dns.adguard-dns.com")
-                                clipboard?.setPrimaryClip(clip)
-
-                                android.widget.Toast.makeText(context, "✅ 'dns.adguard-dns.com' copied! Paste into Private DNS.", android.widget.Toast.LENGTH_LONG).show()
-
-                                // 2. Launch system Network & Internet / Private DNS Settings
-                                try {
-                                    val intent = android.content.Intent("android.settings.NETWORK_OPERATOR_SETTINGS")
-                                    context.startActivity(intent)
-                                } catch (e: Exception) {
-                                    try {
-                                        val intent = android.content.Intent(android.provider.Settings.ACTION_WIRELESS_SETTINGS)
-                                        context.startActivity(intent)
-                                    } catch (e2: Exception) {
-                                        context.startActivity(android.content.Intent(android.provider.Settings.ACTION_SETTINGS))
-                                    }
-                                }
-                            },
-                            shape = RoundedCornerShape(8.dp),
-                            color = CyanAccent,
+                    Column(modifier = Modifier.padding(12.dp)) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Text(
-                                text = "Auto-Copy & Open ⚙️",
-                                color = ObsidianBg,
-                                fontSize = 12.sp,
-                                fontWeight = FontWeight.Black,
-                                modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp)
-                            )
+                            Column {
+                                Text(
+                                    text = "Protected via AdGuard Secure DNS",
+                                    fontSize = 11.sp,
+                                    fontWeight = FontWeight.SemiBold,
+                                    color = if (uiState.isAdBlockerVpnEnabled) EmeraldFocus else TextPrimary
+                                )
+                                Text(
+                                    text = if (uiState.isAdBlockerVpnEnabled) "Status: Filtering active in real-time" else "Flip switch above for instant 1-tap activation",
+                                    fontSize = 10.sp,
+                                    color = TextMuted
+                                )
+                            }
+
+                            Surface(
+                                modifier = Modifier.clickable {
+                                    // Copy DNS hostname to clipboard & open Private DNS settings as fallback
+                                    val clipboard = context.getSystemService(android.content.Context.CLIPBOARD_SERVICE) as? android.content.ClipboardManager
+                                    val clip = android.content.ClipData.newPlainText("Private DNS", "dns.adguard-dns.com")
+                                    clipboard?.setPrimaryClip(clip)
+
+                                    android.widget.Toast.makeText(context, "Copied 'dns.adguard-dns.com'! Opening Private DNS settings...", android.widget.Toast.LENGTH_SHORT).show()
+
+                                    try {
+                                        val intent = android.content.Intent("android.settings.NETWORK_OPERATOR_SETTINGS")
+                                        context.startActivity(intent)
+                                    } catch (e: Exception) {
+                                        try {
+                                            val intent = android.content.Intent(android.provider.Settings.ACTION_WIRELESS_SETTINGS)
+                                            context.startActivity(intent)
+                                        } catch (e2: Exception) {
+                                            context.startActivity(android.content.Intent(android.provider.Settings.ACTION_SETTINGS))
+                                        }
+                                    }
+                                },
+                                shape = RoundedCornerShape(6.dp),
+                                color = DeepSurface,
+                                border = BorderStroke(1.dp, SubtleBorder)
+                            ) {
+                                Text(
+                                    text = "Manual Private DNS ↗",
+                                    color = CyanAccent,
+                                    fontSize = 10.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 5.dp)
+                                )
+                            }
                         }
                     }
                 }

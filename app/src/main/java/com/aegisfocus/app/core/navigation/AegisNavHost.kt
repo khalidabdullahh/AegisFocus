@@ -42,6 +42,8 @@ import com.aegisfocus.app.presentation.apps.AppsScreen
 import com.aegisfocus.app.presentation.apps.AppsViewModel
 import com.aegisfocus.app.presentation.focus.FocusScreen
 import com.aegisfocus.app.presentation.focus.FocusViewModel
+import com.aegisfocus.app.presentation.goals.GoalsScreen
+import com.aegisfocus.app.presentation.goals.GoalsViewModel
 import com.aegisfocus.app.presentation.home.HomeScreen
 import com.aegisfocus.app.presentation.home.HomeViewModel
 import com.aegisfocus.app.presentation.onboarding.OnboardingScreen
@@ -70,9 +72,10 @@ fun AegisNavHost(
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
-    // অনবোর্ডিং বা পে-ওয়াল স্ক্রিনে বটম বার হাইড রাখা
+    // অনবোর্ডিং, পে-ওয়াল বা গোলস স্ক্রিনে বটম বার হাইড রাখা
     val showBottomBar = currentRoute != Screen.Onboarding.route &&
-            currentRoute != Screen.Paywall.route
+            currentRoute != Screen.Paywall.route &&
+            currentRoute != Screen.Goals.route
 
     Scaffold(
         modifier = modifier.fillMaxSize(),
@@ -174,6 +177,9 @@ fun AegisNavHost(
                     },
                     onNavigateToPaywall = {
                         navController.navigate(Screen.Paywall.route)
+                    },
+                    onNavigateToGoals = {
+                        navController.navigate(Screen.Goals.route)
                     }
                 )
             }
@@ -223,7 +229,10 @@ fun AegisNavHost(
                         xpManager = container.xpManager
                     )
                 }
-                StatsScreen(viewModel = vm)
+                StatsScreen(
+                    viewModel = vm,
+                    onNavigateToGoals = { navController.navigate(Screen.Goals.route) }
+                )
             }
 
             composable(Screen.Settings.route) {
@@ -250,6 +259,21 @@ fun AegisNavHost(
                 PaywallScreen(
                     viewModel = vm,
                     onDismiss = { navController.popBackStack() }
+                )
+            }
+
+            composable(Screen.Goals.route) {
+                val vm = androidx.lifecycle.viewmodel.compose.viewModel {
+                    GoalsViewModel(
+                        dailyGoalDao = container.dailyGoalDao,
+                        focusSessionDao = container.focusSessionDao,
+                        settingsRepository = container.settingsRepository,
+                        userXpDao = container.userXpDao
+                    )
+                }
+                GoalsScreen(
+                    viewModel = vm,
+                    onNavigateBack = { navController.popBackStack() }
                 )
             }
         }

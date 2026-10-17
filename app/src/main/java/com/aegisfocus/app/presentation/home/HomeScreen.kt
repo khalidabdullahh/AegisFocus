@@ -60,6 +60,7 @@ fun HomeScreen(
     viewModel: HomeViewModel,
     onNavigateToFocus: () -> Unit,
     onNavigateToPaywall: () -> Unit = {},
+    onNavigateToGoals: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -94,10 +95,10 @@ fun HomeScreen(
                 Spacer(modifier = Modifier.height(2.dp))
                 Text(
                     text = uiState.greeting,
-                    fontSize = 28.sp,
+                    fontSize = 22.sp,
                     fontWeight = FontWeight.Bold,
                     color = TextPrimary,
-                    letterSpacing = (-0.5).sp
+                    letterSpacing = (-0.3).sp
                 )
             }
 
@@ -274,6 +275,75 @@ fun HomeScreen(
                 ) {
                     Text("⚡ Unlock Pro — Unlimited Strict Mode + Website Blocking", color = CyanAccent, fontSize = 12.sp, fontWeight = FontWeight.SemiBold, modifier = Modifier.weight(1f))
                     Icon(Icons.Default.ChevronRight, contentDescription = null, tint = CyanAccent, modifier = Modifier.size(16.dp))
+                }
+            }
+        }
+
+        Spacer(modifier = Modifier.height(14.dp))
+
+        // 🎯 Monthly Goals & Consistency Shortcut Card
+        Surface(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable { onNavigateToGoals() },
+            shape = RoundedCornerShape(14.dp),
+            color = DeepSurface,
+            border = BorderStroke(1.dp, SubtleBorder)
+        ) {
+            Row(
+                modifier = Modifier.padding(14.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(10.dp),
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Surface(
+                        shape = RoundedCornerShape(8.dp),
+                        color = EmeraldFocus.copy(alpha = 0.15f),
+                        modifier = Modifier.size(34.dp)
+                    ) {
+                        Box(contentAlignment = Alignment.Center) {
+                            Text("📅", fontSize = 16.sp)
+                        }
+                    }
+                    Column {
+                        Text(
+                            text = "Monthly Goals & Consistency",
+                            fontSize = 13.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = TextPrimary
+                        )
+                        Text(
+                            text = "View green & red habit calendar • Set target",
+                            fontSize = 11.sp,
+                            color = TextSecondary
+                        )
+                    }
+                }
+
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Surface(
+                        shape = RoundedCornerShape(4.dp),
+                        color = EmeraldFocus.copy(alpha = 0.2f)
+                    ) {
+                        Text(
+                            text = "CALENDAR",
+                            color = EmeraldFocus,
+                            fontSize = 9.sp,
+                            fontWeight = FontWeight.Black,
+                            modifier = Modifier.padding(horizontal = 4.dp, vertical = 2.dp)
+                        )
+                    }
+                    Spacer(modifier = Modifier.width(4.dp))
+                    Icon(
+                        imageVector = Icons.Default.ChevronRight,
+                        contentDescription = "Open Goals",
+                        tint = TextMuted,
+                        modifier = Modifier.size(16.dp)
+                    )
                 }
             }
         }
