@@ -6,27 +6,26 @@ enum class DisciplineLevel(
     val displayName: String,
     val minXp: Int,
     val maxXp: Int,
-    val emoji: String,
     val description: String
 ) {
     NEW_STARTER(
-        "NEW_STARTER", "New Starter", 0, 499, "🌱",
+        "NEW_STARTER", "New Starter", 0, 499,
         "Beginning your discipline journey"
     ),
     CONSISTENT(
-        "CONSISTENT", "Consistent", 500, 1_499, "⚡",
+        "CONSISTENT", "Consistent", 500, 1_499,
         "Building reliable focus habits"
     ),
     FOCUSED(
-        "FOCUSED", "Focused", 1_500, 3_499, "🎯",
+        "FOCUSED", "Focused", 1_500, 3_499,
         "Mastering intentional attention"
     ),
     DISCIPLINED(
-        "DISCIPLINED", "Disciplined", 3_500, 7_499, "🔥",
+        "DISCIPLINED", "Disciplined", 3_500, 7_499,
         "Disciplined mind, deliberate action"
     ),
     IRON_WILL(
-        "IRON_WILL", "Iron Will", 7_500, Int.MAX_VALUE, "🏆",
+        "IRON_WILL", "Iron Will", 7_500, Int.MAX_VALUE,
         "Unbreakable. The highest tier."
     );
 

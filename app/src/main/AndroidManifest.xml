@@ -104,6 +104,11 @@
             </intent-filter>
         </receiver>
 
+        <!-- Daily reminder notifications from the Productivity tab -->
+        <receiver
+            android:name=".service.receiver.ReminderReceiver"
+            android:exported="false" />
+
         <!-- Scheduled Focus Routines Alarm Receiver -->
         <receiver
             android:name=".service.receiver.ScheduleAlarmReceiver"

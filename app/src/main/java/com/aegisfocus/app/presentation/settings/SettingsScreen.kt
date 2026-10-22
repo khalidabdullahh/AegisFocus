@@ -107,14 +107,22 @@ fun SettingsScreen(
     val context = LocalContext.current
     val scrollState = rememberScrollState()
 
+    // Remembers which switch asked for the VPN permission ("ad" or "adult")
+    var pendingVpnFor by remember { mutableStateOf("ad") }
+
     val vpnLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartActivityForResult()
     ) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
-            viewModel.toggleAdBlockerVpn(true, context)
-            android.widget.Toast.makeText(context, "🛡️ Aegis AdBlocker Activated!", android.widget.Toast.LENGTH_SHORT).show()
+            if (pendingVpnFor == "adult") {
+                viewModel.toggleAdultBlock(true, context)
+                android.widget.Toast.makeText(context, "18+ content blocking is on", android.widget.Toast.LENGTH_SHORT).show()
+            } else {
+                viewModel.toggleAdBlockerVpn(true, context)
+                android.widget.Toast.makeText(context, "AdBlocker is on", android.widget.Toast.LENGTH_SHORT).show()
+            }
         } else {
-            android.widget.Toast.makeText(context, "VPN Permission required for automatic AdBlocker", android.widget.Toast.LENGTH_SHORT).show()
+            android.widget.Toast.makeText(context, "VPN permission is required for the system-wide blocker", android.widget.Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -182,7 +190,7 @@ fun SettingsScreen(
                     Column {
                         val isProActive = uiState.activePlan != SubscriptionPlan.FREE
                         Text(
-                            text = if (isProActive) "👑 ${uiState.activePlan.displayName}" else "Aegis Focus Pro",
+                            text = if (isProActive) "${uiState.activePlan.displayName}" else "Aegis Focus Pro",
                             color = TextPrimary,
                             fontWeight = FontWeight.Bold,
                             fontSize = 15.sp
@@ -250,7 +258,7 @@ fun SettingsScreen(
                     )
                 }
                 Text(
-                    text = "Redeem ⚡",
+                    text = "Redeem",
                     color = CyanAccent,
                     fontSize = 12.sp,
                     fontWeight = FontWeight.Bold
@@ -340,49 +348,6 @@ fun SettingsScreen(
             border = BorderStroke(1.dp, SubtleBorder)
         ) {
             Column(modifier = Modifier.padding(16.dp)) {
-                // Emergency Exit Cooldown
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Column(modifier = Modifier.weight(1f)) {
-                        Text(
-                            text = "Emergency Exit Delay",
-                            fontSize = 15.sp,
-                            fontWeight = FontWeight.SemiBold,
-                            color = TextPrimary
-                        )
-                        Text(
-                            text = "Friction cooldown to prevent impulsive session breaks",
-                            fontSize = 12.sp,
-                            color = TextSecondary
-                        )
-                    }
-
-                    Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                        listOf(5, 10, 15).forEach { sec ->
-                            val isSelected = uiState.emergencyCooldownSeconds == sec
-                            Surface(
-                                modifier = Modifier.clickable { viewModel.setEmergencyCooldown(sec) },
-                                shape = RoundedCornerShape(8.dp),
-                                color = if (isSelected) ElevatedSurface else DeepSurface,
-                                border = BorderStroke(1.dp, if (isSelected) CyanAccent else SubtleBorder)
-                            ) {
-                                Text(
-                                    text = "${sec}s",
-                                    fontSize = 12.sp,
-                                    fontWeight = FontWeight.Bold,
-                                    color = if (isSelected) CyanAccent else TextSecondary,
-                                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 6.dp)
-                                )
-                            }
-                        }
-                    }
-                }
-
-                Spacer(modifier = Modifier.height(18.dp))
-
                 // Mindful Confirmation Phrase
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -417,7 +382,7 @@ fun SettingsScreen(
 
                 Spacer(modifier = Modifier.height(18.dp))
 
-                // 🎬 Surgical Shorts / Reels Blocker Toggle
+                // Surgical Shorts / Reels Blocker Toggle
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
@@ -465,7 +430,7 @@ fun SettingsScreen(
 
                 Spacer(modifier = Modifier.height(18.dp))
 
-                // 🌓 Scroll Fatigue & Grayscale Detox
+                // Scroll Fatigue & Grayscale Detox
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
@@ -530,7 +495,7 @@ fun SettingsScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // 🛡️ 1-Tap Automatic AdBlocker Card
+        // 1-Tap Automatic AdBlocker Card
         Surface(
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(16.dp),
@@ -554,7 +519,12 @@ fun SettingsScreen(
                             modifier = Modifier.size(38.dp)
                         ) {
                             Box(contentAlignment = Alignment.Center) {
-                                Text(if (uiState.isAdBlockerVpnEnabled) "🛡️" else "🛡️", fontSize = 18.sp)
+                                Icon(
+                                    imageVector = Icons.Default.Security,
+                                    contentDescription = null,
+                                    tint = if (uiState.isAdBlockerVpnEnabled) EmeraldFocus else CyanAccent,
+                                    modifier = Modifier.size(20.dp)
+                                )
                             }
                         }
                         Column {
@@ -579,7 +549,7 @@ fun SettingsScreen(
                                 }
                             }
                             Text(
-                                text = "Blocks 99% of in-app ads, popups & trackers system-wide with zero battery drain.",
+                                text = "Blocks most in-app ads, popups and trackers system-wide with one tap.",
                                 fontSize = 12.sp,
                                 color = TextSecondary
                             )
@@ -592,14 +562,61 @@ fun SettingsScreen(
                             if (isChecked) {
                                 val vpnIntent = android.net.VpnService.prepare(context)
                                 if (vpnIntent != null) {
+                                    pendingVpnFor = "ad"
                                     vpnLauncher.launch(vpnIntent)
                                 } else {
                                     viewModel.toggleAdBlockerVpn(true, context)
-                                    android.widget.Toast.makeText(context, "🛡️ Aegis AdBlocker Activated!", android.widget.Toast.LENGTH_SHORT).show()
+                                    android.widget.Toast.makeText(context, "AdBlocker is on", android.widget.Toast.LENGTH_SHORT).show()
                                 }
                             } else {
                                 viewModel.toggleAdBlockerVpn(false, context)
                                 android.widget.Toast.makeText(context, "AdBlocker Deactivated", android.widget.Toast.LENGTH_SHORT).show()
+                            }
+                        },
+                        colors = SwitchDefaults.colors(
+                            checkedThumbColor = ObsidianBg,
+                            checkedTrackColor = EmeraldFocus,
+                            uncheckedThumbColor = TextMuted,
+                            uncheckedTrackColor = DeepSurface
+                        )
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Column(modifier = Modifier.weight(1f)) {
+                        Text(
+                            text = "Block 18+ content",
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.SemiBold,
+                            color = TextPrimary
+                        )
+                        Text(
+                            text = "Blocks known adult sites, video ads and trackers using a family-safe DNS filter.",
+                            fontSize = 12.sp,
+                            color = TextSecondary
+                        )
+                    }
+
+                    Switch(
+                        checked = uiState.isAdultBlockEnabled,
+                        onCheckedChange = { isChecked ->
+                            if (isChecked) {
+                                val vpnIntent = android.net.VpnService.prepare(context)
+                                if (vpnIntent != null) {
+                                    pendingVpnFor = "adult"
+                                    vpnLauncher.launch(vpnIntent)
+                                } else {
+                                    viewModel.toggleAdultBlock(true, context)
+                                    android.widget.Toast.makeText(context, "18+ content blocking is on", android.widget.Toast.LENGTH_SHORT).show()
+                                }
+                            } else {
+                                viewModel.toggleAdultBlock(false, context)
                             }
                         },
                         colors = SwitchDefaults.colors(
@@ -627,7 +644,7 @@ fun SettingsScreen(
                         ) {
                             Column {
                                 Text(
-                                    text = "Protected via AdGuard Secure DNS",
+                                    text = if (uiState.isAdultBlockEnabled) "Protected via AdGuard Family DNS" else "Protected via AdGuard Secure DNS",
                                     fontSize = 11.sp,
                                     fontWeight = FontWeight.SemiBold,
                                     color = if (uiState.isAdBlockerVpnEnabled) EmeraldFocus else TextPrimary
@@ -643,10 +660,10 @@ fun SettingsScreen(
                                 modifier = Modifier.clickable {
                                     // Copy DNS hostname to clipboard & open Private DNS settings as fallback
                                     val clipboard = context.getSystemService(android.content.Context.CLIPBOARD_SERVICE) as? android.content.ClipboardManager
-                                    val clip = android.content.ClipData.newPlainText("Private DNS", "dns.adguard-dns.com")
+                                    val clip = android.content.ClipData.newPlainText("Private DNS", if (uiState.isAdultBlockEnabled) "family.adguard-dns.com" else "dns.adguard-dns.com")
                                     clipboard?.setPrimaryClip(clip)
 
-                                    android.widget.Toast.makeText(context, "Copied 'dns.adguard-dns.com'! Opening Private DNS settings...", android.widget.Toast.LENGTH_SHORT).show()
+                                    android.widget.Toast.makeText(context, "DNS hostname copied. Opening network settings...", android.widget.Toast.LENGTH_SHORT).show()
 
                                     try {
                                         val intent = android.content.Intent("android.settings.NETWORK_OPERATOR_SETTINGS")
@@ -730,44 +747,6 @@ fun SettingsScreen(
 
         Spacer(modifier = Modifier.height(28.dp))
 
-        // Local-First Privacy Guarantee Card
-        Surface(
-            modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(16.dp),
-            color = DeepSurface,
-            border = BorderStroke(1.dp, EmeraldFocus.copy(alpha = 0.3f))
-        ) {
-            Row(
-                modifier = Modifier.padding(16.dp),
-                verticalAlignment = Alignment.Top
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Security,
-                    contentDescription = null,
-                    tint = EmeraldFocus,
-                    modifier = Modifier.size(24.dp)
-                )
-                Spacer(modifier = Modifier.width(12.dp))
-                Column {
-                    Text(
-                        text = "100% On-Device Privacy",
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = TextPrimary
-                    )
-                    Spacer(modifier = Modifier.height(4.dp))
-                    Text(
-                        text = "Aegis Focus operates completely on-device using local SQLite Room database. No analytics, no accounts, and no data ever leaves your device.",
-                        fontSize = 12.sp,
-                        color = TextSecondary,
-                        lineHeight = 17.sp
-                    )
-                }
-            }
-        }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
         // About & Version Info
         Surface(
             modifier = Modifier
@@ -790,7 +769,7 @@ fun SettingsScreen(
                 Spacer(modifier = Modifier.width(12.dp))
                 Column {
                     Text(
-                        text = "Aegis Focus • v1.1.0",
+                        text = "Aegis Focus • v1.3.0",
                         fontSize = 14.sp,
                         fontWeight = FontWeight.SemiBold,
                         color = TextPrimary
@@ -1143,7 +1122,7 @@ private fun SuperAdminKeyGeneratorCard() {
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                Text("🔑", fontSize = 18.sp)
+                Icon(imageVector = Icons.Default.Key, contentDescription = null, tint = CyanAccent, modifier = Modifier.size(18.dp))
                 Text(
                     text = "Super Admin • License Generator",
                     color = CyanAccent,
@@ -1227,7 +1206,7 @@ private fun SuperAdminKeyGeneratorCard() {
                             Text("KEY (TAP TO COPY):", fontSize = 10.sp, color = TextMuted, fontWeight = FontWeight.Bold)
                             Text(generatedKey, fontSize = 15.sp, color = EmeraldFocus, fontWeight = FontWeight.Black, letterSpacing = 1.sp)
                         }
-                        Text("Copy 📋", fontSize = 12.sp, color = CyanAccent, fontWeight = FontWeight.Bold)
+                        Text("Copy", fontSize = 12.sp, color = CyanAccent, fontWeight = FontWeight.Bold)
                     }
                 }
             }
@@ -1305,7 +1284,7 @@ private fun RedeemLicenseDialog(
                 if (errorMessage != null) {
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
-                        text = "⚠ $errorMessage",
+                        text = "$errorMessage",
                         color = AlertStrict,
                         fontSize = 12.sp,
                         textAlign = TextAlign.Center
@@ -1315,7 +1294,7 @@ private fun RedeemLicenseDialog(
                 if (successMessage != null) {
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
-                        text = "✓ $successMessage",
+                        text = "$successMessage",
                         color = EmeraldFocus,
                         fontSize = 12.sp,
                         fontWeight = FontWeight.Bold,
@@ -1420,7 +1399,7 @@ private fun AdminPasswordPromptDialog(
                 if (errorMessage != null) {
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
-                        text = "⚠ $errorMessage",
+                        text = "$errorMessage",
                         color = AlertStrict,
                         fontSize = 12.sp,
                         fontWeight = FontWeight.SemiBold

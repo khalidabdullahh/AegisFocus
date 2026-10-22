@@ -19,10 +19,10 @@ import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
 enum class DayGoalStatus {
-    SUCCESS_MET,       // 🟢 Met or exceeded daily goal
-    MISSED,            // 🔴 Missed goal in the past
-    TODAY_IN_PROGRESS, // 🟡 Today with active progress
-    FUTURE             // ⚪ Upcoming day in the month
+    SUCCESS_MET,       // Met or exceeded daily goal
+    MISSED,            // Missed goal in the past
+    TODAY_IN_PROGRESS, // Today with active progress
+    FUTURE             // Upcoming day in the month
 }
 
 data class GoalDayUiModel(

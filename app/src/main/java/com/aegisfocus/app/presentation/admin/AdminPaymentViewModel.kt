@@ -50,7 +50,7 @@ class AdminPaymentViewModel(
             if (result.success) {
                 _uiState.value = _uiState.value.copy(
                     isLoading = false,
-                    actionFeedback = "✅ Approved TrxID: ${request.transactionId} for plan ${request.planRequested}."
+                    actionFeedback = "Approved TrxID: ${request.transactionId} for plan ${request.planRequested}."
                 )
                 loadPendingRequests()
             } else {
@@ -74,7 +74,7 @@ class AdminPaymentViewModel(
             if (result.success) {
                 _uiState.value = _uiState.value.copy(
                     isLoading = false,
-                    actionFeedback = "❌ Rejected TrxID: ${request.transactionId}."
+                    actionFeedback = "Rejected TrxID: ${request.transactionId}."
                 )
                 loadPendingRequests()
             } else {

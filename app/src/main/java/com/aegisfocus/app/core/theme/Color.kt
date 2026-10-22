@@ -2,28 +2,28 @@ package com.aegisfocus.app.core.theme
 
 import androidx.compose.ui.graphics.Color
 
-// Obsidian & Calm Dark Palette
-val ObsidianBg = Color(0xFF0B0F17)
-val DeepSurface = Color(0xFF131B2B)
-val ElevatedSurface = Color(0xFF1C2538)
-val SubtleBorder = Color(0xFF243048)
-val TextPrimary = Color(0xFFF8FAFC)
-val TextSecondary = Color(0xFF94A3B8)
-val TextMuted = Color(0xFF64748B)
+// Calm Dark Palette: deep slate-teal base, soft sage accents, muted lavender secondary
+val ObsidianBg = Color(0xFF0E181D)
+val DeepSurface = Color(0xFF15242B)
+val ElevatedSurface = Color(0xFF1C2F38)
+val SubtleBorder = Color(0xFF2B434D)
+val TextPrimary = Color(0xFFEEF2EE)
+val TextSecondary = Color(0xFFA8B9BC)
+val TextMuted = Color(0xFF7A8E93)
 
-// Brand & Accent Colors
-val CyanAccent = Color(0xFF00E5FF)
-val CyanAccentMuted = Color(0xFF00838F)
-val IndigoAccent = Color(0xFF6366F1)
-val EmeraldFocus = Color(0xFF10B981)
-val AmberWarning = Color(0xFFF59E0B)
-val AlertStrict = Color(0xFFEF4444)
-val AlertStrictDark = Color(0xFF991B1B)
-val CrimsonDanger = Color(0xFFEF4444)
+// Brand & Accent Colors (names kept for compatibility, values are soft and low-saturation)
+val CyanAccent = Color(0xFF86C5B4)
+val CyanAccentMuted = Color(0xFF4F8A7E)
+val IndigoAccent = Color(0xFFA9A0D6)
+val EmeraldFocus = Color(0xFF9CC5A1)
+val AmberWarning = Color(0xFFD8B574)
+val AlertStrict = Color(0xFFC77D7D)
+val AlertStrictDark = Color(0xFF7A3F3F)
+val CrimsonDanger = Color(0xFFC77D7D)
 
 // Gradients / Surfaces
-val CardGlow = Color(0x1A00E5FF)
-val StrictCardGlow = Color(0x1AEF4444)
+val CardGlow = Color(0x1A86C5B4)
+val StrictCardGlow = Color(0x1AC77D7D)
 
 // Light Mode Palette (for future dynamic switching)
 val LightBg = Color(0xFFF8FAFC)

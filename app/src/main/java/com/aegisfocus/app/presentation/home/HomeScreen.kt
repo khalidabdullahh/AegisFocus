@@ -21,6 +21,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Bolt
+import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material.icons.filled.HourglassTop
 import androidx.compose.material.icons.filled.Lock
@@ -76,7 +77,7 @@ fun HomeScreen(
             .padding(horizontal = 20.dp)
             .verticalScroll(scrollState)
     ) {
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(16.dp))
 
         // Greeting Header
         Row(
@@ -102,159 +103,35 @@ fun HomeScreen(
                 )
             }
 
-            Surface(
-                shape = CircleShape,
-                color = ElevatedSurface,
-                border = BorderStroke(1.dp, SubtleBorder),
-                modifier = Modifier.size(44.dp)
-            ) {
-                Box(contentAlignment = Alignment.Center) {
-                    Icon(
-                        imageVector = Icons.Default.Shield,
-                        contentDescription = "Aegis",
-                        tint = CyanAccent,
-                        modifier = Modifier.size(22.dp)
-                    )
-                }
-            }
         }
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        // ─── Discipline Score + XP Row ────────────────────────────────────────
+        // Discipline score and level as two small chips
+        val hasActivity = uiState.currentXp > 0 ||
+            uiState.currentStreak > 0 ||
+            uiState.usageSummary.sessionsCompleted > 0
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            // Discipline Score card
-            Surface(
-                modifier = Modifier.weight(1f),
-                shape = RoundedCornerShape(16.dp),
-                color = ElevatedSurface,
-                border = BorderStroke(1.dp, SubtleBorder)
-            ) {
-                Column(Modifier.padding(14.dp)) {
-                    Text("Discipline Score", color = TextMuted, fontSize = 11.sp, fontWeight = FontWeight.SemiBold, letterSpacing = 0.5.sp)
-                    Spacer(Modifier.height(4.dp))
-                    Text(
-                        text = "${uiState.disciplineScore}",
-                        color = when {
-                            uiState.disciplineScore >= 85 -> EmeraldFocus
-                            uiState.disciplineScore >= 60 -> CyanAccent
-                            else -> AlertStrict
-                        },
-                        fontSize = 32.sp,
-                        fontWeight = FontWeight.ExtraBold
-                    )
-                    Text("/100", color = TextMuted, fontSize = 12.sp)
-                }
-            }
-            // XP + Level card
-            Surface(
-                modifier = Modifier.weight(1f),
-                shape = RoundedCornerShape(16.dp),
-                color = ElevatedSurface,
-                border = BorderStroke(1.dp, SubtleBorder)
-            ) {
-                Column(Modifier.padding(14.dp)) {
-                    Text("Level", color = TextMuted, fontSize = 11.sp, fontWeight = FontWeight.SemiBold, letterSpacing = 0.5.sp)
-                    Spacer(Modifier.height(4.dp))
-                    Text(
-                        text = "${uiState.currentLevel.emoji} ${uiState.currentLevel.displayName}",
-                        color = TextPrimary,
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight.Bold
-                    )
-                    Spacer(Modifier.height(2.dp))
-                    Text("${uiState.currentXp} XP  •  🔥 ${uiState.currentStreak}d streak", color = TextSecondary, fontSize = 12.sp)
-                }
-            }
-        }
-
-        Spacer(modifier = Modifier.height(12.dp))
-
-        // ─── Monk Mode Aegis Shield Evolution Card ───────────────────────────
-        val shieldTier = com.aegisfocus.app.domain.motivation.ShieldTier.fromStreak(uiState.currentStreak)
-        Surface(
-            modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(16.dp),
-            color = DeepSurface,
-            border = BorderStroke(1.dp, androidx.compose.ui.graphics.Color(shieldTier.accentHex).copy(alpha = 0.5f))
-        ) {
-            Row(
-                modifier = Modifier.padding(16.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(14.dp),
-                    modifier = Modifier.weight(1f)
-                ) {
-                    Surface(
-                        shape = CircleShape,
-                        color = androidx.compose.ui.graphics.Color(shieldTier.accentHex).copy(alpha = 0.15f),
-                        border = BorderStroke(1.dp, androidx.compose.ui.graphics.Color(shieldTier.accentHex).copy(alpha = 0.6f)),
-                        modifier = Modifier.size(46.dp)
-                    ) {
-                        Box(contentAlignment = Alignment.Center) {
-                            Text(
-                                text = when (shieldTier) {
-                                    com.aegisfocus.app.domain.motivation.ShieldTier.BRONZE -> "🥉"
-                                    com.aegisfocus.app.domain.motivation.ShieldTier.SILVER -> "🥈"
-                                    com.aegisfocus.app.domain.motivation.ShieldTier.GOLD -> "🥇"
-                                    com.aegisfocus.app.domain.motivation.ShieldTier.OBSIDIAN -> "💎"
-                                },
-                                fontSize = 22.sp
-                            )
-                        }
-                    }
-
-                    Column {
-                        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                            Text(
-                                text = shieldTier.title,
-                                color = androidx.compose.ui.graphics.Color(shieldTier.accentHex),
-                                fontSize = 15.sp,
-                                fontWeight = FontWeight.Black
-                            )
-                            Surface(
-                                shape = RoundedCornerShape(4.dp),
-                                color = EmeraldFocus.copy(alpha = 0.2f)
-                            ) {
-                                Text(
-                                    text = "MONK SHIELD",
-                                    color = EmeraldFocus,
-                                    fontSize = 9.sp,
-                                    fontWeight = FontWeight.Bold,
-                                    modifier = Modifier.padding(horizontal = 4.dp, vertical = 1.dp)
-                                )
-                            }
-                        }
-                        Spacer(Modifier.height(2.dp))
-                        Text(
-                            text = shieldTier.description,
-                            color = TextSecondary,
-                            fontSize = 12.sp,
-                            maxLines = 1
-                        )
-                    }
-                }
-
-                Column(horizontalAlignment = Alignment.End) {
-                    Text(
-                        text = "100%",
-                        color = EmeraldFocus,
-                        fontSize = 13.sp,
-                        fontWeight = FontWeight.ExtraBold
-                    )
-                    Text(
-                        text = "Durability",
-                        color = TextMuted,
-                        fontSize = 10.sp
-                    )
-                }
-            }
+            InfoChip(
+                label = "Discipline",
+                value = if (hasActivity) "${uiState.disciplineScore}/100" else "--",
+                valueColor = when {
+                    !hasActivity -> TextMuted
+                    uiState.disciplineScore >= 85 -> EmeraldFocus
+                    uiState.disciplineScore >= 60 -> CyanAccent
+                    else -> AlertStrict
+                },
+                modifier = Modifier.weight(1f)
+            )
+            InfoChip(
+                label = "Level",
+                value = uiState.currentLevel.displayName,
+                valueColor = TextPrimary,
+                modifier = Modifier.weight(1f)
+            )
         }
 
         // Pro upgrade nudge (only for Free users)
@@ -264,91 +141,81 @@ fun HomeScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .clickable { onNavigateToPaywall() },
-                shape = RoundedCornerShape(12.dp),
+                shape = RoundedCornerShape(10.dp),
                 color = CyanAccent.copy(alpha = 0.08f),
-                border = BorderStroke(1.dp, CyanAccent.copy(alpha = 0.3f))
+                border = BorderStroke(1.dp, CyanAccent.copy(alpha = 0.25f))
             ) {
                 Row(
-                    Modifier.padding(horizontal = 16.dp, vertical = 10.dp),
+                    Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    Text("⚡ Unlock Pro — Unlimited Strict Mode + Website Blocking", color = CyanAccent, fontSize = 12.sp, fontWeight = FontWeight.SemiBold, modifier = Modifier.weight(1f))
+                    Icon(Icons.Default.Bolt, contentDescription = null, tint = CyanAccent, modifier = Modifier.size(14.dp))
+                    Text(
+                        "Unlock Pro: unlimited Strict Mode and website blocking",
+                        color = CyanAccent,
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.Medium,
+                        modifier = Modifier.weight(1f)
+                    )
                     Icon(Icons.Default.ChevronRight, contentDescription = null, tint = CyanAccent, modifier = Modifier.size(16.dp))
                 }
             }
         }
 
-        Spacer(modifier = Modifier.height(14.dp))
+        Spacer(modifier = Modifier.height(10.dp))
 
-        // 🎯 Monthly Goals & Consistency Shortcut Card
+        // Monthly goals and habit calendar shortcut
         Surface(
             modifier = Modifier
                 .fillMaxWidth()
                 .clickable { onNavigateToGoals() },
-            shape = RoundedCornerShape(14.dp),
+            shape = RoundedCornerShape(12.dp),
             color = DeepSurface,
             border = BorderStroke(1.dp, SubtleBorder)
         ) {
             Row(
-                modifier = Modifier.padding(14.dp),
+                modifier = Modifier.padding(12.dp),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
+                horizontalArrangement = Arrangement.spacedBy(10.dp)
             ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(10.dp),
-                    modifier = Modifier.weight(1f)
+                Surface(
+                    shape = RoundedCornerShape(8.dp),
+                    color = EmeraldFocus.copy(alpha = 0.15f),
+                    modifier = Modifier.size(32.dp)
                 ) {
-                    Surface(
-                        shape = RoundedCornerShape(8.dp),
-                        color = EmeraldFocus.copy(alpha = 0.15f),
-                        modifier = Modifier.size(34.dp)
-                    ) {
-                        Box(contentAlignment = Alignment.Center) {
-                            Text("📅", fontSize = 16.sp)
-                        }
-                    }
-                    Column {
-                        Text(
-                            text = "Monthly Goals & Consistency",
-                            fontSize = 13.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = TextPrimary
-                        )
-                        Text(
-                            text = "View green & red habit calendar • Set target",
-                            fontSize = 11.sp,
-                            color = TextSecondary
+                    Box(contentAlignment = Alignment.Center) {
+                        Icon(
+                            imageVector = Icons.Default.CalendarMonth,
+                            contentDescription = null,
+                            tint = EmeraldFocus,
+                            modifier = Modifier.size(18.dp)
                         )
                     }
                 }
-
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Surface(
-                        shape = RoundedCornerShape(4.dp),
-                        color = EmeraldFocus.copy(alpha = 0.2f)
-                    ) {
-                        Text(
-                            text = "CALENDAR",
-                            color = EmeraldFocus,
-                            fontSize = 9.sp,
-                            fontWeight = FontWeight.Black,
-                            modifier = Modifier.padding(horizontal = 4.dp, vertical = 2.dp)
-                        )
-                    }
-                    Spacer(modifier = Modifier.width(4.dp))
-                    Icon(
-                        imageVector = Icons.Default.ChevronRight,
-                        contentDescription = "Open Goals",
-                        tint = TextMuted,
-                        modifier = Modifier.size(16.dp)
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(
+                        text = "Monthly goals",
+                        fontSize = 13.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        color = TextPrimary
+                    )
+                    Text(
+                        text = "Habit calendar and daily target",
+                        fontSize = 11.sp,
+                        color = TextSecondary
                     )
                 }
+                Icon(
+                    imageVector = Icons.Default.ChevronRight,
+                    contentDescription = "Open goals",
+                    tint = TextMuted,
+                    modifier = Modifier.size(16.dp)
+                )
             }
         }
 
-        Spacer(modifier = Modifier.height(20.dp))
+        Spacer(modifier = Modifier.height(16.dp))
 
         // Hero Active Session or Primary CTA
         if (activeSession != null) {
@@ -449,17 +316,18 @@ fun HomeScreen(
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        // Discipline Metrics Grid
+        // Discipline snapshot: only real values, otherwise an honest empty state
         SectionHeader(title = "Discipline Snapshot")
 
+        val summary = uiState.usageSummary
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
+            horizontalArrangement = Arrangement.spacedBy(10.dp)
         ) {
             StatCard(
                 title = "Focus Time",
-                value = TimeUtils.formatMillisHuman(uiState.usageSummary.totalFocusTimeMs),
-                subtitle = "${uiState.usageSummary.sessionsCompleted} completed",
+                value = if (summary.sessionsCompleted > 0) TimeUtils.formatMillisHuman(summary.totalFocusTimeMs) else "No data yet",
+                subtitle = if (summary.sessionsCompleted > 0) "${summary.sessionsCompleted} completed today" else "Finish a session to start",
                 icon = Icons.Default.HourglassTop,
                 accentColor = EmeraldFocus,
                 modifier = Modifier.weight(1f)
@@ -467,40 +335,40 @@ fun HomeScreen(
 
             StatCard(
                 title = "Screen Time",
-                value = TimeUtils.formatMillisHuman(uiState.usageSummary.totalScreenTimeMs),
-                subtitle = "Total today",
+                value = if (summary.hasScreenTimeData) TimeUtils.formatMillisHuman(summary.totalScreenTimeMs) else "No data yet",
+                subtitle = if (summary.hasScreenTimeData) "Total today" else "Needs Usage Access",
                 icon = Icons.Default.PhoneAndroid,
                 accentColor = CyanAccent,
                 modifier = Modifier.weight(1f)
             )
         }
 
-        Spacer(modifier = Modifier.height(12.dp))
+        Spacer(modifier = Modifier.height(10.dp))
 
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
+            horizontalArrangement = Arrangement.spacedBy(10.dp)
         ) {
             StatCard(
-                title = "Productivity Score",
-                value = "${uiState.usageSummary.productivityScore}%",
-                subtitle = if (uiState.usageSummary.productivityScore >= 75) "Optimal focus" else "Room for growth",
+                title = "Focus Share",
+                value = summary.productivityScore?.let { "$it%" } ?: "No data yet",
+                subtitle = "Focus vs screen time",
                 icon = Icons.Default.SelfImprovement,
                 accentColor = CyanAccent,
                 modifier = Modifier.weight(1f)
             )
 
             StatCard(
-                title = "Discipline Streak",
-                value = "${uiState.usageSummary.streakDays} days",
-                subtitle = "Consecutive active",
+                title = "Focus Streak",
+                value = if (summary.streakDays > 0) "${summary.streakDays} days" else "No streak yet",
+                subtitle = "Consecutive days",
                 icon = Icons.Default.Bolt,
                 accentColor = EmeraldFocus,
                 modifier = Modifier.weight(1f)
             )
         }
 
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(16.dp))
 
         // Quick Launch Presets
         if (activeSession == null) {
@@ -536,6 +404,30 @@ fun HomeScreen(
 }
 
 @Composable
+private fun InfoChip(
+    label: String,
+    value: String,
+    valueColor: androidx.compose.ui.graphics.Color,
+    modifier: Modifier = Modifier
+) {
+    Surface(
+        modifier = modifier,
+        shape = RoundedCornerShape(10.dp),
+        color = ElevatedSurface,
+        border = BorderStroke(1.dp, SubtleBorder)
+    ) {
+        Row(
+            modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(label, color = TextMuted, fontSize = 11.sp, fontWeight = FontWeight.Medium)
+            Text(value, color = valueColor, fontSize = 13.sp, fontWeight = FontWeight.Bold, maxLines = 1)
+        }
+    }
+}
+
+@Composable
 private fun QuickPresetButton(
     minutes: Int,
     label: String,
@@ -549,7 +441,7 @@ private fun QuickPresetButton(
         border = BorderStroke(1.dp, SubtleBorder)
     ) {
         Column(
-            modifier = Modifier.padding(14.dp),
+            modifier = Modifier.padding(10.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(

@@ -89,6 +89,7 @@ import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import kotlinx.coroutines.launch
 import java.io.File
+import androidx.compose.material.icons.filled.CameraAlt
 
 @Composable
 fun AuthScreen(
@@ -180,7 +181,7 @@ fun AuthScreen(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         TextButton(onClick = { viewModel.resendVerification() }) {
-                            Text("Resend Link ✉️", color = CyanAccent, fontWeight = FontWeight.Bold, fontSize = 12.sp)
+                            Text("Resend Link", color = CyanAccent, fontWeight = FontWeight.Bold, fontSize = 12.sp)
                         }
                         TextButton(onClick = { viewModel.setAuthMode(false) }) {
                             Text("Switch to Sign In →", color = EmeraldFocus, fontWeight = FontWeight.Bold, fontSize = 12.sp)
@@ -296,7 +297,7 @@ fun AuthScreen(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(
-                    text = "⚠️ $msg",
+                    text = "$msg",
                     color = AlertStrict,
                     fontSize = 13.sp,
                     fontWeight = FontWeight.Medium,
@@ -316,7 +317,7 @@ fun AuthScreen(
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Text(
-                        text = "✅ $msg",
+                        text = "$msg",
                         color = EmeraldFocus,
                         fontSize = 13.sp,
                         fontWeight = FontWeight.Bold,
@@ -537,7 +538,7 @@ private fun LoggedInProfileCard(
                         .align(Alignment.BottomEnd),
                     contentAlignment = Alignment.Center
                 ) {
-                    Text("📷", fontSize = 14.sp)
+                    Icon(imageVector = Icons.Default.CameraAlt, contentDescription = null, tint = TextSecondary, modifier = Modifier.size(16.dp))
                 }
             }
 
@@ -568,7 +569,7 @@ private fun LoggedInProfileCard(
                     shape = RoundedCornerShape(20.dp)
                 ) {
                     Text(
-                        text = "👑 Super Admin • Lifetime Pro Unlocked",
+                        text = "Super Admin • Lifetime Pro Unlocked",
                         color = CyanAccent,
                         fontSize = 12.sp,
                         fontWeight = FontWeight.Bold,
@@ -680,7 +681,7 @@ private fun LoggedInProfileCard(
                     modifier = Modifier.align(Alignment.CenterHorizontally)
                 ) {
                     Text(
-                        text = "✉️ Send Verification / Password Reset Link",
+                        text = "Send Verification / Password Reset Link",
                         color = CyanAccent,
                         fontSize = 13.sp,
                         fontWeight = FontWeight.SemiBold

@@ -7,17 +7,19 @@ data class UsageStatsSummary(
     val sessionsCompleted: Int = 0,
     val streakDays: Int = 0,
     val topDistractingApps: List<AppUsageStat> = emptyList(),
-    val hourlyFocusDistribution: List<HourlyDistribution> = emptyList()
+    val hourlyFocusDistribution: List<HourlyDistribution> = emptyList(),
+    /** True when Android usage access returned real data for this period. */
+    val hasScreenTimeData: Boolean = false
 ) {
-    val productivityScore: Int
+    /**
+     * Share of tracked time spent in focus sessions, 0..100.
+     * Null when there is nothing real to base it on.
+     */
+    val productivityScore: Int?
         get() {
-            if (totalScreenTimeMs == 0L && totalFocusTimeMs == 0L) return 80
-            val totalTime = (totalScreenTimeMs + totalFocusTimeMs).toFloat()
-            if (totalTime == 0f) return 80
-            val focusRatio = (totalFocusTimeMs.toFloat() / totalTime) * 100f
-            // Base score influenced by focus ratio and streak bonus
-            val calculated = (focusRatio * 0.7f + (streakDays * 5f).coerceAtMost(30f)).toInt()
-            return calculated.coerceIn(10, 100)
+            val total = totalScreenTimeMs + totalFocusTimeMs
+            if (total <= 0L || totalFocusTimeMs <= 0L) return null
+            return ((totalFocusTimeMs.toFloat() / total) * 100f).toInt().coerceIn(0, 100)
         }
 }
 

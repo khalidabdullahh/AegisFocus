@@ -168,6 +168,14 @@ class SettingsRepositoryImpl(
         prefs.edit().putBoolean(KEY_ADBLOCKER_VPN_ENABLED, enabled).apply()
     }
 
+    override fun isAdultContentBlockEnabled(): Boolean {
+        return prefs.getBoolean(KEY_ADULT_BLOCK_ENABLED, false)
+    }
+
+    override fun setAdultContentBlockEnabled(enabled: Boolean) {
+        prefs.edit().putBoolean(KEY_ADULT_BLOCK_ENABLED, enabled).apply()
+    }
+
     override fun getDailyFocusGoalMinutes(): Int {
         return prefs.getInt(KEY_DAILY_FOCUS_GOAL_MINUTES, 120)
     }
@@ -185,6 +193,7 @@ class SettingsRepositoryImpl(
         private const val KEY_SHORTS_BLOCKER_ENABLED = "shorts_blocker_enabled"
         private const val KEY_GRAYSCALE_FATIGUE_ENABLED = "grayscale_fatigue_enabled"
         private const val KEY_ADBLOCKER_VPN_ENABLED = "adblocker_vpn_enabled"
+        private const val KEY_ADULT_BLOCK_ENABLED = "adult_block_enabled"
         private const val KEY_DAILY_FOCUS_GOAL_MINUTES = "daily_focus_goal_minutes"
     }
 }

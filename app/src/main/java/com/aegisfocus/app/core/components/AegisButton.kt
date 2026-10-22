@@ -6,6 +6,7 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -33,6 +34,7 @@ fun AegisPrimaryButton(
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     isDanger: Boolean = false,
+    wrapContent: Boolean = false,
     containerColor: Color = if (isDanger) AlertStrict else CyanAccent,
     contentColor: Color = if (isDanger) TextPrimary else ObsidianBg
 ) {
@@ -44,24 +46,23 @@ fun AegisPrimaryButton(
 
     Button(
         onClick = onClick,
-        modifier = modifier
-            .fillMaxWidth()
-            .height(56.dp),
+        modifier = (if (wrapContent) modifier.widthIn(min = 150.dp) else modifier.fillMaxWidth())
+            .height(46.dp),
         enabled = enabled,
-        shape = RoundedCornerShape(16.dp),
+        shape = RoundedCornerShape(12.dp),
         colors = ButtonDefaults.buttonColors(
             containerColor = animatedBg,
             contentColor = contentColor,
             disabledContainerColor = DeepSurface,
             disabledContentColor = TextSecondary.copy(alpha = 0.5f)
         ),
-        contentPadding = PaddingValues(horizontal = 24.dp)
+        contentPadding = PaddingValues(horizontal = 18.dp)
     ) {
         Text(
             text = text,
-            fontSize = 16.sp,
-            fontWeight = FontWeight.Bold,
-            letterSpacing = 0.5.sp
+            fontSize = 14.sp,
+            fontWeight = FontWeight.SemiBold,
+            letterSpacing = 0.3.sp
         )
     }
 }
@@ -79,9 +80,9 @@ fun AegisOutlinedButton(
         onClick = onClick,
         modifier = modifier
             .fillMaxWidth()
-            .height(52.dp),
+            .height(42.dp),
         enabled = enabled,
-        shape = RoundedCornerShape(16.dp),
+        shape = RoundedCornerShape(12.dp),
         border = BorderStroke(1.dp, borderColor),
         colors = ButtonDefaults.outlinedButtonColors(
             contentColor = textColor,
@@ -93,6 +94,41 @@ fun AegisOutlinedButton(
             text = text,
             fontSize = 15.sp,
             fontWeight = FontWeight.SemiBold
+        )
+    }
+}
+
+/**
+ * Compact pill button that only takes the width its label needs.
+ * Used for inline actions such as granting a permission.
+ */
+@Composable
+fun AegisCompactButton(
+    text: String,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true,
+    containerColor: Color = CyanAccent,
+    contentColor: Color = ObsidianBg
+) {
+    Button(
+        onClick = onClick,
+        modifier = modifier.height(36.dp),
+        enabled = enabled,
+        shape = RoundedCornerShape(10.dp),
+        colors = ButtonDefaults.buttonColors(
+            containerColor = containerColor,
+            contentColor = contentColor,
+            disabledContainerColor = DeepSurface,
+            disabledContentColor = TextSecondary.copy(alpha = 0.5f)
+        ),
+        contentPadding = PaddingValues(horizontal = 16.dp, vertical = 0.dp)
+    ) {
+        Text(
+            text = text,
+            fontSize = 13.sp,
+            fontWeight = FontWeight.SemiBold,
+            maxLines = 1
         )
     }
 }

@@ -78,12 +78,7 @@ class AppDiscoveryRepositoryImpl(
             .distinctBy { it.packageName }
             .sortedBy { it.appName.lowercase() }
 
-        // If running on a minimal emulator with few launchable apps, ensure rich mockable list if empty
-        if (apps.isEmpty()) {
-            getSampleApps()
-        } else {
-            apps
-        }
+        apps
     }
 
     override suspend fun getBlockedPackageNames(): List<String> {
@@ -165,19 +160,5 @@ class AppDiscoveryRepositoryImpl(
 
             else -> AppCategory.OTHER
         }
-    }
-
-    private fun getSampleApps(): List<AppInfo> {
-        return listOf(
-            AppInfo("com.google.android.youtube", "YouTube", AppCategory.ENTERTAINMENT),
-            AppInfo("com.instagram.android", "Instagram", AppCategory.SOCIAL),
-            AppInfo("com.twitter.android", "X (Twitter)", AppCategory.SOCIAL),
-            AppInfo("com.zhiliaoapp.musically", "TikTok", AppCategory.SOCIAL),
-            AppInfo("com.reddit.frontpage", "Reddit", AppCategory.SOCIAL),
-            AppInfo("com.facebook.katana", "Facebook", AppCategory.SOCIAL),
-            AppInfo("com.netflix.mediaclient", "Netflix", AppCategory.ENTERTAINMENT),
-            AppInfo("com.discord", "Discord", AppCategory.COMMUNICATION),
-            AppInfo("com.slack", "Slack", AppCategory.PRODUCTIVITY)
-        )
     }
 }

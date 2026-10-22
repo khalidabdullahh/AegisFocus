@@ -15,11 +15,12 @@ import com.aegisfocus.app.R
 
 /**
  * -----------------------------------------------------------------------------
- * 🛡️ AegisAdBlockerVpnService
- * 🎯 Purpose: Provides true 1-tap, on-device automatic AdBlocking.
- * 💡 Mechanism: Creates a lightweight local VPN tunnel interface that sets
- *               AdGuard DNS (94.140.14.14 / 94.140.15.15) as the active resolver.
- * 🔒 Privacy: 100% on-device. Zero network traffic is proxied or sent to remote
+ * AegisAdBlockerVpnService
+ * Purpose: Provides true 1-tap, on-device automatic AdBlocking.
+ * Mechanism: Creates a lightweight local VPN tunnel interface that sets
+ *               AdGuard DNS as the active resolver. With "Block 18+ content" on, the
+ *               AdGuard Family DNS is used instead, which also blocks adult sites.
+ * Privacy: 100% on-device. Zero network traffic is proxied or sent to remote
  *             servers; only standard DNS lookups are filtered.
  * -----------------------------------------------------------------------------
  */
@@ -45,20 +46,38 @@ class AegisAdBlockerVpnService : VpnService() {
 
     private fun startVpn() {
         try {
-            val notification = buildNotification()
-            startForeground(NOTIFICATION_ID, notification)
+            val adultBlock = com.aegisfocus.app.core.di.ServiceLocator
+                .getContainer(applicationContext)
+                .settingsRepository
+                .isAdultContentBlockEnabled()
+
+            startForeground(NOTIFICATION_ID, buildNotification(adultBlock))
+
+            // Restart cleanly when the filter level changes while the VPN is running
+            vpnInterface?.close()
+            vpnInterface = null
 
             val builder = Builder()
                 .setSession("Aegis Focus AdBlocker")
                 .addAddress("10.0.0.2", 32)
-                .addDnsServer("94.140.14.14")      // AdGuard Primary DNS
-                .addDnsServer("94.140.15.15")      // AdGuard Secondary DNS
-                .addDnsServer("2a10:50c0::ad1:ff")  // AdGuard IPv6 Primary
-                .addDnsServer("2a10:50c0::ad2:ff")  // AdGuard IPv6 Secondary
                 .setBlocking(false)
 
+            if (adultBlock) {
+                builder
+                    .addDnsServer("94.140.14.15")       // AdGuard Family Primary DNS
+                    .addDnsServer("94.140.15.16")       // AdGuard Family Secondary DNS
+                    .addDnsServer("2a10:50c0::bad1:ff")  // AdGuard Family IPv6 Primary
+                    .addDnsServer("2a10:50c0::bad2:ff")  // AdGuard Family IPv6 Secondary
+            } else {
+                builder
+                    .addDnsServer("94.140.14.14")       // AdGuard Primary DNS
+                    .addDnsServer("94.140.15.15")       // AdGuard Secondary DNS
+                    .addDnsServer("2a10:50c0::ad1:ff")  // AdGuard IPv6 Primary
+                    .addDnsServer("2a10:50c0::ad2:ff")  // AdGuard IPv6 Secondary
+            }
+
             vpnInterface = builder.establish()
-            isRunning = true
+            isRunning = vpnInterface != null
         } catch (e: Exception) {
             e.printStackTrace()
             stopSelf()
@@ -97,7 +116,7 @@ class AegisAdBlockerVpnService : VpnService() {
         }
     }
 
-    private fun buildNotification(): Notification {
+    private fun buildNotification(adultBlock: Boolean): Notification {
         val intent = Intent(this, MainActivity::class.java)
         val pendingIntent = PendingIntent.getActivity(
             this,
@@ -107,8 +126,11 @@ class AegisAdBlockerVpnService : VpnService() {
         )
 
         return NotificationCompat.Builder(this, CHANNEL_ID)
-            .setContentTitle("🛡️ Aegis AdBlocker Active")
-            .setContentText("Blocking in-app ads & trackers on-device (AdGuard DNS)")
+            .setContentTitle("Aegis AdBlocker active")
+            .setContentText(
+                if (adultBlock) "Blocking ads, trackers and 18+ sites (AdGuard Family DNS)"
+                else "Blocking in-app ads and trackers (AdGuard DNS)"
+            )
             .setSmallIcon(android.R.drawable.ic_secure)
             .setContentIntent(pendingIntent)
             .setOngoing(true)

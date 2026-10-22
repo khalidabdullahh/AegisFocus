@@ -22,6 +22,8 @@ interface SettingsRepository {
     fun setGrayscaleFatigueEnabled(enabled: Boolean)
     fun isAdBlockerVpnEnabled(): Boolean
     fun setAdBlockerVpnEnabled(enabled: Boolean)
+    fun isAdultContentBlockEnabled(): Boolean
+    fun setAdultContentBlockEnabled(enabled: Boolean)
     fun getDailyFocusGoalMinutes(): Int
     fun setDailyFocusGoalMinutes(minutes: Int)
 }

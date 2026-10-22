@@ -53,6 +53,8 @@ class AppContainer(private val context: Context) {
     val subscriptionDao by lazy { database.subscriptionDao() }
     val websiteRuleDao by lazy { database.websiteRuleDao() }
 
+    val productivityStore by lazy { com.aegisfocus.app.data.local.ProductivityStore(context) }
+
     // ─── Repositories ────────────────────────────────────────────────────────
     val focusSessionRepository: FocusSessionRepository by lazy {
         FocusSessionRepositoryImpl(focusSessionDao, emergencyExitDao)

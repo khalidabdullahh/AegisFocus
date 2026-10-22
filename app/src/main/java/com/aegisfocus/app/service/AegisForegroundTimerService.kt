@@ -85,7 +85,7 @@ class AegisForegroundTimerService : Service() {
     private fun buildNotification(): Notification {
         val remaining = (endEpochMs - System.currentTimeMillis()).coerceAtLeast(0L)
         val formattedTime = TimeUtils.formatRemainingMillis(remaining)
-        val modeLabel = if (isStrict) "⚡ Strict Mode" else "🌱 Normal Mode"
+        val modeLabel = if (isStrict) "Strict Mode" else "Normal Mode"
 
         val openAppIntent = Intent(this, MainActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP

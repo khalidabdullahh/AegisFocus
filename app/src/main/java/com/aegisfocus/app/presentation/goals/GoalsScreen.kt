@@ -140,7 +140,7 @@ fun GoalsScreen(
             MetricCard(
                 title = "Days Won",
                 value = "${uiState.daysWon}",
-                subtitle = "Goal met 🏆",
+                subtitle = "Goal met",
                 color = EmeraldFocus,
                 modifier = Modifier.weight(1f)
             )
@@ -480,10 +480,10 @@ private fun CalendarDayTile(
 @Composable
 private fun StatusPill(status: DayGoalStatus) {
     val (label, bgColor, textColor) = when (status) {
-        DayGoalStatus.SUCCESS_MET -> Triple("🟢 GOAL MET", EmeraldFocus.copy(alpha = 0.2f), EmeraldFocus)
-        DayGoalStatus.MISSED -> Triple("🔴 MISSED", CrimsonDanger.copy(alpha = 0.2f), CrimsonDanger)
-        DayGoalStatus.TODAY_IN_PROGRESS -> Triple("🟡 IN PROGRESS", AmberWarning.copy(alpha = 0.2f), AmberWarning)
-        DayGoalStatus.FUTURE -> Triple("⚪ UPCOMING", ElevatedSurface, TextMuted)
+        DayGoalStatus.SUCCESS_MET -> Triple("GOAL MET", EmeraldFocus.copy(alpha = 0.2f), EmeraldFocus)
+        DayGoalStatus.MISSED -> Triple("MISSED", CrimsonDanger.copy(alpha = 0.2f), CrimsonDanger)
+        DayGoalStatus.TODAY_IN_PROGRESS -> Triple("IN PROGRESS", AmberWarning.copy(alpha = 0.2f), AmberWarning)
+        DayGoalStatus.FUTURE -> Triple("UPCOMING", ElevatedSurface, TextMuted)
     }
 
     Surface(
