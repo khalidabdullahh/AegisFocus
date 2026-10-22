@@ -2,7 +2,7 @@ name: Build and Release Android APK
 
 on:
   push:
-    branches: [ main ]
+    tags: [ 'v*' ]
   pull_request:
     branches: [ main ]
   workflow_dispatch:
@@ -31,81 +31,73 @@ jobs:
       - name: Install Android SDK Packages & Licenses
         run: |
           yes | sdkmanager --licenses || true
-          sdkmanager "platforms;android-35" "platforms;android-34" "build-tools;35.0.0" "build-tools;34.0.0" || true
+          sdkmanager "platforms;android-35" "build-tools;35.0.0" || true
 
-      - name: Build Debug APK
-        run: ./gradlew assembleDebug --no-daemon --stacktrace
+      - name: Run Unit Tests
+        continue-on-error: true
+        run: ./gradlew testDebugUnitTest --no-daemon
 
-      - name: Verify and Package APK
+      # Stable signing: add KEYSTORE_BASE64, KEYSTORE_PASSWORD, KEY_ALIAS and KEY_PASSWORD
+      # as repository secrets. Without them a temporary key is generated, which still gives a
+      # valid release APK but with a different signature on every build.
+      - name: Prepare Release Signing Key
+        env:
+          KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
         run: |
-          APK_FILE=$(find app/build/outputs/apk/debug -name "*.apk" | head -n 1)
+          if [ -n "$KEYSTORE_BASE64" ]; then
+            echo "$KEYSTORE_BASE64" | base64 -d > release-keystore.jks
+            echo "KEYSTORE_PASSWORD=$KEYSTORE_PASSWORD" >> "$GITHUB_ENV"
+            echo "KEY_ALIAS=$KEY_ALIAS" >> "$GITHUB_ENV"
+            echo "KEY_PASSWORD=$KEY_PASSWORD" >> "$GITHUB_ENV"
+            echo "Using the repository signing key."
+          else
+            keytool -genkeypair -v -keystore release-keystore.jks -alias asar_key \
+              -storepass asar_secure_pass -keypass asar_secure_pass \
+              -keyalg RSA -keysize 2048 -validity 10000 \
+              -dname "CN=Aegis Focus, O=Aegis Focus, C=BD"
+            echo "::warning::No signing secrets found. Built with a temporary key; updates over an older install will not work."
+          fi
+
+      - name: Build Release APK
+        run: ./gradlew assembleRelease --no-daemon --stacktrace
+
+      - name: Package APK
+        id: package
+        run: |
+          APK_FILE=$(find app/build/outputs/apk/release -name "*.apk" | head -n 1)
           if [ -z "$APK_FILE" ] || [ ! -f "$APK_FILE" ]; then
-            echo "::error::No APK file generated in app/build/outputs/apk/debug!"
+            echo "::error::No release APK was generated"
             exit 1
           fi
-          echo "✅ APK successfully generated at: $APK_FILE"
+          VERSION=$(grep -oP 'versionName = "\K[^"]+' app/build.gradle.kts | head -n 1)
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
           mkdir -p release-assets
+          cp "$APK_FILE" "release-assets/AegisFocus-v${VERSION}.apk"
           cp "$APK_FILE" release-assets/AegisFocus-Latest.apk
-          cp "$APK_FILE" release-assets/AegisFocus-v1.1.0.apk
-          if [ -f "Barakah-Release.apk" ]; then
-            cp Barakah-Release.apk release-assets/Barakah-Latest.apk
-            cp Barakah-Release.apk release-assets/Barakah-v1.0.5.apk
-          fi
-          if [ -f "ASAR-Latest.apk" ]; then
-            cp ASAR-Latest.apk release-assets/ASAR-Latest.apk
-            cp ASAR-Latest.apk release-assets/ASAR-v1.0.0.apk
-          elif [ -f "releases/ASAR-v1.0.0-Release.apk" ]; then
-            cp releases/ASAR-v1.0.0-Release.apk release-assets/ASAR-Latest.apk
-            cp releases/ASAR-v1.0.0-Release.apk release-assets/ASAR-v1.0.0.apk
-          fi
           ls -lh release-assets/
 
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: AegisFocus-All-Release-APKs
+          name: AegisFocus-APK
           path: release-assets/*.apk
           retention-days: 30
           if-no-files-found: error
 
-      - name: Create or Update GitHub Release
-        if: github.ref == 'refs/heads/main'
+      - name: Publish GitHub Release
+        if: startsWith(github.ref, 'refs/tags/v')
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: latest
-          name: "Aegis Focus (Latest Release & Archive)"
-          body: |
-            ## 🛡️ Aegis Focus — Complete Release Archive
-
-            Download current and previous versions of Aegis Focus, Barakah Focus, and ASAR Focus:
-
-            ---
-            ### 📥 Aegis Focus (Current - Recommended)
-            * **[AegisFocus-Latest.apk](https://github.com/khalidabdullahh/AegisFocus/releases/latest/download/AegisFocus-Latest.apk)** *(v1.1.0 Latest • AdBlock DNS + Shorts Blocker + Monk Shield)*
-            * **[AegisFocus-v1.1.0.apk](https://github.com/khalidabdullahh/AegisFocus/releases/latest/download/AegisFocus-v1.1.0.apk)** *(v1.1.0 Tagged)*
-
-            ---
-            ### 🌙 Barakah Focus (Special Bengali / Spiritual Edition)
-            * **[Barakah-Latest.apk](https://github.com/khalidabdullahh/AegisFocus/releases/latest/download/Barakah-Latest.apk)** *(v1.0.5 • Dual Slogan + Apple Typography)*
-            * **[Barakah-v1.0.5.apk](https://github.com/khalidabdullahh/AegisFocus/releases/latest/download/Barakah-v1.0.5.apk)** *(v1.0.5 Tagged)*
-
-            ---
-            ### ⚡ ASAR Focus (Legacy Foundation Edition)
-            * **[ASAR-Latest.apk](https://github.com/khalidabdullahh/AegisFocus/releases/latest/download/ASAR-Latest.apk)** *(v1.0.0 Legacy Foundation)*
-            * **[ASAR-v1.0.0.apk](https://github.com/khalidabdullahh/AegisFocus/releases/latest/download/ASAR-v1.0.0.apk)** *(v1.0.0 Tagged)*
-
-            ---
-            ### 🔒 Integrity & Security:
-            * All builds are signed with official keystores and 100% on-device private.
-            * Master Super Admin key for offline key generator: `6924923086`.
+          tag_name: ${{ github.ref_name }}
+          name: Aegis Focus ${{ github.ref_name }}
+          body_path: release-notes/${{ github.ref_name }}.md
           draft: false
           prerelease: false
           files: |
+            release-assets/AegisFocus-v${{ steps.package.outputs.version }}.apk
             release-assets/AegisFocus-Latest.apk
-            release-assets/AegisFocus-v1.1.0.apk
-            release-assets/Barakah-Latest.apk
-            release-assets/Barakah-v1.0.5.apk
-            release-assets/ASAR-Latest.apk
-            release-assets/ASAR-v1.0.0.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

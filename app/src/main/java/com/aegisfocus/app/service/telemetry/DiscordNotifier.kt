@@ -41,7 +41,7 @@ object DiscordNotifier {
                 val isSignUp = eventType.contains("Create", ignoreCase = true) || eventType.contains("Register", ignoreCase = true)
 
                 val embed = JSONObject().apply {
-                    put("title", if (isSignUp) "🎉 New User Account Created" else "🔐 User Signed In")
+                    put("title", if (isSignUp) "New User Account Created" else "User Signed In")
                     put("color", if (isSignUp) 3066993 else 3447003)
                     put("fields", JSONArray().apply {
                         put(JSONObject().apply { put("name", "Event"); put("value", eventType); put("inline", true) })

@@ -46,7 +46,8 @@ data class SettingsUiState(
     val daysRemaining: Long = 0L,
     val isShortsBlockerEnabled: Boolean = true,
     val isGrayscaleFatigueEnabled: Boolean = false,
-    val isAdBlockerVpnEnabled: Boolean = false
+    val isAdBlockerVpnEnabled: Boolean = false,
+    val isAdultBlockEnabled: Boolean = false
 )
 
 private data class SettingsLocalDialogState(
@@ -68,7 +69,10 @@ class SettingsViewModel(
 
     private val _schedules = MutableStateFlow<List<Schedule>>(emptyList())
     private val _localState = MutableStateFlow(SettingsLocalDialogState())
+    // Bumped after every preference change so toggles update on screen immediately
+    private val _refreshTick = MutableStateFlow(0)
     private var adminTapCount = 0
+    private var lastAdminTapMs = 0L
 
     private val activePlanFlow: StateFlow<SubscriptionPlan> = entitlementManager?.activePlan?.stateIn(
         viewModelScope, SharingStarted.Eagerly, SubscriptionPlan.FREE
@@ -92,8 +96,9 @@ class SettingsViewModel(
         settingsRepository.getPermissionStateFlow(),
         _schedules,
         subDataFlow,
-        _localState
-    ) { perms, scheds, subData, local ->
+        _localState,
+        _refreshTick
+    ) { perms, scheds, subData, local, _ ->
         val (plan, remaining) = subData
         SettingsUiState(
             permissions = perms,
@@ -113,7 +118,8 @@ class SettingsViewModel(
             daysRemaining = remaining,
             isShortsBlockerEnabled = settingsRepository.isShortsBlockerEnabled(),
             isGrayscaleFatigueEnabled = settingsRepository.isGrayscaleFatigueEnabled(),
-            isAdBlockerVpnEnabled = settingsRepository.isAdBlockerVpnEnabled()
+            isAdBlockerVpnEnabled = settingsRepository.isAdBlockerVpnEnabled(),
+            isAdultBlockEnabled = settingsRepository.isAdultContentBlockEnabled()
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), SettingsUiState())
 
@@ -132,7 +138,22 @@ class SettingsViewModel(
         if (enabled) {
             com.aegisfocus.app.service.vpn.AegisAdBlockerVpnService.start(context)
         } else {
+            // 18+ filtering runs through the same VPN, so it turns off with it
+            settingsRepository.setAdultContentBlockEnabled(false)
             com.aegisfocus.app.service.vpn.AegisAdBlockerVpnService.stop(context)
+        }
+        refreshPermissions()
+    }
+
+    /** 18+ blocking uses the family-safe DNS inside the same VPN, so it also keeps the VPN on. */
+    fun toggleAdultBlock(enabled: Boolean, context: Context) {
+        settingsRepository.setAdultContentBlockEnabled(enabled)
+        if (enabled) {
+            settingsRepository.setAdBlockerVpnEnabled(true)
+        }
+        if (settingsRepository.isAdBlockerVpnEnabled()) {
+            // Re-run start so the running VPN switches to the new DNS servers
+            com.aegisfocus.app.service.vpn.AegisAdBlockerVpnService.start(context)
         }
         refreshPermissions()
     }
@@ -144,6 +165,7 @@ class SettingsViewModel(
 
     fun refreshPermissions() {
         settingsRepository.refreshPermissionState()
+        _refreshTick.value += 1
     }
 
     fun loadSchedules() {
@@ -249,16 +271,17 @@ class SettingsViewModel(
             return
         }
 
+        val now = System.currentTimeMillis()
+        if (now - lastAdminTapMs > ADMIN_TAP_WINDOW_MS) adminTapCount = 0
+        lastAdminTapMs = now
+
         adminTapCount++
-        if (adminTapCount >= 5) {
+        if (adminTapCount >= ADMIN_TAP_TARGET) {
             _localState.value = _localState.value.copy(
                 isPasswordPromptOpen = true,
                 adminPasswordError = null
             )
             adminTapCount = 0
-        } else if (adminTapCount >= 2 && context != null) {
-            val remaining = 5 - adminTapCount
-            Toast.makeText(context, "Tap $remaining more times for Admin Mode", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -278,7 +301,7 @@ class SettingsViewModel(
                 adminPasswordError = null
             )
             if (context != null) {
-                Toast.makeText(context, "👑 Super Admin Mode Unlocked!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Super Admin Mode Unlocked!", Toast.LENGTH_SHORT).show()
             }
         } else {
             _localState.value = _localState.value.copy(
@@ -352,5 +375,10 @@ class SettingsViewModel(
             if (context !is Activity) flags = Intent.FLAG_ACTIVITY_NEW_TASK
         }
         runCatching { context.startActivity(intent) }
+    }
+
+    private companion object {
+        const val ADMIN_TAP_TARGET = 3
+        const val ADMIN_TAP_WINDOW_MS = 1_500L
     }
 }

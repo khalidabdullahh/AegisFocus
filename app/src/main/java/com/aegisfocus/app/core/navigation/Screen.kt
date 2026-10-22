@@ -3,12 +3,14 @@ package com.aegisfocus.app.core.navigation
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Apps
 import androidx.compose.material.icons.filled.BarChart
+import androidx.compose.material.icons.filled.TaskAlt
 import androidx.compose.material.icons.filled.HourglassTop
 import androidx.compose.material.icons.filled.Security
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Shield
 import androidx.compose.material.icons.outlined.Apps
 import androidx.compose.material.icons.outlined.BarChart
+import androidx.compose.material.icons.outlined.TaskAlt
 import androidx.compose.material.icons.outlined.HourglassTop
 import androidx.compose.material.icons.outlined.Security
 import androidx.compose.material.icons.outlined.Settings
@@ -42,11 +44,11 @@ sealed class Screen(
         unselectedIcon = Icons.Outlined.Apps
     )
 
-    data object Stats : Screen(
-        route = "stats",
-        title = "Stats",
-        selectedIcon = Icons.Filled.BarChart,
-        unselectedIcon = Icons.Outlined.BarChart
+    data object Productivity : Screen(
+        route = "productivity",
+        title = "Productivity",
+        selectedIcon = Icons.Filled.TaskAlt,
+        unselectedIcon = Icons.Outlined.TaskAlt
     )
 
     data object Settings : Screen(
@@ -77,6 +79,6 @@ val BottomNavScreens = listOf(
     Screen.Home,
     Screen.Focus,
     Screen.Apps,
-    Screen.Stats,
+    Screen.Productivity,
     Screen.Settings
 )

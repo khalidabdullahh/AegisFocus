@@ -26,6 +26,16 @@ class BootCompletedReceiver : BroadcastReceiver() {
                     // 2. Reschedule enabled routines
                     val enabledSchedules = container.scheduleRepository.getEnabledSchedules()
                     // ScheduleAlarmReceiver can trigger checks or WorkManager can sync
+
+                    // 3. Restore daily reminders from the Productivity tab
+                    ReminderScheduler.rescheduleAll(context)
+
+                    // 4. Bring the system-wide AdBlocker back if it was on and already authorised
+                    if (container.settingsRepository.isAdBlockerVpnEnabled() &&
+                        android.net.VpnService.prepare(context) == null
+                    ) {
+                        com.aegisfocus.app.service.vpn.AegisAdBlockerVpnService.start(context)
+                    }
                 } finally {
                     pendingResult.finish()
                 }

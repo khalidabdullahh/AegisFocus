@@ -50,6 +50,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.aegisfocus.app.R
+import com.aegisfocus.app.core.components.AegisCompactButton
 import com.aegisfocus.app.core.components.AegisPrimaryButton
 import com.aegisfocus.app.core.theme.CyanAccent
 import com.aegisfocus.app.core.theme.DeepSurface
@@ -141,22 +142,26 @@ fun OnboardingScreen(
 
             AegisPrimaryButton(
                 text = when {
-                    uiState.currentPage < 2 -> "CONTINUE"
-                    hasRequiredPermissions -> "ENTER AEGIS FOCUS"
-                    else -> "GRANT ALL PERMISSIONS"
+                    uiState.currentPage < 2 -> "Continue"
+                    hasRequiredPermissions -> "Enter Aegis Focus"
+                    else -> "Grant permissions"
                 },
-                enabled = uiState.currentPage < 2 || hasRequiredPermissions,
                 onClick = {
-                    if (uiState.currentPage == 2) {
-                        if (hasRequiredPermissions) {
-                            viewModel.completeOnboarding()
-                            onComplete()
-                        }
-                    } else {
+                    if (uiState.currentPage < 2) {
                         viewModel.nextPage()
+                    } else if (hasRequiredPermissions) {
+                        viewModel.completeOnboarding()
+                        onComplete()
+                    } else {
+                        // Jump straight to the first permission that is still missing
+                        when {
+                            !uiState.permissions.hasUsageAccess -> viewModel.openUsageAccessSettings(context)
+                            !uiState.permissions.hasAccessibilityService -> viewModel.openAccessibilitySettings(context)
+                            else -> viewModel.openNotificationSettings(context)
+                        }
                     }
                 },
-                modifier = Modifier.width(if (uiState.currentPage == 2 && !hasRequiredPermissions) 220.dp else 170.dp)
+                wrapContent = true
             )
         }
     }
@@ -243,7 +248,7 @@ private fun OnboardingStep2() {
         Spacer(modifier = Modifier.height(12.dp))
 
         Text(
-            text = "When activated, Strict Mode locks your session parameters and app shield rules. An emergency exit is available only with intentional friction to break impulse habits.",
+            text = "When activated, Strict Mode locks your session parameters and app shield rules. There is no emergency exit in Strict Mode, so choose your duration with care.",
             fontSize = 14.sp,
             color = TextSecondary,
             textAlign = TextAlign.Center,
@@ -314,13 +319,10 @@ private fun OnboardingStep3(
                     }
                 }
                 if (!permissions.hasUsageAccess) {
-                    Button(
-                        onClick = onConfigureUsage,
-                        shape = RoundedCornerShape(8.dp),
-                        colors = ButtonDefaults.buttonColors(containerColor = CyanAccent, contentColor = ObsidianBg)
-                    ) {
-                        Text("Grant", fontSize = 11.sp, fontWeight = FontWeight.Bold)
-                    }
+                    AegisCompactButton(
+                        text = "Grant",
+                        onClick = onConfigureUsage
+                    )
                 }
             }
         }
@@ -357,13 +359,10 @@ private fun OnboardingStep3(
                     }
                 }
                 if (!permissions.hasAccessibilityService) {
-                    Button(
-                        onClick = onConfigureAccessibility,
-                        shape = RoundedCornerShape(8.dp),
-                        colors = ButtonDefaults.buttonColors(containerColor = CyanAccent, contentColor = ObsidianBg)
-                    ) {
-                        Text("Enable", fontSize = 11.sp, fontWeight = FontWeight.Bold)
-                    }
+                    AegisCompactButton(
+                        text = "Enable",
+                        onClick = onConfigureAccessibility
+                    )
                 }
             }
         }
@@ -400,13 +399,10 @@ private fun OnboardingStep3(
                     }
                 }
                 if (!permissions.hasNotificationPermission) {
-                    Button(
-                        onClick = onConfigureNotification,
-                        shape = RoundedCornerShape(8.dp),
-                        colors = ButtonDefaults.buttonColors(containerColor = CyanAccent, contentColor = ObsidianBg)
-                    ) {
-                        Text("Allow", fontSize = 11.sp, fontWeight = FontWeight.Bold)
-                    }
+                    AegisCompactButton(
+                        text = "Allow",
+                        onClick = onConfigureNotification
+                    )
                 }
             }
         }
@@ -443,13 +439,12 @@ private fun OnboardingStep3(
                     }
                 }
                 if (!permissions.hasDeviceAdminPermission) {
-                    Button(
+                    AegisCompactButton(
+                        text = "Activate",
                         onClick = onConfigureDeviceAdmin,
-                        shape = RoundedCornerShape(8.dp),
-                        colors = ButtonDefaults.buttonColors(containerColor = ElevatedSurface, contentColor = CyanAccent)
-                    ) {
-                        Text("Activate", fontSize = 11.sp, fontWeight = FontWeight.Bold)
-                    }
+                        containerColor = ElevatedSurface,
+                        contentColor = CyanAccent
+                    )
                 }
             }
         }

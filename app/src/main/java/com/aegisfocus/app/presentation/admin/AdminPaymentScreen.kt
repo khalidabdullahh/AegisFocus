@@ -266,7 +266,7 @@ private fun PaymentRequestAdminCard(
                         Text("TRANSACTION ID (TAP TO COPY):", fontSize = 9.sp, color = TextMuted, fontWeight = FontWeight.Bold)
                         Text(request.transactionId, fontSize = 14.sp, color = TextPrimary, fontWeight = FontWeight.Bold)
                     }
-                    Text("Copy 📋", fontSize = 11.sp, color = CyanAccent)
+                    Text("Copy", fontSize = 11.sp, color = CyanAccent)
                 }
             }
 
@@ -288,7 +288,7 @@ private fun PaymentRequestAdminCard(
                         Text("SENDER PHONE:", fontSize = 9.sp, color = TextMuted, fontWeight = FontWeight.Bold)
                         Text(request.senderNumber, fontSize = 13.sp, color = TextSecondary)
                     }
-                    Text("Copy 📋", fontSize = 11.sp, color = CyanAccent)
+                    Text("Copy", fontSize = 11.sp, color = CyanAccent)
                 }
             }
 

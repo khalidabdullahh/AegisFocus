@@ -223,7 +223,7 @@ fun PaywallScreen(
                 if (uiState.redeemErrorMessage != null) {
                     Spacer(Modifier.height(6.dp))
                     Text(
-                        text = "⚠ ${uiState.redeemErrorMessage}",
+                        text = "${uiState.redeemErrorMessage}",
                         color = AlertStrict,
                         fontSize = 12.sp
                     )
@@ -232,7 +232,7 @@ fun PaywallScreen(
                 if (uiState.redeemSuccessMessage != null) {
                     Spacer(Modifier.height(6.dp))
                     Text(
-                        text = "✓ ${uiState.redeemSuccessMessage}",
+                        text = "${uiState.redeemSuccessMessage}",
                         color = EmeraldFocus,
                         fontSize = 12.sp,
                         fontWeight = FontWeight.Bold
@@ -242,7 +242,7 @@ fun PaywallScreen(
                 Spacer(Modifier.height(12.dp))
 
                 AegisPrimaryButton(
-                    text = if (uiState.isRedeeming) "Activating..." else "Activate Pro Key ⚡",
+                    text = if (uiState.isRedeeming) "Activating..." else "Activate Pro Key",
                     onClick = {
                         focusManager.clearFocus()
                         viewModel.redeemLicenseKey()
@@ -292,7 +292,7 @@ fun PaywallScreen(
         ) {
             Column(Modifier.padding(16.dp)) {
                 Text(
-                    text = "💡 How to get a License Code?",
+                    text = "How to get a License Code?",
                     color = CyanAccent,
                     fontWeight = FontWeight.Bold,
                     fontSize = 14.sp

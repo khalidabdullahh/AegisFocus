@@ -28,7 +28,7 @@ class AegisDeviceAdminReceiver : DeviceAdminReceiver() {
         val activeSession = container.focusSessionManager.activeSession.value
 
         return if (activeSession != null && activeSession.mode == SessionMode.STRICT && !activeSession.isExpired) {
-            "⚠️ STRICT MODE ACTIVE: ASR is currently protecting your focus session. Deactivating device admin or uninstalling the app is prevented until the session ends."
+            "STRICT MODE ACTIVE: ASR is currently protecting your focus session. Deactivating device admin or uninstalling the app is prevented until the session ends."
         } else {
             "Deactivating Device Administrator will disable ASR anti-uninstall protection."
         }

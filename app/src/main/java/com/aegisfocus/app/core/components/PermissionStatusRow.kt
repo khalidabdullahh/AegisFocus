@@ -14,8 +14,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Warning
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -50,12 +48,12 @@ fun PermissionStatusRow(
 ) {
     Surface(
         modifier = modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(16.dp),
+        shape = RoundedCornerShape(12.dp),
         color = DeepSurface,
         border = BorderStroke(1.dp, if (isGranted) EmeraldFocus.copy(alpha = 0.3f) else SubtleBorder)
     ) {
         Column(
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier.padding(12.dp)
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -121,21 +119,11 @@ fun PermissionStatusRow(
 
             if (!isGranted) {
                 Spacer(modifier = Modifier.height(12.dp))
-                Button(
+                AegisCompactButton(
+                    text = "Grant",
                     onClick = onGrantClick,
-                    shape = RoundedCornerShape(10.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = CyanAccent,
-                        contentColor = ObsidianBg
-                    ),
                     modifier = Modifier.align(Alignment.End)
-                ) {
-                    Text(
-                        text = "Configure Setting",
-                        fontSize = 12.sp,
-                        fontWeight = FontWeight.Bold
-                    )
-                }
+                )
             }
         }
     }

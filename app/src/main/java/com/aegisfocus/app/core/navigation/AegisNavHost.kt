@@ -1,9 +1,9 @@
 /*
  * ==============================================================================
- * 📌 প্রজেক্ট: ASR / Aegis-Focus
- * 📄 ফাইল: AegisNavHost.kt
- * 🎯 উদ্দেশ্য: জেটপ্যাক কম্পোজ (Jetpack Compose) নেভিগেশন গ্রাফ ও বটম নেভিগেশন বার।
- * 💡 ভূমিকা: হোম (Home), ফোকাস (Focus), অ্যাপস ব্লকার (Apps), স্ট্যাটস (Stats) ও সেটিংসের 
+ * প্রজেক্ট: ASR / Aegis-Focus
+ * ফাইল: AegisNavHost.kt
+ * উদ্দেশ্য: জেটপ্যাক কম্পোজ (Jetpack Compose) নেভিগেশন গ্রাফ ও বটম নেভিগেশন বার।
+ * ভূমিকা: হোম (Home), ফোকাস (Focus), অ্যাপস ব্লকার (Apps), স্ট্যাটস (Stats) ও সেটিংসের 
  *            মধ্যে স্ক্রিন ট্রানজিশন এবং রুট হ্যান্ডলিং নিয়ন্ত্রণ করে।
  * ==============================================================================
  */
@@ -22,7 +22,12 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.foundation.layout.height
+import androidx.compose.ui.platform.LocalContext
+import com.aegisfocus.app.core.components.TierShieldIcon
+import com.aegisfocus.app.domain.motivation.ShieldProgress
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -50,15 +55,15 @@ import com.aegisfocus.app.presentation.onboarding.OnboardingScreen
 import com.aegisfocus.app.presentation.onboarding.OnboardingViewModel
 import com.aegisfocus.app.presentation.settings.SettingsScreen
 import com.aegisfocus.app.presentation.settings.SettingsViewModel
-import com.aegisfocus.app.presentation.stats.StatsScreen
-import com.aegisfocus.app.presentation.stats.StatsViewModel
+import com.aegisfocus.app.presentation.productivity.ProductivityScreen
+import com.aegisfocus.app.presentation.productivity.ProductivityViewModel
 import com.aegisfocus.app.presentation.paywall.PaywallScreen
 import com.aegisfocus.app.presentation.paywall.PaywallViewModel
 
 /**
  * -----------------------------------------------------------------------------
- * 📌 কম্পোজেবল: AegisNavHost
- * 🎯 উদ্দেশ্য: অ্যাপ্লিকেশনের মূল ফ্রেম এবং সমস্ত স্ক্রিনের নেভিগেশন রাউটিং ডিফাইন করে।
+ * কম্পোজেবল: AegisNavHost
+ * উদ্দেশ্য: অ্যাপ্লিকেশনের মূল ফ্রেম এবং সমস্ত স্ক্রিনের নেভিগেশন রাউটিং ডিফাইন করে।
  * -----------------------------------------------------------------------------
  */
 @Composable
@@ -71,6 +76,11 @@ fun AegisNavHost(
     // বর্তমান একটিভ রুটের পাথ ট্র্যাক করা
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
+
+    // The Home tab shows a shield that upgrades (Bronze to Diamond) with the discipline streak
+    val streakDays by container.xpManager.currentStreak.collectAsState(initial = 0)
+    val shieldProgress = ShieldProgress.fromStreak(streakDays)
+    val appContext = LocalContext.current.applicationContext
 
     // অনবোর্ডিং, পে-ওয়াল বা গোলস স্ক্রিনে বটম বার হাইড রাখা
     val showBottomBar = currentRoute != Screen.Onboarding.route &&
@@ -86,6 +96,7 @@ fun AegisNavHost(
                     border = BorderStroke(1.dp, SubtleBorder)
                 ) {
                     NavigationBar(
+                        modifier = Modifier.height(64.dp),
                         containerColor = DeepSurface,
                         tonalElevation = 0.dp
                     ) {
@@ -93,11 +104,15 @@ fun AegisNavHost(
                             val isSelected = currentRoute == screen.route
                             NavigationBarItem(
                                 icon = {
-                                    Icon(
-                                        imageVector = if (isSelected) screen.selectedIcon else screen.unselectedIcon,
-                                        contentDescription = screen.title,
-                                        modifier = Modifier.size(22.dp)
-                                    )
+                                    if (screen == Screen.Home) {
+                                        TierShieldIcon(progress = shieldProgress, selected = isSelected)
+                                    } else {
+                                        Icon(
+                                            imageVector = if (isSelected) screen.selectedIcon else screen.unselectedIcon,
+                                            contentDescription = screen.title,
+                                            modifier = Modifier.size(22.dp)
+                                        )
+                                    }
                                 },
                                 label = {
                                     Text(
@@ -221,15 +236,14 @@ fun AegisNavHost(
                 )
             }
 
-            composable(Screen.Stats.route) {
+            composable(Screen.Productivity.route) {
                 val vm = androidx.lifecycle.viewmodel.compose.viewModel {
-                    StatsViewModel(
-                        getUsageAnalyticsUseCase = container.getUsageAnalyticsUseCase,
-                        disciplineScoreCalculator = container.disciplineScoreCalculator,
-                        xpManager = container.xpManager
+                    ProductivityViewModel(
+                        store = container.productivityStore,
+                        appContext = appContext
                     )
                 }
-                StatsScreen(
+                ProductivityScreen(
                     viewModel = vm,
                     onNavigateToGoals = { navController.navigate(Screen.Goals.route) }
                 )

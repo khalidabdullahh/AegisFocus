@@ -151,8 +151,8 @@ fun FocusScreen(
 
     if (uiState.isEmergencyDialogOpen) {
         CalmMindfulnessDialog(
-            title = "⚠️ Emergency Exit & Discipline Penalty",
-            message = "Exiting early shatters your Monk Shield, breaks your streak, and deducts -50 XP.\n\n🤝 Charity Pledge: You previously pledged $2 / ৳১০০ to your chosen charity if you quit prematurely. Honor your commitment or resume deep work.",
+            title = "Emergency Exit & Discipline Penalty",
+            message = "Exiting early breaks your streak and deducts 50 XP. Honor your commitment, or resume deep work.",
             confirmButtonText = "I Accept Penalty & Break Focus",
             cooldownSeconds = uiState.emergencyCooldownSeconds.coerceAtLeast(10),
             requireConfirmationPhrase = uiState.isStrictFrictionPhraseEnabled,
