@@ -59,8 +59,8 @@ jobs:
             echo "KEY_PASSWORD=$KEY_PASSWORD" >> "$GITHUB_ENV"
             echo "Using the repository signing key."
           else
-            keytool -genkeypair -v -keystore release-keystore.jks -alias asar_key \
-              -storepass asar_secure_pass -keypass asar_secure_pass \
+            keytool -genkeypair -v -keystore release-keystore.jks -alias aegis_key \
+              -storepass aegis_secure_pass -keypass aegis_secure_pass \
               -keyalg RSA -keysize 2048 -validity 10000 \
               -dname "CN=Aegis Focus, O=Aegis Focus, C=BD"
             echo "::warning::No signing secrets found. Built with a temporary key; updates over an older install will not work."

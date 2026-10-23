@@ -7,7 +7,7 @@
 set -e
 
 KEYSTORE_PATH="release-keystore.jks"
-KEY_ALIAS="asar_key"
+KEY_ALIAS="aegis_key"
 VALIDITY_DAYS=10000
 
 if [ -f "$KEYSTORE_PATH" ]; then
@@ -22,9 +22,9 @@ keytool -genkey -v \
     -keyalg RSA \
     -keysize 2048 \
     -validity "$VALIDITY_DAYS" \
-    -storepass "asar_secure_pass" \
-    -keypass "asar_secure_pass" \
-    -dname "CN=AegisFocus, OU=Engineering, O=AegisFocus, L=Dhaka, ST=Dhaka, C=BD"
+    -storepass "aegis_secure_pass" \
+    -keypass "aegis_secure_pass" \
+    -dname "CN=Aegis Focus, OU=Engineering, O=AegisFocus, L=Dhaka, ST=Dhaka, C=BD"
 
 echo "✅ Successfully generated: $KEYSTORE_PATH (Alias: $KEY_ALIAS)"
 echo "Keep this keystore safe! You will need it to sign all future updates."

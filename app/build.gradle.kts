@@ -36,9 +36,9 @@ android {
             val releaseKeystore = rootProject.file("release-keystore.jks")
             if (releaseKeystore.exists()) {
                 storeFile = releaseKeystore
-                storePassword = System.getenv("KEYSTORE_PASSWORD") ?: "asar_secure_pass"
-                keyAlias = System.getenv("KEY_ALIAS") ?: "asar_key"
-                keyPassword = System.getenv("KEY_PASSWORD") ?: "asar_secure_pass"
+                storePassword = System.getenv("KEYSTORE_PASSWORD") ?: "aegis_secure_pass"
+                keyAlias = System.getenv("KEY_ALIAS") ?: "aegis_key"
+                keyPassword = System.getenv("KEY_PASSWORD") ?: "aegis_secure_pass"
             }
         }
     }
