@@ -26,8 +26,10 @@ All release APKs are signed with production keys and are ready for sideloading o
 
 | Version | Release File | Notes & SHA256 Checksum | Direct Link |
 |:---|:---|:---|:---:|
-| **v1.1.0 (Latest)** | `AegisFocus-Latest.apk` | Rebranded identity, offline license generator, master admin pass `6924923086`, zero telemetry.<br>`SHA256: 315b72ddc8cfa874eccbf74de4a560b0139a48957226f5c71af61b0885138f99` | [Download](https://github.com/khalidabdullahh/AegisFocus/releases/latest/download/AegisFocus-Latest.apk) |
-| **v1.1.0 (Archive)** | `releases/AegisFocus-v1.1.0-Release.apk` | Direct immutable release archive for v1.1.0 build.<br>`SHA256: ee75846496d661e1ab222ef11479da554baaeb480137fd7ead28ac812fd2e80f` | [Download](releases/AegisFocus-v1.1.0-Release.apk) |
+| **v1.4.0 (Latest)** | `AegisFocus-Latest.apk` | One-time server license keys, new brand logo, Productivity tab with Clean Streak, 1-tap AdBlocker & 18+ DNS filter.<br>`SHA256: 88b647ff1ad49544932584a48957e0ea087ca6cf9875064c47ab74ba4d420878` | [Download](AegisFocus-Latest.apk) |
+| **v1.4.0 (Archive)** | `releases/AegisFocus-v1.4.0-Release.apk` | Direct immutable release archive for v1.4.0 build.<br>`SHA256: 88b647ff1ad49544932584a48957e0ea087ca6cf9875064c47ab74ba4d420878` | [Download](releases/AegisFocus-v1.4.0-Release.apk) |
+| **v1.2.0 (Archive)** | `releases/AegisFocus-v1.2.0-Release.apk` | 1-Tap AdBlocker via local VPN & monthly habit consistency calendar.<br>`SHA256: 8a42e128b99185a7593c66f54c9c8e192f146914594c7bca06c9a7516da1e0b5` | [Download](releases/AegisFocus-v1.2.0-Release.apk) |
+| **v1.1.0 (Archive)** | `releases/AegisFocus-v1.1.0-Release.apk` | Rebranded identity, offline license generator, master admin pass `6924923086`.<br>`SHA256: ee75846496d661e1ab222ef11479da554baaeb480137fd7ead28ac812fd2e80f` | [Download](releases/AegisFocus-v1.1.0-Release.apk) |
 | **v1.0.0 (Legacy)** | `releases/AegisFocus-v1.0.0-Release.apk` | Initial launch version with core accessibility blocking and discipline analytics.<br>`SHA256: 9051c347337dfd8d02cb2eab3538db1afefeeb6fd6c0d2b3272c2c515146a163` | [Download](releases/AegisFocus-v1.0.0-Release.apk) |
 
 ---
@@ -37,16 +39,20 @@ All release APKs are signed with production keys and are ready for sideloading o
 - **100% Offline & Private (Zero Tracking)**:
   - No mandatory account creation or cloud database tracking.
   - All focus logs, app block rules, and discipline scores live strictly inside your device's local Room database (`aegis_focus.db`).
+- **One-Time Server-Verified License Keys**:
+  - Pro keys purchased via direct contact (WhatsApp / Instagram / Facebook) and redeemed securely via Supabase RPCs. Each key works exactly once.
+- **Calm, Compact UI & Tier Shield**:
+  - Calmer palette (slate teal, soft sage), compact layout without emojis, and dynamic navbar shield that upgrades across Bronze, Silver, Gold, Platinum, and Diamond.
+- **Productivity & Clean Streak Tab**:
+  - Daily goals, customizable routine reminders with real notifications, and private Clean Streak check-ins with body and mind milestone timelines.
+- **System-Wide AdBlocker & 18+ Content DNS Blocker**:
+  - On-device local DNS filtering powered by AdGuard DNS, blocking ads, malicious trackers, and adult content without battery drain.
 - **Unbreakable Strict Mode & Anti-Uninstall**:
   - Android Device Administrator lock preventing impulsive app uninstallation or disabling during active focus sessions.
 - **Mindful Pause & Adaptive Friction**:
   - Escalating cooldown timers (5s → 10s → 20s → 30s) and intentional mindful prompts before app unblocking.
-- **Mandatory Permission Onboarding Gate**:
-  - Requires **Usage Access**, **Accessibility Blocker**, and **Notification Access** before entering the dashboard to ensure 100% effective distraction protection.
-- **Offline Cryptographic License System**:
-  - In-app HMAC SHA-256 license engine supporting lifetime and multi-month offline passes (`AEGIS-12M-XXXX-XXXX`, `AEGIS-LIFETIME-XXXX-XXXX`). Backward compatible with earlier license formats.
-- **Built-in Super Admin License Key Generator**:
-  - Tap the version card in Settings 5 times ➔ enter master password **`6924923086`** to unlock the embedded license key generator directly from your mobile.
+- **In-App Admin License Key Manager**:
+  - Access the admin panel (3 taps on Aegis Focus in Settings) to generate, list, and revoke keys (requires `super_admin` credentials).
 
 ---
 
