@@ -177,7 +177,7 @@ object DiscordNotifier {
             conn.requestMethod = "POST"
             conn.setRequestProperty("Content-Type", "application/json")
             conn.setRequestProperty("apikey", SupabaseConfig.ANON_KEY)
-            conn.setRequestProperty("User-Agent", "ASAR-Android/1.0")
+            conn.setRequestProperty("User-Agent", "AegisFocus-Android/1.4")
             conn.doOutput = true
             conn.connectTimeout = 4000
             conn.readTimeout = 4000

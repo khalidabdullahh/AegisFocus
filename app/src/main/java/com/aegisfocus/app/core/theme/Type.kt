@@ -8,7 +8,7 @@ import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.compose.ui.unit.sp
 
 /**
- * ASAR Typography System — iOS-inspired clean hierarchy with robust bilingual
+ * Aegis Focus Typography System — iOS-inspired clean hierarchy with robust bilingual
  * support (English + Bangla) ensuring complex conjuncts and diacritics never clip.
  */
 private val defaultLineHeightStyle = LineHeightStyle(

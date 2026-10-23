@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # ==============================================================================
-# 🔐 ASAR Production Keystore Generator
+# 🔐 Aegis Focus Production Keystore Generator
 # Generates a standard 2048-bit RSA upload keystore for signing APKs and AABs.
 # ==============================================================================
 
@@ -24,7 +24,7 @@ keytool -genkey -v \
     -validity "$VALIDITY_DAYS" \
     -storepass "asar_secure_pass" \
     -keypass "asar_secure_pass" \
-    -dname "CN=ASAR, OU=Engineering, O=AegisFocus, L=Dhaka, ST=Dhaka, C=BD"
+    -dname "CN=AegisFocus, OU=Engineering, O=AegisFocus, L=Dhaka, ST=Dhaka, C=BD"
 
 echo "✅ Successfully generated: $KEYSTORE_PATH (Alias: $KEY_ALIAS)"
 echo "Keep this keystore safe! You will need it to sign all future updates."

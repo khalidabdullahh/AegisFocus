@@ -1,5 +1,5 @@
 -- ==============================================================================
--- Project: ASAR — Turn Time Into Progress
+-- Project: Aegis Focus — Reclaim Your Focus
 -- Database Schema & Server-Authoritative Security for Supabase PostgreSQL
 -- ==============================================================================
 

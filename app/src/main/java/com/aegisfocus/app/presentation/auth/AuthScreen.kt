@@ -140,7 +140,7 @@ fun AuthScreen(
             letterSpacing = (-0.5).sp
         )
         Text(
-            text = if (uiState.isSignUp) "Join ASAR and sync your focus discipline across all devices." else "Sign in to access your cloud-synced focus profile.",
+            text = if (uiState.isSignUp) "Join Aegis Focus and sync your focus discipline across all devices." else "Sign in to access your cloud-synced focus profile.",
             fontSize = 13.sp,
             color = TextSecondary,
             modifier = Modifier.padding(top = 4.dp)

@@ -1,7 +1,7 @@
 {
-  "name": "asar-focus",
-  "version": "1.0.0",
-  "description": "ASAR - Turn Time Into Progress",
+  "name": "aegis-focus",
+  "version": "1.4.0",
+  "description": "Aegis Focus — Reclaim Your Focus",
   "scripts": {
     "build": "node build.js"
   }
