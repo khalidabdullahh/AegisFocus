@@ -4,8 +4,13 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 
-/** Where customers go to buy a license key. */
+/** Where customers go to buy a license key, download updates or visit site. */
 object ContactLinks {
+    /** Official website and download URLs. */
+    const val WEBSITE_URL = "https://bproductive.vercel.app"
+    const val DOWNLOAD_PAGE_URL = "https://bproductive.vercel.app/download"
+    const val GITHUB_RELEASES_URL = "https://github.com/khalidabdullahh/AegisFocus/releases/latest"
+
     /** WhatsApp number in international format without the plus sign (+880 1643-526721). */
     const val WHATSAPP_NUMBER = "8801643526721"
     const val FACEBOOK_URL = "https://www.facebook.com/VoiceoffKhalid"
@@ -13,6 +18,10 @@ object ContactLinks {
 
     fun whatsappUrl(message: String): String =
         "https://wa.me/$WHATSAPP_NUMBER?text=${Uri.encode(message)}"
+
+    fun openWebsite(context: Context): Boolean = open(context, WEBSITE_URL)
+    fun openDownloadPage(context: Context): Boolean = open(context, DOWNLOAD_PAGE_URL)
+    fun openReleases(context: Context): Boolean = open(context, GITHUB_RELEASES_URL)
 
     /** Opens a link in the matching app or the browser. Returns false if nothing could open it. */
     fun open(context: Context, url: String): Boolean {
