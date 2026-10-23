@@ -366,7 +366,8 @@ END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
 -- ─── 4. Secure RPC: Redeem License Key ────────────────────────────────────────
-CREATE OR REPLACE FUNCTION public.redeem_license_key(key_input TEXT)
+DROP FUNCTION IF EXISTS public.redeem_license_key(TEXT);
+CREATE OR REPLACE FUNCTION public.redeem_license_key(p_key TEXT)
 RETURNS JSONB AS $$
 DECLARE
     v_user_id UUID;
@@ -382,7 +383,7 @@ BEGIN
     -- Look up active license key with row lock
     SELECT * INTO v_key_record
     FROM public.license_keys
-    WHERE key_code = UPPER(TRIM(key_input))
+    WHERE key_code = UPPER(TRIM(p_key))
       AND is_active = TRUE
       AND redeemed_by IS NULL
     FOR UPDATE;
