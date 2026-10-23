@@ -1,9 +1,9 @@
 package com.aegisfocus.app.presentation.paywall
 
-import android.app.Activity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.aegisfocus.app.data.billing.StoreBillingManager
+import com.aegisfocus.app.data.remote.SupabaseAuthService
+import com.aegisfocus.app.data.remote.SupabasePaymentService
 import com.aegisfocus.app.domain.subscription.EntitlementManager
 import com.aegisfocus.app.domain.subscription.SubscriptionPlan
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -11,19 +11,16 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-import com.aegisfocus.app.domain.subscription.LicenseKeyValidator
-
 data class PaywallUiState(
     val currentPlan: SubscriptionPlan = SubscriptionPlan.FREE,
     val selectedOption: PaywallOption = PaywallOption.MONTH_12,
-    val isLoading: Boolean = false,
     val isRedeeming: Boolean = false,
     val purchaseSucceeded: Boolean = false,
-    val errorMessage: String? = null,
     val redeemSuccessMessage: String? = null,
     val redeemErrorMessage: String? = null,
     val licenseKeyInput: String = "",
-    val storeName: String = "Direct APK / License Key"
+    val isSignedIn: Boolean = false,
+    val userEmail: String? = null
 )
 
 enum class PaywallOption(
@@ -42,14 +39,11 @@ enum class PaywallOption(
 
 class PaywallViewModel(
     private val entitlementManager: EntitlementManager,
-    private val storeBillingManager: StoreBillingManager? = null
+    private val paymentService: SupabasePaymentService,
+    private val authService: SupabaseAuthService
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(
-        PaywallUiState(
-            storeName = storeBillingManager?.currentStore?.displayName ?: "Direct APK / License Key"
-        )
-    )
+    private val _uiState = MutableStateFlow(PaywallUiState())
     val uiState: StateFlow<PaywallUiState> = _uiState.asStateFlow()
 
     init {
@@ -58,6 +52,14 @@ class PaywallViewModel(
                 _uiState.value = _uiState.value.copy(
                     currentPlan = plan,
                     purchaseSucceeded = plan != SubscriptionPlan.FREE
+                )
+            }
+        }
+        viewModelScope.launch {
+            authService.currentUser.collect { user ->
+                _uiState.value = _uiState.value.copy(
+                    isSignedIn = user != null,
+                    userEmail = user?.email
                 )
             }
         }
@@ -76,38 +78,40 @@ class PaywallViewModel(
     }
 
     /**
-     * Offline Cryptographic License Key Redemption (Instant, 100% On-Device, No DB).
+     * Redeems a key on the server. Each key works exactly once, so a key that someone
+     * else already used is rejected there, not here.
      */
     fun redeemLicenseKey(rawKey: String? = null) {
         val key = (rawKey ?: _uiState.value.licenseKeyInput).trim().uppercase()
         if (key.isBlank()) {
-            _uiState.value = _uiState.value.copy(redeemErrorMessage = "Please enter a valid license key.")
+            _uiState.value = _uiState.value.copy(redeemErrorMessage = "Please enter your license key.")
             return
         }
 
         _uiState.value = _uiState.value.copy(isRedeeming = true, redeemErrorMessage = null, redeemSuccessMessage = null)
 
-        val result = LicenseKeyValidator.validateKey(key)
-        if (!result.isValid) {
-            _uiState.value = _uiState.value.copy(
-                isRedeeming = false,
-                redeemErrorMessage = result.message
-            )
-            return
-        }
-
         viewModelScope.launch {
+            val result = paymentService.redeemLicenseKey(key)
+            if (!result.success) {
+                _uiState.value = _uiState.value.copy(isRedeeming = false, redeemErrorMessage = result.message)
+                return@launch
+            }
+
+            val plan = SubscriptionPlan.values().firstOrNull { it.name == result.plan }
+            if (plan == null) {
+                _uiState.value = _uiState.value.copy(
+                    isRedeeming = false,
+                    redeemErrorMessage = "Key accepted, but the plan is unknown to this app version. Please update the app."
+                )
+                return@launch
+            }
+
             try {
-                val expiryMs = if (result.durationDays > 0) {
-                    System.currentTimeMillis() + result.durationDays.toLong() * 24 * 60 * 60 * 1000
-                } else {
-                    0L // Lifetime
-                }
-                entitlementManager.activatePlan(result.plan, expiryMs, key)
+                entitlementManager.activatePlan(plan, result.expiryEpochMs, key)
                 _uiState.value = _uiState.value.copy(
                     isRedeeming = false,
                     purchaseSucceeded = true,
-                    redeemSuccessMessage = result.message,
+                    redeemSuccessMessage = "${plan.displayName} activated.",
                     licenseKeyInput = ""
                 )
             } catch (e: Exception) {
@@ -119,66 +123,7 @@ class PaywallViewModel(
         }
     }
 
-    /**
-     * Initiates official Store In-App Purchase flow (if store configured) or local activation fallback.
-     */
-    fun purchaseSelected(activity: Activity? = null) {
-        val option = _uiState.value.selectedOption
-        _uiState.value = _uiState.value.copy(isLoading = true, errorMessage = null)
-
-        if (activity != null && storeBillingManager != null) {
-            storeBillingManager.launchPurchase(activity, option.planType) { success, error ->
-                _uiState.value = _uiState.value.copy(
-                    isLoading = false,
-                    purchaseSucceeded = success,
-                    errorMessage = error
-                )
-            }
-        } else {
-            // Local activation fallback
-            viewModelScope.launch {
-                try {
-                    val expiryMs = if (option.durationDays > 0) {
-                        System.currentTimeMillis() + option.durationDays.toLong() * 24 * 60 * 60 * 1000
-                    } else {
-                        0L
-                    }
-                    entitlementManager.activatePlan(option.planType, expiryMs, "local_activated")
-                    _uiState.value = _uiState.value.copy(isLoading = false, purchaseSucceeded = true)
-                } catch (e: Exception) {
-                    _uiState.value = _uiState.value.copy(
-                        isLoading = false,
-                        errorMessage = "Purchase failed: ${e.message}"
-                    )
-                }
-            }
-        }
-    }
-
-    /**
-     * Restores previous purchases across connected store accounts.
-     */
-    fun restorePurchases() {
-        _uiState.value = _uiState.value.copy(isLoading = true, errorMessage = null)
-        if (storeBillingManager != null) {
-            storeBillingManager.restorePurchases { success, message ->
-                _uiState.value = _uiState.value.copy(
-                    isLoading = false,
-                    errorMessage = if (!success) message else null
-                )
-            }
-        } else {
-            viewModelScope.launch {
-                val isPro = entitlementManager.isPro()
-                _uiState.value = _uiState.value.copy(
-                    isLoading = false,
-                    errorMessage = if (!isPro) "No active subscriptions found." else null
-                )
-            }
-        }
-    }
-
     fun clearError() {
-        _uiState.value = _uiState.value.copy(errorMessage = null, redeemErrorMessage = null)
+        _uiState.value = _uiState.value.copy(redeemErrorMessage = null)
     }
 }

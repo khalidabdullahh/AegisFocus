@@ -18,12 +18,14 @@ import com.aegisfocus.app.domain.model.Schedule
 import com.aegisfocus.app.domain.repository.ScheduleRepository
 import com.aegisfocus.app.domain.repository.SettingsRepository
 import com.aegisfocus.app.domain.subscription.EntitlementManager
-import com.aegisfocus.app.domain.subscription.LicenseKeyValidator
+import com.aegisfocus.app.data.remote.LicenseKeyRow
+import com.aegisfocus.app.data.remote.SupabasePaymentService
 import com.aegisfocus.app.domain.subscription.SubscriptionPlan
 import com.aegisfocus.app.service.receiver.AegisDeviceAdminReceiver
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -60,11 +62,19 @@ private data class SettingsLocalDialogState(
     val adminPasswordError: String? = null
 )
 
+data class AdminKeyState(
+    val isBusy: Boolean = false,
+    val lastKey: String? = null,
+    val keys: List<LicenseKeyRow> = emptyList(),
+    val message: String? = null
+)
+
 class SettingsViewModel(
     private val settingsRepository: SettingsRepository,
     private val scheduleRepository: ScheduleRepository,
     private val entitlementManager: EntitlementManager? = null,
-    private val authService: SupabaseAuthService? = null
+    private val authService: SupabaseAuthService? = null,
+    private val paymentService: SupabasePaymentService? = null
 ) : ViewModel() {
 
     private val _schedules = MutableStateFlow<List<Schedule>>(emptyList())
@@ -228,36 +238,38 @@ class SettingsViewModel(
         )
     }
 
-    fun redeemLicenseKey(rawKey: String) {
-        val key = rawKey.trim().uppercase()
-        if (key.isBlank()) {
-            _localState.value = _localState.value.copy(redeemError = "Please enter a valid license key.")
-            return
-        }
+    // ---- Admin: one-time license keys (generated and stored on the server) ----
+    private val _adminKeys = MutableStateFlow(AdminKeyState())
+    val adminKeys: StateFlow<AdminKeyState> = _adminKeys.asStateFlow()
 
-        val result = LicenseKeyValidator.validateKey(key)
-        if (!result.isValid) {
-            _localState.value = _localState.value.copy(redeemError = result.message)
-            return
-        }
-
+    fun generateKey(tier: String, note: String?) {
+        val svc = paymentService ?: return
+        _adminKeys.value = _adminKeys.value.copy(isBusy = true, message = null)
         viewModelScope.launch {
-            try {
-                val expiryMs = if (result.durationDays > 0) {
-                    System.currentTimeMillis() + result.durationDays.toLong() * 24 * 60 * 60 * 1000
-                } else {
-                    0L
-                }
-                entitlementManager?.activatePlan(result.plan, expiryMs, key)
-                _localState.value = _localState.value.copy(
-                    redeemSuccess = result.message,
-                    redeemError = null
-                )
-            } catch (e: Exception) {
-                _localState.value = _localState.value.copy(
-                    redeemError = "Activation failed: ${e.message}"
-                )
-            }
+            val r = svc.generateLicenseKey(tier, note?.takeIf { it.isNotBlank() })
+            _adminKeys.value = _adminKeys.value.copy(
+                isBusy = false,
+                lastKey = if (r.success) r.key else _adminKeys.value.lastKey,
+                message = if (r.success) null else r.message
+            )
+            if (r.success) refreshKeys()
+        }
+    }
+
+    fun refreshKeys() {
+        val svc = paymentService ?: return
+        viewModelScope.launch {
+            val (rows, err) = svc.listLicenseKeys(30)
+            _adminKeys.value = _adminKeys.value.copy(keys = rows, message = err ?: _adminKeys.value.message)
+        }
+    }
+
+    fun revokeKey(key: String) {
+        val svc = paymentService ?: return
+        viewModelScope.launch {
+            val r = svc.revokeLicenseKey(key)
+            _adminKeys.value = _adminKeys.value.copy(message = if (r.success) null else r.message)
+            refreshKeys()
         }
     }
 

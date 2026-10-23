@@ -39,7 +39,24 @@ data class AdminActionResult(
 data class LicenseRedeemResult(
     val success: Boolean,
     val plan: String? = null,
-    val message: String
+    val message: String,
+    val expiryEpochMs: Long = 0L
+)
+
+/** One row of the admin key list. status is UNUSED, USED or REVOKED. */
+data class LicenseKeyRow(
+    val keyCode: String,
+    val tier: String,
+    val status: String,
+    val redeemedByEmail: String?,
+    val createdAt: String?,
+    val note: String?
+)
+
+data class KeyGenerationResult(
+    val success: Boolean,
+    val key: String? = null,
+    val message: String = ""
 )
 
 class SupabasePaymentService(
@@ -304,56 +321,107 @@ class SupabasePaymentService(
     }
 
     /**
-     * Redeems a license key via server-side RPC.
+     * Calls a Supabase RPC as the signed-in user.
+     * Returns the parsed JSON object, or a JSON object with success=false and an error message.
      */
-    suspend fun redeemLicenseKey(rawKey: String): LicenseRedeemResult = withContext(Dispatchers.IO) {
+    private fun callRpc(name: String, payload: JSONObject): JSONObject {
         val user = authService.currentUser.value
-            ?: return@withContext LicenseRedeemResult(false, null, "Please log in first to redeem license.")
+            ?: return JSONObject().put("success", false).put("error", "Please sign in first.")
         val token = user.accessToken ?: ""
 
-        try {
-            val url = URL("${SupabaseConfig.REST_ENDPOINT}/rpc/redeem_license_key")
-            val conn = url.openConnection() as HttpURLConnection
+        return try {
+            val conn = URL("${SupabaseConfig.REST_ENDPOINT}/rpc/$name").openConnection() as HttpURLConnection
             conn.requestMethod = "POST"
             conn.setRequestProperty("apikey", SupabaseConfig.ANON_KEY)
             conn.setRequestProperty("Authorization", "Bearer $token")
             conn.setRequestProperty("Content-Type", "application/json")
             conn.doOutput = true
-            conn.connectTimeout = 8000
-            conn.readTimeout = 8000
-
-            val payload = JSONObject().apply {
-                put("p_key", rawKey.trim().uppercase())
-            }
-
+            conn.connectTimeout = 10000
+            conn.readTimeout = 10000
             conn.outputStream.use { it.write(payload.toString().toByteArray(Charsets.UTF_8)) }
 
-            val responseCode = conn.responseCode
-            val stream = if (responseCode in 200..299) conn.inputStream else conn.errorStream
-            val respText = stream.bufferedReader().use { it.readText() }
+            val code = conn.responseCode
+            val stream = if (code in 200..299) conn.inputStream else conn.errorStream
+            val text = stream?.bufferedReader()?.use { it.readText() } ?: ""
             conn.disconnect()
 
-            if (responseCode in 200..299) {
-                val json = try { JSONObject(respText) } catch (e: Exception) { JSONObject() }
-                val plan = json.optString("plan", "PRO")
-                DiscordNotifier.notifyProPurchase(
-                    planName = plan,
-                    method = "Server License Key Redemption",
-                    licenseKey = rawKey.trim().uppercase()
-                )
-                LicenseRedeemResult(true, plan, "License redeemed successfully! Pro activated.")
-            } else {
-                val err = try {
-                    JSONObject(respText).optString("message", respText)
-                } catch (e: Exception) {
-                    respText
+            if (code in 200..299) {
+                try { JSONObject(text) } catch (e: Exception) {
+                    JSONObject().put("success", false).put("error", "Unexpected server reply.")
                 }
-                LicenseRedeemResult(false, null, "Redemption failed: $err")
+            } else {
+                val msg = try { JSONObject(text).optString("message", text) } catch (e: Exception) { text }
+                val friendly = if (code == 404 || msg.contains("Could not find the function", ignoreCase = true)) {
+                    "Server is not set up for license keys yet."
+                } else msg
+                JSONObject().put("success", false).put("error", friendly)
             }
         } catch (e: Exception) {
-            Log.e(tag, "Error redeeming license: ${e.message}", e)
-            LicenseRedeemResult(false, null, "Network error: ${e.localizedMessage}")
+            Log.e(tag, "RPC $name failed: ${e.message}", e)
+            JSONObject().put("success", false).put("error", "Network error: ${e.localizedMessage}")
         }
+    }
+
+    /**
+     * Redeems a license key on the server. The server accepts each key exactly once.
+     */
+    suspend fun redeemLicenseKey(rawKey: String): LicenseRedeemResult = withContext(Dispatchers.IO) {
+        if (authService.currentUser.value == null) {
+            return@withContext LicenseRedeemResult(false, null, "Please sign in first to redeem a key.")
+        }
+        val key = rawKey.trim().uppercase()
+        val json = callRpc("redeem_license_key", JSONObject().put("p_key", key))
+
+        if (json.optBoolean("success", false)) {
+            val plan = json.optString("plan", "")
+            DiscordNotifier.notifyProPurchase(
+                planName = plan,
+                method = "Server License Key Redemption",
+                licenseKey = key
+            )
+            LicenseRedeemResult(true, plan, json.optString("message", "Pro activated."), json.optLong("expiry_epoch_ms", 0L))
+        } else {
+            LicenseRedeemResult(false, null, json.optString("error", "Could not redeem this key."))
+        }
+    }
+
+    /** Admin only: creates a new unused key on the server. */
+    suspend fun generateLicenseKey(tier: String, note: String? = null): KeyGenerationResult = withContext(Dispatchers.IO) {
+        val payload = JSONObject().put("p_tier", tier).put("p_note", note ?: JSONObject.NULL)
+        val json = callRpc("admin_generate_license_key", payload)
+        if (json.optBoolean("success", false)) {
+            KeyGenerationResult(true, json.optString("key"), "Key created.")
+        } else {
+            KeyGenerationResult(false, null, json.optString("error", "Could not create the key."))
+        }
+    }
+
+    /** Admin only: most recent keys with their status. */
+    suspend fun listLicenseKeys(limit: Int = 50): Pair<List<LicenseKeyRow>, String?> = withContext(Dispatchers.IO) {
+        val json = callRpc("admin_list_license_keys", JSONObject().put("p_limit", limit))
+        if (!json.optBoolean("success", false)) {
+            return@withContext emptyList<LicenseKeyRow>() to json.optString("error", "Could not load keys.")
+        }
+        val array = json.optJSONArray("keys") ?: JSONArray()
+        val rows = (0 until array.length()).map { i ->
+            val o = array.getJSONObject(i)
+            LicenseKeyRow(
+                keyCode = o.optString("key_code"),
+                tier = o.optString("tier"),
+                status = o.optString("status"),
+                redeemedByEmail = o.optString("redeemed_by_email").takeIf { it.isNotBlank() && it != "null" },
+                createdAt = o.optString("created_at").takeIf { it.isNotBlank() && it != "null" },
+                note = o.optString("note").takeIf { it.isNotBlank() && it != "null" }
+            )
+        }
+        rows to null
+    }
+
+    /** Admin only: disables a key that has not been used yet. */
+    suspend fun revokeLicenseKey(key: String): AdminActionResult = withContext(Dispatchers.IO) {
+        val json = callRpc("admin_revoke_license_key", JSONObject().put("p_key", key))
+        if (json.optBoolean("success", false)) AdminActionResult(true, "Key revoked.")
+        else AdminActionResult(false, json.optString("error", "Could not revoke the key."))
     }
 
     fun isCurrentUserAdmin(): Boolean {

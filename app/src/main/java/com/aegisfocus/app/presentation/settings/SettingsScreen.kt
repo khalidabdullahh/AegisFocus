@@ -94,7 +94,6 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.foundation.text.KeyboardOptions
 import com.aegisfocus.app.domain.model.Schedule
-import com.aegisfocus.app.domain.subscription.LicenseKeyValidator
 import com.aegisfocus.app.domain.subscription.SubscriptionPlan
 
 @Composable
@@ -235,7 +234,7 @@ fun SettingsScreen(
         Surface(
             modifier = Modifier
                 .fillMaxWidth()
-                .clickable { viewModel.openRedeemDialog() },
+                .clickable(onClick = onNavigateToPaywall),
             shape = RoundedCornerShape(14.dp),
             color = ElevatedSurface,
             border = BorderStroke(1.dp, SubtleBorder)
@@ -769,7 +768,7 @@ fun SettingsScreen(
                 Spacer(modifier = Modifier.width(12.dp))
                 Column {
                     Text(
-                        text = "Aegis Focus • v1.3.0",
+                        text = "Aegis Focus • v1.4.0",
                         fontSize = 14.sp,
                         fontWeight = FontWeight.SemiBold,
                         color = TextPrimary
@@ -785,7 +784,13 @@ fun SettingsScreen(
 
         if (uiState.isAdminMode) {
             Spacer(modifier = Modifier.height(16.dp))
-            SuperAdminKeyGeneratorCard()
+            val adminState by viewModel.adminKeys.collectAsState()
+            SuperAdminKeyGeneratorCard(
+                state = adminState,
+                onGenerate = { tier, note -> viewModel.generateKey(tier, note) },
+                onRefresh = { viewModel.refreshKeys() },
+                onRevoke = { viewModel.revokeKey(it) }
+            )
         }
 
         Spacer(modifier = Modifier.height(36.dp))
@@ -795,15 +800,6 @@ fun SettingsScreen(
         AddScheduleDialog(
             onDismiss = { viewModel.closeAddScheduleDialog() },
             onSave = { schedule -> viewModel.addSchedule(schedule) }
-        )
-    }
-
-    if (uiState.isRedeemDialogOpen) {
-        RedeemLicenseDialog(
-            errorMessage = uiState.redeemError,
-            successMessage = uiState.redeemSuccess,
-            onDismiss = { viewModel.closeRedeemDialog() },
-            onRedeem = { key -> viewModel.redeemLicenseKey(key) }
         )
     }
 
@@ -1106,10 +1102,17 @@ private fun AddScheduleDialog(
 }
 
 @Composable
-private fun SuperAdminKeyGeneratorCard() {
-    var generatedKey by remember { mutableStateOf("") }
-    var selectedTier by remember { mutableStateOf("12M") }
+private fun SuperAdminKeyGeneratorCard(
+    state: AdminKeyState,
+    onGenerate: (String, String?) -> Unit,
+    onRefresh: () -> Unit,
+    onRevoke: (String) -> Unit
+) {
+    var selectedTier by remember { mutableStateOf("YEAR") }
+    var note by remember { mutableStateOf("") }
     val clipboardManager = LocalClipboardManager.current
+
+    LaunchedEffect(Unit) { onRefresh() }
 
     Surface(
         modifier = Modifier.fillMaxWidth(),
@@ -1124,41 +1127,26 @@ private fun SuperAdminKeyGeneratorCard() {
             ) {
                 Icon(imageVector = Icons.Default.Key, contentDescription = null, tint = CyanAccent, modifier = Modifier.size(18.dp))
                 Text(
-                    text = "Super Admin • License Generator",
+                    text = "Admin - One-time License Keys",
                     color = CyanAccent,
                     fontWeight = FontWeight.Bold,
                     fontSize = 14.sp
                 )
             }
-
             Spacer(modifier = Modifier.height(4.dp))
-
             Text(
-                text = "Generate cryptographic Pro license keys for bKash / Nagad / Direct customers (100% Offline):",
+                text = "Keys are created on the server and work exactly once. You must be signed in as super_admin.",
                 fontSize = 11.sp,
                 color = TextSecondary
             )
-
             Spacer(modifier = Modifier.height(12.dp))
 
-            val tiers = listOf(
-                "1M" to "1 Month",
-                "3M" to "3 Mos",
-                "6M" to "6 Mos",
-                "12M" to "1 Year",
-                "LIFE" to "Lifetime"
-            )
-
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(6.dp),
-                modifier = Modifier.fillMaxWidth()
-            ) {
+            val tiers = listOf("MNTH" to "1 Mo", "3M" to "3 Mo", "6M" to "6 Mo", "YEAR" to "1 Yr", "STUD" to "Student", "LIFE" to "Life")
+            Row(horizontalArrangement = Arrangement.spacedBy(4.dp), modifier = Modifier.fillMaxWidth()) {
                 tiers.forEach { (tier, label) ->
                     val isSel = selectedTier == tier
                     Surface(
-                        modifier = Modifier
-                            .weight(1f)
-                            .clickable { selectedTier = tier },
+                        modifier = Modifier.weight(1f).clickable { selectedTier = tier },
                         shape = RoundedCornerShape(8.dp),
                         color = if (isSel) CyanAccent.copy(alpha = 0.2f) else DeepSurface,
                         border = BorderStroke(1.dp, if (isSel) CyanAccent else SubtleBorder)
@@ -1169,162 +1157,97 @@ private fun SuperAdminKeyGeneratorCard() {
                             fontSize = 10.sp,
                             fontWeight = FontWeight.Bold,
                             textAlign = TextAlign.Center,
+                            maxLines = 1,
                             modifier = Modifier.padding(vertical = 8.dp)
                         )
                     }
                 }
             }
 
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(8.dp))
+            OutlinedTextField(
+                value = note,
+                onValueChange = { note = it },
+                modifier = Modifier.fillMaxWidth(),
+                singleLine = true,
+                placeholder = { Text("Buyer note (optional)", color = TextMuted, fontSize = 12.sp) },
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = CyanAccent,
+                    unfocusedBorderColor = SubtleBorder,
+                    focusedTextColor = TextPrimary,
+                    unfocusedTextColor = TextPrimary,
+                    cursorColor = CyanAccent
+                ),
+                shape = RoundedCornerShape(10.dp)
+            )
 
+            Spacer(modifier = Modifier.height(10.dp))
             AegisPrimaryButton(
-                text = "Generate License Key",
-                onClick = {
-                    generatedKey = LicenseKeyValidator.generateKey(selectedTier)
-                },
+                text = if (state.isBusy) "Working..." else "Generate Key",
+                onClick = { onGenerate(selectedTier, note) },
+                enabled = !state.isBusy,
                 modifier = Modifier.fillMaxWidth()
             )
 
-            if (generatedKey.isNotBlank()) {
-                Spacer(modifier = Modifier.height(12.dp))
+            state.message?.let {
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(it, color = AlertStrict, fontSize = 12.sp)
+            }
+
+            state.lastKey?.let { key ->
+                Spacer(modifier = Modifier.height(10.dp))
                 Surface(
                     shape = RoundedCornerShape(10.dp),
                     color = ElevatedSurface,
                     border = BorderStroke(1.dp, EmeraldFocus),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable {
-                            clipboardManager.setText(AnnotatedString(generatedKey))
-                        }
+                    modifier = Modifier.fillMaxWidth().clickable { clipboardManager.setText(AnnotatedString(key)) }
                 ) {
                     Row(
                         modifier = Modifier.padding(12.dp),
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Column {
-                            Text("KEY (TAP TO COPY):", fontSize = 10.sp, color = TextMuted, fontWeight = FontWeight.Bold)
-                            Text(generatedKey, fontSize = 15.sp, color = EmeraldFocus, fontWeight = FontWeight.Black, letterSpacing = 1.sp)
+                        Column(Modifier.weight(1f)) {
+                            Text("NEW KEY (TAP TO COPY)", fontSize = 10.sp, color = TextMuted, fontWeight = FontWeight.Bold)
+                            Text(key, fontSize = 14.sp, color = EmeraldFocus, fontWeight = FontWeight.Black)
                         }
                         Text("Copy", fontSize = 12.sp, color = CyanAccent, fontWeight = FontWeight.Bold)
                     }
                 }
             }
-        }
-    }
-}
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun RedeemLicenseDialog(
-    errorMessage: String?,
-    successMessage: String?,
-    onDismiss: () -> Unit,
-    onRedeem: (String) -> Unit
-) {
-    var keyInput by remember { mutableStateOf("") }
-    val clipboardManager = LocalClipboardManager.current
-
-    BasicAlertDialog(onDismissRequest = onDismiss) {
-        Surface(
-            shape = RoundedCornerShape(20.dp),
-            color = DeepSurface,
-            border = BorderStroke(1.dp, CyanAccent.copy(alpha = 0.4f)),
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Column(
-                modifier = Modifier.padding(20.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Icon(Icons.Default.Key, contentDescription = null, tint = CyanAccent, modifier = Modifier.size(32.dp))
-                Spacer(modifier = Modifier.height(8.dp))
-                Text(
-                    text = "Redeem Pro License",
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = TextPrimary
-                )
-                Spacer(modifier = Modifier.height(4.dp))
-                Text(
-                    text = "Enter the 16-character license key to instantly unlock Aegis Pro:",
-                    fontSize = 12.sp,
-                    color = TextSecondary,
-                    textAlign = TextAlign.Center
-                )
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                OutlinedTextField(
-                    value = keyInput,
-                    onValueChange = { keyInput = it.uppercase() },
-                    modifier = Modifier.fillMaxWidth(),
-                    placeholder = {
-                        Text("AEGIS-12M-XXXX-XXXX", color = TextMuted, fontSize = 13.sp)
-                    },
-                    trailingIcon = {
-                        IconButton(onClick = {
-                            clipboardManager.getText()?.text?.let {
-                                keyInput = it.trim().uppercase()
-                            }
-                        }) {
-                            Icon(Icons.Default.ContentPaste, contentDescription = "Paste", tint = CyanAccent)
+            if (state.keys.isNotEmpty()) {
+                Spacer(modifier = Modifier.height(14.dp))
+                Text("Recent keys", color = TextPrimary, fontWeight = FontWeight.SemiBold, fontSize = 13.sp)
+                Spacer(modifier = Modifier.height(6.dp))
+                state.keys.forEach { row ->
+                    Row(
+                        modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Column(Modifier.weight(1f)) {
+                            Text(
+                                row.keyCode,
+                                color = TextPrimary,
+                                fontSize = 11.sp,
+                                modifier = Modifier.clickable { clipboardManager.setText(AnnotatedString(row.keyCode)) }
+                            )
+                            val who = row.redeemedByEmail?.let { " by $it" } ?: ""
+                            Text("${row.tier} - ${row.status}$who", color = TextMuted, fontSize = 10.sp)
                         }
-                    },
-                    singleLine = true,
-                    colors = OutlinedTextFieldDefaults.colors(
-                        focusedBorderColor = CyanAccent,
-                        unfocusedBorderColor = SubtleBorder,
-                        focusedTextColor = TextPrimary,
-                        unfocusedTextColor = TextPrimary,
-                        cursorColor = CyanAccent
-                    ),
-                    shape = RoundedCornerShape(10.dp)
-                )
-
-                if (errorMessage != null) {
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Text(
-                        text = "$errorMessage",
-                        color = AlertStrict,
-                        fontSize = 12.sp,
-                        textAlign = TextAlign.Center
-                    )
-                }
-
-                if (successMessage != null) {
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Text(
-                        text = "$successMessage",
-                        color = EmeraldFocus,
-                        fontSize = 12.sp,
-                        fontWeight = FontWeight.Bold,
-                        textAlign = TextAlign.Center
-                    )
-                }
-
-                Spacer(modifier = Modifier.height(20.dp))
-
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.End
-                ) {
-                    TextButton(onClick = onDismiss) {
-                        Text(if (successMessage != null) "Done" else "Cancel", color = TextSecondary)
-                    }
-                    Spacer(modifier = Modifier.width(8.dp))
-                    if (successMessage == null) {
-                        AegisPrimaryButton(
-                            text = "Activate",
-                            onClick = { onRedeem(keyInput) },
-                            enabled = keyInput.isNotBlank(),
-                            modifier = Modifier.width(110.dp)
-                        )
+                        if (row.status.equals("unused", true) || row.status.equals("active", true)) {
+                            TextButton(onClick = { onRevoke(row.keyCode) }) {
+                                Text("Revoke", color = AlertStrict, fontSize = 11.sp)
+                            }
+                        }
                     }
                 }
             }
         }
     }
 }
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

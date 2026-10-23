@@ -85,6 +85,7 @@ fun AegisNavHost(
     // অনবোর্ডিং, পে-ওয়াল বা গোলস স্ক্রিনে বটম বার হাইড রাখা
     val showBottomBar = currentRoute != Screen.Onboarding.route &&
             currentRoute != Screen.Paywall.route &&
+            currentRoute != Screen.Auth.route &&
             currentRoute != Screen.Goals.route
 
     Scaffold(
@@ -254,7 +255,9 @@ fun AegisNavHost(
                     SettingsViewModel(
                         settingsRepository = container.settingsRepository,
                         scheduleRepository = container.scheduleRepository,
-                        entitlementManager = container.entitlementManager
+                        entitlementManager = container.entitlementManager,
+                        authService = container.supabaseAuthService,
+                        paymentService = container.supabasePaymentService
                     )
                 }
                 SettingsScreen(
@@ -267,12 +270,24 @@ fun AegisNavHost(
                 val vm = androidx.lifecycle.viewmodel.compose.viewModel {
                     PaywallViewModel(
                         entitlementManager = container.entitlementManager,
-                        storeBillingManager = container.storeBillingManager
+                        paymentService = container.supabasePaymentService,
+                        authService = container.supabaseAuthService
                     )
                 }
                 PaywallScreen(
                     viewModel = vm,
-                    onDismiss = { navController.popBackStack() }
+                    onDismiss = { navController.popBackStack() },
+                    onNavigateToAuth = { navController.navigate(Screen.Auth.route) }
+                )
+            }
+
+            composable(Screen.Auth.route) {
+                val vm = androidx.lifecycle.viewmodel.compose.viewModel {
+                    com.aegisfocus.app.presentation.auth.AuthViewModel(container.supabaseAuthService)
+                }
+                com.aegisfocus.app.presentation.auth.AuthScreen(
+                    viewModel = vm,
+                    onNavigateBack = { navController.popBackStack() }
                 )
             }
 

@@ -39,6 +39,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.TextButton
+import com.aegisfocus.app.core.common.ContactLinks
+import com.aegisfocus.app.core.components.AegisOutlinedButton
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -71,9 +78,11 @@ import com.aegisfocus.app.domain.subscription.SubscriptionPlan
 fun PaywallScreen(
     viewModel: PaywallViewModel,
     onDismiss: () -> Unit,
+    onNavigateToAuth: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    var showContactDialog by remember { mutableStateOf(false) }
     val context = LocalContext.current
     val activity = context as? Activity
     val clipboardManager = LocalClipboardManager.current
@@ -175,7 +184,7 @@ fun PaywallScreen(
 
                 Spacer(Modifier.height(6.dp))
                 Text(
-                    text = "Enter the 16-character license key received after purchasing via bKash / Nagad / Direct seller:",
+                    text = "Enter the license key you received from the seller. Each key works only once.",
                     color = TextSecondary,
                     fontSize = 12.sp,
                     lineHeight = 16.sp
@@ -188,7 +197,7 @@ fun PaywallScreen(
                     onValueChange = { viewModel.onLicenseKeyChange(it.uppercase()) },
                     modifier = Modifier.fillMaxWidth(),
                     placeholder = {
-                        Text("AEGIS-12M-XXXX-XXXX", color = TextMuted, fontSize = 13.sp, fontFamily = FontFamily.Monospace)
+                        Text("AEGIS-XXXX-XXXX-XXXX-XXXX", color = TextMuted, fontSize = 13.sp, fontFamily = FontFamily.Monospace)
                     },
                     trailingIcon = {
                         IconButton(onClick = {
@@ -241,15 +250,37 @@ fun PaywallScreen(
 
                 Spacer(Modifier.height(12.dp))
 
-                AegisPrimaryButton(
-                    text = if (uiState.isRedeeming) "Activating..." else "Activate Pro Key",
-                    onClick = {
-                        focusManager.clearFocus()
-                        viewModel.redeemLicenseKey()
-                    },
-                    enabled = uiState.licenseKeyInput.isNotBlank() && !uiState.isRedeeming,
-                    modifier = Modifier.fillMaxWidth()
-                )
+                if (!uiState.isSignedIn) {
+                    Text(
+                        text = "Sign in first so the key is tied to your account.",
+                        color = TextSecondary,
+                        fontSize = 12.sp
+                    )
+                    Spacer(Modifier.height(8.dp))
+                    AegisPrimaryButton(
+                        text = "Sign in to redeem",
+                        onClick = onNavigateToAuth,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                } else {
+                    if (uiState.userEmail != null) {
+                        Text(
+                            text = "Signed in as ${uiState.userEmail}",
+                            color = TextMuted,
+                            fontSize = 11.sp
+                        )
+                        Spacer(Modifier.height(8.dp))
+                    }
+                    AegisPrimaryButton(
+                        text = if (uiState.isRedeeming) "Activating..." else "Activate Pro Key",
+                        onClick = {
+                            focusManager.clearFocus()
+                            viewModel.redeemLicenseKey()
+                        },
+                        enabled = uiState.licenseKeyInput.isNotBlank() && !uiState.isRedeeming,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
             }
         }
 
@@ -292,14 +323,14 @@ fun PaywallScreen(
         ) {
             Column(Modifier.padding(16.dp)) {
                 Text(
-                    text = "How to get a License Code?",
+                    text = "How to get a license key",
                     color = CyanAccent,
                     fontWeight = FontWeight.Bold,
                     fontSize = 14.sp
                 )
                 Spacer(Modifier.height(6.dp))
                 Text(
-                    text = "1. Choose your preferred plan above (1, 3, 6, or 12 Months).\n2. Send the subscription fee via bKash / Nagad / Bank to the authorized seller.\n3. You will immediately receive your unique activation code.\n4. Paste the code above to activate instant Pro access!",
+                    text = "1. Choose a plan above.\n2. Tap Get your key and message the owner on WhatsApp, Facebook or Instagram.\n3. Pay as agreed and receive your one-time key.\n4. Sign in, paste the key above and Pro activates instantly.",
                     color = TextSecondary,
                     fontSize = 12.sp,
                     lineHeight = 18.sp
@@ -307,17 +338,65 @@ fun PaywallScreen(
             }
         }
 
+        Spacer(Modifier.height(12.dp))
+
+        AegisPrimaryButton(
+            text = "Get your key: ${uiState.selectedOption.label}",
+            onClick = { showContactDialog = true },
+            modifier = Modifier
+                .padding(horizontal = 20.dp)
+                .fillMaxWidth()
+        )
+
         Spacer(Modifier.height(16.dp))
 
         // Privacy note
         Text(
-            text = "100% Offline Cryptographic Verification • No Account or Remote Database Required",
+            text = "Keys are verified on our server and can be used only once.",
             color = TextMuted,
             fontSize = 11.sp,
             textAlign = TextAlign.Center,
             modifier = Modifier
                 .padding(horizontal = 24.dp)
                 .fillMaxWidth()
+        )
+    }
+
+    if (showContactDialog) {
+        val option = uiState.selectedOption
+        val message = "Hi, I want to buy Aegis Focus ${option.label} (${option.price})." +
+            (uiState.userEmail?.let { " My account email: $it" } ?: "")
+        AlertDialog(
+            onDismissRequest = { showContactDialog = false },
+            containerColor = DeepSurface,
+            title = { Text("Get your key", color = TextPrimary, fontWeight = FontWeight.Bold) },
+            text = {
+                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Text(
+                        "Message the owner for ${option.label} (${option.price}). You will receive a one-time key.",
+                        color = TextSecondary,
+                        fontSize = 13.sp
+                    )
+                    AegisPrimaryButton(
+                        text = "WhatsApp",
+                        onClick = { ContactLinks.open(context, ContactLinks.whatsappUrl(message)) },
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                    AegisOutlinedButton(
+                        text = "Facebook",
+                        onClick = { ContactLinks.open(context, ContactLinks.FACEBOOK_URL) },
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                    AegisOutlinedButton(
+                        text = "Instagram",
+                        onClick = { ContactLinks.open(context, ContactLinks.INSTAGRAM_URL) },
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
+            },
+            confirmButton = {
+                TextButton(onClick = { showContactDialog = false }) { Text("Close", color = CyanAccent) }
+            }
         )
     }
 }
