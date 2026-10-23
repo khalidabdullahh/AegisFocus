@@ -49,7 +49,8 @@ data class SettingsUiState(
     val isShortsBlockerEnabled: Boolean = true,
     val isGrayscaleFatigueEnabled: Boolean = false,
     val isAdBlockerVpnEnabled: Boolean = false,
-    val isAdultBlockEnabled: Boolean = false
+    val isAdultBlockEnabled: Boolean = false,
+    val currentUser: com.aegisfocus.app.data.remote.AuthUser? = null
 )
 
 private data class SettingsLocalDialogState(
@@ -102,14 +103,21 @@ class SettingsViewModel(
         plan to remaining
     }
 
+    private val accountFlow = combine(
+        subDataFlow,
+        authService?.currentUser ?: MutableStateFlow(null)
+    ) { sub, user ->
+        Triple(sub.first, sub.second, user)
+    }
+
     val uiState: StateFlow<SettingsUiState> = combine(
         settingsRepository.getPermissionStateFlow(),
         _schedules,
-        subDataFlow,
+        accountFlow,
         _localState,
         _refreshTick
-    ) { perms, scheds, subData, local, _ ->
-        val (plan, remaining) = subData
+    ) { perms, scheds, account, local, _ ->
+        val (plan, remaining, user) = account
         SettingsUiState(
             permissions = perms,
             defaultDurationMinutes = settingsRepository.getDefaultFocusDurationMinutes(),
@@ -129,7 +137,8 @@ class SettingsViewModel(
             isShortsBlockerEnabled = settingsRepository.isShortsBlockerEnabled(),
             isGrayscaleFatigueEnabled = settingsRepository.isGrayscaleFatigueEnabled(),
             isAdBlockerVpnEnabled = settingsRepository.isAdBlockerVpnEnabled(),
-            isAdultBlockEnabled = settingsRepository.isAdultContentBlockEnabled()
+            isAdultBlockEnabled = settingsRepository.isAdultContentBlockEnabled(),
+            currentUser = user
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), SettingsUiState())
 

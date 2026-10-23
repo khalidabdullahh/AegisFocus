@@ -262,7 +262,8 @@ fun AegisNavHost(
                 }
                 SettingsScreen(
                     viewModel = vm,
-                    onNavigateToPaywall = { navController.navigate(Screen.Paywall.route) }
+                    onNavigateToPaywall = { navController.navigate(Screen.Paywall.route) },
+                    onNavigateToAuth = { navController.navigate(Screen.Auth.route) }
                 )
             }
 

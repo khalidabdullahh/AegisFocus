@@ -27,6 +27,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccessibilityNew
+import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Alarm
 import androidx.compose.material.icons.filled.BarChart
@@ -106,6 +107,7 @@ import com.aegisfocus.app.domain.subscription.SubscriptionPlan
 fun SettingsScreen(
     viewModel: SettingsViewModel,
     onNavigateToPaywall: () -> Unit = {},
+    onNavigateToAuth: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -234,7 +236,74 @@ fun SettingsScreen(
             }
         }
 
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(10.dp))
+
+        // Account / Cloud Sync Card
+        val user = uiState.currentUser
+        Surface(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable(onClick = onNavigateToAuth),
+            shape = RoundedCornerShape(16.dp),
+            color = DeepSurface,
+            border = BorderStroke(1.dp, SubtleBorder)
+        ) {
+            Row(
+                modifier = Modifier.padding(16.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(12.dp),
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .size(40.dp)
+                            .clip(CircleShape)
+                            .background(if (user != null) EmeraldFocus.copy(alpha = 0.15f) else CyanAccent.copy(alpha = 0.15f)),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.AccountCircle,
+                            contentDescription = null,
+                            tint = if (user != null) EmeraldFocus else CyanAccent,
+                            modifier = Modifier.size(24.dp)
+                        )
+                    }
+                    Column {
+                        Text(
+                            text = if (user != null) (user.displayName ?: user.email) else "Account & Cloud Sync",
+                            color = TextPrimary,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 14.sp
+                        )
+                        Text(
+                            text = if (user != null) "Signed in as ${user.email}" else "Sign in to sync focus stats & save license",
+                            color = TextSecondary,
+                            fontSize = 11.sp
+                        )
+                    }
+                }
+                Surface(
+                    onClick = onNavigateToAuth,
+                    shape = RoundedCornerShape(10.dp),
+                    color = if (user != null) ElevatedSurface else CyanAccent.copy(alpha = 0.15f),
+                    border = BorderStroke(1.dp, if (user != null) SubtleBorder else CyanAccent)
+                ) {
+                    Text(
+                        text = if (user != null) "Manage" else "Sign In",
+                        color = if (user != null) TextPrimary else CyanAccent,
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
+                    )
+                }
+            }
+        }
+
+        Spacer(modifier = Modifier.height(10.dp))
 
         // Quick Redeem License Button Card
         Surface(
