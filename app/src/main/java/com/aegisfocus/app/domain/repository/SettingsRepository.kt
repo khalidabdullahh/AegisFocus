@@ -23,6 +23,8 @@ interface SettingsRepository {
     fun isAdBlockerVpnEnabled(): Boolean
     fun setAdBlockerVpnEnabled(enabled: Boolean)
     fun isAdultContentBlockEnabled(): Boolean
+    fun isScamShieldEnabled(): Boolean
+    fun setScamShieldEnabled(enabled: Boolean)
     fun setAdultContentBlockEnabled(enabled: Boolean)
     fun getDailyFocusGoalMinutes(): Int
     fun setDailyFocusGoalMinutes(minutes: Int)

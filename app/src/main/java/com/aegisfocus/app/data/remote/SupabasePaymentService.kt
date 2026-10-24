@@ -77,7 +77,7 @@ class SupabasePaymentService(
         val user = authService.currentUser.value
             ?: return@withContext PaymentSubmissionResult(false, "User must be logged in to submit payment claim.")
 
-        val token = user.accessToken ?: ""
+        val token = authService.freshAccessToken() ?: ""
         val cleanTrx = transactionId.trim().uppercase()
         val cleanSender = senderNumber.trim()
 
@@ -143,7 +143,7 @@ class SupabasePaymentService(
      */
     suspend fun getUserPaymentRequests(): List<PaymentRequest> = withContext(Dispatchers.IO) {
         val user = authService.currentUser.value ?: return@withContext emptyList()
-        val token = user.accessToken ?: ""
+        val token = authService.freshAccessToken() ?: ""
 
         try {
             val url = URL("${SupabaseConfig.REST_ENDPOINT}/payment_requests?user_id=eq.${user.id}&order=created_at.desc")
@@ -176,7 +176,7 @@ class SupabasePaymentService(
      */
     suspend fun getAllPendingRequests(): List<PaymentRequest> = withContext(Dispatchers.IO) {
         val user = authService.currentUser.value ?: return@withContext emptyList()
-        val token = user.accessToken ?: ""
+        val token = authService.freshAccessToken() ?: ""
 
         try {
             val url = URL("${SupabaseConfig.REST_ENDPOINT}/payment_requests?status=eq.PENDING&order=created_at.asc")
@@ -215,7 +215,7 @@ class SupabasePaymentService(
     ): AdminActionResult = withContext(Dispatchers.IO) {
         val user = authService.currentUser.value
             ?: return@withContext AdminActionResult(false, "Admin must be logged in.")
-        val token = user.accessToken ?: ""
+        val token = authService.freshAccessToken() ?: ""
 
         try {
             val url = URL("${SupabaseConfig.REST_ENDPOINT}/rpc/approve_payment_request")
@@ -273,7 +273,7 @@ class SupabasePaymentService(
     ): AdminActionResult = withContext(Dispatchers.IO) {
         val user = authService.currentUser.value
             ?: return@withContext AdminActionResult(false, "Admin must be logged in.")
-        val token = user.accessToken ?: ""
+        val token = authService.freshAccessToken() ?: ""
 
         try {
             val url = URL("${SupabaseConfig.REST_ENDPOINT}/rpc/reject_payment_request")
@@ -327,7 +327,7 @@ class SupabasePaymentService(
     private fun callRpc(name: String, payload: JSONObject): JSONObject {
         val user = authService.currentUser.value
             ?: return JSONObject().put("success", false).put("error", "Please sign in first.")
-        val token = user.accessToken ?: ""
+        val token = authService.freshAccessToken() ?: ""
 
         return try {
             val conn = URL("${SupabaseConfig.REST_ENDPOINT}/rpc/$name").openConnection() as HttpURLConnection

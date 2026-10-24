@@ -46,12 +46,14 @@ class AegisAdBlockerVpnService : VpnService() {
 
     private fun startVpn() {
         try {
-            val adultBlock = com.aegisfocus.app.core.di.ServiceLocator
+            val settings = com.aegisfocus.app.core.di.ServiceLocator
                 .getContainer(applicationContext)
                 .settingsRepository
-                .isAdultContentBlockEnabled()
+            val adultBlock = settings.isAdultContentBlockEnabled()
+            val adsBlock = settings.isAdBlockerVpnEnabled()
+            val scamShield = settings.isScamShieldEnabled()
 
-            startForeground(NOTIFICATION_ID, buildNotification(adultBlock))
+            startForeground(NOTIFICATION_ID, buildNotification(adultBlock, adsBlock, scamShield))
 
             // Restart cleanly when the filter level changes while the VPN is running
             vpnInterface?.close()
@@ -68,7 +70,15 @@ class AegisAdBlockerVpnService : VpnService() {
                     .addDnsServer("94.140.15.16")       // AdGuard Family Secondary DNS
                     .addDnsServer("2a10:50c0::bad1:ff")  // AdGuard Family IPv6 Primary
                     .addDnsServer("2a10:50c0::bad2:ff")  // AdGuard Family IPv6 Secondary
+            } else if (scamShield && !adsBlock) {
+                // Scam Shield only: Cloudflare security DNS blocks malware and phishing domains
+                builder
+                    .addDnsServer("1.1.1.2")
+                    .addDnsServer("1.0.0.2")
+                    .addDnsServer("2606:4700:4700::1112")
+                    .addDnsServer("2606:4700:4700::1002")
             } else {
+                // AdGuard DNS also filters known phishing and malware domains
                 builder
                     .addDnsServer("94.140.14.14")       // AdGuard Primary DNS
                     .addDnsServer("94.140.15.15")       // AdGuard Secondary DNS
@@ -116,7 +126,7 @@ class AegisAdBlockerVpnService : VpnService() {
         }
     }
 
-    private fun buildNotification(adultBlock: Boolean): Notification {
+    private fun buildNotification(adultBlock: Boolean, adsBlock: Boolean, scamShield: Boolean): Notification {
         val intent = Intent(this, MainActivity::class.java)
         val pendingIntent = PendingIntent.getActivity(
             this,
@@ -126,10 +136,14 @@ class AegisAdBlockerVpnService : VpnService() {
         )
 
         return NotificationCompat.Builder(this, CHANNEL_ID)
-            .setContentTitle("Aegis AdBlocker active")
+            .setContentTitle("Aegis protection active")
             .setContentText(
-                if (adultBlock) "Blocking ads, trackers and 18+ sites (AdGuard Family DNS)"
-                else "Blocking in-app ads and trackers (AdGuard DNS)"
+                when {
+                    adultBlock -> "Blocking ads, scams, trackers and 18+ sites"
+                    adsBlock && scamShield -> "Blocking ads, trackers and scam links"
+                    adsBlock -> "Blocking in-app ads, trackers and scam links"
+                    else -> "Scam Shield is blocking phishing and malware links"
+                }
             )
             .setSmallIcon(android.R.drawable.ic_secure)
             .setContentIntent(pendingIntent)

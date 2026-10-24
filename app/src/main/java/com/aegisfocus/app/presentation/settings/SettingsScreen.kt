@@ -95,6 +95,7 @@ import com.aegisfocus.app.core.theme.TextSecondary
 import com.aegisfocus.app.core.theme.AlertStrict
 import com.aegisfocus.app.data.remote.SupabaseAuthService
 import androidx.compose.material.icons.filled.ContentPaste
+import androidx.compose.material.icons.filled.GppGood
 import androidx.compose.material.icons.filled.Key
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.ui.text.input.KeyboardType
@@ -121,7 +122,10 @@ fun SettingsScreen(
         contract = ActivityResultContracts.StartActivityForResult()
     ) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
-            if (pendingVpnFor == "adult") {
+            if (pendingVpnFor == "scam") {
+                viewModel.toggleScamShield(true, context)
+                android.widget.Toast.makeText(context, "Scam Shield is on", android.widget.Toast.LENGTH_SHORT).show()
+            } else if (pendingVpnFor == "adult") {
                 viewModel.toggleAdultBlock(true, context)
                 android.widget.Toast.makeText(context, "18+ content blocking is on", android.widget.Toast.LENGTH_SHORT).show()
             } else {
@@ -769,6 +773,92 @@ fun SettingsScreen(
             }
         }
 
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // Scam Shield Card
+        Surface(
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(16.dp),
+            color = DeepSurface,
+            border = BorderStroke(1.dp, if (uiState.isScamShieldEnabled) EmeraldFocus.copy(alpha = 0.4f) else SubtleBorder)
+        ) {
+            Column(modifier = Modifier.padding(16.dp)) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(10.dp),
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Surface(
+                            shape = RoundedCornerShape(10.dp),
+                            color = if (uiState.isScamShieldEnabled) EmeraldFocus.copy(alpha = 0.15f) else CyanAccent.copy(alpha = 0.15f),
+                            modifier = Modifier.size(38.dp)
+                        ) {
+                            Box(contentAlignment = Alignment.Center) {
+                                Icon(
+                                    imageVector = Icons.Default.GppGood,
+                                    contentDescription = null,
+                                    tint = if (uiState.isScamShieldEnabled) EmeraldFocus else CyanAccent,
+                                    modifier = Modifier.size(20.dp)
+                                )
+                            }
+                        }
+                        Column {
+                            Text(
+                                text = "Scam Shield",
+                                fontSize = 15.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = TextPrimary
+                            )
+                            Text(
+                                text = "Blocks known scam, phishing and malware links before they load, in any browser or app.",
+                                fontSize = 12.sp,
+                                color = TextSecondary
+                            )
+                        }
+                    }
+
+                    Switch(
+                        checked = uiState.isScamShieldEnabled,
+                        onCheckedChange = { isChecked ->
+                            if (isChecked) {
+                                val vpnIntent = android.net.VpnService.prepare(context)
+                                if (vpnIntent != null) {
+                                    pendingVpnFor = "scam"
+                                    vpnLauncher.launch(vpnIntent)
+                                } else {
+                                    viewModel.toggleScamShield(true, context)
+                                    android.widget.Toast.makeText(context, "Scam Shield is on", android.widget.Toast.LENGTH_SHORT).show()
+                                }
+                            } else {
+                                viewModel.toggleScamShield(false, context)
+                                android.widget.Toast.makeText(context, "Scam Shield is off", android.widget.Toast.LENGTH_SHORT).show()
+                            }
+                        },
+                        colors = SwitchDefaults.colors(
+                            checkedThumbColor = ObsidianBg,
+                            checkedTrackColor = EmeraldFocus,
+                            uncheckedThumbColor = TextMuted,
+                            uncheckedTrackColor = DeepSurface
+                        )
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(10.dp))
+
+                Text(
+                    text = "It filters website lookups on your phone, so it catches links already known as dangerous. A brand-new scam can still get through, so never enter passwords or OTPs on a page you reached from a message.",
+                    fontSize = 11.sp,
+                    lineHeight = 15.sp,
+                    color = TextMuted
+                )
+            }
+        }
+
         Spacer(modifier = Modifier.height(28.dp))
 
         // Scheduled Routines Section
@@ -844,7 +934,7 @@ fun SettingsScreen(
                     Spacer(modifier = Modifier.width(12.dp))
                     Column(modifier = Modifier.weight(1f)) {
                         Text(
-                            text = "Aegis Focus • v1.4.0",
+                            text = "Aegis Focus • v1.5.0",
                             fontSize = 14.sp,
                             fontWeight = FontWeight.SemiBold,
                             color = TextPrimary

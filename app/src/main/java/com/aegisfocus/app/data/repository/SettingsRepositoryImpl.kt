@@ -168,6 +168,12 @@ class SettingsRepositoryImpl(
         prefs.edit().putBoolean(KEY_ADBLOCKER_VPN_ENABLED, enabled).apply()
     }
 
+    override fun isScamShieldEnabled(): Boolean = prefs.getBoolean(KEY_SCAM_SHIELD_ENABLED, false)
+
+    override fun setScamShieldEnabled(enabled: Boolean) {
+        prefs.edit().putBoolean(KEY_SCAM_SHIELD_ENABLED, enabled).apply()
+    }
+
     override fun isAdultContentBlockEnabled(): Boolean {
         return prefs.getBoolean(KEY_ADULT_BLOCK_ENABLED, false)
     }
@@ -194,6 +200,7 @@ class SettingsRepositoryImpl(
         private const val KEY_GRAYSCALE_FATIGUE_ENABLED = "grayscale_fatigue_enabled"
         private const val KEY_ADBLOCKER_VPN_ENABLED = "adblocker_vpn_enabled"
         private const val KEY_ADULT_BLOCK_ENABLED = "adult_block_enabled"
+        private const val KEY_SCAM_SHIELD_ENABLED = "scam_shield_enabled"
         private const val KEY_DAILY_FOCUS_GOAL_MINUTES = "daily_focus_goal_minutes"
     }
 }

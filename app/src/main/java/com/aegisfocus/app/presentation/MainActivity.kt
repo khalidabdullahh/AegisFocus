@@ -1,6 +1,11 @@
 package com.aegisfocus.app.presentation
 
+import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
+import androidx.lifecycle.lifecycleScope
+import com.aegisfocus.app.data.remote.AuthResult
+import kotlinx.coroutines.launch
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
@@ -34,6 +39,8 @@ class MainActivity : ComponentActivity() {
             Screen.Onboarding.route
         }
 
+        handleAuthIntent(intent)
+
         setContent {
             AegisFocusTheme(darkTheme = true) {
                 Box(
@@ -48,6 +55,27 @@ class MainActivity : ComponentActivity() {
                         startDestination = startDestination
                     )
                 }
+            }
+        }
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+        handleAuthIntent(intent)
+    }
+
+    /** Completes Google sign-in and email confirmation, which come back as aegisfocus://auth-callback. */
+    private fun handleAuthIntent(intent: Intent?) {
+        val uri = intent?.data ?: return
+        if (uri.scheme != "aegisfocus" || uri.host != "auth-callback") return
+        intent.data = null
+        val authService = (application as AegisApplication).container.supabaseAuthService
+        lifecycleScope.launch {
+            when (val result = authService.handleOAuthCallback(uri)) {
+                is AuthResult.Success -> Toast.makeText(this@MainActivity, "Signed in as ${result.user.email}", Toast.LENGTH_LONG).show()
+                is AuthResult.Error -> Toast.makeText(this@MainActivity, result.message, Toast.LENGTH_LONG).show()
+                else -> {}
             }
         }
     }
