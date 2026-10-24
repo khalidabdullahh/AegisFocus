@@ -54,5 +54,5 @@ Barakah uses Android's AccessibilityService API and UsageStats API strictly to d
 
 ### 🌐 Links & Resources:
 * **Developer**: Khalid Abdullah ([@khalidabdullahh](https://github.com/khalidabdullahh))
-* **Website**: [https://bproductive.vercel.app](https://bproductive.vercel.app)
-* **Privacy Policy**: [https://bproductive.vercel.app/privacy.html](https://bproductive.vercel.app/privacy.html)
+* **Website**: [https://aegisfocus.pages.dev/](https://aegisfocus.pages.dev/)
+* **Privacy Policy**: [https://aegisfocus.pages.dev/privacy.html](https://aegisfocus.pages.dev/privacy.html)

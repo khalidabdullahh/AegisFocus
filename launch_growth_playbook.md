@@ -37,7 +37,7 @@ So over the last few months, I built **ASR (Turn Time Into Progress)** — a loc
 ### 🎁 Early Beta Giveaway:
 To celebrate the initial release, **I'm giving away 100 Lifetime Pro license keys** to anyone who tests it out and leaves honest feedback or feature suggestions!
 
-👉 **Download APK & Website**: [https://bproductive.vercel.app](https://bproductive.vercel.app)
+👉 **Download APK & Website**: [https://aegisfocus.pages.dev/](https://aegisfocus.pages.dev/)
 👉 **Drop a comment below**, and I'll DM you a Lifetime Pro activation key!
 
 I'd love to hear your feedback on what features you want next!

@@ -7,8 +7,8 @@ import android.net.Uri
 /** Where customers go to buy a license key, download updates or visit site. */
 object ContactLinks {
     /** Official website and download URLs. */
-    const val WEBSITE_URL = "https://bproductive.vercel.app"
-    const val DOWNLOAD_PAGE_URL = "https://bproductive.vercel.app/download"
+    const val WEBSITE_URL = "https://aegisfocus.pages.dev/"
+    const val DOWNLOAD_PAGE_URL = "https://aegisfocus.pages.dev/download"
     const val GITHUB_RELEASES_URL = "https://github.com/khalidabdullahh/AegisFocus/releases/latest"
 
     /** WhatsApp number in international format without the plus sign (+880 1643-526721). */
