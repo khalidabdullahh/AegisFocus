@@ -31,7 +31,7 @@ class BootCompletedReceiver : BroadcastReceiver() {
                     ReminderScheduler.rescheduleAll(context)
 
                     // 4. Bring the system-wide AdBlocker back if it was on and already authorised
-                    if (container.settingsRepository.isAdBlockerVpnEnabled() &&
+                    if ((container.settingsRepository.isAdBlockerVpnEnabled() || container.settingsRepository.isScamShieldEnabled()) &&
                         android.net.VpnService.prepare(context) == null
                     ) {
                         com.aegisfocus.app.service.vpn.AegisAdBlockerVpnService.start(context)

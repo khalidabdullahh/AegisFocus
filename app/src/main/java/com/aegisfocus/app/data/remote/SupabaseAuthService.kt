@@ -71,7 +71,7 @@ class SupabaseAuthService(private val context: Context) {
         val cleanName = displayName.trim()
 
         try {
-            val url = URL("${SupabaseConfig.AUTH_ENDPOINT}/signup")
+            val url = URL("${SupabaseConfig.AUTH_ENDPOINT}/signup?redirect_to=${Uri.encode(REDIRECT_URI)}")
             val conn = url.openConnection() as HttpURLConnection
             conn.requestMethod = "POST"
             conn.setRequestProperty("apikey", SupabaseConfig.ANON_KEY)
@@ -111,7 +111,7 @@ class SupabaseAuthService(private val context: Context) {
                         displayName = cleanName.ifBlank { userEmail.substringBefore("@") },
                         accessToken = token
                     )
-                    saveSession(authUser)
+                    saveSession(authUser, json.optString("refresh_token", "").ifBlank { null })
 
                     DiscordNotifier.notifyUserAuth(
                         eventType = "Account Created (Auto-Confirmed)",
@@ -188,7 +188,7 @@ class SupabaseAuthService(private val context: Context) {
                     displayName = name.ifBlank { userEmail.substringBefore("@") },
                     accessToken = token
                 )
-                saveSession(authUser)
+                saveSession(authUser, json.optString("refresh_token", "").ifBlank { null })
 
                 DiscordNotifier.notifyUserAuth(
                     eventType = "User Signed In",
@@ -261,7 +261,7 @@ class SupabaseAuthService(private val context: Context) {
                 val token = json.optString("access_token", "")
 
                 val authUser = AuthUser(id = userId, email = email, displayName = name, accessToken = token)
-                saveSession(authUser)
+                saveSession(authUser, json.optString("refresh_token", "").ifBlank { null })
 
                 DiscordNotifier.notifyUserAuth(
                     eventType = "Google Sign-In (ID Token)",
@@ -286,7 +286,7 @@ class SupabaseAuthService(private val context: Context) {
      * Redirects back to `aegisfocus://auth-callback`.
      */
     fun launchBrowserGoogleAuth(activityContext: Context) {
-        val redirectUri = "aegisfocus://auth-callback"
+        val redirectUri = REDIRECT_URI
         val authUrl = "${SupabaseConfig.AUTH_ENDPOINT}/authorize?provider=google&redirect_to=${Uri.encode(redirectUri)}"
         val intent = Intent(Intent.ACTION_VIEW, Uri.parse(authUrl)).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK
@@ -357,7 +357,7 @@ class SupabaseAuthService(private val context: Context) {
                     ?: email.substringBefore("@")
 
                 val authUser = AuthUser(id = userId, email = email, displayName = name, accessToken = accessToken)
-                saveSession(authUser)
+                saveSession(authUser, params["refresh_token"])
 
                 DiscordNotifier.notifyUserAuth(
                     eventType = "OAuth Browser Callback Sign-In",
@@ -382,7 +382,7 @@ class SupabaseAuthService(private val context: Context) {
     suspend fun resendVerificationEmail(email: String): AuthResult = withContext(Dispatchers.IO) {
         val cleanEmail = email.trim().lowercase()
         try {
-            val url = URL("${SupabaseConfig.AUTH_ENDPOINT}/resend")
+            val url = URL("${SupabaseConfig.AUTH_ENDPOINT}/resend?redirect_to=${Uri.encode(REDIRECT_URI)}")
             val conn = url.openConnection() as HttpURLConnection
             conn.requestMethod = "POST"
             conn.setRequestProperty("apikey", SupabaseConfig.ANON_KEY)
@@ -419,6 +419,58 @@ class SupabaseAuthService(private val context: Context) {
     /**
      * Signs out and clears stored credentials.
      */
+    /**
+     * Returns an access token that is valid right now, refreshing it first when it is expired or
+     * about to expire. Blocking: call it from a background thread (all remote calls already are).
+     */
+    @Synchronized
+    fun freshAccessToken(): String? {
+        val user = _currentUser.value ?: return null
+        val token = user.accessToken
+        if (!token.isNullOrBlank() && !isJwtExpiring(token)) return token
+        return refreshSessionBlocking() ?: token
+    }
+
+    private fun isJwtExpiring(jwt: String): Boolean {
+        return try {
+            val payload = jwt.split(".")[1]
+            val bytes = android.util.Base64.decode(payload, android.util.Base64.URL_SAFE or android.util.Base64.NO_PADDING or android.util.Base64.NO_WRAP)
+            val exp = JSONObject(String(bytes, Charsets.UTF_8)).optLong("exp", 0L)
+            exp == 0L || exp - System.currentTimeMillis() / 1000 < 60
+        } catch (e: Exception) { false }
+    }
+
+    private fun refreshSessionBlocking(): String? {
+        val refresh = prefs.getString("auth_refresh_token", null) ?: return null
+        val user = _currentUser.value ?: return null
+        return try {
+            val conn = URL("${SupabaseConfig.AUTH_ENDPOINT}/token?grant_type=refresh_token").openConnection() as HttpURLConnection
+            conn.requestMethod = "POST"
+            conn.setRequestProperty("apikey", SupabaseConfig.ANON_KEY)
+            conn.setRequestProperty("Content-Type", "application/json")
+            conn.doOutput = true
+            conn.connectTimeout = 10000
+            conn.readTimeout = 10000
+            conn.outputStream.use { it.write(JSONObject().put("refresh_token", refresh).toString().toByteArray(Charsets.UTF_8)) }
+            val code = conn.responseCode
+            if (code in 200..299) {
+                val json = JSONObject(conn.inputStream.bufferedReader().use { it.readText() })
+                conn.disconnect()
+                val newToken = json.optString("access_token", "")
+                if (newToken.isBlank()) return null
+                saveSession(user.copy(accessToken = newToken), json.optString("refresh_token", "").ifBlank { null })
+                newToken
+            } else {
+                conn.disconnect()
+                Log.w(tag, "Token refresh failed ($code)")
+                null
+            }
+        } catch (e: Exception) {
+            Log.w(tag, "Token refresh error: ${e.message}")
+            null
+        }
+    }
+
     fun signOut() {
         prefs.edit().clear().apply()
         _currentUser.value = null
@@ -502,8 +554,9 @@ class SupabaseAuthService(private val context: Context) {
         saveSession(updated)
     }
 
-    private fun saveSession(user: AuthUser) {
+    private fun saveSession(user: AuthUser, refreshToken: String? = null) {
         prefs.edit()
+            .apply { if (!refreshToken.isNullOrBlank()) putString("auth_refresh_token", refreshToken) }
             .putString("auth_user_id", user.id)
             .putString("auth_user_email", user.email)
             .putString("auth_user_name", user.displayName)
@@ -542,6 +595,8 @@ class SupabaseAuthService(private val context: Context) {
     }
 
     companion object {
+        const val REDIRECT_URI = "aegisfocus://auth-callback"
+
         val SUPER_ADMIN_EMAILS = setOf(
             "seamafridi123456789@gmail.com"
         )

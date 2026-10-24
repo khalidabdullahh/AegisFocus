@@ -24,7 +24,7 @@ class SupabaseSyncService(
      */
     suspend fun syncStatsToCloud(): Boolean = withContext(Dispatchers.IO) {
         val user = authService.currentUser.value ?: return@withContext false
-        val token = user.accessToken ?: return@withContext false
+        val token = authService.freshAccessToken() ?: return@withContext false
 
         try {
             val xp = userXpDao.getXp() ?: return@withContext false

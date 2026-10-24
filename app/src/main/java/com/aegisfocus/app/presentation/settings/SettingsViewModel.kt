@@ -50,6 +50,7 @@ data class SettingsUiState(
     val isGrayscaleFatigueEnabled: Boolean = false,
     val isAdBlockerVpnEnabled: Boolean = false,
     val isAdultBlockEnabled: Boolean = false,
+    val isScamShieldEnabled: Boolean = false,
     val currentUser: com.aegisfocus.app.data.remote.AuthUser? = null
 )
 
@@ -138,6 +139,7 @@ class SettingsViewModel(
             isGrayscaleFatigueEnabled = settingsRepository.isGrayscaleFatigueEnabled(),
             isAdBlockerVpnEnabled = settingsRepository.isAdBlockerVpnEnabled(),
             isAdultBlockEnabled = settingsRepository.isAdultContentBlockEnabled(),
+            isScamShieldEnabled = settingsRepository.isScamShieldEnabled(),
             currentUser = user
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), SettingsUiState())
@@ -159,7 +161,12 @@ class SettingsViewModel(
         } else {
             // 18+ filtering runs through the same VPN, so it turns off with it
             settingsRepository.setAdultContentBlockEnabled(false)
-            com.aegisfocus.app.service.vpn.AegisAdBlockerVpnService.stop(context)
+            if (settingsRepository.isScamShieldEnabled()) {
+                // Scam Shield still needs the VPN: restart it on the scam-only DNS
+                com.aegisfocus.app.service.vpn.AegisAdBlockerVpnService.start(context)
+            } else {
+                com.aegisfocus.app.service.vpn.AegisAdBlockerVpnService.stop(context)
+            }
         }
         refreshPermissions()
     }
@@ -173,6 +180,17 @@ class SettingsViewModel(
         if (settingsRepository.isAdBlockerVpnEnabled()) {
             // Re-run start so the running VPN switches to the new DNS servers
             com.aegisfocus.app.service.vpn.AegisAdBlockerVpnService.start(context)
+        }
+        refreshPermissions()
+    }
+
+    /** Scam Shield uses its own DNS inside the same local VPN, so it can run without the ad blocker. */
+    fun toggleScamShield(enabled: Boolean, context: Context) {
+        settingsRepository.setScamShieldEnabled(enabled)
+        if (enabled || settingsRepository.isAdBlockerVpnEnabled()) {
+            com.aegisfocus.app.service.vpn.AegisAdBlockerVpnService.start(context)
+        } else {
+            com.aegisfocus.app.service.vpn.AegisAdBlockerVpnService.stop(context)
         }
         refreshPermissions()
     }
