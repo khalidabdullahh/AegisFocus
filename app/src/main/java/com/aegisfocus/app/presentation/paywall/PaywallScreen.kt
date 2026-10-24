@@ -458,7 +458,7 @@ fun PaywallScreen(
 @Composable
 private fun FeatureComparisonTable() {
     val features = listOf(
-        Triple("Strict Mode Duration", "Max 2 Hours", "Unlimited"),
+        Triple("Strict Mode Duration", "Max 3 Hours", "Unlimited"),
         Triple("Shielded Blocked Apps", "Max 3 Apps", "Unlimited"),
         Triple("Custom Focus Profiles", "Max 2 Profiles", "Unlimited"),
         Triple("Website & Domain Blocking", "Basic", "Advanced"),
