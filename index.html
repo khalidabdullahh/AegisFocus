@@ -4,1985 +4,630 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- ── Google Search Console Verification ────────────────────── -->
     <meta name="google-site-verification" content="sAEZCegxeQIFBoWMIlgFoe7OhUQ6kkp0AQWkDvS3AFA">
     <meta name="google-site-verification" content="c5763RMADMzYDlmgJn2K1dbwR_ELOn2yLNVllMG0jHI" />
-    <link rel="canonical" href="https://bproductive.vercel.app">
+    <link rel="canonical" href="https://asar.pages.dev/">
 
-    <!-- ── Aegis Focus Identity ──────────────────────────────────────────── -->
-    <title>Aegis Focus — Unbreakable Digital Discipline & Focus | Unbreakable Android App Blocker &amp; Focus System</title>
-    <meta name="description" content="Aegis Focus is an advanced on-device digital discipline and focus system for Android. Block distracting apps, activate unbypassable Strict Mode, automate recurring routines, and build unbreakable habits with 100% local-first privacy.">
-    <meta name="keywords" content="Aegis Focus, focus app, productivity, app blocker, strict mode, unbypassable app blocker, screen time tracker, digital discipline, deep work, pomodoro, local first focus, adhd focus app">
+    <title>Aegis Focus - Block Distractions, Build Discipline | Android Focus App</title>
+    <meta name="description" content="Aegis Focus is a calm, on-device focus app for Android. Block distracting apps, lock in Strict Mode, cut Shorts and Reels, block ads system-wide, and track a private Clean Streak. Free to start.">
+    <meta name="keywords" content="Aegis Focus, Android focus app, app blocker, strict mode, block shorts reels, ad blocker DNS, screen time, digital discipline, clean streak, deep work">
     <meta name="author" content="Khalid Abdullah">
-    <meta name="theme-color" content="#0A0D14">
+    <meta name="theme-color" content="#0E181D">
 
-    <!-- ── Open Graph ──────────────────────────────────────────────── -->
-    <meta property="og:title" content="Aegis Focus — Unbreakable Digital Discipline & Focus | Unbreakable Focus System">
-    <meta property="og:description" content="Protect your attention. Control distracting apps. Build real discipline. Aegis Focus is a local-first, unbypassable focus system for Android.">
+    <meta property="og:title" content="Aegis Focus - Block Distractions, Build Discipline">
+    <meta property="og:description" content="A calm, on-device focus app for Android: app blocking, Strict Mode, Shorts and Reels blocker, system-wide ad blocker and a private Clean Streak.">
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://bproductive.vercel.app">
-    <meta property="og:image" content="https://bproductive.vercel.app/og.png">
+    <meta property="og:url" content="https://asar.pages.dev/">
+    <meta property="og:image" content="https://asar.pages.dev/assets/aegis_logo_512.png">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Aegis Focus - Block Distractions, Build Discipline">
+    <meta name="twitter:description" content="A calm, on-device focus app for Android. Free to start.">
+    <meta name="twitter:image" content="https://asar.pages.dev/assets/aegis_logo_512.png">
 
-    <!-- ── Twitter / X Card ────────────────────────────────────────── -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Aegis Focus — Unbreakable Digital Discipline & Focus">
-    <meta name="twitter:description" content="Protect your attention. Control distracting apps. Build real discipline with on-device local privacy.">
-    <meta name="twitter:image" content="https://bproductive.vercel.app/og.png">
-
-        <!-- ── Favicon ────────────────────────────────────────────────── -->
     <link rel="shortcut icon" href="favicon.ico">
     <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16x16.png">
     <link rel="icon" type="image/png" href="assets/favicon.png">
     <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
 
-    <!-- ── Google Fonts: Inter ─────────────────────────────────────── -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 
-    <!-- ── Tailwind CSS ────────────────────────────────────────────── -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
-            darkMode: 'class',
             theme: {
                 extend: {
                     fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] },
                     colors: {
-                        asr: {
-                            bg:       '#0A0D14',
-                            surface:  '#111827',
-                            elevated: '#1A2235',
-                            border:   '#1E2D45',
-                            sky:      '#38BDF8',
-                            emerald:  '#10B981',
-                            red:      '#F87171',
-                            text:     '#F8FAFC',
-                            muted:    '#94A3B8',
-                            faint:    '#64748B',
-                        }
+                        bg: '#0E181D', surface: '#15242B', elevated: '#1C2F38', line: '#2B434D',
+                        sage: '#9CC5A1', teal: '#86C5B4', text: '#EEF2EE', muted: '#A8B9BC', faint: '#7C9094',
+                        alert: '#C77D7D'
                     }
                 }
             }
-        }
+        };
     </script>
-
-    <!-- ── Lucide Icons ────────────────────────────────────────────── -->
-    <script src="https://unpkg.com/lucide@latest"></script>
-
-    <!-- ── Alpine.js ───────────────────────────────────────────────── -->
-    <script defer src="https://unpkg.com/alpinejs@3.13.3/dist/cdn.min.js"></script>
+    <script src="https://unpkg.com/lucide@0.469.0/dist/umd/lucide.min.js"></script>
 
     <style>
-        /* Scrollbars */
-        ::-webkit-scrollbar { width: 5px; height: 5px; }
-        ::-webkit-scrollbar-track { background: #0A0D14; }
-        ::-webkit-scrollbar-thumb { background: #1E2D45; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #38BDF8; }
-
-        /* Ring timer animation */
-        .progress-ring-circle {
-            transition: stroke-dashoffset 0.35s;
-            transform: rotate(-90deg);
-            transform-origin: 50% 50%;
-        }
-
-        /* Glows */
-        .glow-sky     { box-shadow: 0 0 35px rgba(56, 189, 248, 0.15); }
-        .glow-emerald { box-shadow: 0 0 35px rgba(16, 185, 129, 0.15); }
-        .glow-red     { box-shadow: 0 0 35px rgba(248, 113, 113, 0.20); }
-
-        /* Gradient text */
+        html { scroll-padding-top: 76px; }
+        body { background: #0E181D; overflow-x: hidden; }
         .text-gradient {
-            background: linear-gradient(135deg, #38BDF8 0%, #818CF8 50%, #34D399 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            background: linear-gradient(120deg, #86C5B4 0%, #9CC5A1 55%, #D6E7B8 100%);
+            -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
         }
-
-        /* Toast animation */
-        @keyframes slideUp {
-            from { transform: translateY(20px); opacity: 0; }
-            to   { transform: translateY(0);    opacity: 1; }
+        .hero-bg {
+            background:
+                radial-gradient(60% 50% at 80% 0%, rgba(134,197,180,.16), transparent 70%),
+                radial-gradient(50% 40% at 0% 30%, rgba(156,197,161,.10), transparent 70%);
         }
-        .toast-enter { animation: slideUp 0.3s ease forwards; }
-
-        /* Subtle grid background */
-        .hero-grid {
-            background-image:
-                linear-gradient(rgba(56,189,248,0.035) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(56,189,248,0.035) 1px, transparent 1px);
-            background-size: 40px 40px;
-        }
-
-        /* Section fade-in on scroll */
-        .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.6s ease, transform 0.6s ease; }
-        .reveal.visible { opacity: 1; transform: translateY(0); }
-
-        /* Hide Alpine cloak */
-        [x-cloak] { display: none !important; }
+        .card { background: #15242B; border: 1px solid #2B434D; border-radius: 1.25rem; }
+        .card-hover { transition: transform .2s ease, border-color .2s ease; }
+        .card-hover:hover { transform: translateY(-3px); border-color: rgba(134,197,180,.55); }
+        .btn-primary { background: #9CC5A1; color: #0E181D; font-weight: 800; transition: transform .15s ease, filter .15s ease; }
+        .btn-primary:hover { filter: brightness(1.06); transform: translateY(-1px); }
+        .btn-ghost { border: 1px solid #2B434D; background: #15242B; font-weight: 700; transition: border-color .15s ease, background .15s ease; }
+        .btn-ghost:hover { border-color: #86C5B4; background: #1C2F38; }
+        .reveal { opacity: 0; transform: translateY(18px); transition: opacity .6s ease, transform .6s ease; }
+        .reveal.in { opacity: 1; transform: none; }
+        @media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; transition: none; } }
+        details > summary { list-style: none; cursor: pointer; }
+        details > summary::-webkit-details-marker { display: none; }
+        details[open] .chev { transform: rotate(180deg); }
+        .chev { transition: transform .2s ease; }
+        .phone { width: 272px; height: 548px; border-radius: 2.6rem; background: #0E181D; border: 8px solid #1C2F38; box-shadow: 0 30px 80px -20px rgba(0,0,0,.7), 0 0 0 1px #2B434D; }
+        .ring { background: conic-gradient(#9CC5A1 0 68%, #1C2F38 68% 100%); }
+        #sticky-cta { transform: translateY(120%); transition: transform .3s ease; }
+        #sticky-cta.show { transform: none; }
+        ::-webkit-scrollbar { width: 6px; } ::-webkit-scrollbar-track { background: #0E181D; } ::-webkit-scrollbar-thumb { background: #2B434D; border-radius: 4px; }
     </style>
 </head>
 
-<body class="bg-asr-bg text-asr-text font-sans antialiased"
-      x-data="asrApp()"
-      x-init="initApp()">
+<body class="text-text font-sans antialiased">
 
-<!-- ══════════════════════════════════════════════════════════════════
-     TOP ANNOUNCEMENT BAR
-════════════════════════════════════════════════════════════════════ -->
-<div class="bg-gradient-to-r from-asr-elevated via-asr-surface to-asr-elevated border-b border-asr-border/80 text-xs py-2 px-4 text-center text-asr-muted flex items-center justify-center gap-2">
-    <span class="inline-block w-2 h-2 rounded-full bg-asr-emerald animate-pulse"></span>
-    <span><strong>Aegis Focus v1.4.0 is Live:</strong> one-time license keys, new logo, Productivity tab, 18+ content blocking.</span>
-    <a href="download" class="text-asr-sky hover:underline font-bold ml-1 flex items-center gap-0.5">Download Latest APK &rarr;</a>
-</div>
-
-<!-- ══════════════════════════════════════════════════════════════════
-     NAVIGATION
-════════════════════════════════════════════════════════════════════ -->
-<header class="sticky top-0 z-50 border-b border-asr-border/60 backdrop-blur-xl bg-asr-bg/85 transition-all">
-    <div class="max-w-6xl mx-auto px-5 sm:px-8 h-18 py-2.5 flex items-center justify-between gap-4">
-
-        <!-- Logo & Brand (Large & Prominent) -->
-        <a href="index.html" class="flex items-center gap-3.5 group shrink-0">
-            <div class="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-asr-elevated border border-asr-border/80 flex items-center justify-center p-1.5 shadow-md group-hover:border-asr-sky/50 transition overflow-hidden">
-                <img src="assets/aegis_logo.png" alt="Aegis Focus Logo" class="w-full h-full object-contain">
-            </div>
-            <div class="flex items-center gap-2">
-                <span class="font-black text-xl sm:text-2xl tracking-tight text-white group-hover:text-asr-sky transition">Aegis Focus</span>
-                <span class="hidden sm:inline-block text-[10px] text-asr-sky font-extrabold px-2 py-0.5 rounded-full bg-asr-sky/15 border border-asr-sky/30 uppercase tracking-wider">SHIELD</span>
-            </div>
+<!-- HEADER -->
+<header class="sticky top-0 z-50 border-b border-line/70 bg-bg/85 backdrop-blur-xl">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-3">
+        <a href="/" class="flex items-center gap-2.5 shrink-0" aria-label="Aegis Focus home">
+            <img src="assets/favicon.png" alt="Aegis Focus logo" width="36" height="36" class="w-9 h-9 rounded-xl border border-line">
+            <span class="font-extrabold tracking-tight text-lg">Aegis Focus</span>
         </a>
 
-        <!-- Desktop Navigation Links -->
-        <nav class="hidden lg:flex items-center gap-6 text-xs font-semibold text-asr-muted">
-            <a href="#how-it-works" class="hover:text-asr-text transition">How It Works</a>
-            <a href="#features" class="hover:text-asr-text transition">Features</a>
-            <a href="#use-cases" class="hover:text-asr-text transition">Use Cases</a>
-            <a href="#comparison" class="hover:text-asr-text transition">Comparison</a>
-            <a href="#simulator" class="hover:text-asr-text transition text-asr-sky flex items-center gap-1">
-                <i data-lucide="play" class="w-3.5 h-3.5"></i> Live Demo
-            </a>
-            <a href="#pricing" class="hover:text-asr-text transition">Pricing</a>
-            <a href="#faq" class="hover:text-asr-text transition">FAQ</a>
-            <a href="guides.html" class="hover:text-asr-text transition flex items-center gap-1 text-asr-emerald">
-                <i data-lucide="book-open" class="w-3.5 h-3.5"></i> Guides
-            </a>
+        <nav class="hidden lg:flex items-center gap-6 text-sm font-semibold text-muted" aria-label="Main">
+            <a href="#features" class="hover:text-text transition">Features</a>
+            <a href="#how" class="hover:text-text transition">How it works</a>
+            <a href="#streak" class="hover:text-text transition">Clean Streak</a>
+            <a href="#privacy" class="hover:text-text transition">Privacy</a>
+            <a href="#pricing" class="hover:text-text transition">Pricing</a>
+            <a href="#install" class="hover:text-text transition">Install</a>
+            <a href="#faq" class="hover:text-text transition">FAQ</a>
         </nav>
 
-        <!-- CTA Buttons (Never Collapse or Wrap) -->
-        <div class="flex items-center gap-2.5 shrink-0">
-            <a href="AegisFocus-Latest.apk"
-               download="AegisFocus-Latest.apk"
-               class="bg-asr-emerald hover:bg-asr-emerald/90 text-asr-bg text-xs sm:text-sm font-extrabold px-4 py-2.5 rounded-xl transition shadow-lg shadow-asr-emerald/25 flex items-center gap-2 shrink-0 whitespace-nowrap">
-                <i data-lucide="download" class="w-4 h-4 shrink-0"></i>
-                <span>Get APK</span>
+        <div class="flex items-center gap-2">
+            <a href="https://github.com/khalidabdullahh/AegisFocus/releases/latest/download/AegisFocus-Latest.apk"
+               class="btn-primary rounded-xl px-4 py-2.5 text-sm inline-flex items-center gap-2" data-apk>
+                <i data-lucide="download" class="w-4 h-4"></i><span>Get APK</span>
             </a>
-            <button type="button"
-                    @click="showVersionModal = true"
-                    class="hidden sm:inline-flex bg-asr-elevated hover:bg-asr-border border border-asr-sky/30 hover:border-asr-sky text-asr-sky text-xs sm:text-sm font-bold px-3.5 py-2.5 rounded-xl transition items-center gap-1.5 shrink-0 whitespace-nowrap">
-                <i data-lucide="layers" class="w-4 h-4 shrink-0 text-asr-sky"></i>
-                <span>All Versions</span>
+            <button id="menu-btn" type="button" aria-label="Open menu" aria-expanded="false"
+                    class="lg:hidden btn-ghost rounded-xl w-10 h-10 inline-flex items-center justify-center">
+                <i data-lucide="menu" class="w-5 h-5"></i>
             </button>
-            <a href="#simulator"
-               class="hidden md:inline-flex bg-asr-elevated hover:bg-asr-border border border-asr-border text-asr-text text-xs sm:text-sm font-semibold px-3.5 py-2.5 rounded-xl transition shrink-0 whitespace-nowrap">
-                Simulator
-            </a>
+        </div>
+    </div>
+    <div id="mobile-menu" class="hidden lg:hidden border-t border-line/70 bg-bg">
+        <div class="max-w-6xl mx-auto px-4 py-3 grid grid-cols-2 gap-2 text-sm font-semibold">
+            <a href="#features" class="btn-ghost rounded-xl px-4 py-3">Features</a>
+            <a href="#how" class="btn-ghost rounded-xl px-4 py-3">How it works</a>
+            <a href="#streak" class="btn-ghost rounded-xl px-4 py-3">Clean Streak</a>
+            <a href="#privacy" class="btn-ghost rounded-xl px-4 py-3">Privacy</a>
+            <a href="#pricing" class="btn-ghost rounded-xl px-4 py-3">Pricing</a>
+            <a href="#install" class="btn-ghost rounded-xl px-4 py-3">Install</a>
+            <a href="#faq" class="btn-ghost rounded-xl px-4 py-3">FAQ</a>
+            <a href="guides.html" class="btn-ghost rounded-xl px-4 py-3">Guides</a>
         </div>
     </div>
 </header>
 
+<main>
 
-<!-- ══════════════════════════════════════════════════════════════════
-     HERO SECTION
-════════════════════════════════════════════════════════════════════ -->
-<section class="hero-grid min-h-[90vh] flex flex-col items-center justify-center pt-8 pb-16 px-5 text-center relative overflow-hidden">
+<!-- HERO -->
+<section class="hero-bg relative overflow-hidden">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 pt-10 pb-14 lg:pt-20 lg:pb-24 grid lg:grid-cols-2 gap-12 items-center">
+        <div class="text-center lg:text-left">
+            <p class="inline-flex items-center gap-2 rounded-full border border-teal/30 bg-teal/10 text-teal text-xs font-bold px-3.5 py-1.5">
+                <i data-lucide="shield-check" class="w-3.5 h-3.5"></i>
+                <span id="hero-badge">Android app, free to start</span>
+            </p>
+            <h1 class="mt-5 text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-[1.07]">
+                Take your attention back.
+                <span class="text-gradient block mt-1">Build real discipline.</span>
+            </h1>
+            <p class="mt-5 text-base sm:text-lg text-muted leading-relaxed max-w-xl mx-auto lg:mx-0">
+                Aegis Focus blocks the apps that pull you in, cuts Shorts and Reels, removes ads system-wide and locks your focus sessions so you cannot talk yourself out of them. Everything runs on your phone.
+            </p>
 
-    <!-- Ambient background glows -->
-    <div class="absolute -top-40 left-1/2 -translate-x-1/2 w-[700px] h-[700px] bg-asr-sky/6 rounded-full blur-3xl pointer-events-none"></div>
-    <div class="absolute top-1/2 -left-40 w-[450px] h-[450px] bg-asr-emerald/5 rounded-full blur-3xl pointer-events-none"></div>
-    <div class="absolute top-1/3 -right-40 w-[450px] h-[450px] bg-asr-red/5 rounded-full blur-3xl pointer-events-none"></div>
-
-    <div class="max-w-4xl mx-auto z-10 py-10 sm:py-16">
-
-        <!-- Top Pill Badge -->
-        <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-asr-sky/30 bg-asr-sky/10 text-asr-sky text-xs font-bold mb-8 tracking-wide">
-            <i data-lucide="shield-check" class="w-3.5 h-3.5"></i>
-            <span>The 100% Offline Digital Discipline & Focus Shield</span>
-        </div>
-
-        <!-- Main Headline -->
-        <h1 class="text-4xl sm:text-6xl md:text-7xl font-black tracking-tight leading-[1.08]">
-            Protect Your Attention.
-            <span class="text-gradient block mt-1.5">Unbreakable Digital Discipline.</span>
-        </h1>
-
-        <!-- English Subtitle (Bangla removed completely) -->
-        <p class="mt-6 text-base sm:text-lg text-asr-muted max-w-2xl mx-auto leading-relaxed">
-            The ultimate offline shield against unconscious doomscrolling. Lock down dopamine traps with unbypassable Strict Mode, 1-tap Private DNS AdBlocker, and reclaim up to 3 hours of deep focus every day.
-        </p>
-
-        <!-- CTAs Grid with Spacious 2-Tier Layout (Fixed Button Collapse) -->
-        <div class="mt-10 flex flex-col items-center gap-4">
-            
-            <!-- Tier 1: Primary Action Buttons -->
-            <div class="flex flex-col sm:flex-row items-center justify-center gap-4 w-full max-w-xl">
-                <!-- Primary Download Button -->
-                <a href="download"
-                   class="w-full sm:flex-1 bg-asr-emerald hover:bg-asr-emerald/90 text-asr-bg font-extrabold text-base px-8 py-4 rounded-2xl transition shadow-xl shadow-asr-emerald/30 flex items-center justify-center gap-2.5 group whitespace-nowrap">
-                    <i data-lucide="download" class="w-5 h-5 group-hover:-translate-y-0.5 transition shrink-0"></i>
-                    <span>Download Latest APK</span>
+            <div class="mt-8 flex flex-col sm:flex-row gap-3 justify-center lg:justify-start">
+                <a href="https://github.com/khalidabdullahh/AegisFocus/releases/latest/download/AegisFocus-Latest.apk" data-apk
+                   class="btn-primary rounded-2xl px-7 py-4 text-base inline-flex items-center justify-center gap-2.5 shadow-xl shadow-sage/20">
+                    <i data-lucide="download" class="w-5 h-5"></i>
+                    <span>Download APK <span id="hero-version" class="font-semibold opacity-70"></span></span>
                 </a>
-
-                <!-- All Versions Modal Button -->
-                <button type="button"
-                        @click="showVersionModal = true"
-                        class="w-full sm:w-auto bg-asr-surface hover:bg-asr-elevated border border-asr-sky/40 hover:border-asr-sky text-asr-sky font-bold text-base px-6 py-4 rounded-2xl transition flex items-center justify-center gap-2 whitespace-nowrap shadow-md">
-                    <i data-lucide="layers" class="w-5 h-5 shrink-0"></i>
-                    <span>All Releases &amp; Old APKs</span>
-                </button>
-            </div>
-
-            <!-- Tier 2: Secondary Quick Links -->
-            <div class="flex flex-wrap items-center justify-center gap-3 text-xs sm:text-sm text-asr-muted mt-2">
-                <a href="#simulator"
-                   class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-asr-elevated/80 hover:bg-asr-elevated border border-asr-border text-asr-text hover:text-asr-sky transition">
-                    <i data-lucide="play" class="w-4 h-4 fill-current text-asr-sky"></i>
-                    <span>Try Live Simulator</span>
+                <a href="#features" class="btn-ghost rounded-2xl px-7 py-4 text-base inline-flex items-center justify-center gap-2.5 text-teal">
+                    <i data-lucide="sparkles" class="w-5 h-5"></i><span>See what it does</span>
                 </a>
-                <a href="https://github.com/khalidabdullahh/AegisFocus"
-                   target="_blank"
-                   class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-asr-elevated/80 hover:bg-asr-elevated border border-asr-border text-asr-text hover:text-asr-emerald transition">
-                    <i data-lucide="github" class="w-4 h-4"></i>
-                    <span>GitHub Repository</span>
-                </a>
-                <span class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-asr-surface/80 border border-asr-border/50 text-asr-faint text-xs">
-                    <i data-lucide="shield-check" class="w-3.5 h-3.5 text-asr-emerald"></i>
-                    <span>100% Offline &bull; No Account</span>
-                </span>
             </div>
 
-        </div>
-
-        <!-- Google Play Protect Installation Tip (100% English) -->
-        <div class="mt-8 max-w-2xl mx-auto bg-asr-surface/90 border border-asr-sky/30 rounded-2xl p-4 text-left shadow-lg backdrop-blur-md">
-            <div class="flex items-start gap-3">
-                <div class="p-2 rounded-xl bg-asr-sky/10 text-asr-sky mt-0.5 shrink-0">
-                    <i data-lucide="info" class="w-5 h-5"></i>
-                </div>
-                <div>
-                    <h4 class="text-xs sm:text-sm font-bold text-asr-text flex items-center gap-2">
-                        <span>How to Install APK on Android (Play Protect Notice)</span>
-                        <span class="text-[10px] bg-asr-sky/20 text-asr-sky px-2 py-0.5 rounded-full font-semibold">1-Tap Tip</span>
-                    </h4>
-                    <p class="text-xs text-asr-muted mt-1 leading-relaxed">
-                        If Google Play Protect shows a popup (<em>"Unrecognised app"</em> or <em>"Blocked by Play Protect"</em>), simply tap:
-                        <strong class="text-asr-sky font-semibold">"More details"</strong> ➔ <strong class="text-asr-emerald font-semibold">"Install anyway"</strong>.
-                    </p>
-                    <p class="text-[11px] text-asr-faint mt-1.5">
-                        🛡️ <em>Why this happens:</em> Aegis Focus is 100% offline and standalone. Sideloaded APKs requiring Accessibility and Device Admin trigger standard Android security warnings until indexed on the Play Store.
-                    </p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Social proof / Trust Stats -->
-        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-14 max-w-3xl mx-auto text-left">
-            <div class="bg-asr-surface/70 border border-asr-border/80 rounded-2xl p-4">
-                <div class="text-2xl font-black text-asr-text">100%</div>
-                <div class="text-xs font-semibold text-asr-muted mt-0.5">On-Device Privacy</div>
-                <div class="text-[11px] text-asr-faint mt-1">Zero cloud tracking</div>
-            </div>
-            <div class="bg-asr-surface/70 border border-asr-border/80 rounded-2xl p-4">
-                <div class="text-2xl font-black text-asr-sky">Zero</div>
-                <div class="text-xs font-semibold text-asr-muted mt-0.5">Bypass Loopholes</div>
-                <div class="text-[11px] text-asr-faint mt-1">Anti-uninstall locked</div>
-            </div>
-            <div class="bg-asr-surface/70 border border-asr-border/80 rounded-2xl p-4">
-                <div class="text-2xl font-black text-asr-emerald">Auto</div>
-                <div class="text-xs font-semibold text-asr-muted mt-0.5">Repeating Routines</div>
-                <div class="text-[11px] text-asr-faint mt-1">Scheduled daily focus</div>
-            </div>
-            <div class="bg-asr-surface/70 border border-asr-border/80 rounded-2xl p-4">
-                <div class="text-2xl font-black text-asr-text">Free</div>
-                <div class="text-xs font-semibold text-asr-muted mt-0.5">Core Foundation</div>
-                <div class="text-[11px] text-asr-faint mt-1">Up to 2h Strict Mode</div>
-            </div>
-        </div>
-    </div>
-</section>
-
-
-<!-- ══════════════════════════════════════════════════════════════════
-     THE PROBLEM: THE MODERN ATTENTION CRISIS
-════════════════════════════════════════════════════════════════════ -->
-<section class="py-20 px-5 max-w-5xl mx-auto reveal" id="problem">
-    <div class="text-center max-w-3xl mx-auto">
-        <p class="text-asr-red text-xs font-bold tracking-widest uppercase mb-3 flex items-center justify-center gap-1.5">
-            <i data-lucide="alert-triangle" class="w-3.5 h-3.5"></i> The Attention Crisis
-        </p>
-        <h2 class="text-3xl sm:text-4xl font-extrabold text-asr-text leading-tight">
-            Your attention is being weaponized against your future.
-        </h2>
-        <p class="mt-4 text-asr-muted text-sm sm:text-base leading-relaxed">
-            Modern social feeds, algorithmically engineered short videos, and push notifications are designed by hundreds of behavioral engineers to keep your dopamine loop active. Willpower alone cannot compete against a multi-billion dollar algorithm.
-        </p>
-    </div>
-
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mt-12">
-        <div class="bg-asr-surface border border-asr-border rounded-2xl p-6 relative overflow-hidden">
-            <div class="text-4xl font-black text-asr-red">4.8h</div>
-            <div class="text-base font-bold text-asr-text mt-2">Average Daily Screen Time</div>
-            <p class="text-xs text-asr-muted mt-2 leading-relaxed">
-                Over 33 hours every week disappear into mindless doomscrolling on TikTok, Reels, YouTube Shorts, and feeds.
-            </p>
-            <div class="text-[10px] text-asr-faint font-semibold uppercase tracking-wider mt-4">Data: DataReportal Global Report</div>
-        </div>
-
-        <div class="bg-asr-surface border border-asr-border rounded-2xl p-6 relative overflow-hidden">
-            <div class="text-4xl font-black text-asr-red">23m</div>
-            <div class="text-base font-bold text-asr-text mt-2">Lost per Interruption</div>
-            <p class="text-xs text-asr-muted mt-2 leading-relaxed">
-                University of California research shows it takes an average of 23 minutes and 15 seconds to regain deep flow state after a single phone ping.
-            </p>
-            <div class="text-[10px] text-asr-faint font-semibold uppercase tracking-wider mt-4">Research: UC Irvine Attention Study</div>
-        </div>
-
-        <div class="bg-asr-surface border border-asr-border rounded-2xl p-6 relative overflow-hidden">
-            <div class="text-4xl font-black text-asr-red">150+</div>
-            <div class="text-base font-bold text-asr-text mt-2">Daily Unconscious Phone Unlocks</div>
-            <p class="text-xs text-asr-muted mt-2 leading-relaxed">
-                Most phone pickups happen out of sub-conscious habit and boredom reflex rather than conscious intent or necessity.
-            </p>
-            <div class="text-[10px] text-asr-faint font-semibold uppercase tracking-wider mt-4">Metric: Habitual Loop Analytics</div>
-        </div>
-    </div>
-</section>
-
-
-<!-- ══════════════════════════════════════════════════════════════════
-     HOW BARAKAH WORKS (3-STEP SYSTEM)
-════════════════════════════════════════════════════════════════════ -->
-<section id="how-it-works" class="py-24 px-5 bg-asr-surface border-y border-asr-border reveal">
-    <div class="max-w-6xl mx-auto">
-        <div class="text-center mb-16">
-            <p class="text-asr-sky text-xs font-bold tracking-widest uppercase mb-3">How Aegis Focus Works</p>
-            <h2 class="text-3xl sm:text-4xl font-extrabold text-asr-text">A 3-Step Behavioral Defense System</h2>
-            <p class="text-asr-muted text-sm mt-3 max-w-xl mx-auto">
-                Aegis Focus replaces weak willpower with structural friction and unbreakable guardrails.
-            </p>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 relative">
-            <!-- Step 1 -->
-            <div class="bg-asr-bg border border-asr-border rounded-2xl p-7 flex flex-col justify-between hover:border-asr-sky/40 transition">
-                <div>
-                    <div class="w-12 h-12 rounded-xl bg-asr-sky/10 border border-asr-sky/20 flex items-center justify-center text-asr-sky font-black text-xl mb-5">
-                        01
-                    </div>
-                    <h3 class="text-lg font-bold text-asr-text">Select Shields &amp; Routines</h3>
-                    <p class="text-sm text-asr-muted mt-3 leading-relaxed">
-                        Pick your distracting applications (social media, video streaming, mobile games) or configure automated weekly routines (e.g. 9 AM–12 PM Mon–Fri).
-                    </p>
-                </div>
-                <div class="mt-6 pt-4 border-t border-asr-border/60 flex items-center gap-2 text-xs text-asr-sky font-semibold">
-                    <i data-lucide="check-circle" class="w-4 h-4"></i> Live reactive app chips
-                </div>
-            </div>
-
-            <!-- Step 2 -->
-            <div class="bg-asr-bg border border-asr-border rounded-2xl p-7 flex flex-col justify-between hover:border-asr-sky/40 transition">
-                <div>
-                    <div class="w-12 h-12 rounded-xl bg-asr-red/10 border border-asr-red/20 flex items-center justify-center text-asr-red font-black text-xl mb-5">
-                        02
-                    </div>
-                    <h3 class="text-lg font-bold text-asr-text">Lock In with Strict Mode</h3>
-                    <p class="text-sm text-asr-muted mt-3 leading-relaxed">
-                        Choose your duration and commit. Under Strict Mode, Device Administrator protection prevents changing rules, force-closing, or uninstalling until the timer expires.
-                    </p>
-                </div>
-                <div class="mt-6 pt-4 border-t border-asr-border/60 flex items-center gap-2 text-xs text-asr-red font-semibold">
-                    <i data-lucide="lock" class="w-4 h-4"></i> Zero bypass loopholes
-                </div>
-            </div>
-
-            <!-- Step 3 -->
-            <div class="bg-asr-bg border border-asr-border rounded-2xl p-7 flex flex-col justify-between hover:border-asr-sky/40 transition">
-                <div>
-                    <div class="w-12 h-12 rounded-xl bg-asr-emerald/10 border border-asr-emerald/20 flex items-center justify-center text-asr-emerald font-black text-xl mb-5">
-                        03
-                    </div>
-                    <h3 class="text-lg font-bold text-asr-text">Reclaim Discipline &amp; Flow</h3>
-                    <p class="text-sm text-asr-muted mt-3 leading-relaxed">
-                        Build deep work streaks, earn XP, and watch your transparent Discipline Score climb from 10 to 100 with zero cloud telemetry.
-                    </p>
-                </div>
-                <div class="mt-6 pt-4 border-t border-asr-border/60 flex items-center gap-2 text-xs text-asr-emerald font-semibold">
-                    <i data-lucide="trending-up" class="w-4 h-4"></i> Real behavioral transformation
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-
-<!-- ══════════════════════════════════════════════════════════════════
-     DEEP DIVE: CORE ARCHITECTURAL FEATURES
-════════════════════════════════════════════════════════════════════ -->
-<section id="features" class="py-24 px-5 max-w-6xl mx-auto reveal">
-    <div class="text-center mb-16">
-        <p class="text-asr-sky text-xs font-bold tracking-widest uppercase mb-3">Architectural Pillars</p>
-        <h2 class="text-3xl sm:text-4xl font-extrabold text-asr-text">Engineered for Uncompromising Focus</h2>
-        <p class="text-asr-muted text-sm mt-3 max-w-xl mx-auto">
-            Every feature in Aegis Focus is built ground-up on Android's native APIs for maximum reliability and absolute privacy.
-        </p>
-    </div>
-
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-
-        <!-- 1. Strict Mode Anti-Uninstall -->
-        <div class="bg-asr-surface border border-asr-border rounded-2xl p-7 hover:border-asr-red/40 transition group">
-            <div class="w-12 h-12 bg-asr-red/10 border border-asr-red/20 rounded-xl flex items-center justify-center mb-5 group-hover:bg-asr-red/20 transition text-asr-red">
-                <i data-lucide="shield-alert" class="w-6 h-6"></i>
-            </div>
-            <div class="flex items-center gap-2">
-                <h3 class="font-bold text-lg text-asr-text">Unbreakable Strict Mode</h3>
-                <span class="bg-asr-red/10 text-asr-red text-[10px] font-bold px-2 py-0.5 rounded">CORE</span>
-            </div>
-            <p class="text-asr-muted text-sm mt-3 leading-relaxed">
-                When Strict Mode is active, Aegis Focus engages Android Device Administration. You cannot uninstall the app, cancel sessions impulsively, or disable accessibility until the timer finishes.
-            </p>
-            <ul class="mt-4 space-y-1.5 text-xs text-asr-faint">
-                <li class="flex items-center gap-1.5"><span class="text-asr-red font-bold">&bull;</span> Free tier: up to 2 hours &amp; 3 apps</li>
-                <li class="flex items-center gap-1.5"><span class="text-asr-red font-bold">&bull;</span> Pro tier: up to 12h / unlimited</li>
+            <ul class="mt-6 flex flex-wrap gap-x-5 gap-y-2 justify-center lg:justify-start text-xs sm:text-sm text-muted">
+                <li class="inline-flex items-center gap-1.5"><i data-lucide="check" class="w-4 h-4 text-sage"></i>No ads</li>
+                <li class="inline-flex items-center gap-1.5"><i data-lucide="check" class="w-4 h-4 text-sage"></i>Android 8.0 or newer</li>
+                <li class="inline-flex items-center gap-1.5"><i data-lucide="check" class="w-4 h-4 text-sage"></i><span id="hero-size">Small download</span></li>
+                <li class="inline-flex items-center gap-1.5"><i data-lucide="check" class="w-4 h-4 text-sage"></i>Your data stays on your phone</li>
             </ul>
         </div>
 
-        <!-- 2. Recurring Scheduled Routines -->
-        <div class="bg-asr-surface border border-asr-border rounded-2xl p-7 hover:border-asr-sky/40 transition group">
-            <div class="w-12 h-12 bg-asr-sky/10 border border-asr-sky/20 rounded-xl flex items-center justify-center mb-5 group-hover:bg-asr-sky/20 transition text-asr-sky">
-                <i data-lucide="calendar-check" class="w-6 h-6"></i>
-            </div>
-            <div class="flex items-center gap-2">
-                <h3 class="font-bold text-lg text-asr-text">Automated Looping Routines</h3>
-                <span class="bg-asr-sky/10 text-asr-sky text-[10px] font-bold px-2 py-0.5 rounded">NEW</span>
-            </div>
-            <p class="text-asr-muted text-sm mt-3 leading-relaxed">
-                Define recurring focus blocks (e.g. 9:00 AM–12:00 PM every weekday). Android AlarmManager exact scheduling triggers Strict Mode automatically across weeks without daily setup.
-            </p>
-            <ul class="mt-4 space-y-1.5 text-xs text-asr-faint">
-                <li class="flex items-center gap-1.5"><span class="text-asr-sky font-bold">&bull;</span> Day-of-week bitmask engine</li>
-                <li class="flex items-center gap-1.5"><span class="text-asr-sky font-bold">&bull;</span> Background WorkManager watchdog</li>
-            </ul>
-        </div>
-
-        <!-- 3. Adaptive Friction & Mindful Pause -->
-        <div class="bg-asr-surface border border-asr-border rounded-2xl p-7 hover:border-asr-emerald/40 transition group">
-            <div class="w-12 h-12 bg-asr-emerald/10 border border-asr-emerald/20 rounded-xl flex items-center justify-center mb-5 group-hover:bg-asr-emerald/20 transition text-asr-emerald">
-                <i data-lucide="brain" class="w-6 h-6"></i>
-            </div>
-            <div class="flex items-center gap-2">
-                <h3 class="font-bold text-lg text-asr-text">Adaptive Psychological Friction</h3>
-                <span class="bg-asr-emerald/10 text-asr-emerald text-[10px] font-bold px-2 py-0.5 rounded">PRO</span>
-            </div>
-            <p class="text-asr-muted text-sm mt-3 leading-relaxed">
-                Opening blocked apps triggers a calming breathing countdown and an intention prompt: <em>"Why are you opening this?"</em> Repeated attempts escalate delay from 5s up to 30s.
-            </p>
-            <ul class="mt-4 space-y-1.5 text-xs text-asr-faint">
-                <li class="flex items-center gap-1.5"><span class="text-asr-emerald font-bold">&bull;</span> Breaks automatic reflex loops</li>
-                <li class="flex items-center gap-1.5"><span class="text-asr-emerald font-bold">&bull;</span> Mindful reason logging</li>
-            </ul>
-        </div>
-
-        <!-- 4. 100% On-Device Privacy -->
-        <div class="bg-asr-surface border border-asr-border rounded-2xl p-7 hover:border-asr-emerald/40 transition group">
-            <div class="w-12 h-12 bg-asr-emerald/10 border border-asr-emerald/20 rounded-xl flex items-center justify-center mb-5 group-hover:bg-asr-emerald/20 transition text-asr-emerald">
-                <i data-lucide="lock" class="w-6 h-6"></i>
-            </div>
-            <div class="flex items-center gap-2">
-                <h3 class="font-bold text-lg text-asr-text">100% On-Device Privacy</h3>
-                <span class="bg-asr-emerald/10 text-asr-emerald text-[10px] font-bold px-2 py-0.5 rounded">ZERO CLOUD</span>
-            </div>
-            <p class="text-asr-muted text-sm mt-3 leading-relaxed">
-                No accounts required. No server calls. All focus logs, usage stats, and app lists live in a local SQLite Room database on your phone and nowhere else in the world.
-            </p>
-            <ul class="mt-4 space-y-1.5 text-xs text-asr-faint">
-                <li class="flex items-center gap-1.5"><span class="text-asr-emerald font-bold">&bull;</span> Zero advertising telemetry</li>
-                <li class="flex items-center gap-1.5"><span class="text-asr-emerald font-bold">&bull;</span> Works 100% offline in Airplane Mode</li>
-            </ul>
-        </div>
-
-        <!-- 5. Transparent Discipline Score -->
-        <div class="bg-asr-surface border border-asr-border rounded-2xl p-7 hover:border-asr-sky/40 transition group">
-            <div class="w-12 h-12 bg-asr-sky/10 border border-asr-sky/20 rounded-xl flex items-center justify-center mb-5 group-hover:bg-asr-sky/20 transition text-asr-sky">
-                <i data-lucide="sparkles" class="w-6 h-6"></i>
-            </div>
-            <div class="flex items-center gap-2">
-                <h3 class="font-bold text-lg text-asr-text">Discipline Score &amp; XP</h3>
-                <span class="bg-asr-sky/10 text-asr-sky text-[10px] font-bold px-2 py-0.5 rounded">GAMIFIED</span>
-            </div>
-            <p class="text-asr-muted text-sm mt-3 leading-relaxed">
-                A transparent 10–100 behavioral score. Base 80 + consistency (+10) + streak (+5) minus penalties for block attempts and emergency breakouts. Level up from Starter to Iron Will.
-            </p>
-            <ul class="mt-4 space-y-1.5 text-xs text-asr-faint">
-                <li class="flex items-center gap-1.5"><span class="text-asr-sky font-bold">&bull;</span> Documented transparent formula</li>
-                <li class="flex items-center gap-1.5"><span class="text-asr-sky font-bold">&bull;</span> Unlockable achievement badges</li>
-            </ul>
-        </div>
-
-        <!-- 6. Live Reactive App Selector -->
-        <div class="bg-asr-surface border border-asr-border rounded-2xl p-7 hover:border-asr-sky/40 transition group">
-            <div class="w-12 h-12 bg-asr-sky/10 border border-asr-sky/20 rounded-xl flex items-center justify-center mb-5 group-hover:bg-asr-sky/20 transition text-asr-sky">
-                <i data-lucide="layout-grid" class="w-6 h-6"></i>
-            </div>
-            <div class="flex items-center gap-2">
-                <h3 class="font-bold text-lg text-asr-text">Live Reactive App Shields</h3>
-                <span class="bg-asr-sky/10 text-asr-sky text-[10px] font-bold px-2 py-0.5 rounded">INSTANT</span>
-            </div>
-            <p class="text-asr-muted text-sm mt-3 leading-relaxed">
-                See all shielded apps live in real-time before starting your focus session. Quick-add suggestions, one-tap removal chips, and instant category filters make setup effortless.
-            </p>
-            <ul class="mt-4 space-y-1.5 text-xs text-asr-faint">
-                <li class="flex items-center gap-1.5"><span class="text-asr-sky font-bold">&bull;</span> Live Jetpack Compose StateFlow</li>
-                <li class="flex items-center gap-1.5"><span class="text-asr-sky font-bold">&bull;</span> One-tap remove/add chips</li>
-            </ul>
-        </div>
-
-    </div>
-</section>
-
-
-<!-- ══════════════════════════════════════════════════════════════════
-     WHO IS BARAKAH FOR? (PERSONAS / USE CASES)
-════════════════════════════════════════════════════════════════════ -->
-<section id="use-cases" class="py-24 px-5 bg-asr-surface border-y border-asr-border reveal">
-    <div class="max-w-6xl mx-auto">
-        <div class="text-center mb-16">
-            <p class="text-asr-sky text-xs font-bold tracking-widest uppercase mb-3">Tailored Discipline</p>
-            <h2 class="text-3xl sm:text-4xl font-extrabold text-asr-text">Built For Those Who Value Their Time</h2>
-            <p class="text-asr-muted text-sm mt-3 max-w-xl mx-auto">
-                Discover how individuals in high-focus disciplines use Aegis Focus to outperform distractions.
-            </p>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
-            <!-- Persona 1: Developers -->
-            <div class="bg-asr-bg border border-asr-border rounded-2xl p-6">
-                <div class="text-3xl mb-3">💻</div>
-                <h3 class="font-bold text-base text-asr-text">Software Engineers</h3>
-                <div class="text-xs text-asr-sky font-semibold mt-1">Deep Flow Retention</div>
-                <p class="text-xs text-asr-muted mt-3 leading-relaxed">
-                    Block YouTube, Slack, Twitter, and Reddit during coding blocks. Maintain mental context without breaking complex problem-solving architectures.
-                </p>
-            </div>
-
-            <!-- Persona 2: Students -->
-            <div class="bg-asr-bg border border-asr-border rounded-2xl p-6">
-                <div class="text-3xl mb-3">🎓</div>
-                <h3 class="font-bold text-base text-asr-text">Students &amp; Aspirants</h3>
-                <div class="text-xs text-asr-emerald font-semibold mt-1">Exam &amp; Study Marathons</div>
-                <p class="text-xs text-asr-muted mt-3 leading-relaxed">
-                    Preparing for BCS, Medical, SAT, or University finals? Lock down short-form video reels and games for 2–4 hours of uninterrupted reading.
-                </p>
-            </div>
-
-            <!-- Persona 3: ADHD -->
-            <div class="bg-asr-bg border border-asr-border rounded-2xl p-6">
-                <div class="text-3xl mb-3">🧠</div>
-                <h3 class="font-bold text-base text-asr-text">ADHD &amp; Dopamine Reset</h3>
-                <div class="text-xs text-asr-sky font-semibold mt-1">Friction &amp; Accountability</div>
-                <p class="text-xs text-asr-muted mt-3 leading-relaxed">
-                    When impulse control is hard, Aegis Focus provides external structure with adaptive friction, countdown delays, and visual streak trackers.
-                </p>
-            </div>
-
-            <!-- Persona 4: Sleep / Wellness -->
-            <div class="bg-asr-bg border border-asr-border rounded-2xl p-6">
-                <div class="text-3xl mb-3">🌙</div>
-                <h3 class="font-bold text-base text-asr-text">Night Calm &amp; Sleep</h3>
-                <div class="text-xs text-asr-red font-semibold mt-1">Revenge Procrastination Cure</div>
-                <p class="text-xs text-asr-muted mt-3 leading-relaxed">
-                    Set a routine from 10:30 PM to 7:00 AM every night. Aegis Focus locks all social media automatically so your brain can wind down for deep sleep.
-                </p>
-            </div>
-        </div>
-    </div>
-</section>
-
-
-<!-- ══════════════════════════════════════════════════════════════════
-     INTERACTIVE APP SIMULATOR
-════════════════════════════════════════════════════════════════════ -->
-<section id="simulator" class="py-24 px-5 reveal">
-    <div class="max-w-6xl mx-auto">
-        <div class="text-center mb-12">
-            <p class="text-asr-faint text-xs font-bold tracking-widest uppercase mb-3">Interactive Preview</p>
-            <h2 class="text-3xl sm:text-4xl font-bold text-asr-text">Experience Aegis Focus In Your Browser</h2>
-            <p class="text-asr-muted text-sm mt-3 max-w-lg mx-auto">This simulator runs the exact state machine and logic powering the native Android application.</p>
-        </div>
-
+        <!-- Phone illustration -->
         <div class="flex flex-col items-center">
-
-            <!-- Simulator Control Bar -->
-            <div class="flex items-center gap-3 mb-5 flex-wrap justify-center">
-                <div class="flex items-center gap-2 bg-asr-surface border border-asr-border px-3.5 py-1.5 rounded-lg text-xs">
-                    <span class="w-2 h-2 rounded-full bg-asr-emerald animate-pulse"></span>
-                    <span class="font-semibold text-asr-muted">Aegis Focus On-Device Demo</span>
+            <div class="phone relative overflow-hidden" aria-hidden="true">
+                <div class="px-4 pt-6 pb-3">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-[11px] text-faint">Good focus</p>
+                            <p class="text-base font-extrabold leading-tight">Aegis Focus</p>
+                        </div>
+                        <img src="assets/favicon.png" class="w-8 h-8 rounded-lg border border-line" alt="">
+                    </div>
+                    <div class="mt-3 flex gap-2">
+                        <span class="rounded-full bg-elevated border border-line text-[10px] font-bold px-2.5 py-1 text-teal">Discipline</span>
+                        <span class="rounded-full bg-elevated border border-line text-[10px] font-bold px-2.5 py-1 text-sage">Level</span>
+                    </div>
                 </div>
-                <button @click="simulateOpenBlockedApp()"
-                        class="bg-asr-red/10 hover:bg-asr-red/20 border border-asr-red/30 text-asr-red px-3.5 py-1.5 rounded-lg text-xs font-semibold transition flex items-center gap-1.5">
-                    <i data-lucide="shield-alert" class="w-3.5 h-3.5"></i>
-                    Simulate Distraction Attempt
-                </button>
+                <div class="mx-4 rounded-2xl bg-surface border border-line p-4 flex flex-col items-center">
+                    <div class="ring w-32 h-32 rounded-full grid place-items-center">
+                        <div class="w-[104px] h-[104px] rounded-full bg-surface grid place-items-center text-center">
+                            <div><p class="text-2xl font-black">25:00</p><p class="text-[10px] text-faint">Strict Mode</p></div>
+                        </div>
+                    </div>
+                    <div class="mt-3 w-full rounded-xl bg-sage text-bg text-center text-xs font-extrabold py-2.5">Start focus session</div>
+                </div>
+                <div class="mx-4 mt-3 grid grid-cols-2 gap-2">
+                    <div class="rounded-xl bg-surface border border-line p-3"><p class="text-[10px] text-faint">Shorts / Reels</p><p class="text-xs font-bold text-sage mt-0.5">Blocked</p></div>
+                    <div class="rounded-xl bg-surface border border-line p-3"><p class="text-[10px] text-faint">Ad blocker</p><p class="text-xs font-bold text-sage mt-0.5">On</p></div>
+                </div>
+                <div class="mx-4 mt-2 rounded-xl bg-surface border border-line p-3 flex items-center gap-3">
+                    <span class="w-8 h-8 rounded-full bg-[#CD7F32]/20 text-[#E0A06A] grid place-items-center"><i data-lucide="shield" class="w-4 h-4"></i></span>
+                    <div class="flex-1"><p class="text-xs font-bold">Bronze shield</p><div class="mt-1.5 h-1.5 rounded-full bg-elevated overflow-hidden"><div class="h-full w-1/3 bg-sage rounded-full"></div></div></div>
+                </div>
+                <div class="absolute bottom-0 inset-x-0 h-14 bg-surface border-t border-line flex items-center justify-around px-3">
+                    <i data-lucide="shield" class="w-5 h-5 text-teal"></i>
+                    <i data-lucide="hourglass" class="w-5 h-5 text-faint"></i>
+                    <i data-lucide="layout-grid" class="w-5 h-5 text-faint"></i>
+                    <i data-lucide="list-checks" class="w-5 h-5 text-faint"></i>
+                    <i data-lucide="settings" class="w-5 h-5 text-faint"></i>
+                </div>
             </div>
-
-            <!-- Phone Shell -->
-            <div class="w-full max-w-[360px] h-[780px] max-h-[90vh] bg-asr-bg border-[3px] border-asr-elevated rounded-[44px] shadow-2xl overflow-hidden flex flex-col relative glow-sky">
-
-                <!-- Status Bar -->
-                <div class="h-10 bg-asr-bg px-6 pt-2 flex items-center justify-between text-xs text-asr-faint font-medium z-20 shrink-0">
-                    <span x-text="currentTimeStr">09:41</span>
-                    <div class="w-20 h-3.5 bg-asr-surface rounded-full flex items-center justify-center">
-                        <div class="w-2 h-2 rounded-full bg-asr-bg mr-1.5"></div>
-                        <div class="w-1.5 h-1.5 rounded-full bg-asr-elevated"></div>
-                    </div>
-                    <div class="flex items-center gap-1.5">
-                        <i data-lucide="wifi" class="w-3.5 h-3.5 text-asr-muted"></i>
-                        <i data-lucide="battery-medium" class="w-4 h-4 text-asr-muted"></i>
-                    </div>
-                </div>
-
-                <!-- Scrollable Content -->
-                <div class="flex-1 overflow-y-auto px-5 pb-20 pt-2 relative">
-
-                    <!-- ── TAB: HOME ────────────────────────────────── -->
-                    <section x-show="currentTab === 'home'"
-                             x-transition:enter="transition ease-out duration-200"
-                             x-transition:enter-start="opacity-0 translate-y-1">
-
-                        <!-- Header -->
-                        <div class="flex items-center justify-between mt-2">
-                            <div>
-                                <p class="text-[10px] uppercase tracking-widest font-bold text-asr-sky" x-text="todayDateStr"></p>
-                                <h1 class="text-xl font-bold text-asr-text tracking-tight" x-text="greeting"></h1>
-                            </div>
-                            <div class="w-9 h-9 rounded-full bg-asr-elevated border border-asr-border flex items-center justify-center">
-                                <svg width="18" height="18" viewBox="0 0 28 28" fill="none">
-                                    <path d="M9 20L14 8L19 20" stroke="#38BDF8" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
-                                    <path d="M10.8 16.5H17.2" stroke="#38BDF8" stroke-width="1.8" stroke-linecap="round"/>
-                                </svg>
-                            </div>
-                        </div>
-
-                        <!-- Discipline Score + XP row -->
-                        <div class="grid grid-cols-2 gap-2.5 mt-4">
-                            <div class="bg-asr-surface border border-asr-border rounded-2xl p-3">
-                                <div class="text-[10px] font-bold tracking-wider text-asr-faint uppercase">Score</div>
-                                <div class="text-2xl font-black mt-1"
-                                     :class="disciplineScore >= 80 ? 'text-asr-emerald' : disciplineScore >= 60 ? 'text-asr-sky' : 'text-asr-red'"
-                                     x-text="disciplineScore"></div>
-                                <div class="text-[10px] text-asr-faint">/100 discipline</div>
-                            </div>
-                            <div class="bg-asr-surface border border-asr-border rounded-2xl p-3">
-                                <div class="text-[10px] font-bold tracking-wider text-asr-faint uppercase">Streak</div>
-                                <div class="text-2xl font-black text-asr-text mt-1" x-text="streakDays + 'd'"></div>
-                                <div class="text-[10px] text-asr-faint">🔥 active streak</div>
-                            </div>
-                        </div>
-
-                        <!-- Active session hero or start CTA -->
-                        <div class="mt-4">
-                            <template x-if="isSessionActive">
-                                <div @click="currentTab = 'focus'" class="cursor-pointer bg-asr-elevated border-2 rounded-2xl p-4 transition-all"
-                                     :class="activeMode === 'STRICT' ? 'border-asr-red glow-red' : 'border-asr-sky glow-sky'">
-                                    <div class="flex items-center justify-between text-xs">
-                                        <div class="flex items-center gap-2 font-bold tracking-wider"
-                                             :class="activeMode === 'STRICT' ? 'text-asr-red' : 'text-asr-sky'">
-                                            <span class="w-2 h-2 rounded-full animate-ping" :class="activeMode === 'STRICT' ? 'bg-asr-red' : 'bg-asr-sky'"></span>
-                                            SESSION ACTIVE
-                                        </div>
-                                        <span class="bg-asr-surface border border-asr-border px-2 py-0.5 rounded text-[10px] font-bold text-asr-text" x-text="activeMode"></span>
-                                    </div>
-                                    <div class="mt-2 text-3xl font-extrabold text-asr-text tracking-tight" x-text="formatTime(remainingSeconds)"></div>
-                                    <p class="text-xs text-asr-muted mt-1" x-text="sessionGoal + ' · ' + selectedApps.length + ' apps blocked'"></p>
-                                    <div class="mt-2 text-right text-xs font-semibold text-asr-sky flex items-center justify-end gap-1">
-                                        View Timer <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
-                                    </div>
-                                </div>
-                            </template>
-
-                            <template x-if="!isSessionActive">
-                                <button @click="currentTab = 'focus'"
-                                        class="w-full h-12 bg-asr-sky hover:bg-asr-sky/90 active:scale-[0.98] text-asr-bg font-bold text-sm tracking-wide rounded-2xl transition-all shadow-lg shadow-asr-sky/20 flex items-center justify-center gap-2">
-                                    <i data-lucide="play" class="w-4 h-4 fill-current"></i>
-                                    START FOCUS SESSION
-                                </button>
-                            </template>
-                        </div>
-
-                        <!-- Stats row -->
-                        <div class="grid grid-cols-2 gap-2.5 mt-4">
-                            <div class="bg-asr-surface border border-asr-border rounded-2xl p-3">
-                                <div class="text-[10px] font-bold tracking-wider text-asr-faint uppercase mb-1">Focus Time</div>
-                                <div class="text-base font-bold text-asr-text" x-text="focusTimeToday"></div>
-                                <div class="text-[10px] text-asr-faint" x-text="sessionsCompletedCount + ' sessions today'"></div>
-                            </div>
-                            <div class="bg-asr-surface border border-asr-border rounded-2xl p-3">
-                                <div class="text-[10px] font-bold tracking-wider text-asr-faint uppercase mb-1">Screen Time</div>
-                                <div class="text-base font-bold text-asr-text" x-text="screenTimeToday"></div>
-                                <div class="text-[10px] text-asr-faint">Total phone usage</div>
-                            </div>
-                        </div>
-
-                        <!-- Quick Launch -->
-                        <template x-if="!isSessionActive">
-                            <div class="mt-5">
-                                <h2 class="text-xs font-bold text-asr-text tracking-wide mb-2">Quick Launch</h2>
-                                <div class="grid grid-cols-3 gap-2">
-                                    <button @click="startQuickSession(25, 'NORMAL')" class="bg-asr-surface hover:bg-asr-elevated border border-asr-border rounded-xl p-2.5 text-center transition">
-                                        <span class="text-base font-bold text-asr-sky block">25m</span>
-                                        <span class="text-[10px] text-asr-muted mt-0.5 block">Pomodoro</span>
-                                    </button>
-                                    <button @click="startQuickSession(50, 'STRICT')" class="bg-asr-surface hover:bg-asr-elevated border border-asr-border rounded-xl p-2.5 text-center transition">
-                                        <span class="text-base font-bold text-asr-sky block">50m</span>
-                                        <span class="text-[10px] text-asr-muted mt-0.5 block">Deep Work</span>
-                                    </button>
-                                    <button @click="startQuickSession(90, 'STRICT')" class="bg-asr-surface hover:bg-asr-elevated border border-asr-border rounded-xl p-2.5 text-center transition">
-                                        <span class="text-base font-bold text-asr-sky block">90m</span>
-                                        <span class="text-[10px] text-asr-muted mt-0.5 block">Immersion</span>
-                                    </button>
-                                </div>
-                            </div>
-                        </template>
-                    </section>
-
-
-                    <!-- ── TAB: FOCUS ──────────────────────────────── -->
-                    <section x-show="currentTab === 'focus'"
-                             x-transition:enter="transition ease-out duration-200"
-                             x-transition:enter-start="opacity-0 translate-y-1">
-
-                        <!-- Active: countdown -->
-                        <template x-if="isSessionActive">
-                            <div class="flex flex-col items-center pt-3 text-center">
-                                <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold tracking-wider"
-                                     :class="activeMode === 'STRICT' ? 'bg-asr-red/10 border border-asr-red/30 text-asr-red' : 'bg-asr-sky/10 border border-asr-sky/30 text-asr-sky'">
-                                    <i :data-lucide="activeMode === 'STRICT' ? 'lock' : 'shield'" class="w-3.5 h-3.5"></i>
-                                    <span x-text="activeMode === 'STRICT' ? 'STRICT ACTIVE' : 'FOCUS IN PROGRESS'"></span>
-                                </div>
-
-                                <h2 class="text-lg font-bold text-asr-text mt-3" x-text="sessionGoal"></h2>
-
-                                <!-- Circular timer -->
-                                <div class="relative w-52 h-52 mt-5 flex items-center justify-center">
-                                    <svg class="w-full h-full transform -rotate-90">
-                                        <circle cx="104" cy="104" r="88" stroke="#1A2235" stroke-width="10" fill="transparent"></circle>
-                                        <circle cx="104" cy="104" r="88"
-                                                :stroke="activeMode === 'STRICT' ? '#F87171' : '#38BDF8'"
-                                                stroke-width="10"
-                                                stroke-linecap="round"
-                                                stroke-dasharray="552.9"
-                                                :stroke-dashoffset="552.9 * (1 - (remainingSeconds / (durationMinutes * 60)))"
-                                                fill="transparent"
-                                                class="progress-ring-circle"></circle>
-                                    </svg>
-                                    <div class="absolute flex flex-col items-center">
-                                        <span class="text-3xl font-extrabold text-asr-text tracking-tight" x-text="formatTime(remainingSeconds)"></span>
-                                        <span class="text-[10px] font-semibold text-asr-muted uppercase tracking-widest mt-1">Remaining</span>
-                                    </div>
-                                </div>
-
-                                <!-- Blocked apps -->
-                                <div class="w-full bg-asr-surface border border-asr-border rounded-2xl p-3.5 mt-5 text-left">
-                                    <div class="flex items-center justify-between text-xs mb-2">
-                                        <span class="font-bold text-asr-text flex items-center gap-1.5">
-                                            <i data-lucide="shield-ban" class="w-3.5 h-3.5 text-asr-red"></i>
-                                            Shielded Apps
-                                        </span>
-                                        <span class="text-asr-sky font-semibold" x-text="selectedApps.length + ' apps'"></span>
-                                    </div>
-                                    <div class="flex gap-1.5 overflow-x-auto pb-1">
-                                        <template x-for="app in selectedApps" :key="app">
-                                            <span class="bg-asr-elevated border border-asr-border px-2.5 py-1 rounded-lg text-xs text-asr-muted shrink-0" x-text="app"></span>
-                                        </template>
-                                    </div>
-                                </div>
-
-                                <!-- Controls -->
-                                <div class="w-full mt-5 space-y-2">
-                                    <template x-if="activeMode === 'STRICT'">
-                                        <div>
-                                            <div class="bg-asr-surface border border-asr-border rounded-xl p-3 text-left flex items-center gap-2.5 text-xs text-asr-faint mb-2">
-                                                <i data-lucide="lock" class="w-4 h-4 shrink-0"></i>
-                                                <span>Rules are locked until completion to protect your flow.</span>
-                                            </div>
-                                            <button @click="openEmergencyModal()"
-                                                    class="w-full h-10 bg-transparent hover:bg-asr-red/10 border border-asr-red/40 text-asr-red font-semibold rounded-xl text-xs transition">
-                                                Emergency Exit (With Friction)
-                                            </button>
-                                        </div>
-                                    </template>
-                                    <template x-if="activeMode === 'NORMAL'">
-                                        <button @click="cancelSession()"
-                                                class="w-full h-10 bg-transparent hover:bg-asr-elevated border border-asr-border text-asr-muted font-semibold rounded-xl text-xs transition">
-                                            End Session Early
-                                        </button>
-                                    </template>
-                                </div>
-                            </div>
-                        </template>
-
-                        <!-- Idle: config -->
-                        <template x-if="!isSessionActive">
-                            <div>
-                                <h1 class="text-xl font-bold text-asr-text tracking-tight">New Session</h1>
-                                <p class="text-xs text-asr-muted mt-0.5">Deliberate focus. Undisturbed mind.</p>
-
-                                <!-- Goal input -->
-                                <div class="mt-4">
-                                    <label class="text-xs text-asr-muted font-medium">Session Goal</label>
-                                    <input type="text" x-model="sessionGoal"
-                                           class="w-full bg-asr-surface border border-asr-border rounded-xl px-3.5 py-2.5 text-sm text-asr-text focus:outline-none focus:border-asr-sky mt-1 transition">
-                                </div>
-
-                                <!-- Profiles -->
-                                <div class="mt-4">
-                                    <label class="text-xs text-asr-muted font-medium">Focus Profiles</label>
-                                    <div class="grid grid-cols-2 gap-2 mt-1.5">
-                                        <template x-for="p in profiles" :key="p.name">
-                                            <div @click="applyProfile(p)"
-                                                 class="cursor-pointer border rounded-xl p-2.5 transition"
-                                                 :class="sessionGoal === p.name ? 'bg-asr-elevated border-asr-sky' : 'bg-asr-surface border-asr-border'">
-                                                <div class="text-xs font-bold text-asr-text" x-text="p.name"></div>
-                                                <div class="text-[10px] text-asr-muted mt-0.5" x-text="p.duration + 'm · ' + p.mode"></div>
-                                            </div>
-                                        </template>
-                                    </div>
-                                </div>
-
-                                <!-- Duration presets -->
-                                <div class="mt-4">
-                                    <label class="text-xs text-asr-muted font-medium">Duration</label>
-                                    <div class="grid grid-cols-3 gap-2 mt-1.5">
-                                        <button @click="durationMinutes = 25"
-                                                class="py-2 rounded-xl border text-sm font-bold transition"
-                                                :class="durationMinutes === 25 ? 'bg-asr-elevated border-asr-sky text-asr-sky' : 'bg-asr-surface border-asr-border text-asr-text'">25m</button>
-                                        <button @click="durationMinutes = 50"
-                                                class="py-2 rounded-xl border text-sm font-bold transition"
-                                                :class="durationMinutes === 50 ? 'bg-asr-elevated border-asr-sky text-asr-sky' : 'bg-asr-surface border-asr-border text-asr-text'">50m</button>
-                                        <button @click="durationMinutes = 90"
-                                                class="py-2 rounded-xl border text-sm font-bold transition"
-                                                :class="durationMinutes === 90 ? 'bg-asr-elevated border-asr-sky text-asr-sky' : 'bg-asr-surface border-asr-border text-asr-text'">90m</button>
-                                    </div>
-                                </div>
-
-                                <!-- Mode toggle -->
-                                <div class="mt-4">
-                                    <label class="text-xs text-asr-muted font-medium">Discipline Mode</label>
-                                    <div class="grid grid-cols-2 gap-2 mt-1.5">
-                                        <div @click="activeMode = 'NORMAL'"
-                                             class="cursor-pointer border rounded-xl p-2.5 text-center transition"
-                                             :class="activeMode === 'NORMAL' ? 'bg-asr-elevated border-asr-sky text-asr-sky' : 'bg-asr-surface border-asr-border text-asr-muted'">
-                                            <div class="text-xs font-bold">Normal</div>
-                                            <div class="text-[10px]">Gentle mindful pause</div>
-                                        </div>
-                                        <div @click="activeMode = 'STRICT'"
-                                             class="cursor-pointer border rounded-xl p-2.5 text-center transition"
-                                             :class="activeMode === 'STRICT' ? 'bg-asr-elevated border-asr-red text-asr-red' : 'bg-asr-surface border-asr-border text-asr-muted'">
-                                            <div class="text-xs font-bold">Strict Mode</div>
-                                            <div class="text-[10px]">Unbreakable lock</div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <button @click="startSession()"
-                                        class="w-full h-12 bg-asr-sky hover:bg-asr-sky/90 text-asr-bg font-bold text-sm tracking-wide rounded-2xl mt-6 transition-all shadow-lg shadow-asr-sky/20">
-                                    COMMITTED FOCUS START
-                                </button>
-                            </div>
-                        </template>
-                    </section>
-
-
-                    <!-- ── TAB: APPS ───────────────────────────────── -->
-                    <section x-show="currentTab === 'apps'"
-                             x-transition:enter="transition ease-out duration-200"
-                             x-transition:enter-start="opacity-0 translate-y-1">
-                        <div class="flex items-center justify-between">
-                            <div>
-                                <h1 class="text-xl font-bold text-asr-text tracking-tight">Shielded Apps</h1>
-                                <p class="text-xs text-asr-muted" x-text="selectedApps.length + ' / 3 selected (Free tier)'"></p>
-                            </div>
-                        </div>
-
-                        <!-- App list -->
-                        <div class="space-y-2 mt-4">
-                            <template x-for="app in installedAppsList" :key="app.pkg">
-                                <div class="bg-asr-surface border border-asr-border rounded-xl p-3 flex items-center justify-between transition"
-                                     :class="isAppSelected(app.name) ? 'border-asr-sky/40 bg-asr-elevated' : ''">
-                                    <div class="flex items-center gap-2.5">
-                                        <div class="w-7 h-7 rounded-lg bg-asr-border flex items-center justify-center text-xs font-bold text-asr-text"
-                                             x-text="app.name.charAt(0)"></div>
-                                        <div>
-                                            <div class="text-xs font-bold text-asr-text" x-text="app.name"></div>
-                                            <div class="text-[10px] text-asr-muted" x-text="app.category"></div>
-                                        </div>
-                                    </div>
-                                    <button @click="toggleApp(app.name)"
-                                            class="w-6 h-6 rounded-lg border flex items-center justify-center transition text-xs"
-                                            :class="isAppSelected(app.name) ? 'bg-asr-sky border-asr-sky text-asr-bg font-bold' : 'border-asr-border text-transparent'">
-                                        ✓
-                                    </button>
-                                </div>
-                            </template>
-                        </div>
-                    </section>
-
-
-                    <!-- ── TAB: STATS ──────────────────────────────── -->
-                    <section x-show="currentTab === 'stats'"
-                             x-transition:enter="transition ease-out duration-200"
-                             x-transition:enter-start="opacity-0 translate-y-1">
-                        <h1 class="text-xl font-bold text-asr-text tracking-tight">Focus Analytics</h1>
-                        <p class="text-xs text-asr-muted">Transparent 100% on-device discipline metrics.</p>
-
-                        <!-- 7-day pattern -->
-                        <div class="bg-asr-surface border border-asr-border rounded-2xl p-4 mt-4">
-                            <h2 class="text-xs font-bold text-asr-text mb-3">7-Day Discipline Pattern</h2>
-                            <div class="flex items-end justify-between h-24 pt-2">
-                                <template x-for="d in weeklyData" :key="d.day">
-                                    <div class="flex flex-col items-center gap-1.5 flex-1">
-                                        <div class="w-full flex justify-center items-end gap-1 h-16">
-                                            <div class="w-2 rounded-t bg-asr-emerald transition-all" :style="'height: ' + (d.focus / 120 * 100) + '%'"></div>
-                                            <div class="w-2 rounded-t bg-asr-sky/30 transition-all" :style="'height: ' + (d.screen / 240 * 100) + '%'"></div>
-                                        </div>
-                                        <span class="text-[10px] text-asr-faint font-semibold" x-text="d.day"></span>
-                                    </div>
-                                </template>
-                            </div>
-                            <div class="flex justify-center gap-4 text-[10px] text-asr-faint mt-3 border-t border-asr-border pt-2">
-                                <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-asr-emerald"></span> Focus</span>
-                                <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-asr-sky/40"></span> Screen</span>
-                            </div>
-                        </div>
-
-                        <!-- Top distractions -->
-                        <div class="bg-asr-surface border border-asr-border rounded-2xl p-4 mt-4">
-                            <h2 class="text-xs font-bold text-asr-text mb-3">Top Intercepted Apps</h2>
-                            <div class="space-y-3">
-                                <template x-for="d in topDistractions" :key="d.name">
-                                    <div>
-                                        <div class="flex justify-between text-xs mb-1">
-                                            <span class="font-semibold text-asr-text" x-text="d.name"></span>
-                                            <span class="text-asr-red font-bold text-[11px]" x-text="d.time"></span>
-                                        </div>
-                                        <div class="w-full bg-asr-elevated rounded-full h-1.5 overflow-hidden">
-                                            <div class="bg-asr-red h-full rounded-full transition-all" :style="'width: ' + d.percent + '%'"></div>
-                                        </div>
-                                    </div>
-                                </template>
-                            </div>
-                        </div>
-                    </section>
-
-
-                    <!-- ── TAB: SETTINGS ───────────────────────────── -->
-                    <section x-show="currentTab === 'settings'"
-                             x-transition:enter="transition ease-out duration-200"
-                             x-transition:enter-start="opacity-0 translate-y-1">
-                        <h1 class="text-xl font-bold text-asr-text tracking-tight">Settings &amp; Guardrails</h1>
-                        <p class="text-xs text-asr-muted">Permissions, strict mode protection, and routines.</p>
-
-                        <!-- Permissions -->
-                        <div class="mt-4 space-y-2">
-                            <h2 class="text-xs font-bold text-asr-text mb-2">Android Permissions</h2>
-                            <div class="bg-asr-surface border border-asr-border rounded-xl p-3 flex items-center justify-between text-xs">
-                                <div class="flex items-center gap-2.5">
-                                    <i data-lucide="bar-chart-2" class="w-4 h-4 text-asr-sky"></i>
-                                    <div>
-                                        <div class="font-bold text-asr-text">Usage Access</div>
-                                        <div class="text-[10px] text-asr-muted">On-device analytics</div>
-                                    </div>
-                                </div>
-                                <span class="bg-asr-emerald/10 text-asr-emerald text-[10px] font-bold px-2 py-0.5 rounded">GRANTED</span>
-                            </div>
-                            <div class="bg-asr-surface border border-asr-border rounded-xl p-3 flex items-center justify-between text-xs">
-                                <div class="flex items-center gap-2.5">
-                                    <i data-lucide="activity" class="w-4 h-4 text-asr-sky"></i>
-                                    <div>
-                                        <div class="font-bold text-asr-text">Accessibility Blocker</div>
-                                        <div class="text-[10px] text-asr-muted">Instant app shield</div>
-                                    </div>
-                                </div>
-                                <span class="bg-asr-emerald/10 text-asr-emerald text-[10px] font-bold px-2 py-0.5 rounded">ACTIVE</span>
-                            </div>
-                            <div class="bg-asr-surface border border-asr-border rounded-xl p-3 flex items-center justify-between text-xs">
-                                <div class="flex items-center gap-2.5">
-                                    <i data-lucide="shield" class="w-4 h-4 text-asr-red"></i>
-                                    <div>
-                                        <div class="font-bold text-asr-text">Device Administrator</div>
-                                        <div class="text-[10px] text-asr-muted">Anti-uninstall lock</div>
-                                    </div>
-                                </div>
-                                <span class="bg-asr-emerald/10 text-asr-emerald text-[10px] font-bold px-2 py-0.5 rounded">ENABLED</span>
-                            </div>
-                        </div>
-
-                        <!-- Privacy Guarantee -->
-                        <div class="bg-asr-surface border border-asr-emerald/20 rounded-2xl p-3.5 mt-5 flex items-start gap-3">
-                            <i data-lucide="shield-check" class="w-5 h-5 text-asr-emerald shrink-0 mt-0.5"></i>
-                            <div>
-                                <div class="text-xs font-bold text-asr-text">100% Local SQLite Guarantee</div>
-                                <p class="text-[10px] text-asr-muted mt-0.5 leading-relaxed">
-                                    Aegis Focus never sends telemetry or usage logs to remote servers. All calculations and records remain exclusively on your device.
-                                </p>
-                            </div>
-                        </div>
-                    </section>
-
-                </div><!-- /scrollable -->
-
-                <!-- Bottom Navigation -->
-                <nav class="h-16 bg-asr-surface border-t border-asr-border px-2 flex items-center justify-around z-20 shrink-0">
-                    <template x-for="tab in navTabs" :key="tab.id">
-                        <button @click="currentTab = tab.id"
-                                class="flex flex-col items-center gap-1 transition"
-                                :class="currentTab === tab.id ? 'text-asr-sky' : 'text-asr-faint hover:text-asr-muted'">
-                            <i :data-lucide="tab.icon" class="w-5 h-5"></i>
-                            <span class="text-[10px] font-medium" x-text="tab.label"></span>
-                        </button>
-                    </template>
-                </nav>
-
-                <!-- Block Intervention Overlay -->
-                <div x-show="showInterventionOverlay" x-cloak
-                     class="absolute inset-0 bg-asr-bg z-50 p-6 flex flex-col items-center justify-between text-center"
-                     x-transition:enter="transition ease-out duration-200"
-                     x-transition:enter-start="opacity-0 scale-95"
-                     x-transition:enter-end="opacity-100 scale-100">
-
-                    <div class="mt-8 flex flex-col items-center">
-                        <div class="w-20 h-20 rounded-full bg-asr-elevated border-2 border-asr-red flex items-center justify-center">
-                            <i data-lucide="shield-ban" class="w-10 h-10 text-asr-red"></i>
-                        </div>
-                        <span class="bg-asr-red/10 border border-asr-red/30 text-asr-red text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider mt-4">
-                            FOCUS GUARD ACTIVE
-                        </span>
-                        <h2 class="text-2xl font-bold text-asr-text mt-4">Pause. Breathe.</h2>
-                        <p class="text-xs text-asr-muted mt-2 leading-relaxed px-4">
-                            "<span x-text="simulatedBlockedAppName"></span>" is shielded during your focus commitment. Return to what truly matters.
-                        </p>
-                        <div class="bg-asr-surface border border-asr-border rounded-xl px-4 py-2 mt-5 text-xs text-asr-sky font-bold">
-                            Remaining: <span x-text="formatTime(remainingSeconds)"></span>
-                        </div>
-                    </div>
-
-                    <div class="w-full space-y-2 mb-6">
-                        <button @click="showInterventionOverlay = false; currentTab = 'home'"
-                                class="w-full py-3.5 bg-asr-sky text-asr-bg font-bold text-xs rounded-xl shadow-lg">
-                            Return to Deep Work
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Emergency Exit Modal -->
-                <div x-show="showEmergencyModal" x-cloak
-                     class="absolute inset-0 bg-black/80 backdrop-blur-sm z-50 p-6 flex items-center justify-center"
-                     x-transition:enter="transition ease-out duration-150">
-                    <div class="bg-asr-surface border border-asr-red/40 rounded-3xl p-5 w-full max-w-xs text-center shadow-2xl">
-                        <i data-lucide="alert-triangle" class="w-10 h-10 text-asr-red mx-auto"></i>
-                        <h3 class="text-base font-bold text-asr-text mt-3">Emergency Exit</h3>
-                        <p class="text-xs text-asr-muted mt-1 leading-relaxed">
-                            Breaking focus prematurely records an emergency event and resets your streak.
-                        </p>
-                        <p class="text-xs font-bold text-asr-red mt-3 bg-asr-bg py-1.5 rounded-lg">"I choose to break focus"</p>
-                        <input type="text" x-model="emergencyTypedPhrase"
-                               placeholder="Type phrase to confirm..."
-                               class="w-full bg-asr-bg border border-asr-border rounded-xl px-3 py-2 text-xs text-asr-text focus:outline-none focus:border-asr-red mt-2 text-center">
-                        <div class="grid grid-cols-2 gap-2 mt-4">
-                            <button @click="showEmergencyModal = false"
-                                    class="py-2.5 bg-asr-elevated text-asr-muted font-semibold text-xs rounded-xl">
-                                Stay Focused
-                            </button>
-                            <button @click="confirmEmergencyExit()"
-                                    :disabled="emergencyCountdown > 0 || emergencyTypedPhrase.toLowerCase() !== 'i choose to break focus'"
-                                    class="py-2.5 bg-asr-red disabled:opacity-30 disabled:cursor-not-allowed text-asr-text font-bold text-xs rounded-xl transition">
-                                <span x-text="emergencyCountdown > 0 ? 'Wait (' + emergencyCountdown + 's)' : 'Break Focus'"></span>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Session Complete Toast -->
-                <div x-show="showToast" x-cloak
-                     class="absolute bottom-20 left-4 right-4 z-50 bg-asr-emerald text-asr-bg text-xs font-bold px-4 py-3 rounded-xl text-center toast-enter shadow-lg">
-                    🎉 Focus session complete! Discipline score updated.
-                </div>
-
-            </div><!-- /phone shell -->
-        </div><!-- /simulator wrapper -->
-    </div>
-</section>
-
-
-<!-- ══════════════════════════════════════════════════════════════════
-     COMPREHENSIVE COMPARISON TABLE (Aegis Focus VS OTHERS)
-════════════════════════════════════════════════════════════════════ -->
-<section id="comparison" class="py-24 px-5 bg-asr-surface border-y border-asr-border reveal">
-    <div class="max-w-5xl mx-auto">
-        <div class="text-center mb-14">
-            <p class="text-asr-sky text-xs font-bold tracking-widest uppercase mb-3">Honest Comparison</p>
-            <h2 class="text-3xl sm:text-4xl font-extrabold text-asr-text">How Aegis Focus Compares to Alternatives</h2>
-            <p class="text-asr-muted text-sm mt-3 max-w-xl mx-auto">
-                Compare Aegis Focus against legacy screen-time apps, basic timers, and overpriced cloud blockers.
-            </p>
-        </div>
-
-        <div class="overflow-x-auto">
-            <table class="w-full text-left border-collapse text-xs sm:text-sm">
-                <thead>
-                    <tr class="border-b border-asr-border text-asr-faint">
-                        <th class="py-4 px-4 font-bold text-xs uppercase tracking-wider">Capability / Feature</th>
-                        <th class="py-4 px-4 font-extrabold text-asr-sky text-center bg-asr-sky/5 rounded-t-xl">Aegis Focus</th>
-                        <th class="py-4 px-4 font-semibold text-center text-asr-muted">Opal</th>
-                        <th class="py-4 px-4 font-semibold text-center text-asr-muted">Freedom</th>
-                        <th class="py-4 px-4 font-semibold text-center text-asr-muted">Forest</th>
-                    </tr>
-                </thead>
-                <tbody class="divide-y divide-asr-border/60 text-asr-muted">
-                    <tr>
-                        <td class="py-3.5 px-4 font-semibold text-asr-text">Unbypassable Strict Mode (Anti-Uninstall)</td>
-                        <td class="py-3.5 px-4 text-center font-bold text-asr-emerald bg-asr-sky/5">✓ Yes (Device Admin)</td>
-                        <td class="py-3.5 px-4 text-center text-asr-faint">Partial</td>
-                        <td class="py-3.5 px-4 text-center text-asr-faint">Limited on Android</td>
-                        <td class="py-3.5 px-4 text-center text-asr-red">✕ No</td>
-                    </tr>
-                    <tr>
-                        <td class="py-3.5 px-4 font-semibold text-asr-text">100% On-Device Privacy (Zero Cloud Telemetry)</td>
-                        <td class="py-3.5 px-4 text-center font-bold text-asr-emerald bg-asr-sky/5">✓ Yes (Local SQLite)</td>
-                        <td class="py-3.5 px-4 text-center text-asr-red">✕ Cloud Dependent</td>
-                        <td class="py-3.5 px-4 text-center text-asr-red">✕ Cloud Sync</td>
-                        <td class="py-3.5 px-4 text-center text-asr-faint">Account Required</td>
-                    </tr>
-                    <tr>
-                        <td class="py-3.5 px-4 font-semibold text-asr-text">Automated Recurring Routines (Looping)</td>
-                        <td class="py-3.5 px-4 text-center font-bold text-asr-emerald bg-asr-sky/5">✓ Built-in</td>
-                        <td class="py-3.5 px-4 text-center text-asr-emerald">✓ Yes</td>
-                        <td class="py-3.5 px-4 text-center text-asr-emerald">✓ Yes</td>
-                        <td class="py-3.5 px-4 text-center text-asr-red">✕ Manual Only</td>
-                    </tr>
-                    <tr>
-                        <td class="py-3.5 px-4 font-semibold text-asr-text">Adaptive Escalating Friction (5s &rarr; 30s)</td>
-                        <td class="py-3.5 px-4 text-center font-bold text-asr-emerald bg-asr-sky/5">✓ Yes</td>
-                        <td class="py-3.5 px-4 text-center text-asr-faint">Basic Delay</td>
-                        <td class="py-3.5 px-4 text-center text-asr-red">✕ No</td>
-                        <td class="py-3.5 px-4 text-center text-asr-red">✕ No</td>
-                    </tr>
-                    <tr>
-                        <td class="py-3.5 px-4 font-semibold text-asr-text">Transparent Discipline Score &amp; XP Engine</td>
-                        <td class="py-3.5 px-4 text-center font-bold text-asr-emerald bg-asr-sky/5">✓ Open Formula</td>
-                        <td class="py-3.5 px-4 text-center text-asr-faint">Proprietary Focus Score</td>
-                        <td class="py-3.5 px-4 text-center text-asr-red">✕ No</td>
-                        <td class="py-3.5 px-4 text-center text-asr-faint">Virtual Trees</td>
-                    </tr>
-                    <tr>
-                        <td class="py-3.5 px-4 font-semibold text-asr-text">Free Tier Offering</td>
-                        <td class="py-3.5 px-4 text-center font-bold text-asr-emerald bg-asr-sky/5">✓ Up to 2h Strict Mode</td>
-                        <td class="py-3.5 px-4 text-center text-asr-red">✕ Very Restricted</td>
-                        <td class="py-3.5 px-4 text-center text-asr-red">✕ Trial Only</td>
-                        <td class="py-3.5 px-4 text-center text-asr-faint">Freemium Ads</td>
-                    </tr>
-                    <tr class="font-bold text-asr-text">
-                        <td class="py-4 px-4">Pro Annual Pricing</td>
-                        <td class="py-4 px-4 text-center text-asr-sky text-base bg-asr-sky/10 rounded-b-xl">$19.99 / year</td>
-                        <td class="py-4 px-4 text-center text-asr-red">$99.99 / year</td>
-                        <td class="py-4 px-4 text-center text-asr-red">$39.99 / year</td>
-                        <td class="py-4 px-4 text-center text-asr-muted">$4.99 + Coins</td>
-                    </tr>
-                </tbody>
-            </table>
+            <p class="mt-3 text-[11px] text-faint">App preview, illustration</p>
         </div>
     </div>
 </section>
 
+<!-- QUICK FACTS -->
+<section class="border-y border-line/70 bg-surface/60">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 py-6 grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+        <div><p class="text-xl sm:text-2xl font-black text-sage">Free</p><p class="text-xs text-muted mt-0.5">core features, no sign-up</p></div>
+        <div><p class="text-xl sm:text-2xl font-black text-sage">On-device</p><p class="text-xs text-muted mt-0.5">your usage never leaves the phone</p></div>
+        <div><p class="text-xl sm:text-2xl font-black text-sage">0 ads</p><p class="text-xs text-muted mt-0.5">and it blocks them elsewhere too</p></div>
+        <div><p class="text-xl sm:text-2xl font-black text-sage" id="fact-size">Light</p><p class="text-xs text-muted mt-0.5">APK size, installs in seconds</p></div>
+    </div>
+</section>
 
-<!-- ══════════════════════════════════════════════════════════════════
-     PRICING SECTION (HONEST, TRANSPARENT MULTI-STORE BILLING)
-════════════════════════════════════════════════════════════════════ -->
-<section id="pricing" class="py-24 px-5 reveal">
-    <div class="max-w-5xl mx-auto">
-        <div class="text-center mb-14">
-            <p class="text-asr-sky text-xs font-bold tracking-widest uppercase mb-3">Simple &amp; Honest Pricing</p>
-            <h2 class="text-3xl sm:text-4xl font-extrabold text-asr-text">Invest in Your Focus. No Dark Patterns.</h2>
-            <p class="text-asr-muted text-sm mt-3 max-w-lg mx-auto">
-                Core local protection is forever free. Pro unlocks unlimited durations, advanced routines, and adaptive friction.
-            </p>
+<!-- WHY -->
+<section class="max-w-4xl mx-auto px-4 sm:px-6 py-16 sm:py-24 text-center reveal">
+    <p class="text-sm font-bold text-teal">Why it exists</p>
+    <h2 class="mt-2 text-3xl sm:text-4xl font-extrabold tracking-tight">Willpower loses to apps built to hook you</h2>
+    <p class="mt-5 text-muted leading-relaxed text-base sm:text-lg">
+        Infinite feeds, autoplay and notifications are designed so you never reach a natural stopping point. Reminders and good intentions do not hold up at 11 pm. Aegis Focus works on the environment instead: it makes the distracting thing hard to reach, and makes the focused thing the easy default.
+    </p>
+</section>
+
+<!-- FEATURES -->
+<section id="features" class="py-16 sm:py-24 bg-surface/50 border-y border-line/70">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6">
+        <div class="text-center max-w-2xl mx-auto reveal">
+            <p class="text-sm font-bold text-teal">Features</p>
+            <h2 class="mt-2 text-3xl sm:text-4xl font-extrabold tracking-tight">Everything you need, nothing you do not</h2>
+            <p class="mt-4 text-muted">A focused toolkit in one calm app. No clutter, no fake numbers, no dark patterns.</p>
         </div>
 
-        <!-- Pricing Cards Grid: All 4 Main Plans -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
-            
-            <!-- 1. Free Plan -->
-            <div class="bg-asr-surface border border-asr-border rounded-2xl p-6 flex flex-col justify-between hover:border-asr-sky/30 transition">
-                <div>
-                    <div class="text-asr-faint text-[10px] font-bold tracking-widest uppercase mb-1">Free Forever</div>
-                    <div class="text-3xl font-black text-asr-text">$0</div>
-                    <div class="text-asr-faint text-xs mt-0.5">No credit card required</div>
-                    <p class="text-xs text-asr-muted mt-3 leading-relaxed">
-                        Essential on-device protection for building daily habits.
-                    </p>
-                    <ul class="mt-5 space-y-2 text-xs">
-                        <li class="flex items-center gap-2 text-asr-muted"><span class="text-asr-emerald font-bold">✓</span> Core app blocker</li>
-                        <li class="flex items-center gap-2 text-asr-muted"><span class="text-asr-emerald font-bold">✓</span> Strict Mode (max 2h &amp; 3 apps)</li>
-                        <li class="flex items-center gap-2 text-asr-muted"><span class="text-asr-emerald font-bold">✓</span> Mindful pause prompt</li>
-                        <li class="flex items-center gap-2 text-asr-muted"><span class="text-asr-emerald font-bold">✓</span> Basic scheduled routines</li>
-                        <li class="flex items-center gap-2 text-asr-muted"><span class="text-asr-emerald font-bold">✓</span> 100% Local SQLite storage</li>
-                    </ul>
-                </div>
-                <a href="AegisFocus-Latest.apk" class="mt-6 w-full block text-center py-3 bg-asr-elevated hover:bg-asr-border text-asr-text font-bold text-xs rounded-xl transition">
-                    Get Free APK
-                </a>
-            </div>
+        <div class="mt-12 grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
+            <article class="card card-hover p-6 reveal">
+                <div class="w-11 h-11 rounded-xl bg-teal/15 text-teal grid place-items-center"><i data-lucide="lock" class="w-5 h-5"></i></div>
+                <h3 class="mt-4 font-bold text-lg">Strict Mode</h3>
+                <p class="mt-2 text-sm text-muted leading-relaxed">Commit to a session and the rules lock. Blocked apps stay blocked, the list cannot be edited and the app cannot be removed until the timer ends. There is no emergency exit, so you pick your duration deliberately.</p>
+            </article>
+            <article class="card card-hover p-6 reveal">
+                <div class="w-11 h-11 rounded-xl bg-teal/15 text-teal grid place-items-center"><i data-lucide="ban" class="w-5 h-5"></i></div>
+                <h3 class="mt-4 font-bold text-lg">App blocking</h3>
+                <p class="mt-2 text-sm text-muted leading-relaxed">Pick the apps that drain you. When you open one during a focus session, Aegis Focus steps in with a block screen instead of letting you slip through.</p>
+            </article>
+            <article class="card card-hover p-6 reveal">
+                <div class="w-11 h-11 rounded-xl bg-teal/15 text-teal grid place-items-center"><i data-lucide="film" class="w-5 h-5"></i></div>
+                <h3 class="mt-4 font-bold text-lg">Shorts and Reels blocker</h3>
+                <p class="mt-2 text-sm text-muted leading-relaxed">Keep the useful parts of YouTube, Instagram and Facebook while cutting the endless short-video feeds. The toggle takes effect instantly, no restart needed.</p>
+            </article>
+            <article class="card card-hover p-6 reveal">
+                <div class="w-11 h-11 rounded-xl bg-teal/15 text-teal grid place-items-center"><i data-lucide="shield-off" class="w-5 h-5"></i></div>
+                <h3 class="mt-4 font-bold text-lg">System-wide ad blocker</h3>
+                <p class="mt-2 text-sm text-muted leading-relaxed">One tap turns on a local DNS filter that removes ads and trackers across apps and browsers. It does not send your traffic through anyone's server.</p>
+            </article>
+            <article class="card card-hover p-6 reveal">
+                <div class="w-11 h-11 rounded-xl bg-teal/15 text-teal grid place-items-center"><i data-lucide="eye-off" class="w-5 h-5"></i></div>
+                <h3 class="mt-4 font-bold text-lg">18+ content block</h3>
+                <p class="mt-2 text-sm text-muted leading-relaxed">An optional family-safe DNS mode that blocks adult sites in every browser and app. It is a strong first wall, not a perfect one, so pair it with Strict Mode for hard moments.</p>
+            </article>
+            <article class="card card-hover p-6 reveal">
+                <div class="w-11 h-11 rounded-xl bg-teal/15 text-teal grid place-items-center"><i data-lucide="heart-pulse" class="w-5 h-5"></i></div>
+                <h3 class="mt-4 font-bold text-lg">Clean Streak</h3>
+                <p class="mt-2 text-sm text-muted leading-relaxed">A private daily check-in for quitting a bad habit, with a 7-day strip, best streak and a body-and-mind recovery timeline. Nothing about it is shared or uploaded.</p>
+            </article>
+            <article class="card card-hover p-6 reveal">
+                <div class="w-11 h-11 rounded-xl bg-teal/15 text-teal grid place-items-center"><i data-lucide="timer" class="w-5 h-5"></i></div>
+                <h3 class="mt-4 font-bold text-lg">Focus sessions</h3>
+                <p class="mt-2 text-sm text-muted leading-relaxed">Start a timed session in one tap. Every finished session counts toward your real focus time and your streak.</p>
+            </article>
+            <article class="card card-hover p-6 reveal">
+                <div class="w-11 h-11 rounded-xl bg-teal/15 text-teal grid place-items-center"><i data-lucide="calendar-clock" class="w-5 h-5"></i></div>
+                <h3 class="mt-4 font-bold text-lg">Recurring routines</h3>
+                <p class="mt-2 text-sm text-muted leading-relaxed">Schedule focus for the hours you want protected, for example weekday mornings, and it starts by itself even after a reboot.</p>
+            </article>
+            <article class="card card-hover p-6 reveal">
+                <div class="w-11 h-11 rounded-xl bg-teal/15 text-teal grid place-items-center"><i data-lucide="target" class="w-5 h-5"></i></div>
+                <h3 class="mt-4 font-bold text-lg">Goals and reminders</h3>
+                <p class="mt-2 text-sm text-muted leading-relaxed">Set daily and monthly goals, then add reminders at the times that matter. A Productivity tab keeps it all in one place.</p>
+            </article>
+            <article class="card card-hover p-6 reveal">
+                <div class="w-11 h-11 rounded-xl bg-teal/15 text-teal grid place-items-center"><i data-lucide="bar-chart-3" class="w-5 h-5"></i></div>
+                <h3 class="mt-4 font-bold text-lg">Honest usage stats</h3>
+                <p class="mt-2 text-sm text-muted leading-relaxed">Screen time and focus time come straight from Android usage data. If there is no data yet, the app says so instead of inventing a score.</p>
+            </article>
+            <article class="card card-hover p-6 reveal">
+                <div class="w-11 h-11 rounded-xl bg-teal/15 text-teal grid place-items-center"><i data-lucide="trophy" class="w-5 h-5"></i></div>
+                <h3 class="mt-4 font-bold text-lg">Shield tiers</h3>
+                <p class="mt-2 text-sm text-muted leading-relaxed">Your shield levels up from Bronze to Diamond as your focus streak grows, and the home tab shows how close the next tier is.</p>
+            </article>
+            <article class="card card-hover p-6 reveal">
+                <div class="w-11 h-11 rounded-xl bg-teal/15 text-teal grid place-items-center"><i data-lucide="moon" class="w-5 h-5"></i></div>
+                <h3 class="mt-4 font-bold text-lg">Calm by design</h3>
+                <p class="mt-2 text-sm text-muted leading-relaxed">A quiet dark palette, compact layout and no flashing badges. A focus app should not be another thing that shouts at you.</p>
+            </article>
+        </div>
+    </div>
+</section>
 
-            <!-- 2. Pro Monthly -->
-            <div class="bg-asr-surface border border-asr-border rounded-2xl p-6 flex flex-col justify-between hover:border-asr-sky/40 transition">
-                <div>
-                    <div class="text-asr-sky text-[10px] font-bold tracking-widest uppercase mb-1">Pro Monthly</div>
-                    <div class="flex items-baseline gap-1">
-                        <span class="text-3xl font-black text-asr-text">$2.99</span>
-                        <span class="text-asr-faint text-xs">/mo</span>
-                    </div>
-                    <div class="text-asr-faint text-xs mt-0.5">Cancel anytime</div>
-                    <p class="text-xs text-asr-muted mt-3 leading-relaxed">
-                        Flexible month-to-month discipline with all Pro features unlocked.
-                    </p>
-                    <ul class="mt-5 space-y-2 text-xs">
-                        <li class="flex items-center gap-2 text-asr-muted"><span class="text-asr-sky font-bold">✓</span> Unlimited Strict Mode duration</li>
-                        <li class="flex items-center gap-2 text-asr-muted"><span class="text-asr-sky font-bold">✓</span> Unlimited shielded apps</li>
-                        <li class="flex items-center gap-2 text-asr-muted"><span class="text-asr-sky font-bold">✓</span> Adaptive friction (5s&rarr;30s)</li>
-                        <li class="flex items-center gap-2 text-asr-muted"><span class="text-asr-sky font-bold">✓</span> Unlimited recurring routines</li>
-                        <li class="flex items-center gap-2 text-asr-muted"><span class="text-asr-sky font-bold">✓</span> Deep usage analytics</li>
-                    </ul>
-                </div>
-                <a href="#simulator" class="mt-6 w-full block text-center py-3 bg-asr-elevated hover:bg-asr-border text-asr-text font-bold text-xs rounded-xl transition">
-                    Start Monthly
-                </a>
-            </div>
+<!-- HOW IT WORKS -->
+<section id="how" class="max-w-6xl mx-auto px-4 sm:px-6 py-16 sm:py-24">
+    <div class="text-center max-w-2xl mx-auto reveal">
+        <p class="text-sm font-bold text-teal">How it works</p>
+        <h2 class="mt-2 text-3xl sm:text-4xl font-extrabold tracking-tight">Set up once, protected every day</h2>
+    </div>
+    <ol class="mt-12 grid sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
+        <li class="card p-6 reveal"><span class="w-9 h-9 rounded-full bg-sage text-bg font-black grid place-items-center">1</span><h3 class="mt-4 font-bold">Install and grant access</h3><p class="mt-2 text-sm text-muted leading-relaxed">A short onboarding explains each permission and why it is needed. You can continue only when it is clear.</p></li>
+        <li class="card p-6 reveal"><span class="w-9 h-9 rounded-full bg-sage text-bg font-black grid place-items-center">2</span><h3 class="mt-4 font-bold">Choose what to block</h3><p class="mt-2 text-sm text-muted leading-relaxed">Select distracting apps, switch on the Shorts and Reels blocker, and turn on the ad blocker if you want it.</p></li>
+        <li class="card p-6 reveal"><span class="w-9 h-9 rounded-full bg-sage text-bg font-black grid place-items-center">3</span><h3 class="mt-4 font-bold">Start a session</h3><p class="mt-2 text-sm text-muted leading-relaxed">Pick a duration and commit. In Strict Mode the rules lock until the time is up.</p></li>
+        <li class="card p-6 reveal"><span class="w-9 h-9 rounded-full bg-sage text-bg font-black grid place-items-center">4</span><h3 class="mt-4 font-bold">Watch it compound</h3><p class="mt-2 text-sm text-muted leading-relaxed">Real focus time, streaks and shield tiers show your progress. Small days add up.</p></li>
+    </ol>
+</section>
 
-            <!-- 3. Pro Yearly (Featured) -->
-            <div class="bg-asr-surface border-2 border-asr-sky rounded-2xl p-6 flex flex-col justify-between relative overflow-hidden shadow-2xl shadow-asr-sky/15">
-                <div class="absolute top-3 right-3 bg-asr-sky text-asr-bg text-[9px] font-extrabold px-2 py-0.5 rounded-full uppercase tracking-wider">
-                    MOST POPULAR
-                </div>
-                <div>
-                    <div class="text-asr-sky text-[10px] font-bold tracking-widest uppercase mb-1">Pro Yearly</div>
-                    <div class="flex items-baseline gap-1">
-                        <span class="text-3xl font-black text-asr-text">$19.99</span>
-                        <span class="text-asr-faint text-xs">/yr</span>
-                    </div>
-                    <div class="text-asr-sky text-xs font-semibold mt-0.5">Just $1.67 / month (Save 45%)</div>
-                    <p class="text-xs text-asr-muted mt-3 leading-relaxed">
-                        The ultimate high-discipline commitment for serious progress.
-                    </p>
-                    <ul class="mt-5 space-y-2 text-xs">
-                        <li class="flex items-center gap-2 text-asr-muted"><span class="text-asr-sky font-bold">✓</span> All Pro features included</li>
-                        <li class="flex items-center gap-2 text-asr-muted"><span class="text-asr-sky font-bold">✓</span> Unlimited Strict Mode &amp; apps</li>
-                        <li class="flex items-center gap-2 text-asr-muted"><span class="text-asr-sky font-bold">✓</span> Notification Shield service</li>
-                        <li class="flex items-center gap-2 text-asr-muted"><span class="text-asr-sky font-bold">✓</span> Unlimited automated schedules</li>
-                        <li class="flex items-center gap-2 text-asr-muted"><span class="text-asr-sky font-bold">✓</span> Priority updates &amp; support</li>
-                    </ul>
-                </div>
-                <a href="#simulator" class="mt-6 w-full block text-center py-3 bg-asr-sky hover:bg-asr-sky/90 text-asr-bg font-extrabold text-xs rounded-xl transition shadow-lg shadow-asr-sky/25">
-                    Unlock Pro Yearly
-                </a>
-            </div>
-
-            <!-- 4. Lifetime Pro -->
-            <div class="bg-asr-surface border border-asr-border rounded-2xl p-6 flex flex-col justify-between hover:border-asr-sky/40 transition">
-                <div class="inline-block self-end bg-asr-elevated border border-asr-border text-asr-muted text-[9px] font-bold px-2 py-0.5 rounded-full mb-1">
-                    ONE-TIME
-                </div>
-                <div>
-                    <div class="text-asr-text text-[10px] font-bold tracking-widest uppercase mb-1">Lifetime License</div>
-                    <div class="text-3xl font-black text-asr-text">$49.99</div>
-                    <div class="text-asr-faint text-xs mt-0.5">Pay once · Own forever</div>
-                    <p class="text-xs text-asr-muted mt-3 leading-relaxed">
-                        Perpetual license for life. Never pay another subscription fee.
-                    </p>
-                    <ul class="mt-5 space-y-2 text-xs">
-                        <li class="flex items-center gap-2 text-asr-muted"><span class="text-asr-sky font-bold">✓</span> Full Lifetime Pro access</li>
-                        <li class="flex items-center gap-2 text-asr-muted"><span class="text-asr-sky font-bold">✓</span> Zero recurring charges</li>
-                        <li class="flex items-center gap-2 text-asr-muted"><span class="text-asr-sky font-bold">✓</span> All future updates &amp; features</li>
-                        <li class="flex items-center gap-2 text-asr-muted"><span class="text-asr-sky font-bold">✓</span> Lifetime multi-store sync</li>
-                    </ul>
-                </div>
-                <a href="#simulator" class="mt-6 w-full block text-center py-3 bg-asr-elevated hover:bg-asr-border text-asr-text font-bold text-xs rounded-xl transition">
-                    Buy Lifetime
-                </a>
-            </div>
-
+<!-- STREAK SPOTLIGHT + TIERS -->
+<section id="streak" class="py-16 sm:py-24 bg-surface/50 border-y border-line/70">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
+        <div class="reveal">
+            <p class="text-sm font-bold text-teal">Clean Streak</p>
+            <h2 class="mt-2 text-3xl sm:text-4xl font-extrabold tracking-tight">Break a bad habit loop, privately</h2>
+            <p class="mt-4 text-muted leading-relaxed">Pornography, endless scrolling, any loop you want out of. Open the Productivity tab and tick one box each day you stay clean. That is all the tracker asks of you.</p>
+            <ul class="mt-6 space-y-3 text-sm">
+                <li class="flex gap-3"><i data-lucide="check-circle-2" class="w-5 h-5 text-sage shrink-0 mt-0.5"></i><span class="text-muted"><strong class="text-text">Daily tick.</strong> Mark today clean, undo if you mis-tapped, start over without judgement.</span></li>
+                <li class="flex gap-3"><i data-lucide="check-circle-2" class="w-5 h-5 text-sage shrink-0 mt-0.5"></i><span class="text-muted"><strong class="text-text">Streak and best streak.</strong> A 7-day strip shows the week at a glance.</span></li>
+                <li class="flex gap-3"><i data-lucide="check-circle-2" class="w-5 h-5 text-sage shrink-0 mt-0.5"></i><span class="text-muted"><strong class="text-text">Recovery timeline.</strong> Milestones at 1, 3, 7, 14, 30, 60 and 90 days describing common changes in body and mind.</span></li>
+                <li class="flex gap-3"><i data-lucide="check-circle-2" class="w-5 h-5 text-sage shrink-0 mt-0.5"></i><span class="text-muted"><strong class="text-text">Stays on your phone.</strong> No account, no sync, no one else can see it.</span></li>
+            </ul>
+            <p class="mt-5 text-xs text-faint">The timeline is general information, not medical advice. If a habit is harming your health, please talk to a professional.</p>
         </div>
 
-        <!-- Student Discount Banner -->
-        <div class="mt-6 bg-asr-surface border border-asr-border rounded-2xl p-5 flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div class="flex items-center gap-3.5 text-left">
-                <div class="w-10 h-10 rounded-xl bg-asr-emerald/10 border border-asr-emerald/20 flex items-center justify-center text-asr-emerald shrink-0">
-                    <i data-lucide="graduation-cap" class="w-5 h-5"></i>
-                </div>
-                <div>
-                    <div class="flex items-center gap-2">
-                        <span class="font-bold text-sm text-asr-text">Student Pro Plan — $9.99 / year</span>
-                        <span class="bg-asr-emerald/10 text-asr-emerald text-[10px] font-bold px-2 py-0.5 rounded">50% STUDENT DISCOUNT</span>
-                    </div>
-                    <p class="text-xs text-asr-muted mt-0.5">Special subsidized annual plan for high school, college, and university students.</p>
+        <div class="card p-6 sm:p-8 reveal">
+            <h3 class="font-extrabold text-xl">Shield tiers</h3>
+            <p class="mt-1 text-sm text-muted">Your shield grows with your focus streak.</p>
+            <div class="mt-6 space-y-4">
+                <div class="flex items-center gap-4"><span class="w-10 h-10 rounded-full grid place-items-center bg-[#CD7F32]/20 text-[#E0A06A]"><i data-lucide="shield" class="w-5 h-5"></i></span><div class="flex-1"><p class="font-bold">Bronze</p><p class="text-xs text-muted">Where everyone starts</p></div><span class="text-xs font-bold text-faint">Day 0</span></div>
+                <div class="flex items-center gap-4"><span class="w-10 h-10 rounded-full grid place-items-center bg-[#C0C7CC]/15 text-[#C0C7CC]"><i data-lucide="shield" class="w-5 h-5"></i></span><div class="flex-1"><p class="font-bold">Silver</p><p class="text-xs text-muted">The habit is forming</p></div><span class="text-xs font-bold text-faint">Day 4</span></div>
+                <div class="flex items-center gap-4"><span class="w-10 h-10 rounded-full grid place-items-center bg-[#E2B94A]/15 text-[#E2B94A]"><i data-lucide="shield" class="w-5 h-5"></i></span><div class="flex-1"><p class="font-bold">Gold</p><p class="text-xs text-muted">Two solid weeks</p></div><span class="text-xs font-bold text-faint">Day 14</span></div>
+                <div class="flex items-center gap-4"><span class="w-10 h-10 rounded-full grid place-items-center bg-[#9FD3D6]/15 text-[#9FD3D6]"><i data-lucide="shield" class="w-5 h-5"></i></span><div class="flex-1"><p class="font-bold">Platinum</p><p class="text-xs text-muted">A month of discipline</p></div><span class="text-xs font-bold text-faint">Day 30</span></div>
+                <div class="flex items-center gap-4"><span class="w-10 h-10 rounded-full grid place-items-center bg-[#8FB8FF]/15 text-[#8FB8FF]"><i data-lucide="shield-check" class="w-5 h-5"></i></span><div class="flex-1"><p class="font-bold">Diamond</p><p class="text-xs text-muted">Unshakeable</p></div><span class="text-xs font-bold text-faint">Day 60</span></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- BLOCKERS DETAIL -->
+<section id="simulator" class="max-w-6xl mx-auto px-4 sm:px-6 py-16 sm:py-24">
+    <div class="text-center max-w-2xl mx-auto reveal">
+        <p class="text-sm font-bold text-teal">Blocking, explained</p>
+        <h2 class="mt-2 text-3xl sm:text-4xl font-extrabold tracking-tight">Three layers between you and the scroll</h2>
+    </div>
+    <div class="mt-12 grid md:grid-cols-3 gap-4 sm:gap-5">
+        <div class="card p-6 reveal">
+            <i data-lucide="layers" class="w-6 h-6 text-teal"></i>
+            <h3 class="mt-4 font-bold text-lg">Layer 1: apps</h3>
+            <p class="mt-2 text-sm text-muted leading-relaxed">An accessibility service notices when a blocked app comes to the front and puts a block screen over it. It runs only when something changes, so battery use stays low.</p>
+        </div>
+        <div class="card p-6 reveal">
+            <i data-lucide="scroll" class="w-6 h-6 text-teal"></i>
+            <h3 class="mt-4 font-bold text-lg">Layer 2: feeds</h3>
+            <p class="mt-2 text-sm text-muted leading-relaxed">The same service recognises Shorts and Reels screens inside otherwise useful apps and steps you back out, so you can still message friends or watch a tutorial.</p>
+        </div>
+        <div class="card p-6 reveal">
+            <i data-lucide="globe" class="w-6 h-6 text-teal"></i>
+            <h3 class="mt-4 font-bold text-lg">Layer 3: the web</h3>
+            <p class="mt-2 text-sm text-muted leading-relaxed">A local VPN profile swaps your DNS for a filtering one. Ads, trackers and, if you choose, adult domains fail to load in any browser or app. Only DNS lookups are filtered, not your traffic.</p>
+        </div>
+    </div>
+</section>
+
+<!-- PRIVACY -->
+<section id="privacy" class="py-16 sm:py-24 bg-surface/50 border-y border-line/70">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 grid lg:grid-cols-2 gap-10 lg:gap-16">
+        <div class="reveal">
+            <p class="text-sm font-bold text-teal">Privacy and permissions</p>
+            <h2 class="mt-2 text-3xl sm:text-4xl font-extrabold tracking-tight">Your habits are your business</h2>
+            <p class="mt-4 text-muted leading-relaxed">Focus sessions, goals, reminders, streaks and usage stats are stored on your device. There are no ads and no analytics trackers in the app. An account is only needed if you want to redeem a Pro key, and then only to attach that key to you.</p>
+            <p class="mt-4 text-muted leading-relaxed">Android asks for some powerful permissions to block apps. Here is exactly what each one is for:</p>
+            <p class="mt-6"><a href="privacy.html" class="text-teal font-semibold hover:underline inline-flex items-center gap-1">Read the privacy policy <i data-lucide="arrow-right" class="w-4 h-4"></i></a></p>
+        </div>
+        <div class="space-y-3 reveal">
+            <div class="card p-4 flex gap-4"><i data-lucide="bar-chart-2" class="w-5 h-5 text-teal shrink-0 mt-0.5"></i><div><p class="font-bold text-sm">Usage access</p><p class="text-sm text-muted mt-0.5">Reads which app is open and for how long, to show real screen time and trigger blocking.</p></div></div>
+            <div class="card p-4 flex gap-4"><i data-lucide="accessibility" class="w-5 h-5 text-teal shrink-0 mt-0.5"></i><div><p class="font-bold text-sm">Accessibility service</p><p class="text-sm text-muted mt-0.5">Detects blocked apps and Shorts or Reels screens. It is used only for blocking and nothing is recorded or sent.</p></div></div>
+            <div class="card p-4 flex gap-4"><i data-lucide="app-window" class="w-5 h-5 text-teal shrink-0 mt-0.5"></i><div><p class="font-bold text-sm">Display over other apps</p><p class="text-sm text-muted mt-0.5">Draws the block screen on top of a distracting app.</p></div></div>
+            <div class="card p-4 flex gap-4"><i data-lucide="bell" class="w-5 h-5 text-teal shrink-0 mt-0.5"></i><div><p class="font-bold text-sm">Notifications and exact alarms</p><p class="text-sm text-muted mt-0.5">Delivers your reminders and starts scheduled routines on time.</p></div></div>
+            <div class="card p-4 flex gap-4"><i data-lucide="network" class="w-5 h-5 text-teal shrink-0 mt-0.5"></i><div><p class="font-bold text-sm">VPN profile (optional)</p><p class="text-sm text-muted mt-0.5">Only for the ad blocker. It is a local profile that filters DNS and does not route your traffic to us.</p></div></div>
+            <div class="card p-4 flex gap-4"><i data-lucide="power" class="w-5 h-5 text-teal shrink-0 mt-0.5"></i><div><p class="font-bold text-sm">Start after reboot</p><p class="text-sm text-muted mt-0.5">Restores your reminders and routines when the phone restarts.</p></div></div>
+        </div>
+    </div>
+</section>
+
+<!-- PRICING -->
+<section id="pricing" class="max-w-6xl mx-auto px-4 sm:px-6 py-16 sm:py-24">
+    <div class="text-center max-w-2xl mx-auto reveal">
+        <p class="text-sm font-bold text-teal">Pricing</p>
+        <h2 class="mt-2 text-3xl sm:text-4xl font-extrabold tracking-tight">Free to start. Pro when you want more.</h2>
+        <p class="mt-4 text-muted">Pay once per plan, no auto-renewal. You receive a one-time key and activate it inside the app.</p>
+    </div>
+
+    <div class="mt-12 grid lg:grid-cols-5 gap-4 sm:gap-5">
+        <div class="card p-6 lg:col-span-2 reveal">
+            <h3 class="font-extrabold text-xl">Free vs Pro</h3>
+            <div class="mt-5 text-sm">
+                <div class="grid grid-cols-[1fr_auto_auto] gap-x-4 gap-y-3 items-center">
+                    <span class="text-faint text-xs font-bold">Feature</span><span class="text-faint text-xs font-bold text-right">Free</span><span class="text-teal text-xs font-bold text-right">Pro</span>
+                    <span class="text-muted">Blocked apps</span><span class="text-right">3</span><span class="text-right text-sage font-bold">Unlimited</span>
+                    <span class="text-muted">Strict Mode length</span><span class="text-right">3 hours</span><span class="text-right text-sage font-bold">Up to 12 hours</span>
+                    <span class="text-muted">Focus profiles</span><span class="text-right">4</span><span class="text-right text-sage font-bold">Unlimited</span>
+                    <span class="text-muted">Website blocking</span><span class="text-right">Basic</span><span class="text-right text-sage font-bold">Advanced</span>
+                    <span class="text-muted">Notification shield</span><span class="text-right">No</span><span class="text-right text-sage font-bold">Yes</span>
+                    <span class="text-muted">Routines</span><span class="text-right">1</span><span class="text-right text-sage font-bold">Unlimited</span>
+                    <span class="text-muted">Ad blocker, Shorts blocker, Clean Streak</span><span class="text-right text-sage font-bold">Included</span><span class="text-right text-sage font-bold">Included</span>
                 </div>
             </div>
-            <a href="pricing.html" class="shrink-0 text-xs font-bold text-asr-sky hover:underline flex items-center gap-1">
-                Learn more &amp; verify student status <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+        </div>
+
+        <div class="lg:col-span-3 grid sm:grid-cols-2 gap-4 sm:gap-5">
+            <div class="card p-5 reveal"><p class="text-sm font-bold text-muted">1 Month</p><p class="mt-1 text-3xl font-black">&#2547;150</p><p class="text-xs text-faint">about $1.99, 30 days</p></div>
+            <div class="card p-5 reveal"><p class="text-sm font-bold text-muted">3 Months</p><p class="mt-1 text-3xl font-black">&#2547;350</p><p class="text-xs text-faint">about $4.49, 90 days</p></div>
+            <div class="card p-5 reveal"><p class="text-sm font-bold text-muted">6 Months</p><p class="mt-1 text-3xl font-black">&#2547;600</p><p class="text-xs text-faint">about $7.99, 180 days</p></div>
+            <div class="card p-5 reveal border-sage/70 relative"><span class="absolute -top-3 left-5 rounded-full bg-sage text-bg text-[10px] font-extrabold px-2.5 py-1">BEST VALUE</span><p class="text-sm font-bold text-muted">1 Year</p><p class="mt-1 text-3xl font-black">&#2547;999</p><p class="text-xs text-faint">about $12.99, 365 days</p></div>
+            <div class="card p-5 reveal sm:col-span-2 flex items-center justify-between gap-4"><div><p class="text-sm font-bold text-muted">Lifetime</p><p class="mt-1 text-3xl font-black">&#2547;1999</p><p class="text-xs text-faint">about $24.99, pay once, keep Pro</p></div><i data-lucide="infinity" class="w-9 h-9 text-sage"></i></div>
+        </div>
+    </div>
+
+    <div class="mt-10 card p-6 sm:p-8 reveal">
+        <div class="grid lg:grid-cols-2 gap-8 items-center">
+            <div>
+                <h3 class="text-xl sm:text-2xl font-extrabold">How to get your key</h3>
+                <ol class="mt-4 space-y-3 text-sm text-muted">
+                    <li class="flex gap-3"><span class="w-6 h-6 rounded-full bg-sage text-bg text-xs font-black grid place-items-center shrink-0">1</span><span>Open <strong class="text-text">Settings, then Redeem</strong> in the app and tap <strong class="text-text">Get your key</strong> for the plan you want.</span></li>
+                    <li class="flex gap-3"><span class="w-6 h-6 rounded-full bg-sage text-bg text-xs font-black grid place-items-center shrink-0">2</span><span>Message the owner on WhatsApp, Facebook or Instagram and complete payment as agreed.</span></li>
+                    <li class="flex gap-3"><span class="w-6 h-6 rounded-full bg-sage text-bg text-xs font-black grid place-items-center shrink-0">3</span><span>You get a one-time key like <code class="text-sage">AEGIS-XXXX-XXXX-XXXX-XXXX</code>.</span></li>
+                    <li class="flex gap-3"><span class="w-6 h-6 rounded-full bg-sage text-bg text-xs font-black grid place-items-center shrink-0">4</span><span>Sign in, paste the key and Pro activates instantly. Each key works once, so keep it private.</span></li>
+                </ol>
+            </div>
+            <div class="grid gap-3">
+                <a href="https://wa.me/8801643526721?text=Hi%2C%20I%20want%20to%20buy%20an%20Aegis%20Focus%20Pro%20key." target="_blank" rel="noopener"
+                   class="btn-primary rounded-2xl px-6 py-4 inline-flex items-center justify-center gap-3"><i data-lucide="message-circle" class="w-5 h-5"></i>Message on WhatsApp</a>
+                <a href="https://www.facebook.com/VoiceoffKhalid" target="_blank" rel="noopener"
+                   class="btn-ghost rounded-2xl px-6 py-4 inline-flex items-center justify-center gap-3"><i data-lucide="facebook" class="w-5 h-5 text-teal"></i>Message on Facebook</a>
+                <a href="https://www.instagram.com/khalid.abdullahh" target="_blank" rel="noopener"
+                   class="btn-ghost rounded-2xl px-6 py-4 inline-flex items-center justify-center gap-3"><i data-lucide="instagram" class="w-5 h-5 text-teal"></i>Message on Instagram</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- INSTALL -->
+<section id="install" class="py-16 sm:py-24 bg-surface/50 border-y border-line/70">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 grid lg:grid-cols-2 gap-10 lg:gap-16">
+        <div class="reveal">
+            <p class="text-sm font-bold text-teal">Install</p>
+            <h2 class="mt-2 text-3xl sm:text-4xl font-extrabold tracking-tight">Up and running in two minutes</h2>
+            <ol class="mt-6 space-y-4 text-sm text-muted">
+                <li class="flex gap-3"><span class="w-7 h-7 rounded-full bg-sage text-bg font-black grid place-items-center shrink-0">1</span><span><strong class="text-text">Download the APK</strong> on your Android phone with the button below.</span></li>
+                <li class="flex gap-3"><span class="w-7 h-7 rounded-full bg-sage text-bg font-black grid place-items-center shrink-0">2</span><span><strong class="text-text">Open the file.</strong> If Android asks, allow installs from your browser or file manager just for this once.</span></li>
+                <li class="flex gap-3"><span class="w-7 h-7 rounded-full bg-sage text-bg font-black grid place-items-center shrink-0">3</span><span><strong class="text-text">If Play Protect warns you,</strong> choose More details, then Install anyway. The app is not on the Play Store yet, so Google has not seen it before.</span></li>
+                <li class="flex gap-3"><span class="w-7 h-7 rounded-full bg-sage text-bg font-black grid place-items-center shrink-0">4</span><span><strong class="text-text">Follow onboarding</strong> and grant the permissions it asks for.</span></li>
+            </ol>
+            <a href="https://github.com/khalidabdullahh/AegisFocus/releases/latest/download/AegisFocus-Latest.apk" data-apk
+               class="mt-8 btn-primary rounded-2xl px-7 py-4 inline-flex items-center justify-center gap-2.5 w-full sm:w-auto">
+                <i data-lucide="download" class="w-5 h-5"></i><span>Download latest APK</span>
             </a>
-        </div>
-    </div>
-</section>
-
-
-<!-- ══════════════════════════════════════════════════════════════════
-     FREQUENTLY ASKED QUESTIONS (FAQ)
-════════════════════════════════════════════════════════════════════ -->
-<section id="faq" class="py-24 px-5 bg-asr-surface border-y border-asr-border reveal"
-         x-data="{ activeFaq: null }">
-    <div class="max-w-4xl mx-auto">
-        <div class="text-center mb-16">
-            <p class="text-asr-sky text-xs font-bold tracking-widest uppercase mb-3">Got Questions?</p>
-            <h2 class="text-3xl sm:text-4xl font-extrabold text-asr-text">Frequently Asked Questions</h2>
-            <p class="text-asr-muted text-sm mt-3 max-w-xl mx-auto">
-                Everything you need to know about Aegis Focus, privacy, strict mode, and scheduling.
-            </p>
+            <p class="mt-3 text-xs text-faint">Requires Android 8.0 (API 26) or newer. <a href="download" class="text-teal hover:underline">Version details and changelog</a></p>
         </div>
 
-        <div class="space-y-4">
-            <!-- FAQ 1 -->
-            <div class="bg-asr-bg border border-asr-border rounded-2xl overflow-hidden transition">
-                <button @click="activeFaq = (activeFaq === 1 ? null : 1)"
-                        class="w-full p-5 text-left flex items-center justify-between font-bold text-sm sm:text-base text-asr-text">
-                    <span>How is Aegis Focus really unbypassable during Strict Mode?</span>
-                    <i data-lucide="chevron-down" class="w-4 h-4 text-asr-muted transition-transform" :class="activeFaq === 1 ? 'rotate-180 text-asr-sky' : ''"></i>
-                </button>
-                <div x-show="activeFaq === 1" x-collapse class="px-5 pb-5 text-xs sm:text-sm text-asr-muted leading-relaxed border-t border-asr-border/50 pt-3">
-                    Aegis Focus utilizes Android's native <strong>Device Policy Manager (Device Administrator)</strong> and Accessibility APIs. When Strict Mode is active, Android blocks the uninstallation of the app, prevents changing blocked app lists, and disables canceling the session until the timer completes.
+        <div class="reveal">
+            <div class="card p-6 sm:p-8">
+                <div class="flex items-center justify-between gap-3">
+                    <h3 class="font-extrabold text-xl">Releases</h3>
+                    <a href="https://github.com/khalidabdullahh/AegisFocus/releases" target="_blank" rel="noopener" class="text-xs text-teal font-semibold hover:underline">All on GitHub</a>
                 </div>
-            </div>
-
-            <!-- FAQ 2 -->
-            <div class="bg-asr-bg border border-asr-border rounded-2xl overflow-hidden transition">
-                <button @click="activeFaq = (activeFaq === 2 ? null : 2)"
-                        class="w-full p-5 text-left flex items-center justify-between font-bold text-sm sm:text-base text-asr-text">
-                    <span>Does Aegis Focus track or upload my app usage to cloud servers?</span>
-                    <i data-lucide="chevron-down" class="w-4 h-4 text-asr-muted transition-transform" :class="activeFaq === 2 ? 'rotate-180 text-asr-sky' : ''"></i>
-                </button>
-                <div x-show="activeFaq === 2" x-collapse class="px-5 pb-5 text-xs sm:text-sm text-asr-muted leading-relaxed border-t border-asr-border/50 pt-3">
-                    <strong>Absolutely not.</strong> Aegis Focus is strictly local-first. All your focus sessions, app shields, daily goals, and discipline scores live exclusively inside a local Room SQLite database on your device. We have zero analytics servers and no account is required.
-                </div>
-            </div>
-
-            <!-- FAQ 3 -->
-            <div class="bg-asr-bg border border-asr-border rounded-2xl overflow-hidden transition">
-                <button @click="activeFaq = (activeFaq === 3 ? null : 3)"
-                        class="w-full p-5 text-left flex items-center justify-between font-bold text-sm sm:text-base text-asr-text">
-                    <span>What are the limits on the Free tier?</span>
-                    <i data-lucide="chevron-down" class="w-4 h-4 text-asr-muted transition-transform" :class="activeFaq === 3 ? 'rotate-180 text-asr-sky' : ''"></i>
-                </button>
-                <div x-show="activeFaq === 3" x-collapse class="px-5 pb-5 text-xs sm:text-sm text-asr-muted leading-relaxed border-t border-asr-border/50 pt-3">
-                    The Free tier gives you full core focus sessions, mindful pauses, 100% on-device privacy, and Strict Mode sessions up to <strong>2 hours (120 minutes)</strong> with up to <strong>3 shielded apps</strong>. Pro tier unlocks unlimited durations (up to 12h/unlimited), unlimited apps, and adaptive friction.
-                </div>
-            </div>
-
-            <!-- FAQ 4 -->
-            <div class="bg-asr-bg border border-asr-border rounded-2xl overflow-hidden transition">
-                <button @click="activeFaq = (activeFaq === 4 ? null : 4)"
-                        class="w-full p-5 text-left flex items-center justify-between font-bold text-sm sm:text-base text-asr-text">
-                    <span>How do Recurring Focus Routines work?</span>
-                    <i data-lucide="chevron-down" class="w-4 h-4 text-asr-muted transition-transform" :class="activeFaq === 4 ? 'rotate-180 text-asr-sky' : ''"></i>
-                </button>
-                <div x-show="activeFaq === 4" x-collapse class="px-5 pb-5 text-xs sm:text-sm text-asr-muted leading-relaxed border-t border-asr-border/50 pt-3">
-                    You can configure automated routines in Settings (e.g. 9:00 AM to 12:00 PM on Monday through Friday). Aegis Focus's background <code>ScheduleAlarmScheduler</code> schedules exact system alarms to start Strict Mode automatically and loops indefinitely across weeks until you toggle it off.
-                </div>
-            </div>
-
-            <!-- FAQ 5 -->
-            <div class="bg-asr-bg border border-asr-border rounded-2xl overflow-hidden transition">
-                <button @click="activeFaq = (activeFaq === 5 ? null : 5)"
-                        class="w-full p-5 text-left flex items-center justify-between font-bold text-sm sm:text-base text-asr-text">
-                    <span>Does Aegis Focus drain battery life in the background?</span>
-                    <i data-lucide="chevron-down" class="w-4 h-4 text-asr-muted transition-transform" :class="activeFaq === 5 ? 'rotate-180 text-asr-sky' : ''"></i>
-                </button>
-                <div x-show="activeFaq === 5" x-collapse class="px-5 pb-5 text-xs sm:text-sm text-asr-muted leading-relaxed border-t border-asr-border/50 pt-3">
-                    No. Unlike VPN-based blockers that route your network traffic through background processes, Aegis Focus uses Android's lightweight event-driven Accessibility and Usage Stats listeners which sleep when not triggered, consuming less than 1% battery per day.
-                </div>
-            </div>
-
-            <!-- FAQ 6 -->
-            <div class="bg-asr-bg border border-asr-border rounded-2xl overflow-hidden transition">
-                <button @click="activeFaq = (activeFaq === 6 ? null : 6)"
-                        class="w-full p-5 text-left flex items-center justify-between font-bold text-sm sm:text-base text-asr-text">
-                    <span>What happens in an actual emergency during Strict Mode?</span>
-                    <i data-lucide="chevron-down" class="w-4 h-4 text-asr-muted transition-transform" :class="activeFaq === 6 ? 'rotate-180 text-asr-sky' : ''"></i>
-                </button>
-                <div x-show="activeFaq === 6" x-collapse class="px-5 pb-5 text-xs sm:text-sm text-asr-muted leading-relaxed border-t border-asr-border/50 pt-3">
-                    Aegis Focus provides a mindful <strong>Emergency Breakout</strong> mechanism with cooling friction: you must complete a countdown cooldown and type a deliberate confirmation phrase (<em>"I choose to break focus"</em>). It logs an emergency exit in your Discipline analytics to preserve conscious accountability.
-                </div>
+                <ul id="release-list" class="mt-5 divide-y divide-line/70 text-sm">
+                    <li class="py-3 text-muted">Loading releases...</li>
+                </ul>
             </div>
         </div>
     </div>
 </section>
 
+<!-- FAQ -->
+<section id="faq" class="max-w-3xl mx-auto px-4 sm:px-6 py-16 sm:py-24">
+    <div class="text-center reveal">
+        <p class="text-sm font-bold text-teal">FAQ</p>
+        <h2 class="mt-2 text-3xl sm:text-4xl font-extrabold tracking-tight">Questions, answered straight</h2>
+    </div>
+    <div class="mt-10 space-y-3 reveal">
+        <details class="card p-5"><summary class="flex items-center justify-between gap-4 font-bold">Is Aegis Focus free?<i data-lucide="chevron-down" class="chev w-5 h-5 text-faint shrink-0"></i></summary><p class="mt-3 text-sm text-muted leading-relaxed">Yes. Focus sessions, app blocking (3 apps), Strict Mode up to 3 hours, the Shorts and Reels blocker, the ad blocker, goals, reminders and the Clean Streak are free. Pro lifts the limits and adds advanced tools.</p></details>
+        <details class="card p-5"><summary class="flex items-center justify-between gap-4 font-bold">Can I get out of Strict Mode early?<i data-lucide="chevron-down" class="chev w-5 h-5 text-faint shrink-0"></i></summary><p class="mt-3 text-sm text-muted leading-relaxed">No. Strict Mode has no emergency exit by design. While it runs, session rules and blocked apps are locked and the app cannot be uninstalled. Choose a duration you are comfortable committing to.</p></details>
+        <details class="card p-5"><summary class="flex items-center justify-between gap-4 font-bold">Does it upload my usage or habits?<i data-lucide="chevron-down" class="chev w-5 h-5 text-faint shrink-0"></i></summary><p class="mt-3 text-sm text-muted leading-relaxed">No. Your sessions, goals, reminders, usage stats and Clean Streak are stored on your phone. The only server involved is for Pro keys, which checks that a key is valid and unused.</p></details>
+        <details class="card p-5"><summary class="flex items-center justify-between gap-4 font-bold">Why does it need Accessibility and VPN permissions?<i data-lucide="chevron-down" class="chev w-5 h-5 text-faint shrink-0"></i></summary><p class="mt-3 text-sm text-muted leading-relaxed">Accessibility lets the app notice blocked apps and Shorts screens. The VPN permission is optional and only creates a local profile that filters DNS for the ad blocker. See the permission list in the Privacy section above.</p></details>
+        <details class="card p-5"><summary class="flex items-center justify-between gap-4 font-bold">Does the 18+ block stop everything?<i data-lucide="chevron-down" class="chev w-5 h-5 text-faint shrink-0"></i></summary><p class="mt-3 text-sm text-muted leading-relaxed">It blocks a very large set of adult domains in every browser and app, but DNS filtering cannot catch everything, such as content inside some apps or a browser using its own secure DNS. Treat it as a strong first wall and combine it with Strict Mode.</p></details>
+        <details class="card p-5"><summary class="flex items-center justify-between gap-4 font-bold">Will it drain my battery?<i data-lucide="chevron-down" class="chev w-5 h-5 text-faint shrink-0"></i></summary><p class="mt-3 text-sm text-muted leading-relaxed">The blocker reacts to events and sleeps otherwise. The optional ad blocker keeps a small local VPN profile running, which is light but not zero.</p></details>
+        <details class="card p-5"><summary class="flex items-center justify-between gap-4 font-bold">How do I get Pro, and can a key be shared?<i data-lucide="chevron-down" class="chev w-5 h-5 text-faint shrink-0"></i></summary><p class="mt-3 text-sm text-muted leading-relaxed">Tap Get your key in the app and message the owner on WhatsApp, Facebook or Instagram. Each key is single-use: once someone redeems it, nobody else can. Redeeming while you already have Pro adds the new time on top.</p></details>
+        <details class="card p-5"><summary class="flex items-center justify-between gap-4 font-bold">Is it on the Play Store? Is the APK safe?<i data-lucide="chevron-down" class="chev w-5 h-5 text-faint shrink-0"></i></summary><p class="mt-3 text-sm text-muted leading-relaxed">It is distributed as an APK for now. The source code is public on GitHub and every APK is built automatically from it by GitHub Actions, so you can inspect what you install.</p></details>
+        <details class="card p-5"><summary class="flex items-center justify-between gap-4 font-bold">Which phones are supported?<i data-lucide="chevron-down" class="chev w-5 h-5 text-faint shrink-0"></i></summary><p class="mt-3 text-sm text-muted leading-relaxed">Any Android phone or tablet on Android 8.0 or newer. Some brands aggressively close background apps, so if reminders or blocking stop, set Aegis Focus to unrestricted battery use.</p></details>
+        <details class="card p-5"><summary class="flex items-center justify-between gap-4 font-bold">I found a bug or have an idea.<i data-lucide="chevron-down" class="chev w-5 h-5 text-faint shrink-0"></i></summary><p class="mt-3 text-sm text-muted leading-relaxed">Message on WhatsApp, Facebook or Instagram, or open an issue on GitHub. Feedback shapes what gets built next.</p></details>
+    </div>
+</section>
 
-<!-- ══════════════════════════════════════════════════════════════════
-     KNOWLEDGE HUB & GUIDES SHOWCASE
-════════════════════════════════════════════════════════════════════ -->
-<section class="py-24 px-5 max-w-6xl mx-auto reveal">
-    <div class="flex flex-col sm:flex-row items-start sm:items-end justify-between mb-12 gap-4">
+<!-- FINAL CTA -->
+<section class="px-4 sm:px-6 pb-16 sm:pb-24">
+    <div class="max-w-4xl mx-auto rounded-3xl border border-line bg-gradient-to-b from-elevated to-surface p-8 sm:p-14 text-center reveal">
+        <img src="assets/aegis_logo_512.png" alt="" width="84" height="84" class="w-20 h-20 rounded-2xl mx-auto border border-line">
+        <h2 class="mt-6 text-3xl sm:text-4xl font-black tracking-tight">Your next hour is yours.</h2>
+        <p class="mt-3 text-muted max-w-lg mx-auto">Install Aegis Focus, block one app, start one session. That is the whole first step.</p>
+        <a href="https://github.com/khalidabdullahh/AegisFocus/releases/latest/download/AegisFocus-Latest.apk" data-apk
+           class="mt-8 btn-primary rounded-2xl px-8 py-4 text-base inline-flex items-center justify-center gap-2.5 shadow-xl shadow-sage/20">
+            <i data-lucide="download" class="w-5 h-5"></i><span>Download for Android</span>
+        </a>
+    </div>
+</section>
+
+</main>
+
+<!-- FOOTER -->
+<footer class="border-t border-line/70 bg-surface/60">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 py-12 grid sm:grid-cols-2 lg:grid-cols-4 gap-8 text-sm">
         <div>
-            <p class="text-asr-sky text-xs font-bold tracking-widest uppercase mb-2">Knowledge Base &amp; SEO Hub</p>
-            <h2 class="text-3xl sm:text-4xl font-extrabold text-asr-text">Deep Guides on Digital Discipline</h2>
+            <div class="flex items-center gap-2.5"><img src="assets/favicon.png" alt="" width="32" height="32" class="w-8 h-8 rounded-lg border border-line"><span class="font-extrabold text-lg">Aegis Focus</span></div>
+            <p class="mt-3 text-muted leading-relaxed">A calm, on-device focus system for Android. Built by Khalid Abdullah.</p>
         </div>
-        <a href="guides.html" class="text-xs font-bold text-asr-sky hover:underline flex items-center gap-1">
-            Browse all 25+ Guides <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
-        </a>
-    </div>
-
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        <a href="guides/best-app-blocker-you-cannot-bypass.html" class="bg-asr-surface border border-asr-border rounded-2xl p-6 hover:border-asr-sky/40 transition group flex flex-col justify-between">
-            <div>
-                <span class="text-[10px] font-bold text-asr-red uppercase tracking-wider bg-asr-red/10 px-2 py-0.5 rounded">Security &amp; Strict Mode</span>
-                <h3 class="font-bold text-base text-asr-text mt-3 group-hover:text-asr-sky transition">Best App Blocker You Cannot Bypass on Android</h3>
-                <p class="text-xs text-asr-muted mt-2 leading-relaxed">
-                    Why standard screen time apps fail, how bypass loopholes work, and how Device Admin solves impulsive app usage.
-                </p>
-            </div>
-            <div class="mt-4 pt-3 border-t border-asr-border/60 text-xs font-semibold text-asr-sky flex items-center gap-1">
-                Read Guide &rarr;
-            </div>
-        </a>
-
-        <a href="guides/best-app-blocker-for-android-2026.html" class="bg-asr-surface border border-asr-border rounded-2xl p-6 hover:border-asr-sky/40 transition group flex flex-col justify-between">
-            <div>
-                <span class="text-[10px] font-bold text-asr-sky uppercase tracking-wider bg-asr-sky/10 px-2 py-0.5 rounded">2026 Benchmark</span>
-                <h3 class="font-bold text-base text-asr-text mt-3 group-hover:text-asr-sky transition">Top 10 Android App Blockers Reviewed &amp; Ranked</h3>
-                <p class="text-xs text-asr-muted mt-2 leading-relaxed">
-                    A comprehensive technical breakdown comparing Opal, Freedom, Forest, StayFree, and Aegis Focus.
-                </p>
-            </div>
-            <div class="mt-4 pt-3 border-t border-asr-border/60 text-xs font-semibold text-asr-sky flex items-center gap-1">
-                Read Guide &rarr;
-            </div>
-        </a>
-
-        <a href="guides/best-adhd-friendly-app-blocker.html" class="bg-asr-surface border border-asr-border rounded-2xl p-6 hover:border-asr-sky/40 transition group flex flex-col justify-between">
-            <div>
-                <span class="text-[10px] font-bold text-asr-emerald uppercase tracking-wider bg-asr-emerald/10 px-2 py-0.5 rounded">ADHD &amp; Neurodiversity</span>
-                <h3 class="font-bold text-base text-asr-text mt-3 group-hover:text-asr-sky transition">ADHD-Friendly Screen Time &amp; Friction Systems</h3>
-                <p class="text-xs text-asr-muted mt-2 leading-relaxed">
-                    How tactile friction, countdown pauses, and automated routines support neurodivergent focus.
-                </p>
-            </div>
-            <div class="mt-4 pt-3 border-t border-asr-border/60 text-xs font-semibold text-asr-sky flex items-center gap-1">
-                Read Guide &rarr;
-            </div>
-        </a>
-    </div>
-</section>
-
-
-<!-- ══════════════════════════════════════════════════════════════════
-     FINAL CALL TO ACTION
-════════════════════════════════════════════════════════════════════ -->
-<section class="py-28 px-5 text-center bg-gradient-to-b from-asr-bg via-asr-surface to-asr-bg border-t border-asr-border reveal">
-    <div class="max-w-2xl mx-auto">
-        <div class="w-14 h-14 rounded-2xl bg-asr-elevated border border-asr-sky/40 flex items-center justify-center mx-auto mb-6 glow-sky">
-            <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
-                <path d="M9 20L14 8L19 20" stroke="#38BDF8" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M10.8 16.5H17.2" stroke="#38BDF8" stroke-width="1.8" stroke-linecap="round"/>
-            </svg>
+        <div>
+            <p class="font-bold">Product</p>
+            <ul class="mt-3 space-y-2 text-muted">
+                <li><a class="hover:text-text" href="#features">Features</a></li>
+                <li><a class="hover:text-text" href="features.html">Feature matrix</a></li>
+                <li><a class="hover:text-text" href="#pricing">Pricing</a></li>
+                <li><a class="hover:text-text" href="download">Download</a></li>
+                <li><a class="hover:text-text" href="guides.html">Guides</a></li>
+            </ul>
         </div>
-
-        <h2 class="text-4xl sm:text-5xl font-black text-asr-text leading-tight">
-            Take Control of Your Time.<br>Starting Today.
-        </h2>
-        <p class="text-asr-muted text-sm sm:text-base mt-5 max-w-lg mx-auto leading-relaxed">
-            Every minute saved from mindless feeds is a minute invested in your career, health, relationships, and craft.
-        </p>
-
-        <div class="flex flex-col sm:flex-row items-center justify-center gap-3.5 mt-10">
-            <a href="AegisFocus-Latest.apk" download="AegisFocus-Latest.apk"
-               class="w-full sm:w-auto bg-asr-emerald hover:bg-asr-emerald/90 text-asr-bg font-extrabold text-sm px-8 py-4 rounded-xl transition shadow-xl shadow-asr-emerald/25 flex items-center justify-center gap-2">
-                <i data-lucide="download" class="w-4 h-4"></i>
-                Download Free Android APK
-            </a>
-            <a href="#simulator"
-               class="w-full sm:w-auto bg-asr-sky hover:bg-asr-sky/90 text-asr-bg font-bold text-sm px-8 py-4 rounded-xl transition shadow-xl shadow-asr-sky/20 flex items-center justify-center gap-2">
-                <i data-lucide="play" class="w-4 h-4 fill-current"></i>
-                Try Web Simulator
-            </a>
+        <div>
+            <p class="font-bold">Company</p>
+            <ul class="mt-3 space-y-2 text-muted">
+                <li><a class="hover:text-text" href="about.html">About</a></li>
+                <li><a class="hover:text-text" href="privacy.html">Privacy policy</a></li>
+                <li><a class="hover:text-text" href="terms.html">Terms of service</a></li>
+                <li><a class="hover:text-text" href="refund.html">Refund policy</a></li>
+            </ul>
+        </div>
+        <div>
+            <p class="font-bold">Connect</p>
+            <ul class="mt-3 space-y-2 text-muted">
+                <li><a class="hover:text-text" target="_blank" rel="noopener" href="https://wa.me/8801643526721">WhatsApp</a></li>
+                <li><a class="hover:text-text" target="_blank" rel="noopener" href="https://www.facebook.com/VoiceoffKhalid">Facebook</a></li>
+                <li><a class="hover:text-text" target="_blank" rel="noopener" href="https://www.instagram.com/khalid.abdullahh">Instagram</a></li>
+                <li><a class="hover:text-text" target="_blank" rel="noopener" href="https://github.com/khalidabdullahh/AegisFocus">GitHub</a></li>
+            </ul>
         </div>
     </div>
-</section>
-
-
-
-
-
-<!-- ══════════════════════════════════════════════════════════════════
-     FOOTER
-════════════════════════════════════════════════════════════════════ -->
-<footer class="border-t border-asr-border bg-asr-surface">
-    <div class="max-w-6xl mx-auto px-5 sm:px-8 py-12">
-        <div class="flex flex-col md:flex-row items-start justify-between gap-10">
-
-            <!-- Brand & Creator Info -->
-            <div class="max-w-sm">
-                <div class="flex items-center gap-3 mb-3">
-                    <div class="w-11 h-11 rounded-2xl bg-asr-elevated border border-asr-border/80 flex items-center justify-center p-1.5 shadow-md overflow-hidden">
-                        <img src="assets/aegis_logo.png" alt="Aegis Focus Logo" class="w-full h-full object-contain">
-                    </div>
-                    <span class="font-black text-xl text-white">Aegis Focus</span>
-                </div>
-                <p class="text-asr-faint text-xs leading-relaxed">
-                    Unbreakable Digital Discipline. Protect Your Attention.. A local-first, privacy-respecting focus system for Android designed to help you build unbreakable habits.
-                </p>
-                <div class="mt-4 flex items-center gap-2">
-                    <a href="https://github.com/khalidabdullahh" target="_blank" class="text-xs bg-asr-elevated border border-asr-border px-3 py-1.5 rounded-lg text-asr-muted hover:text-asr-sky transition flex items-center gap-1.5 font-semibold">
-                        <i data-lucide="github" class="w-3.5 h-3.5"></i> @khalidabdullahh
-                    </a>
-                </div>
-            </div>
-
-            <!-- Multi-page Links Navigation -->
-            <div class="grid grid-cols-2 sm:grid-cols-3 gap-8 text-xs w-full md:w-auto">
-                <div>
-                    <div class="text-asr-text font-bold mb-3 uppercase tracking-wider text-[11px]">Product &amp; Features</div>
-                    <ul class="space-y-2.5 text-asr-faint">
-                        <li><a href="features.html" class="hover:text-asr-text transition">Feature Matrix</a></li>
-                        <li><a href="pricing.html" class="hover:text-asr-text transition">Pricing Plans</a></li>
-                        <li><a href="about.html" class="hover:text-asr-text transition">Philosophy &amp; Ethics</a></li>
-                        <li><a href="#simulator" class="hover:text-asr-text transition">Live App Demo</a></li>
-                    </ul>
-                </div>
-                <div>
-                    <div class="text-asr-text font-bold mb-3 uppercase tracking-wider text-[11px]">Guides &amp; Hub</div>
-                    <ul class="space-y-2.5 text-asr-faint">
-                        <li><a href="guides.html" class="hover:text-asr-text transition">Productivity Hub</a></li>
-                        <li><a href="guides/best-app-blocker-you-cannot-bypass.html" class="hover:text-asr-text transition">Unbypassable Blocker</a></li>
-                        <li><a href="guides/best-adhd-friendly-app-blocker.html" class="hover:text-asr-text transition">ADHD Focus Guide</a></li>
-                        <li><a href="guides/best-app-blocker-for-android-2026.html" class="hover:text-asr-text transition">2026 Reviews</a></li>
-                    </ul>
-                </div>
-                <div>
-                    <div class="text-asr-text font-bold mb-3 uppercase tracking-wider text-[11px]">Legal &amp; Source</div>
-                    <ul class="space-y-2.5 text-asr-faint">
-                        <li><a href="privacy.html" class="hover:text-asr-text transition">Privacy Policy</a></li>
-                        <li><a href="terms.html" class="hover:text-asr-text transition">Terms of Service</a></li>
-                        <li><a href="refund.html" class="hover:text-asr-text transition">Refund Policy</a></li>
-                        <li><a href="https://github.com/khalidabdullahh/AegisFocus" target="_blank" class="hover:text-asr-text transition flex items-center gap-1"><i data-lucide="git-branch" class="w-3 h-3"></i> GitHub Repo</a></li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-
-        <div class="border-t border-asr-border mt-10 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-asr-faint">
-            <span>&copy; 2025–2026 Aegis Focus — Unbreakable Digital Discipline & Focus. Designed &amp; Engineered by <a href="https://github.com/khalidabdullahh" target="_blank" class="text-asr-sky hover:underline font-semibold">Khalid Abdullah</a>.</span>
-            <span>100% Local-First &bull; Open Source on GitHub</span>
-        </div>
-    </div>
+    <div class="border-t border-line/60 py-5 text-center text-xs text-faint px-4">&copy; 2025-2026 Aegis Focus. Open source on GitHub.</div>
 </footer>
 
-<!-- ══════════════════════════════════════════════════════════════════
-     ALL RELEASES & OLD VERSIONS MODAL
-════════════════════════════════════════════════════════════════════ -->
-<div x-show="showVersionModal"
-     x-cloak
-     class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md transition-all"
-     @keydown.escape.window="showVersionModal = false">
-    <div class="bg-asr-surface border border-asr-border rounded-2xl max-w-xl w-full p-6 sm:p-7 shadow-2xl relative overflow-hidden"
-         @click.away="showVersionModal = false">
-        
-        <!-- Header -->
-        <div class="flex items-center justify-between pb-4 border-b border-asr-border/70">
-            <div class="flex items-center gap-3">
-                <div class="w-12 h-12 rounded-2xl bg-asr-elevated border border-asr-border/80 flex items-center justify-center p-1.5 shadow-md shrink-0 overflow-hidden">
-                    <img src="assets/aegis_logo.png" alt="Aegis Focus" class="w-full h-full object-contain">
-                </div>
-                <div>
-                    <h3 class="text-lg font-extrabold text-asr-text flex items-center gap-2">
-                        <span>Aegis Focus APK Archives</span>
-                        <span class="text-[10px] bg-asr-emerald/20 text-asr-emerald px-2 py-0.5 rounded-full font-bold">Official</span>
-                    </h3>
-                    <p class="text-xs text-asr-muted mt-0.5">Download current or previous production releases</p>
-                </div>
-            </div>
-            <button @click="showVersionModal = false" class="p-1.5 rounded-lg text-asr-muted hover:text-asr-text hover:bg-asr-elevated transition">
-                <i data-lucide="x" class="w-5 h-5"></i>
-            </button>
-        </div>
-
-        <!-- Release List -->
-        <div class="mt-5 space-y-3.5 max-h-[60vh] overflow-y-auto pr-1">
-            
-            <!-- 1. Aegis Focus v1.4.0 (Latest Recommended) -->
-            <div class="p-4 rounded-xl bg-asr-elevated/80 border border-asr-emerald/40 hover:border-asr-emerald transition flex items-center justify-between gap-4">
-                <div class="space-y-1">
-                    <div class="flex items-center gap-2">
-                        <span class="font-extrabold text-sm text-asr-text">Aegis Focus v1.4.0</span>
-                        <span class="text-[10px] font-bold bg-asr-emerald text-asr-bg px-2 py-0.5 rounded-full">LATEST</span>
-                        <span class="text-[11px] text-asr-faint">Oct 2026</span>
-                    </div>
-                    <p class="text-xs text-asr-muted leading-relaxed">
-                        One-time server license keys with WhatsApp/Instagram contact flow, new brand logo, Productivity tab with Clean Streak &amp; daily goals, 1-tap AdBlocker &amp; 18+ DNS filter.
-                    </p>
-                    <div class="text-[10px] text-asr-faint font-mono">
-                        SHA256: 88b647ff1ad4...4d420878 &bull; 13 MB
-                    </div>
-                </div>
-                <div class="shrink-0 flex flex-col gap-1.5">
-                    <a href="AegisFocus-Latest.apk" download="AegisFocus-Latest.apk"
-                       class="bg-asr-emerald hover:bg-asr-emerald/90 text-asr-bg text-xs font-extrabold px-3.5 py-2 rounded-lg transition flex items-center gap-1.5 shadow-md whitespace-nowrap">
-                        <i data-lucide="download" class="w-3.5 h-3.5"></i>
-                        <span>Download</span>
-                    </a>
-                </div>
-            </div>
-
-            <!-- 2. Aegis Focus v1.2.0 (Previous Stable) -->
-            <div class="p-4 rounded-xl bg-asr-surface border border-asr-border hover:border-asr-muted/40 transition flex items-center justify-between gap-4">
-                <div class="space-y-1">
-                    <div class="flex items-center gap-2">
-                        <span class="font-bold text-sm text-asr-text">Aegis Focus v1.2.0</span>
-                        <span class="text-[10px] font-semibold bg-asr-elevated text-asr-muted px-2 py-0.5 rounded-full">v1.2 STABLE</span>
-                        <span class="text-[11px] text-asr-faint">Oct 2026</span>
-                    </div>
-                    <p class="text-xs text-asr-muted leading-relaxed">
-                        1-Tap Automatic AdBlocker via on-device DNS tunnel, dedicated Monthly Goals &amp; Habit Consistency Calendar, refined typography.
-                    </p>
-                    <div class="text-[10px] text-asr-faint font-mono">
-                        SHA256: 8a42e128b991...a1e0b5 &bull; 13 MB
-                    </div>
-                </div>
-                <div class="shrink-0 flex flex-col gap-1.5">
-                    <a href="releases/AegisFocus-v1.2.0-Release.apk" download="AegisFocus-v1.2.0-Release.apk"
-                       class="bg-asr-elevated hover:bg-asr-border text-asr-text text-xs font-semibold px-3.5 py-2 rounded-lg transition flex items-center gap-1.5 border border-asr-border whitespace-nowrap">
-                        <i data-lucide="download" class="w-3.5 h-3.5"></i>
-                        <span>v1.2.0</span>
-                    </a>
-                </div>
-            </div>
-
-            <!-- 2. Aegis Focus v1.1.0 (Previous Stable) -->
-            <div class="p-4 rounded-xl bg-asr-surface border border-asr-border hover:border-asr-muted/40 transition flex items-center justify-between gap-4">
-                <div class="space-y-1">
-                    <div class="flex items-center gap-2">
-                        <span class="font-bold text-sm text-asr-text">Aegis Focus v1.1.0</span>
-                        <span class="text-[10px] font-semibold bg-asr-elevated text-asr-muted px-2 py-0.5 rounded-full">v1.1 STABLE</span>
-                        <span class="text-[11px] text-asr-faint">Oct 2026</span>
-                    </div>
-                    <p class="text-xs text-asr-muted leading-relaxed">
-                        Rebranded identity, Shorts &amp; Reels surgical blocker, Monk Shield evolution, and emergency penalty friction.
-                    </p>
-                    <div class="text-[10px] text-asr-faint font-mono">
-                        SHA256: caad18b0364236d8...5e4ea8cf &bull; 13 MB
-                    </div>
-                </div>
-                <div class="shrink-0 flex flex-col gap-1.5">
-                    <a href="releases/AegisFocus-v1.1.0-Release.apk" download="AegisFocus-v1.1.0-Release.apk"
-                       class="bg-asr-elevated hover:bg-asr-border text-asr-text text-xs font-semibold px-3.5 py-2 rounded-lg transition flex items-center gap-1.5 border border-asr-border whitespace-nowrap">
-                        <i data-lucide="download" class="w-3.5 h-3.5"></i>
-                        <span>v1.1.0</span>
-                    </a>
-                </div>
-            </div>
-
-            <!-- 2. Barakah Focus v1.0.5 (Special Bengali / Spiritual Edition) -->
-            <div class="p-4 rounded-xl bg-asr-surface border border-asr-sky/40 hover:border-asr-sky transition flex items-center justify-between gap-4">
-                <div class="space-y-1">
-                    <div class="flex items-center gap-2">
-                        <span class="font-bold text-sm text-asr-text">Barakah Focus v1.0.5</span>
-                        <span class="text-[10px] font-semibold bg-asr-sky/15 text-asr-sky px-2 py-0.5 rounded-full border border-asr-sky/30">SPECIAL EDITION</span>
-                    </div>
-                    <p class="text-xs text-asr-muted leading-relaxed">
-                        Dual slogan localization ("Protect Your Time. Multiply Barakah."), Apple/iPhone typography rendering, and offline license engine.
-                    </p>
-                    <div class="text-[10px] text-asr-faint font-mono">
-                        SHA256: ee75846496d661e1...812fd2e80f &bull; 13 MB
-                    </div>
-                </div>
-                <div class="shrink-0 flex flex-col gap-1.5">
-                    <a href="releases/Barakah-Release.apk" download="Barakah-Release.apk"
-                       class="bg-asr-elevated hover:bg-asr-border text-asr-sky text-xs font-semibold px-3.5 py-2 rounded-lg transition flex items-center gap-1.5 border border-asr-sky/30 whitespace-nowrap">
-                        <i data-lucide="download" class="w-3.5 h-3.5"></i>
-                        <span>Barakah</span>
-                    </a>
-                </div>
-            </div>
-
-            <!-- 3. ASAR Focus v1.0.0 (Legacy Foundation Edition) -->
-            <div class="p-4 rounded-xl bg-asr-surface border border-asr-border hover:border-asr-muted/40 transition flex items-center justify-between gap-4">
-                <div class="space-y-1">
-                    <div class="flex items-center gap-2">
-                        <span class="font-bold text-sm text-asr-text">ASAR Focus v1.0.0</span>
-                        <span class="text-[10px] font-semibold bg-asr-elevated text-asr-muted px-2 py-0.5 rounded-full">LEGACY RELEASE</span>
-                    </div>
-                    <p class="text-xs text-asr-muted leading-relaxed">
-                        Original foundation release with unbypassable Device Administrator Strict Mode, adaptive delay friction, and local SQLite analytics.
-                    </p>
-                    <div class="text-[10px] text-asr-faint font-mono">
-                        SHA256: 9051c347337dfd8d...515146a163 &bull; 13 MB
-                    </div>
-                </div>
-                <div class="shrink-0 flex flex-col gap-1.5">
-                    <a href="releases/ASAR-Release.apk" download="ASAR-Release.apk"
-                       class="bg-asr-elevated hover:bg-asr-border text-asr-text text-xs font-semibold px-3.5 py-2 rounded-lg transition flex items-center gap-1.5 border border-asr-border whitespace-nowrap">
-                        <i data-lucide="download" class="w-3.5 h-3.5"></i>
-                        <span>ASAR</span>
-                    </a>
-                </div>
-            </div>
-
-            <!-- GitHub Releases Direct Link -->
-            <div class="p-3.5 rounded-xl bg-asr-surface/50 border border-dashed border-asr-border flex items-center justify-between text-xs">
-                <div class="flex items-center gap-2 text-asr-muted">
-                    <i data-lucide="github" class="w-4 h-4 text-asr-text"></i>
-                    <span>Looking for raw CI/CD artifacts or release tags?</span>
-                </div>
-                <a href="https://github.com/khalidabdullahh/AegisFocus/releases" target="_blank"
-                   class="text-asr-sky hover:underline font-semibold flex items-center gap-1">
-                    <span>GitHub Releases</span>
-                    <i data-lucide="external-link" class="w-3 h-3"></i>
-                </a>
-            </div>
-
-        </div>
-
-        <div class="mt-5 pt-3 border-t border-asr-border/60 flex items-center justify-between text-xs text-asr-faint">
-            <span>🛡️ All APKs signed with official production keys</span>
-            <button @click="showVersionModal = false" class="text-asr-muted hover:text-asr-text font-semibold">Close</button>
-        </div>
-
-    </div>
+<!-- Sticky mobile download bar -->
+<div id="sticky-cta" class="fixed bottom-0 inset-x-0 z-40 p-3 sm:hidden bg-bg/90 backdrop-blur border-t border-line/70">
+    <a href="https://github.com/khalidabdullahh/AegisFocus/releases/latest/download/AegisFocus-Latest.apk" data-apk
+       class="btn-primary rounded-xl px-5 py-3.5 text-sm inline-flex items-center justify-center gap-2 w-full"><i data-lucide="download" class="w-4 h-4"></i>Download APK</a>
 </div>
 
-<!-- ══════════════════════════════════════════════════════════════════
-     ALPINE.JS STATE LOGIC (PRESERVED & ENHANCED)
-════════════════════════════════════════════════════════════════════ -->
 <script>
-    function asrApp() {
-        return {
-            showVersionModal: false,
-            currentTab: 'home',
-            navTabs: [
-                { id: 'home',     label: 'Home',     icon: 'shield' },
-                { id: 'focus',    label: 'Focus',    icon: 'hourglass' },
-                { id: 'apps',     label: 'Apps',     icon: 'layout-grid' },
-                { id: 'stats',    label: 'Stats',    icon: 'bar-chart-2' },
-                { id: 'settings', label: 'Settings', icon: 'settings' },
-            ],
+(function () {
+    var repo = 'khalidabdullahh/AegisFocus';
+    var DL = 'https://github.com/' + repo + '/releases/latest/download/AegisFocus-Latest.apk';
 
-            isSessionActive:  false,
-            sessionGoal:      'Deep Focus',
-            durationMinutes:  25,
-            remainingSeconds: 25 * 60,
-            activeMode:       'NORMAL',
-            timerInterval:    null,
+    if (window.lucide) lucide.createIcons();
 
-            streakDays:             4,
-            disciplineScore:        84,
-            focusTimeToday:         '1h 15m',
-            screenTimeToday:        '2h 40m',
-            sessionsCompletedCount: 2,
+    // Mobile menu
+    var btn = document.getElementById('menu-btn'), menu = document.getElementById('mobile-menu');
+    btn.addEventListener('click', function () {
+        var open = menu.classList.toggle('hidden') === false;
+        btn.setAttribute('aria-expanded', open);
+    });
+    menu.addEventListener('click', function (e) { if (e.target.closest('a')) { menu.classList.add('hidden'); btn.setAttribute('aria-expanded', false); } });
 
-            currentTimeStr: '09:41',
-            todayDateStr:   '',
-            greeting:       'Good Morning',
+    // Reveal on scroll
+    var items = document.querySelectorAll('.reveal');
+    if ('IntersectionObserver' in window) {
+        var io = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }); }, { threshold: 0.08 });
+        items.forEach(function (el) { io.observe(el); });
+    } else { items.forEach(function (el) { el.classList.add('in'); }); }
 
-            selectedApps:    ['YouTube', 'Instagram', 'TikTok', 'X (Twitter)', 'Reddit'],
-            appSearchQuery:  '',
-            selectedCategory: 'ALL',
-
-            showInterventionOverlay: false,
-            simulatedBlockedAppName: 'YouTube',
-            showEmergencyModal:      false,
-            emergencyCountdown:      5,
-            emergencyCountdownInterval: null,
-            emergencyTypedPhrase:    '',
-            emergencyCooldown:       5,
-            showToast:               false,
-
-            profiles: [
-                { name: 'Deep Work',   duration: 50,  mode: 'STRICT' },
-                { name: 'Study',       duration: 25,  mode: 'NORMAL' },
-                { name: 'Sleep Calm',  duration: 480, mode: 'STRICT' },
-                { name: 'Quick Reset', duration: 15,  mode: 'NORMAL' },
-            ],
-
-            installedAppsList: [
-                { name: 'YouTube',     category: 'ENTERTAINMENT', pkg: 'com.google.android.youtube' },
-                { name: 'Instagram',   category: 'SOCIAL',        pkg: 'com.instagram.android' },
-                { name: 'TikTok',      category: 'SOCIAL',        pkg: 'com.zhiliaoapp.musically' },
-                { name: 'X (Twitter)', category: 'SOCIAL',        pkg: 'com.twitter.android' },
-                { name: 'Reddit',      category: 'SOCIAL',        pkg: 'com.reddit.frontpage' },
-                { name: 'Facebook',    category: 'SOCIAL',        pkg: 'com.facebook.katana' },
-                { name: 'Netflix',     category: 'ENTERTAINMENT', pkg: 'com.netflix.mediaclient' },
-                { name: 'Spotify',     category: 'ENTERTAINMENT', pkg: 'com.spotify.music' },
-                { name: 'PUBG Mobile', category: 'GAMES',         pkg: 'com.tencent.ig' },
-                { name: 'Candy Crush', category: 'GAMES',         pkg: 'com.king.candycrushsaga' },
-            ],
-
-            weeklyData: [
-                { day: 'Mon', focus: 75,  screen: 180 },
-                { day: 'Tue', focus: 100, screen: 150 },
-                { day: 'Wed', focus: 60,  screen: 210 },
-                { day: 'Thu', focus: 90,  screen: 140 },
-                { day: 'Fri', focus: 110, screen: 120 },
-                { day: 'Sat', focus: 45,  screen: 230 },
-                { day: 'Sun', focus: 85,  screen: 160 },
-            ],
-            topDistractions: [
-                { name: 'YouTube',     time: '1h 12m', percent: 80 },
-                { name: 'Instagram',   time: '45m',    percent: 55 },
-                { name: 'X (Twitter)', time: '28m',    percent: 35 },
-                { name: 'Reddit',      time: '15m',    percent: 20 },
-            ],
-
-            initApp() {
-                this.updateGreeting();
-                this.todayDateStr = new Date().toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
-                setInterval(() => {
-                    const d = new Date();
-                    this.currentTimeStr = d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-                }, 1000);
-                setTimeout(() => lucide.createIcons(), 120);
-
-                const observer = new IntersectionObserver((entries) => {
-                    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
-                }, { threshold: 0.1 });
-                document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-            },
-
-            updateGreeting() {
-                const h = new Date().getHours();
-                if (h < 12)      this.greeting = 'Good Morning';
-                else if (h < 18) this.greeting = 'Good Afternoon';
-                else             this.greeting = 'Good Evening';
-            },
-
-            applyProfile(p) {
-                this.sessionGoal     = p.name;
-                this.durationMinutes = p.duration;
-                this.activeMode      = p.mode;
-            },
-
-            startSession() {
-                this.isSessionActive  = true;
-                this.remainingSeconds = this.durationMinutes * 60;
-                this.startTimer();
-                this.currentTab = 'focus';
-                setTimeout(() => lucide.createIcons(), 60);
-            },
-
-            startQuickSession(mins, mode) {
-                this.durationMinutes = mins;
-                this.activeMode      = mode;
-                this.sessionGoal     = mode === 'STRICT' ? 'Deep Work' : 'Pomodoro';
-                this.startSession();
-            },
-
-            startTimer() {
-                clearInterval(this.timerInterval);
-                this.timerInterval = setInterval(() => {
-                    if (this.remainingSeconds > 0) {
-                        this.remainingSeconds--;
-                    } else {
-                        this.completeSession();
-                    }
-                }, 1000);
-            },
-
-            completeSession() {
-                clearInterval(this.timerInterval);
-                this.isSessionActive = false;
-                this.sessionsCompletedCount++;
-                this.streakDays++;
-                this.disciplineScore = Math.min(100, this.disciplineScore + 3);
-                this.focusTimeToday  = (this.sessionsCompletedCount * 25) + 'm';
-                this.showToastMessage();
-                setTimeout(() => lucide.createIcons(), 60);
-            },
-
-            showToastMessage() {
-                this.showToast = true;
-                setTimeout(() => { this.showToast = false; }, 3500);
-            },
-
-            cancelSession() {
-                clearInterval(this.timerInterval);
-                this.isSessionActive = false;
-            },
-
-            openEmergencyModal() {
-                this.showEmergencyModal    = true;
-                this.emergencyCountdown    = parseInt(this.emergencyCooldown) || 5;
-                this.emergencyTypedPhrase  = '';
-                clearInterval(this.emergencyCountdownInterval);
-                this.emergencyCountdownInterval = setInterval(() => {
-                    if (this.emergencyCountdown > 0) { this.emergencyCountdown--; }
-                    else { clearInterval(this.emergencyCountdownInterval); }
-                }, 1000);
-                setTimeout(() => lucide.createIcons(), 60);
-            },
-
-            confirmEmergencyExit() {
-                clearInterval(this.emergencyCountdownInterval);
-                this.showEmergencyModal = false;
-                this.cancelSession();
-                this.disciplineScore = Math.max(10, this.disciplineScore - 8);
-            },
-
-            simulateOpenBlockedApp() {
-                if (!this.isSessionActive) { this.startQuickSession(25, 'NORMAL'); }
-                this.simulatedBlockedAppName = this.selectedApps[0] || 'Instagram';
-                this.showInterventionOverlay = true;
-                setTimeout(() => lucide.createIcons(), 60);
-            },
-
-            toggleApp(appName) {
-                if (this.isSessionActive && this.activeMode === 'STRICT') return;
-                if (this.selectedApps.includes(appName)) {
-                    this.selectedApps = this.selectedApps.filter(a => a !== appName);
-                } else {
-                    this.selectedApps.push(appName);
-                }
-            },
-
-            isAppSelected(appName) { return this.selectedApps.includes(appName); },
-
-            get filteredApps() {
-                return this.installedAppsList.filter(app => {
-                    const q = !this.appSearchQuery || app.name.toLowerCase().includes(this.appSearchQuery.toLowerCase());
-                    const c = this.selectedCategory === 'ALL' || app.category === this.selectedCategory;
-                    return q && c;
-                });
-            },
-
-            formatTime(totalSec) {
-                const m = Math.floor(totalSec / 60);
-                const s = totalSec % 60;
-                return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
-            }
-        };
+    // Sticky mobile CTA once the hero is out of view
+    var cta = document.getElementById('sticky-cta'), hero = document.querySelector('.hero-bg');
+    if ('IntersectionObserver' in window && hero) {
+        new IntersectionObserver(function (es) { cta.classList.toggle('show', !es[0].isIntersecting); }).observe(hero);
     }
+
+    function esc(t) { return String(t).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+    function mb(b) { return (b / 1048576).toFixed(1) + ' MB'; }
+
+    // Live release info: keeps version, size and links fresh with no site redeploy.
+    fetch('https://api.github.com/repos/' + repo + '/releases?per_page=8')
+        .then(function (r) { if (!r.ok) throw 0; return r.json(); })
+        .then(function (rels) {
+            rels = rels.filter(function (r) { return !r.draft && /^v\d/.test(r.tag_name || ''); });
+            if (!rels.length) return;
+            var latest = rels[0];
+            var apk = (latest.assets || []).filter(function (a) { return /\.apk$/i.test(a.name); })[0];
+            document.getElementById('hero-version').textContent = latest.tag_name ? '(' + latest.tag_name + ')' : '';
+            if (apk) {
+                document.getElementById('hero-size').textContent = mb(apk.size) + ' download';
+                document.getElementById('fact-size').textContent = mb(apk.size);
+            }
+            document.getElementById('hero-badge').textContent = (latest.tag_name || 'Latest') + ' is out, free to start';
+
+            var html = rels.map(function (r, i) {
+                var a = (r.assets || []).filter(function (x) { return /\.apk$/i.test(x.name) && x.name !== 'AegisFocus-Latest.apk'; })[0] ||
+                        (r.assets || []).filter(function (x) { return /\.apk$/i.test(x.name); })[0];
+                var date = r.published_at ? new Date(r.published_at).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' }) : '';
+                return '<li class="py-3 flex items-center justify-between gap-3">' +
+                    '<div><p class="font-bold">' + esc(r.tag_name) + (i === 0 ? ' <span class="ml-1 text-[10px] font-extrabold rounded-full bg-sage text-bg px-2 py-0.5 align-middle">LATEST</span>' : '') + '</p>' +
+                    '<p class="text-xs text-faint">' + esc(date) + (a ? ' &middot; ' + mb(a.size) : '') + '</p></div>' +
+                    (a ? '<a class="btn-ghost rounded-lg px-3.5 py-2 text-xs inline-flex items-center gap-1.5" href="' + esc(a.browser_download_url) + '">Download</a>'
+                       : '<a class="text-xs text-teal hover:underline" href="' + esc(r.html_url) + '">View</a>') + '</li>';
+            }).join('');
+            document.getElementById('release-list').innerHTML = html;
+        })
+        .catch(function () {
+            document.getElementById('release-list').innerHTML =
+                '<li class="py-3 text-muted">Could not load the list. <a class="text-teal hover:underline" href="https://github.com/' + repo + '/releases">Open releases on GitHub</a>.</li>';
+        });
+})();
 </script>
-
-
-
-
-
 </body>
 </html>
