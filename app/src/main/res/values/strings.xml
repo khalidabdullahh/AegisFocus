@@ -2,7 +2,7 @@
     <string name="app_name">Aegis Focus</string>
     <string name="app_slogan">Unbreakable Digital Discipline &amp; Focus</string>
     <string name="onboarding_subtitle">Aegis Focus provides deliberate friction against compulsive app opening, training your mind for sustained deep work and unbreakable discipline.</string>
-    <string name="about_subtitle">Unbreakable Digital Discipline (100% Offline)</string>
+    <string name="about_subtitle">Unbreakable Digital Discipline</string>
     <string name="accessibility_service_description">Aegis Focus uses accessibility events exclusively to detect when blocked distracting apps are opened during your active focus sessions and protect your attention.</string>
     <string name="notification_channel_timer_name">Active Focus Sessions</string>
     <string name="notification_channel_timer_desc">Shows persistent countdown timers and status during active focus sessions.</string>
