@@ -80,6 +80,16 @@
         .phone { width: 272px; height: 548px; border-radius: 2.6rem; background: #0E181D; border: 8px solid #1C2F38; box-shadow: 0 30px 80px -20px rgba(0,0,0,.7), 0 0 0 1px #2B434D; }
         .ring { background: conic-gradient(#9CC5A1 0 var(--p,100%), #1C2F38 var(--p,100%) 100%); transition: background .2s linear; }
         /* interactive demo */
+        /* hero layout: copy + customizer left, phone right from 820px (same placement as GestureVolume) */
+        .hero-grid { display: grid; gap: 2rem; }
+        @media (min-width: 820px) {
+            .hero-grid { grid-template-columns: 1.05fr .95fr; grid-template-areas: "copy stage" "custom stage"; column-gap: 3.5rem; row-gap: 1.5rem; align-items: start; }
+            .hero-copy { grid-area: copy; }
+            .hero-stage { grid-area: stage; position: sticky; top: 92px; }
+            .hero-custom { grid-area: custom; }
+        }
+        .hero-custom { width: 100%; max-width: 36rem; margin-inline: auto; }
+        @media (min-width: 820px) { .hero-custom { margin-inline: 0; max-width: none; } }
         #demo { scroll-margin-top: 84px; }
         .seg { display: grid; gap: .5rem; }
         .seg button, .tgl { border: 1px solid #2B434D; background: #15242B; color: #A8B9BC; font-weight: 700; font-size: .8rem; border-radius: .75rem; padding: .6rem .5rem; transition: border-color .15s ease, background .15s ease, color .15s ease; }
@@ -151,8 +161,8 @@
 
 <!-- HERO -->
 <section class="hero-bg relative overflow-hidden">
-    <div class="max-w-6xl mx-auto px-4 sm:px-6 pt-10 pb-14 lg:pt-20 lg:pb-24 grid lg:grid-cols-2 gap-12 items-center">
-        <div class="text-center lg:text-left">
+    <div class="hero-grid max-w-6xl mx-auto px-4 sm:px-6 pt-10 pb-14 lg:pt-20 lg:pb-24">
+        <div class="hero-copy text-center min-[820px]:text-left">
             <p class="inline-flex items-center gap-2 rounded-full border border-teal/30 bg-teal/10 text-teal text-xs font-bold px-3.5 py-1.5">
                 <i data-lucide="shield-check" class="w-3.5 h-3.5"></i>
                 <span id="hero-badge">Android app, free to start</span>
@@ -161,11 +171,11 @@
                 Take your attention back.
                 <span class="text-gradient block mt-1">Build real discipline.</span>
             </h1>
-            <p class="mt-5 text-base sm:text-lg text-muted leading-relaxed max-w-xl mx-auto lg:mx-0">
+            <p class="mt-5 text-base sm:text-lg text-muted leading-relaxed max-w-xl mx-auto min-[820px]:mx-0">
                 Aegis Focus blocks the apps that pull you in, cuts Shorts and Reels, removes ads system-wide and locks your focus sessions so you cannot talk yourself out of them. Everything runs on your phone.
             </p>
 
-            <div class="mt-8 flex flex-col sm:flex-row gap-3 justify-center lg:justify-start">
+            <div class="mt-8 flex flex-col sm:flex-row gap-3 justify-center min-[820px]:justify-start">
                 <a href="https://github.com/khalidabdullahh/AegisFocus/releases/latest/download/AegisFocus-Latest.apk" data-apk
                    class="btn-primary rounded-2xl px-7 py-4 text-base inline-flex items-center justify-center gap-2.5 shadow-xl shadow-sage/20">
                     <i data-lucide="download" class="w-5 h-5"></i>
@@ -176,44 +186,17 @@
                 </a>
             </div>
 
-            <ul class="mt-6 flex flex-wrap gap-x-5 gap-y-2 justify-center lg:justify-start text-xs sm:text-sm text-muted">
+            <ul class="mt-6 flex flex-wrap gap-x-5 gap-y-2 justify-center min-[820px]:justify-start text-xs sm:text-sm text-muted">
                 <li class="inline-flex items-center gap-1.5"><i data-lucide="check" class="w-4 h-4 text-sage"></i>No ads</li>
                 <li class="inline-flex items-center gap-1.5"><i data-lucide="check" class="w-4 h-4 text-sage"></i>Android 8.0 or newer</li>
                 <li class="inline-flex items-center gap-1.5"><i data-lucide="check" class="w-4 h-4 text-sage"></i><span id="hero-size">Small download</span></li>
                 <li class="inline-flex items-center gap-1.5"><i data-lucide="check" class="w-4 h-4 text-sage"></i>Your data stays on your phone</li>
             </ul>
 
-            <div id="demo" class="mt-8 card p-5 text-left max-w-xl mx-auto lg:mx-0">
-                <div class="flex items-center justify-between">
-                    <h2 class="text-xs font-extrabold tracking-widest text-faint uppercase">Customize your session</h2>
-                    <button id="demo-reset" type="button" class="btn-ghost rounded-lg px-3 py-1.5 text-xs text-muted">Reset</button>
-                </div>
-
-                <p class="mt-4 text-sm font-bold">Mode</p>
-                <div class="seg grid-cols-2 mt-2" id="mode-seg">
-                    <button type="button" data-mode="normal" aria-pressed="false">Normal</button>
-                    <button type="button" data-mode="strict" aria-pressed="true">Strict</button>
-                </div>
-                <p id="mode-hint" class="mt-2 text-xs text-faint">Strict Mode locks the session. You cannot stop it early.</p>
-
-                <p class="mt-4 text-sm font-bold">Session length</p>
-                <div class="seg grid-cols-4 mt-2" id="len-seg">
-                    <button type="button" data-min="15" aria-pressed="false">15m</button>
-                    <button type="button" data-min="25" aria-pressed="true">25m</button>
-                    <button type="button" data-min="45" aria-pressed="false">45m</button>
-                    <button type="button" data-min="60" aria-pressed="false">60m</button>
-                </div>
-
-                <div class="mt-4 grid sm:grid-cols-2 gap-2">
-                    <button type="button" id="tgl-feeds" class="tgl" role="switch" aria-checked="true"><span>Block Shorts / Reels</span><span class="switch"></span></button>
-                    <button type="button" id="tgl-ads" class="tgl" role="switch" aria-checked="true"><span>Ad blocker</span><span class="switch"></span></button>
-                </div>
-                <p class="mt-3 text-xs text-faint">Tip: start a session, tap the bar at the bottom of the phone to go home, then try opening TikTok or Instagram.</p>
-            </div>
         </div>
 
         <!-- Phone illustration -->
-        <div class="flex flex-col items-center">
+        <div id="demo" class="hero-stage flex flex-col items-center">
             <div class="phone relative overflow-hidden" id="phone">
                 <!-- status bar -->
                 <div class="absolute top-0 inset-x-0 z-30 h-7 px-5 flex items-center justify-between text-[10px] font-bold pointer-events-none">
@@ -331,6 +314,36 @@
             <p id="demo-status" class="mt-4 inline-flex items-center gap-2 rounded-full border border-line bg-surface/80 text-xs text-muted px-3.5 py-1.5" aria-live="polite"><span id="status-dot" class="w-1.5 h-1.5 rounded-full bg-faint"></span><span id="status-text">Idle &middot; press start</span></p>
             <p class="mt-3 text-[11px] text-faint text-center">Interactive demo &middot; tap the apps like on a real phone &middot; runs at 60x speed</p>
         </div>
+
+        <!-- Customizer -->
+        <div class="hero-custom card p-5 text-left">
+            <div class="flex items-center justify-between">
+                <h2 class="text-xs font-extrabold tracking-widest text-faint uppercase">Customize your session</h2>
+                <button id="demo-reset" type="button" class="btn-ghost rounded-lg px-3 py-1.5 text-xs text-muted">Reset</button>
+            </div>
+
+            <p class="mt-4 text-sm font-bold">Mode</p>
+            <div class="seg grid-cols-2 mt-2" id="mode-seg">
+                <button type="button" data-mode="normal" aria-pressed="false">Normal</button>
+                <button type="button" data-mode="strict" aria-pressed="true">Strict</button>
+            </div>
+            <p id="mode-hint" class="mt-2 text-xs text-faint">Strict Mode locks the session. You cannot stop it early.</p>
+
+            <p class="mt-4 text-sm font-bold">Session length</p>
+            <div class="seg grid-cols-4 mt-2" id="len-seg">
+                <button type="button" data-min="15" aria-pressed="false">15m</button>
+                <button type="button" data-min="25" aria-pressed="true">25m</button>
+                <button type="button" data-min="45" aria-pressed="false">45m</button>
+                <button type="button" data-min="60" aria-pressed="false">60m</button>
+            </div>
+
+            <div class="mt-4 grid sm:grid-cols-2 gap-2">
+                <button type="button" id="tgl-feeds" class="tgl" role="switch" aria-checked="true"><span>Block Shorts / Reels</span><span class="switch"></span></button>
+                <button type="button" id="tgl-ads" class="tgl" role="switch" aria-checked="true"><span>Ad blocker</span><span class="switch"></span></button>
+            </div>
+            <p class="mt-3 text-xs text-faint">Tip: start a session, tap the bar at the bottom of the phone to go home, then try opening TikTok or Instagram.</p>
+        </div>
+
     </div>
 </section>
 
