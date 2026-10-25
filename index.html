@@ -208,14 +208,56 @@
                     <button type="button" id="tgl-feeds" class="tgl" role="switch" aria-checked="true"><span>Block Shorts / Reels</span><span class="switch"></span></button>
                     <button type="button" id="tgl-ads" class="tgl" role="switch" aria-checked="true"><span>Ad blocker</span><span class="switch"></span></button>
                 </div>
-                <p class="mt-3 text-xs text-faint">Tip: start a session, then press &ldquo;Try opening Reels&rdquo; under the phone.</p>
+                <p class="mt-3 text-xs text-faint">Tip: start a session, tap the bar at the bottom of the phone to go home, then try opening TikTok or Instagram.</p>
             </div>
         </div>
 
         <!-- Phone illustration -->
         <div class="flex flex-col items-center">
-            <div class="phone relative overflow-hidden">
-                <div class="px-4 pt-6 pb-3">
+            <div class="phone relative overflow-hidden" id="phone">
+                <!-- status bar -->
+                <div class="absolute top-0 inset-x-0 z-30 h-7 px-5 flex items-center justify-between text-[10px] font-bold pointer-events-none">
+                    <span id="sb-time">9:41</span>
+                    <span class="absolute left-1/2 -translate-x-1/2 top-2 w-2.5 h-2.5 rounded-full bg-black ring-1 ring-line"></span>
+                    <span class="flex items-center gap-1 text-text/90"><i data-lucide="signal" class="w-3 h-3"></i><i data-lucide="wifi" class="w-3 h-3"></i><i data-lucide="battery-full" class="w-3.5 h-3.5"></i></span>
+                </div>
+
+                <!-- home screen -->
+                <div id="screen-home" class="hidden absolute inset-0 z-[1] pt-12 px-4 pb-16" style="background:radial-gradient(120% 80% at 20% 0%,#1d3a40 0%,#0E181D 60%)">
+                    <p id="home-clock" class="text-4xl font-light tracking-tight">9:41</p>
+                    <p id="home-date" class="text-[11px] text-muted mt-0.5"></p>
+                    <div class="mt-7 grid grid-cols-4 gap-y-4">
+                    <button type="button" data-app="aegis" class="flex flex-col items-center gap-1 active:scale-95 transition">
+                        <img src="assets/favicon.png" alt="" class="w-11 h-11 rounded-[14px] border border-line">
+                        <span class="text-[9px] text-text/90">Aegis Focus</span></button>
+                    <button type="button" data-app="instagram" class="flex flex-col items-center gap-1 active:scale-95 transition">
+                        <span class="w-11 h-11 rounded-[14px] grid place-items-center bg-gradient-to-tr from-[#feda75] via-[#d62976] to-[#4f5bd5] text-white"><i data-lucide="instagram" class="w-5 h-5"></i></span>
+                        <span class="text-[9px] text-text/90">Instagram</span></button>
+                    <button type="button" data-app="youtube" class="flex flex-col items-center gap-1 active:scale-95 transition">
+                        <span class="w-11 h-11 rounded-[14px] grid place-items-center bg-[#E5231B] text-white"><i data-lucide="youtube" class="w-5 h-5"></i></span>
+                        <span class="text-[9px] text-text/90">YouTube</span></button>
+                    <button type="button" data-app="tiktok" class="flex flex-col items-center gap-1 active:scale-95 transition">
+                        <span class="w-11 h-11 rounded-[14px] grid place-items-center bg-black text-white border border-line"><i data-lucide="music-2" class="w-5 h-5"></i></span>
+                        <span class="text-[9px] text-text/90">TikTok</span></button>
+                    <button type="button" data-app="chrome" class="flex flex-col items-center gap-1 active:scale-95 transition">
+                        <span class="w-11 h-11 rounded-[14px] grid place-items-center bg-white text-[#4285F4]"><i data-lucide="globe" class="w-5 h-5"></i></span>
+                        <span class="text-[9px] text-text/90">Chrome</span></button>
+                    <button type="button" data-app="messages" class="flex flex-col items-center gap-1 active:scale-95 transition">
+                        <span class="w-11 h-11 rounded-[14px] grid place-items-center bg-[#2E7D5B] text-white"><i data-lucide="message-circle" class="w-5 h-5"></i></span>
+                        <span class="text-[9px] text-text/90">Messages</span></button>
+                    <button type="button" data-app="camera" class="flex flex-col items-center gap-1 active:scale-95 transition">
+                        <span class="w-11 h-11 rounded-[14px] grid place-items-center bg-[#3A4A52] text-white"><i data-lucide="camera" class="w-5 h-5"></i></span>
+                        <span class="text-[9px] text-text/90">Camera</span></button>
+                    <button type="button" data-app="maps" class="flex flex-col items-center gap-1 active:scale-95 transition">
+                        <span class="w-11 h-11 rounded-[14px] grid place-items-center bg-[#3B7DD8] text-white"><i data-lucide="map-pin" class="w-5 h-5"></i></span>
+                        <span class="text-[9px] text-text/90">Maps</span></button>
+                    </div>
+                    <div class="absolute bottom-10 inset-x-4 rounded-full bg-white/10 border border-white/10 text-[10px] text-muted px-4 py-2 flex items-center gap-2"><i data-lucide="search" class="w-3.5 h-3.5"></i>Search</div>
+                </div>
+
+                <!-- Aegis Focus app -->
+                <div id="screen-app" class="absolute inset-0 z-[2] bg-bg">
+                <div class="px-4 pt-9 pb-3">
                     <div class="flex items-center justify-between">
                         <div>
                             <p class="text-[11px] text-faint">Good focus</p>
@@ -244,22 +286,50 @@
                     <span class="w-8 h-8 rounded-full bg-[#CD7F32]/20 text-[#E0A06A] grid place-items-center"><i data-lucide="shield" class="w-4 h-4"></i></span>
                     <div class="flex-1"><p class="text-xs font-bold">Bronze shield</p><div class="mt-1.5 h-1.5 rounded-full bg-elevated overflow-hidden"><div id="shield-bar" class="h-full w-1/3 bg-sage rounded-full" style="transition:width .6s ease"></div></div></div>
                 </div>
-                <div id="block-overlay" class="absolute inset-0 z-10 bg-bg/95 backdrop-blur-sm flex flex-col items-center justify-center text-center px-6" role="status">
-                    <span class="w-14 h-14 rounded-full bg-sage/15 text-sage grid place-items-center"><i data-lucide="shield-check" class="w-7 h-7"></i></span>
-                    <p class="mt-4 text-base font-extrabold">Blocked by Aegis Focus</p>
-                    <p class="mt-1.5 text-xs text-muted leading-relaxed">Reels is off during your focus session. Back to what matters.</p>
-                </div>
-                <div class="absolute bottom-0 inset-x-0 h-14 bg-surface border-t border-line flex items-center justify-around px-3">
+                
+                <div class="absolute bottom-0 inset-x-0 h-[60px] bg-surface border-t border-line flex items-start pt-3 justify-around px-3">
                     <i data-lucide="shield" class="w-5 h-5 text-teal"></i>
                     <i data-lucide="hourglass" class="w-5 h-5 text-faint"></i>
                     <i data-lucide="layout-grid" class="w-5 h-5 text-faint"></i>
                     <i data-lucide="list-checks" class="w-5 h-5 text-faint"></i>
                     <i data-lucide="settings" class="w-5 h-5 text-faint"></i>
                 </div>
+                </div>
+
+                <!-- other apps (mock) -->
+                <div id="screen-ext" class="hidden absolute inset-0 z-[3] bg-[#10171B] flex flex-col pt-8">
+                    <div class="px-4 py-2.5 flex items-center gap-2 border-b border-line/70">
+                        <span id="ext-icon" class="w-6 h-6 rounded-lg grid place-items-center bg-elevated"></span>
+                        <span id="ext-name" class="text-sm font-extrabold"></span>
+                    </div>
+                    <div class="flex-1 p-4 space-y-3 overflow-hidden">
+                        <div class="h-24 rounded-xl bg-elevated/70"></div>
+                        <div class="h-3 w-3/4 rounded bg-elevated/70"></div>
+                        <div class="h-3 w-1/2 rounded bg-elevated/70"></div>
+                        <div class="h-24 rounded-xl bg-elevated/70"></div>
+                        <div class="h-3 w-2/3 rounded bg-elevated/70"></div>
+                    </div>
+                    <div id="ext-tabs" class="hidden h-[60px] border-t border-line/70 bg-surface items-start pt-2.5 justify-around text-[10px] text-muted">
+                        <span class="flex flex-col items-center gap-0.5"><i data-lucide="home" class="w-4 h-4"></i>Home</span>
+                        <button type="button" id="ext-feed-tab" class="flex flex-col items-center gap-0.5 text-text"><i data-lucide="clapperboard" class="w-4 h-4"></i><span id="ext-feed-label">Reels</span></button>
+                        <span class="flex flex-col items-center gap-0.5"><i data-lucide="user" class="w-4 h-4"></i>Profile</span>
+                    </div>
+                </div>
+
+                <!-- Aegis block screen -->
+                <div id="block-overlay" class="absolute inset-0 z-[10] bg-bg/95 backdrop-blur-sm flex flex-col items-center justify-center text-center px-6" role="status">
+                    <span class="w-14 h-14 rounded-full bg-sage/15 text-sage grid place-items-center"><i data-lucide="shield-check" class="w-7 h-7"></i></span>
+                    <p id="ov-title" class="mt-4 text-base font-extrabold">Blocked by Aegis Focus</p>
+                    <p id="ov-body" class="mt-1.5 text-xs text-muted leading-relaxed"></p>
+                </div>
+
+                <!-- home / gesture bar -->
+                <button type="button" id="home-bar" aria-label="Go to home screen" class="absolute bottom-0 inset-x-0 z-20 h-6 grid place-items-center">
+                    <span class="block w-24 h-1 rounded-full bg-text/70"></span>
+                </button>
             </div>
             <p id="demo-status" class="mt-4 inline-flex items-center gap-2 rounded-full border border-line bg-surface/80 text-xs text-muted px-3.5 py-1.5" aria-live="polite"><span id="status-dot" class="w-1.5 h-1.5 rounded-full bg-faint"></span><span id="status-text">Idle &middot; press start</span></p>
-            <button type="button" id="try-reels" class="mt-3 btn-ghost rounded-xl px-4 py-2.5 text-xs inline-flex items-center gap-2 text-teal"><i data-lucide="clapperboard" class="w-4 h-4"></i>Try opening Reels</button>
-            <p class="mt-3 text-[11px] text-faint text-center">Interactive demo &middot; runs at 60x speed &middot; nothing is installed</p>
+            <p class="mt-3 text-[11px] text-faint text-center">Interactive demo &middot; tap the apps like on a real phone &middot; runs at 60x speed</p>
         </div>
     </div>
 </section>
@@ -698,7 +768,7 @@
             label.textContent = modeName() + ' · locked in';
             if (st.mode === 'strict') { startBtn.disabled = true; startBtn.textContent = 'Locked in'; }
             else { startBtn.disabled = false; startBtn.textContent = 'End session'; }
-            setStatus('Focus session running', true);
+            setStatus('Session running · tap the bar below, then open an app', true);
             render(); // refresh disabled states
             tick(); st.timer = setInterval(tick, 250);
         }
@@ -731,22 +801,97 @@
         tglFeeds.addEventListener('click', function () { st.feeds = !st.feeds; render(); });
         tglAds.addEventListener('click', function () { st.ads = !st.ads; render(); });
 
-        $('try-reels').addEventListener('click', function () {
-            clearTimeout(st.ovTimer);
-            if (!st.running) { setStatus('No session running, Reels opens normally', false); return; }
-            if (!st.feeds) { setStatus('Reels allowed, the blocker is off', false); return; }
-            overlay.classList.add('show');
-            setStatus('Reels blocked', true);
-            st.ovTimer = setTimeout(function () { overlay.classList.remove('show'); if (st.running) setStatus('Focus session running', true); }, 2400);
-        });
-
         $('demo-reset').addEventListener('click', function () {
             clearInterval(st.timer); clearTimeout(st.ovTimer); st.running = false;
             overlay.classList.remove('show');
             st.mode = DEF.mode; st.min = DEF.min; st.feeds = DEF.feeds; st.ads = DEF.ads;
             shield.style.width = '';
+            if (typeof show === 'function') show('app');
             render(); setStatus('Idle · press start', false);
         });
+
+
+        // Phone shell: home screen, app switching, per-app blocking
+        var screens = { home: $('screen-home'), app: $('screen-app'), ext: $('screen-ext') };
+        var cur = 'app';
+        var APPS = {
+            instagram: { name: 'Instagram', icon: 'instagram', bg: 'linear-gradient(45deg,#feda75,#d62976,#4f5bd5)', color: '#fff', feed: 'Reels' },
+            youtube:   { name: 'YouTube', icon: 'youtube', bg: '#E5231B', color: '#fff', feed: 'Shorts' },
+            tiktok:    { name: 'TikTok', icon: 'music-2', bg: '#000', color: '#fff', blocked: true },
+            chrome:    { name: 'Chrome', icon: 'globe', bg: '#fff', color: '#4285F4' },
+            messages:  { name: 'Messages', icon: 'message-circle', bg: '#2E7D5B', color: '#fff' },
+            camera:    { name: 'Camera', icon: 'camera', bg: '#3A4A52', color: '#fff' },
+            maps:      { name: 'Maps', icon: 'map-pin', bg: '#3B7DD8', color: '#fff' }
+        };
+        var curApp = null;
+
+        function show(name) {
+            cur = name;
+            Object.keys(screens).forEach(function (k) { screens[k].classList.toggle('hidden', k !== name); });
+        }
+        function hint() { return st.running ? 'Focus session running' : 'Idle · press start'; }
+        function overlayShow(title, body, after) {
+            clearTimeout(st.ovTimer);
+            $('ov-title').textContent = title; $('ov-body').textContent = body;
+            overlay.classList.add('show');
+            st.ovTimer = setTimeout(function () {
+                overlay.classList.remove('show');
+                if (after) after();
+                if (st.running && cur === 'home') setStatus('Focus session running', true);
+            }, 2400);
+        }
+        function clock() {
+            var d = new Date(), t = pad(d.getHours()) + ':' + pad(d.getMinutes());
+            $('sb-time').textContent = t; $('home-clock').textContent = t;
+            $('home-date').textContent = d.toLocaleDateString(undefined, { weekday: 'long', month: 'short', day: 'numeric' });
+        }
+        clock(); setInterval(clock, 20000);
+
+        function openApp(key) {
+            if (key === 'aegis') { show('app'); return; }
+            var a = APPS[key]; if (!a) return;
+            curApp = key;
+            var ic = $('ext-icon');
+            ic.style.background = a.bg; ic.style.color = a.color;
+            ic.innerHTML = '<i data-lucide="' + a.icon + '" class="w-3.5 h-3.5"></i>';
+            $('ext-name').textContent = a.name;
+            var tabs = $('ext-tabs');
+            if (a.feed) { tabs.classList.remove('hidden'); tabs.classList.add('flex'); $('ext-feed-label').textContent = a.feed; }
+            else { tabs.classList.add('hidden'); tabs.classList.remove('flex'); }
+            if (window.lucide) lucide.createIcons();
+            if (st.running && a.blocked) {
+                setStatus(a.name + ' blocked', true);
+                overlayShow(a.name + ' is blocked', 'Aegis Focus is keeping this app closed during your session.', function () { show('home'); });
+                show('home');
+                return;
+            }
+            show('ext');
+            setStatus(st.running ? a.name + ' is open, session still running' : a.name + ' opens normally, no session', st.running);
+        }
+
+        document.querySelectorAll('[data-app]').forEach(function (b) {
+            b.addEventListener('click', function () { openApp(b.dataset.app); });
+        });
+
+        $('ext-feed-tab').addEventListener('click', function () {
+            var a = APPS[curApp]; if (!a || !a.feed) return;
+            if (st.running && st.feeds) {
+                setStatus(a.feed + ' blocked', true);
+                overlayShow(a.feed + ' blocked', 'Aegis Focus stepped you back. The rest of ' + a.name + ' still works.', null);
+            } else {
+                setStatus(a.feed + ' allowed, ' + (st.running ? 'the blocker is off' : 'no session'), false);
+                overlayShow(a.feed + ' playing', st.running ? 'Shorts and Reels blocker is off, so nothing stops the scroll.' : 'No focus session is running, so it opens normally.', null);
+            }
+        });
+
+        $('home-bar').addEventListener('click', function () {
+            if (cur === 'home') return;
+            overlay.classList.remove('show');
+            show('home');
+            setStatus(hint() + (st.running ? ' · now open an app' : ''), st.running);
+        });
+
+        show('app');
 
         render();
     })();
