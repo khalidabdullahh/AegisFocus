@@ -33,12 +33,17 @@ android {
             }
         }
         create("release") {
+            // Passwords come from the environment only (CI secrets or your shell). With
+            // nothing set the release build stays unsigned instead of using a guessable key.
             val releaseKeystore = rootProject.file("release-keystore.jks")
-            if (releaseKeystore.exists()) {
+            val storePass = System.getenv("KEYSTORE_PASSWORD")
+            val alias = System.getenv("KEY_ALIAS")
+            val keyPass = System.getenv("KEY_PASSWORD")
+            if (releaseKeystore.exists() && storePass != null && alias != null && keyPass != null) {
                 storeFile = releaseKeystore
-                storePassword = System.getenv("KEYSTORE_PASSWORD") ?: "aegis_secure_pass"
-                keyAlias = System.getenv("KEY_ALIAS") ?: "aegis_key"
-                keyPassword = System.getenv("KEY_PASSWORD") ?: "aegis_secure_pass"
+                storePassword = storePass
+                keyAlias = alias
+                keyPassword = keyPass
             }
         }
     }
@@ -46,7 +51,7 @@ android {
     buildTypes {
         release {
             isMinifyEnabled = false
-            signingConfig = signingConfigs.getByName("release")
+            signingConfig = signingConfigs.getByName("release").takeIf { it.storeFile != null }
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"

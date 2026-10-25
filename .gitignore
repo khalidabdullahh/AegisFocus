@@ -22,3 +22,6 @@
 keystore_base64.txt
 local.properties
 
+# Python
+__pycache__/
+*.pyc

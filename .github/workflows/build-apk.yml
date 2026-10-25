@@ -43,35 +43,40 @@ jobs:
         run: ./gradlew testDebugUnitTest --no-daemon
 
       # Stable signing: add KEYSTORE_BASE64, KEYSTORE_PASSWORD, KEY_ALIAS and KEY_PASSWORD
-      # as repository secrets. Without them a temporary key is generated, which still gives a
-      # valid release APK but with a different signature on every build.
+      # as repository secrets (tools/generate_keystore.sh creates the keystore).
+      # Pull-request and test builds without them get a throwaway key with a random password.
+      # A published release without them fails, because users could never update from it.
       - name: Prepare Release Signing Key
         env:
           KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
           KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+          PUBLISHING: ${{ startsWith(github.ref, 'refs/tags/v') || (github.event_name == 'workflow_dispatch' && inputs.publish_release) }}
         run: |
           if [ -n "$KEYSTORE_BASE64" ]; then
-            echo "$KEYSTORE_BASE64" | tr -d '\r\n ' | base64 -d > release-keystore.jks 2>/dev/null || echo "$KEYSTORE_BASE64" | base64 --decode > release-keystore.jks 2>/dev/null || true
+            echo "$KEYSTORE_BASE64" | tr -d '\r\n ' | base64 -d > release-keystore.jks 2>/dev/null || true
           fi
 
-          # Verify keystore integrity; if missing, empty, or corrupt, generate a standard Aegis Focus keystore
-          STORE_PASS="${KEYSTORE_PASSWORD:-aegis_secure_pass}"
-          KEY_PASS="${KEY_PASSWORD:-aegis_secure_pass}"
-          ALIAS="${KEY_ALIAS:-aegis_key}"
-
-          if [ ! -s release-keystore.jks ] || ! keytool -list -keystore release-keystore.jks -storepass "$STORE_PASS" >/dev/null 2>&1; then
-            echo "::warning::Keystore file was empty or corrupted from base64 decode. Creating standard Aegis Focus keystore..."
+          if [ -s release-keystore.jks ] && [ -n "$KEYSTORE_PASSWORD" ] && [ -n "$KEY_ALIAS" ] && [ -n "$KEY_PASSWORD" ] \
+             && keytool -list -keystore release-keystore.jks -storepass "$KEYSTORE_PASSWORD" >/dev/null 2>&1; then
+            echo "Using verified release keystore."
+            STORE_PASS="$KEYSTORE_PASSWORD"; ALIAS="$KEY_ALIAS"; KEY_PASS="$KEY_PASSWORD"
+          else
+            if [ "$PUBLISHING" = "true" ]; then
+              echo "::error::Release signing secrets are missing or invalid. Refusing to publish a release signed with a throwaway key."
+              exit 1
+            fi
+            echo "::warning::No usable signing secrets. Using a throwaway key for this build only."
             rm -f release-keystore.jks
-            keytool -genkeypair -v -keystore release-keystore.jks -alias "$ALIAS" \
+            STORE_PASS="$(openssl rand -hex 16)"; KEY_PASS="$STORE_PASS"; ALIAS="aegis_key"
+            keytool -genkeypair -keystore release-keystore.jks -alias "$ALIAS" \
               -storepass "$STORE_PASS" -keypass "$KEY_PASS" \
               -keyalg RSA -keysize 2048 -validity 10000 \
-              -dname "CN=Aegis Focus, OU=Engineering, O=AegisFocus, L=Dhaka, ST=Dhaka, C=BD"
-          else
-            echo "Using verified release keystore."
+              -dname "CN=Aegis Focus CI, O=AegisFocus, C=BD"
           fi
 
+          echo "::add-mask::$STORE_PASS"
           echo "KEYSTORE_PASSWORD=$STORE_PASS" >> "$GITHUB_ENV"
           echo "KEY_ALIAS=$ALIAS" >> "$GITHUB_ENV"
           echo "KEY_PASSWORD=$KEY_PASS" >> "$GITHUB_ENV"

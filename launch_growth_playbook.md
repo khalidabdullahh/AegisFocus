@@ -64,8 +64,6 @@ I'd love to hear your feedback on what features you want next!
 ---
 
 ## 🔑 How to Generate Keys for Users:
-To generate 20 Lifetime keys for Reddit commenters, run this in your terminal:
-```bash
-python3 tools/generate_license.py --tier LIFE --count 20
-```
-Then copy and DM the keys directly to commenters!
+Keys are one-time and created on the server. In the app, sign in as the admin, open Settings,
+tap the version row 5 times, choose **Life**, add the commenter's name as the buyer note and tap
+**Generate Key**. Repeat once per commenter, then DM each key (it works exactly once).

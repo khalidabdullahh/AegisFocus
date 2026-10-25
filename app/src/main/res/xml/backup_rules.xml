@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <full-backup-content>
     <include domain="database" path="aegis_focus.db" />
-    <include domain="sharedpref" path="." />
+    <!-- Not backed up on purpose: aegis_auth_prefs.xml holds the sign-in tokens -->
+    <include domain="sharedpref" path="aegis_settings.xml" />
+    <include domain="sharedpref" path="aegis_productivity.xml" />
 </full-backup-content>

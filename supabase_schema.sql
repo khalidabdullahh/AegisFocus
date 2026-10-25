@@ -92,7 +92,7 @@ RETURNS BOOLEAN AS $$
         SELECT 1 FROM public.profiles
         WHERE id = auth.uid() AND role IN ('admin', 'super_admin')
     );
-$$ LANGUAGE sql SECURITY DEFINER;
+$$ LANGUAGE sql SECURITY DEFINER SET search_path = public;
 
 CREATE OR REPLACE FUNCTION public.is_super_admin()
 RETURNS BOOLEAN AS $$
@@ -100,7 +100,7 @@ RETURNS BOOLEAN AS $$
         SELECT 1 FROM public.profiles
         WHERE id = auth.uid() AND role = 'super_admin'
     );
-$$ LANGUAGE sql SECURITY DEFINER;
+$$ LANGUAGE sql SECURITY DEFINER SET search_path = public;
 
 -- Profiles Policies
 DROP POLICY IF EXISTS "Users can view their own profile" ON public.profiles;
@@ -111,7 +111,28 @@ CREATE POLICY "Users can view their own profile"
 DROP POLICY IF EXISTS "Users can update their own profile" ON public.profiles;
 CREATE POLICY "Users can update their own profile" 
     ON public.profiles FOR UPDATE 
-    USING (auth.uid() = id);
+    USING (auth.uid() = id)
+    WITH CHECK (auth.uid() = id);
+
+-- A signed-in app user may edit their profile but never their own role.
+-- auth.uid() is NULL in the SQL editor / service key, so those can still grant roles.
+CREATE OR REPLACE FUNCTION public.protect_profile_role()
+RETURNS TRIGGER
+LANGUAGE plpgsql SET search_path = public AS $$
+BEGIN
+    IF auth.uid() IS NOT NULL
+       AND (NEW.role IS DISTINCT FROM OLD.role OR NEW.id IS DISTINCT FROM OLD.id) THEN
+        RAISE EXCEPTION 'Changing role or id is not allowed from the app.'
+            USING ERRCODE = '42501';
+    END IF;
+    RETURN NEW;
+END;
+$$;
+
+DROP TRIGGER IF EXISTS protect_profile_role ON public.profiles;
+CREATE TRIGGER protect_profile_role
+    BEFORE UPDATE ON public.profiles
+    FOR EACH ROW EXECUTE FUNCTION public.protect_profile_role();
 
 -- Subscriptions Policies (READ-ONLY for clients; modifications only via secure RPC)
 DROP POLICY IF EXISTS "Users can view their own subscription" ON public.subscriptions;
@@ -137,9 +158,16 @@ CREATE POLICY "Users can view their own stats"
     USING (auth.uid() = user_id);
 
 DROP POLICY IF EXISTS "Users can insert or update their own stats" ON public.user_stats_sync;
-CREATE POLICY "Users can insert or update their own stats" 
-    ON public.user_stats_sync FOR ALL 
-    USING (auth.uid() = user_id);
+DROP POLICY IF EXISTS "Users can insert their own stats" ON public.user_stats_sync;
+CREATE POLICY "Users can insert their own stats"
+    ON public.user_stats_sync FOR INSERT
+    WITH CHECK (auth.uid() = user_id);
+
+DROP POLICY IF EXISTS "Users can update their own stats" ON public.user_stats_sync;
+CREATE POLICY "Users can update their own stats"
+    ON public.user_stats_sync FOR UPDATE
+    USING (auth.uid() = user_id)
+    WITH CHECK (auth.uid() = user_id);
 
 -- License Keys
 DROP POLICY IF EXISTS "Users can only view their already redeemed keys" ON public.license_keys;
@@ -221,7 +249,7 @@ BEGIN
         'message', 'Payment claim submitted. Awaiting Admin verification.'
     );
 END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
+$$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public;
 
 -- ─── 2. Secure RPC: Admin Approve Payment Request ────────────────────────────
 CREATE OR REPLACE FUNCTION public.approve_payment_request(
@@ -315,7 +343,7 @@ BEGIN
         'message', 'Payment verified and Pro activated successfully.'
     );
 END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
+$$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public;
 
 -- ─── 3. Secure RPC: Admin Reject Payment Request ─────────────────────────────
 CREATE OR REPLACE FUNCTION public.reject_payment_request(
@@ -363,7 +391,7 @@ BEGIN
         'message', 'Payment request has been rejected.'
     );
 END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
+$$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public;
 
 -- ─── 4. Secure RPC: Redeem License Key ────────────────────────────────────────
 DROP FUNCTION IF EXISTS public.redeem_license_key(TEXT);
@@ -426,7 +454,7 @@ BEGIN
         'message', 'License successfully activated!'
     );
 END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
+$$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public;
 
 -- ─── Automatic User Registration Trigger ─────────────────────────────────────
 CREATE OR REPLACE FUNCTION public.handle_new_user()
@@ -466,7 +494,7 @@ BEGIN
 
     RETURN NEW;
 END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
+$$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public;
 
 -- Trigger on auth.users insert
 DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;

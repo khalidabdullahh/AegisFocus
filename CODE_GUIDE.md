@@ -12,7 +12,6 @@
 | [`AegisApplication.kt`](file:///Users/khalidabdullah/AntiGravity/aegis-focus/app/src/main/java/com/aegisfocus/app/AegisApplication.kt) | **অ্যাপ এন্ট্রি পয়েন্ট** | নোটিফিকেশন চ্যানেল তৈরি ও ব্যাকগ্রাউন্ড `WorkManager` শুরু করে। |
 | [`OnboardingScreen.kt`](file:///Users/khalidabdullah/AntiGravity/aegis-focus/app/src/main/java/com/aegisfocus/app/presentation/onboarding/OnboardingScreen.kt) | **ম্যান্ডেটরি পারমিশন গেট** | Usage Access, Accessibility ও Notification ছাড়া ড্যাশবোর্ডে প্রবেশ আটকায়। |
 | [`AegisNavHost.kt`](file:///Users/khalidabdullah/AntiGravity/aegis-focus/app/src/main/java/com/aegisfocus/app/core/navigation/AegisNavHost.kt) | **UI নেভিগেশন গ্রাফ** | Home, Focus, Apps, Stats এবং Settings স্ক্রিনের রাউটিং নিয়ন্ত্রণ করে। |
-| [`LicenseKeyValidator.kt`](file:///Users/khalidabdullah/AntiGravity/aegis-focus/app/src/main/java/com/aegisfocus/app/data/license/LicenseKeyValidator.kt) | **অফলাইন লাইসেন্স ও সুপার অ্যাডমিন** | HMAC SHA-256 কোড ভ্যালিডেশন ও সিক্রেট পাসওয়ার্ড (`6924923086`) দিয়ে কী তৈরি। |
 | [`AegisDatabase.kt`](file:///Users/khalidabdullah/AntiGravity/aegis-focus/app/src/main/java/com/aegisfocus/app/data/local/AegisDatabase.kt) | **১০০% লোকাল ডাটাবেস (Room)** | ব্লকড অ্যাপস তালিকা, সেশন ও ডিসিপ্লিন হিস্ট্রি ডিভাইস মেমরিতে সংরক্ষণ করে। |
 
 ---
@@ -40,11 +39,12 @@ graph TD
   2. হাই-প্রায়োরিটি নোটিফিকেশন চ্যানেল তৈরি করে (যাতে ফোকাস চলাকালে টাইমার দেখা যায়)।
   3. `DailyUsageSnapshotWorker` এবং `ScheduleCheckWorker` ব্যাকগ্রাউন্ড টাস্ক শিডিউল করে।
 
-### খ. `LicenseKeyValidator.kt` & Super Admin Generator
-- 📌 **উদ্দেশ্য:** ১০০% অফলাইন লাইসেন্স কোড তৈরি ও ভেরিফাই করা।
+### খ. সার্ভার-সাইড লাইসেন্স কী (Supabase)
+- 📌 **উদ্দেশ্য:** প্রতিটি লাইসেন্স কী শুধু একবার ব্যবহারযোগ্য, সবকিছু সার্ভারে যাচাই হয়।
 - ⚙️ **লজিক:**
-  - `BARAKAH-12M-XXXX-XXXX` অথবা `BARAKAH-LIFETIME-XXXX-XXXX`
-  - সুপার অ্যাডমিন পাসওয়ার্ড: `6924923086`
+  - কী তৈরি: `admin_generate_license_key` (শুধু `super_admin`), ফরম্যাট `AEGIS-XXXX-XXXX-XXXX-XXXX`
+  - কী ব্যবহার: `redeem_license_key` (একবারই কাজ করে, ভুল চেষ্টায় লক হয়)
+  - অ্যাপে কোনো মাস্টার পাসওয়ার্ড বা সিক্রেট নেই; অ্যাডমিন প্যানেল শুধু অ্যাডমিন অ্যাকাউন্টে দেখায়।
 
 ---
 

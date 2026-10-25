@@ -42,8 +42,6 @@ data class SettingsUiState(
     val redeemError: String? = null,
     val redeemSuccess: String? = null,
     val isAdminMode: Boolean = false,
-    val isPasswordPromptOpen: Boolean = false,
-    val adminPasswordError: String? = null,
     val activePlan: SubscriptionPlan = SubscriptionPlan.FREE,
     val daysRemaining: Long = 0L,
     val isShortsBlockerEnabled: Boolean = true,
@@ -59,9 +57,7 @@ private data class SettingsLocalDialogState(
     val isRedeemDialogOpen: Boolean = false,
     val redeemError: String? = null,
     val redeemSuccess: String? = null,
-    val isAdminMode: Boolean = false,
-    val isPasswordPromptOpen: Boolean = false,
-    val adminPasswordError: String? = null
+    val isAdminMode: Boolean = false
 )
 
 data class AdminKeyState(
@@ -131,8 +127,6 @@ class SettingsViewModel(
             redeemError = local.redeemError,
             redeemSuccess = local.redeemSuccess,
             isAdminMode = local.isAdminMode,
-            isPasswordPromptOpen = local.isPasswordPromptOpen,
-            adminPasswordError = local.adminPasswordError,
             activePlan = plan,
             daysRemaining = remaining,
             isShortsBlockerEnabled = settingsRepository.isShortsBlockerEnabled(),
@@ -316,36 +310,17 @@ class SettingsViewModel(
 
         adminTapCount++
         if (adminTapCount >= ADMIN_TAP_TARGET) {
-            _localState.value = _localState.value.copy(
-                isPasswordPromptOpen = true,
-                adminPasswordError = null
-            )
             adminTapCount = 0
-        }
-    }
-
-    fun closeAdminPasswordPrompt() {
-        _localState.value = _localState.value.copy(
-            isPasswordPromptOpen = false,
-            adminPasswordError = null
-        )
-    }
-
-    fun verifyAdminPassword(password: String, context: Context? = null) {
-        val trimmed = password.trim()
-        if (trimmed == "6924923086") {
-            _localState.value = _localState.value.copy(
-                isAdminMode = true,
-                isPasswordPromptOpen = false,
-                adminPasswordError = null
-            )
-            if (context != null) {
-                Toast.makeText(context, "Super Admin Mode Unlocked!", Toast.LENGTH_SHORT).show()
+            // The panel is only a UI convenience: every admin call is checked again on the
+            // server against profiles.role, so showing it to a non-admin gives them nothing.
+            if (SupabaseAuthService.isSuperAdmin(authService?.currentUser?.value?.email)) {
+                _localState.value = _localState.value.copy(isAdminMode = true)
+                if (context != null) {
+                    Toast.makeText(context, "Super Admin Mode Unlocked!", Toast.LENGTH_SHORT).show()
+                }
+            } else if (context != null) {
+                Toast.makeText(context, "Sign in with the admin account first.", Toast.LENGTH_SHORT).show()
             }
-        } else {
-            _localState.value = _localState.value.copy(
-                adminPasswordError = "Incorrect password. Access denied."
-            )
         }
     }
 
