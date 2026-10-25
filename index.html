@@ -80,16 +80,17 @@
         .phone { width: 272px; height: 548px; border-radius: 2.6rem; background: #0E181D; border: 8px solid #1C2F38; box-shadow: 0 30px 80px -20px rgba(0,0,0,.7), 0 0 0 1px #2B434D; }
         .ring { background: conic-gradient(#9CC5A1 0 var(--p,100%), #1C2F38 var(--p,100%) 100%); transition: background .2s linear; }
         /* interactive demo */
-        /* hero layout: copy + customizer left, phone right from 820px (same placement as GestureVolume) */
+        /* hero layout: row 1 = copy | phone, row 2 = two equal boxes (customizer | live protection) */
         .hero-grid { display: grid; gap: 2rem; }
+        .hero-custom, .hero-live { width: 100%; max-width: 36rem; margin-inline: auto; }
         @media (min-width: 820px) {
-            .hero-grid { grid-template-columns: 1.05fr .95fr; grid-template-areas: "copy stage" "custom stage"; column-gap: 3.5rem; row-gap: 1.5rem; align-items: start; }
-            .hero-copy { grid-area: copy; }
+            .hero-grid { grid-template-columns: 1fr 1fr; grid-template-areas: "copy stage" "custom live"; column-gap: 3rem; row-gap: 2rem; align-items: start; }
+            .hero-copy { grid-area: copy; align-self: center; }
             .hero-stage { grid-area: stage; }
-            .hero-custom { grid-area: custom; }
+            .hero-custom { grid-area: custom; align-self: stretch; }
+            .hero-live { grid-area: live; align-self: stretch; }
+            .hero-custom, .hero-live { max-width: none; margin-inline: 0; }
         }
-        .hero-custom { width: 100%; max-width: 36rem; margin-inline: auto; }
-        @media (min-width: 820px) { .hero-custom { margin-inline: 0; max-width: none; } }
         #demo { scroll-margin-top: 84px; }
         .seg { display: grid; gap: .5rem; }
         .seg button, .tgl { border: 1px solid #2B434D; background: #15242B; color: #A8B9BC; font-weight: 700; font-size: .8rem; border-radius: .75rem; padding: .6rem .5rem; transition: border-color .15s ease, background .15s ease, color .15s ease; }
@@ -121,13 +122,13 @@
 
 <!-- HEADER -->
 <header class="sticky top-0 z-50 border-b border-line/70 bg-bg/85 backdrop-blur-xl">
-    <div class="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-3">
-        <a href="/" class="flex items-center gap-2.5 shrink-0" aria-label="Aegis Focus home">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 h-16 grid grid-cols-[1fr_auto_1fr] items-center gap-3">
+        <a href="/" class="col-start-1 justify-self-start flex items-center gap-2.5 shrink-0" aria-label="Aegis Focus home">
             <img src="assets/favicon.png" alt="Aegis Focus logo" width="36" height="36" class="w-9 h-9 rounded-xl border border-line">
             <span class="font-display tracking-tight text-xl">Aegis Focus</span>
         </a>
 
-        <nav class="hidden min-[820px]:flex items-center gap-5 xl:gap-6 text-sm font-semibold text-muted ml-auto" aria-label="Main">
+        <nav class="hidden min-[820px]:flex items-center gap-5 xl:gap-6 text-sm font-semibold text-muted col-start-2 justify-self-center" aria-label="Main">
             <a href="#demo" class="hover:text-text transition">Try demo</a>
             <a href="#features" class="hover:text-text transition">Features</a>
             <a href="#how" class="hover:text-text transition">How it works</a>
@@ -136,15 +137,14 @@
             <a href="#faq" class="hover:text-text transition">FAQ</a>
         </nav>
 
-        <div class="flex items-center gap-2">
-            
+        <div class="col-start-3 justify-self-end flex items-center gap-2">
             <button id="menu-btn" type="button" aria-label="Open menu" aria-expanded="false"
-                    class="min-[820px]:hidden btn-ghost rounded-xl w-10 h-10 inline-flex items-center justify-center">
+                    class="btn-ghost rounded-xl w-10 h-10 inline-flex items-center justify-center">
                 <i data-lucide="menu" class="w-5 h-5"></i>
             </button>
         </div>
     </div>
-    <div id="mobile-menu" class="hidden min-[820px]:hidden border-t border-line/70 bg-bg">
+    <div id="mobile-menu" class="hidden border-t border-line/70 bg-bg">
         <div class="max-w-6xl mx-auto px-4 py-3 grid grid-cols-2 gap-2 text-sm font-semibold">
             <a href="#demo" class="btn-ghost rounded-xl px-4 py-3">Try demo</a>
             <a href="#features" class="btn-ghost rounded-xl px-4 py-3">Features</a>
@@ -315,22 +315,10 @@
             </div>
             <p id="demo-status" class="mt-4 inline-flex items-center gap-2 rounded-full border border-line bg-surface/80 text-xs text-muted px-3.5 py-1.5" aria-live="polite"><span id="status-dot" class="w-1.5 h-1.5 rounded-full bg-faint"></span><span id="status-text">Idle &middot; press start</span></p>
             <p class="mt-3 text-[11px] text-faint text-center">Interactive demo &middot; tap the apps like on a real phone &middot; runs at 60x speed</p>
-            <div class="hero-live card p-4 mt-5 w-full max-w-[340px] text-left">
-                <div class="flex items-center justify-between gap-3">
-                    <h2 class="text-xs font-extrabold tracking-widest text-faint uppercase">Live protection</h2>
-                    <p class="text-[11px] text-muted">Blocked in this demo: <b id="blk-count" class="text-sage">0</b></p>
-                </div>
-                <div class="mt-3 grid gap-2">
-                    <button type="button" id="tgl-apps" class="tgl" role="switch" aria-checked="true"><span><span class="block">Block distracting apps</span><span class="block text-[11px] text-faint font-medium mt-0.5">TikTok and other feeds, during sessions</span></span><span class="switch"></span></button>
-                    <button type="button" id="tgl-feeds" class="tgl" role="switch" aria-checked="true"><span><span class="block">Block Shorts / Reels</span><span class="block text-[11px] text-faint font-medium mt-0.5">Cut inside Instagram and YouTube</span></span><span class="switch"></span></button>
-                    <button type="button" id="tgl-ads" class="tgl" role="switch" aria-checked="true"><span><span class="block">System-wide ad blocker</span><span class="block text-[11px] text-faint font-medium mt-0.5">Ads, trackers and scam sites, always on</span></span><span class="switch"></span></button>
-                </div>
-                <p class="mt-3 text-[11px] text-faint leading-relaxed">Everything runs on-device. These switches only change this demo.</p>
-            </div>
         </div>
 
         <!-- Customizer -->
-        <div class="hero-custom card p-5 text-left">
+        <div class="hero-custom card p-5 text-left flex flex-col">
             <div class="flex items-center justify-between">
                 <h2 class="text-xs font-extrabold tracking-widest text-faint uppercase">Customize your session</h2>
                 <button id="demo-reset" type="button" class="btn-ghost rounded-lg px-3 py-1.5 text-xs text-muted">Reset</button>
@@ -352,7 +340,21 @@
             </div>
 
             
-            <p class="mt-3 text-xs text-faint">Tip: press Start, tap the bar at the bottom of the phone to go home, then try opening TikTok or Instagram. Change the layers on the right and try again.</p>
+            <p class="mt-auto pt-3 text-xs text-faint">Tip: press Start, tap the bar at the bottom of the phone to go home, then try opening TikTok or Instagram. Switch the layers on the right and try again.</p>
+        </div>
+
+        <!-- Live protection -->
+        <div class="hero-live card p-5 text-left flex flex-col">
+            <div class="flex items-center justify-between gap-3">
+                <h2 class="text-xs font-extrabold tracking-widest text-faint uppercase">Live protection</h2>
+                <p class="text-[11px] text-muted">Blocked in this demo: <b id="blk-count" class="text-sage">0</b></p>
+            </div>
+            <div class="mt-3 grid gap-2">
+                <button type="button" id="tgl-apps" class="tgl" role="switch" aria-checked="true"><span><span class="block">Block distracting apps</span><span class="block text-[11px] text-faint font-medium mt-0.5">TikTok and other feeds, during sessions</span></span><span class="switch"></span></button>
+                <button type="button" id="tgl-feeds" class="tgl" role="switch" aria-checked="true"><span><span class="block">Block Shorts / Reels</span><span class="block text-[11px] text-faint font-medium mt-0.5">Cut inside Instagram and YouTube</span></span><span class="switch"></span></button>
+                <button type="button" id="tgl-ads" class="tgl" role="switch" aria-checked="true"><span><span class="block">System-wide ad blocker</span><span class="block text-[11px] text-faint font-medium mt-0.5">Ads, trackers and scam sites, always on</span></span><span class="switch"></span></button>
+            </div>
+            <p class="mt-auto pt-3 text-xs text-faint">Everything runs on-device. These switches only change this demo.</p>
         </div>
 
     </div>
