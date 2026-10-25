@@ -85,13 +85,20 @@
         .hero-custom, .hero-live { width: 100%; max-width: 36rem; margin-inline: auto; }
         @media (min-width: 820px) {
             .hero-grid { grid-template-columns: 1fr 1fr; grid-template-areas: "copy stage" "custom live"; column-gap: 3rem; row-gap: 2rem; align-items: start; }
-            .hero-copy { grid-area: copy; align-self: center; }
+            .hero-copy { grid-area: copy; align-self: start; }
             .hero-stage { grid-area: stage; }
             .hero-custom { grid-area: custom; align-self: stretch; }
             .hero-live { grid-area: live; align-self: stretch; }
             .hero-custom, .hero-live { max-width: none; margin-inline: 0; }
         }
-        #demo { scroll-margin-top: 84px; }
+        #demo { scroll-margin-top: 96px; }
+        .no-scrollbar { scrollbar-width: none; -ms-overflow-style: none; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .phone .seg button { font-size: 10px; padding: .4rem .25rem; border-radius: .6rem; }
+        .phone .switch { width: 34px; height: 20px; }
+        .phone .switch::after { width: 14px; height: 14px; top: 3px; left: 3px; }
+        .phone [aria-checked="true"] > .switch::after { transform: translateX(14px); }
+        #screen-ext { transition: filter .6s ease; }
         .seg { display: grid; gap: .5rem; }
         .seg button, .tgl { border: 1px solid #2B434D; background: #15242B; color: #A8B9BC; font-weight: 700; font-size: .8rem; border-radius: .75rem; padding: .6rem .5rem; transition: border-color .15s ease, background .15s ease, color .15s ease; }
         .seg button:hover:not(:disabled) { border-color: #86C5B4; }
@@ -194,6 +201,7 @@
                 <li class="inline-flex items-center gap-1.5"><i data-lucide="check" class="w-4 h-4 text-sage"></i><span id="hero-size">Small download</span></li>
                 <li class="inline-flex items-center gap-1.5"><i data-lucide="check" class="w-4 h-4 text-sage"></i>Your data stays on your phone</li>
             </ul>
+            <p class="mt-5 flex items-start gap-2 text-xs text-faint max-w-md mx-auto min-[820px]:mx-0 text-left"><i data-lucide="smartphone" class="w-4 h-4 text-teal shrink-0 mt-0.5"></i><span>Interactive demo. The phone is a working copy of the real app: tap the tabs (Home, Focus, Apps, Productivity, Settings), start a session, then use the bar at the bottom to go home and open an app. Sessions are sped up, so a full one takes about a minute.</span></p>
 
         </div>
 
@@ -240,45 +248,142 @@
                     <div class="absolute bottom-10 inset-x-4 rounded-full bg-white/10 border border-white/10 text-[10px] text-muted px-4 py-2 flex items-center gap-2"><i data-lucide="search" class="w-3.5 h-3.5"></i>Search</div>
                 </div>
 
-                <!-- Aegis Focus app -->
+                <!-- Aegis Focus app (mirrors the real app's 5 tabs) -->
                 <div id="screen-app" class="absolute inset-0 z-[2] bg-bg">
-                <div class="px-4 pt-9 pb-3">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <p class="text-[11px] text-faint">Good focus</p>
-                            <p class="text-base font-extrabold leading-tight">Aegis Focus</p>
-                        </div>
-                        <img src="assets/favicon.png" class="w-8 h-8 rounded-lg border border-line" alt="">
+                    <div id="tab-scroll" class="no-scrollbar absolute inset-x-0 top-0 bottom-[60px] overflow-y-auto pt-9 pb-4">
+
+                        <!-- HOME -->
+                        <section data-tab="home">
+                            <div class="px-4 pb-3">
+                                <div class="flex items-center justify-between">
+                                    <div><p class="text-[11px] text-faint">Good focus</p><p class="text-base font-extrabold leading-tight">Aegis Focus</p></div>
+                                    <img src="assets/favicon.png" class="w-8 h-8 rounded-lg border border-line" alt="">
+                                </div>
+                                <div class="mt-3 flex gap-2">
+                                    <span class="rounded-full bg-elevated border border-line text-[10px] font-bold px-2.5 py-1 text-teal">Discipline</span>
+                                    <span class="rounded-full bg-elevated border border-line text-[10px] font-bold px-2.5 py-1 text-sage">Level</span>
+                                </div>
+                            </div>
+                            <div class="mx-4 rounded-2xl bg-surface border border-line p-4 flex flex-col items-center">
+                                <div id="ring" class="ring w-32 h-32 rounded-full grid place-items-center">
+                                    <div class="w-[104px] h-[104px] rounded-full bg-surface grid place-items-center text-center">
+                                        <div><p id="time" class="text-2xl font-black tabular-nums" aria-live="off">25:00</p><p id="time-label" class="text-[10px] text-faint">Strict Mode</p></div>
+                                    </div>
+                                </div>
+                                <button type="button" id="start-btn" class="mt-3 w-full rounded-xl bg-sage text-bg text-center text-xs font-extrabold py-2.5">Start focus session</button>
+                                <button type="button" id="emergency-btn" class="hidden mt-2 text-[10px] font-bold text-alert">Emergency breakout (discipline penalty)</button>
+                            </div>
+                            <p class="mx-4 mt-4 mb-2 text-[11px] font-bold text-muted">Quick Focus Routines</p>
+                            <div class="mx-4 grid grid-cols-3 gap-2">
+                                <button type="button" data-quick="25:normal" class="rounded-xl bg-surface border border-line py-2 text-center"><span class="block text-xs font-extrabold">25m</span><span class="block text-[9px] text-faint">Pomodoro</span></button>
+                                <button type="button" data-quick="50:strict" class="rounded-xl bg-surface border border-line py-2 text-center"><span class="block text-xs font-extrabold">50m</span><span class="block text-[9px] text-faint">Deep Work</span></button>
+                                <button type="button" data-quick="90:strict" class="rounded-xl bg-surface border border-line py-2 text-center"><span class="block text-xs font-extrabold">90m</span><span class="block text-[9px] text-faint">Immersion</span></button>
+                            </div>
+                            <div class="mx-4 mt-3 grid grid-cols-2 gap-2">
+                                <div class="rounded-xl bg-surface border border-line p-3"><p class="text-[10px] text-faint">Shorts / Reels</p><p id="tile-feeds" class="text-xs font-bold text-sage mt-0.5">Blocked</p></div>
+                                <div class="rounded-xl bg-surface border border-line p-3"><p class="text-[10px] text-faint">Ad blocker</p><p id="tile-ads" class="text-xs font-bold text-sage mt-0.5">On</p></div>
+                            </div>
+                            <div class="mx-4 mt-2 rounded-xl bg-surface border border-line p-3 flex items-center gap-3">
+                                <span id="shield-ic" class="w-8 h-8 rounded-full bg-[#CD7F32]/20 text-[#E0A06A] grid place-items-center"><i data-lucide="shield" class="w-4 h-4"></i></span>
+                                <div class="flex-1"><p id="shield-name" class="text-xs font-bold">Bronze shield</p><div class="mt-1.5 h-1.5 rounded-full bg-elevated overflow-hidden"><div id="shield-bar" class="h-full bg-sage rounded-full" style="width:33%;transition:width .6s ease"></div></div><p id="shield-sub" class="mt-1 text-[9px] text-faint"></p></div>
+                            </div>
+                        </section>
+
+                        <!-- FOCUS -->
+                        <section data-tab="focus" class="hidden px-4">
+                            <h3 class="text-sm font-extrabold">Configure Session</h3>
+                            <p class="text-[10px] text-faint">Deliberate focus, undisturbed mind.</p>
+                            <p class="text-[10px] font-bold text-muted mt-3">Session Goal / Name</p>
+                            <input id="goal-name" value="Focus session" maxlength="24" aria-label="Session name" class="mt-1 w-full rounded-lg bg-surface border border-line px-3 py-2 text-xs outline-none focus:border-teal">
+                            <p class="text-[10px] font-bold text-muted mt-3">Discipline Mode</p>
+                            <div class="seg grid-cols-2 mt-1">
+                                <button type="button" data-mode="normal" aria-pressed="false">Normal</button>
+                                <button type="button" data-mode="strict" aria-pressed="true">Strict</button>
+                            </div>
+                            <p id="strict-note" class="mt-1.5 text-[10px] text-faint leading-snug"></p>
+                            <p class="text-[10px] font-bold text-muted mt-3">Duration</p>
+                            <div class="seg mt-1" data-len style="grid-template-columns:repeat(5,minmax(0,1fr))"></div>
+                            <p class="text-[10px] font-bold text-muted mt-3">Shielded Applications</p>
+                            <div id="shield-chips" class="mt-1.5 flex flex-wrap gap-1.5"></div>
+                            <button type="button" data-tabbtn="apps" class="mt-2 text-[10px] font-bold text-teal">Search &amp; manage all apps</button>
+                            <button type="button" id="start-btn2" class="mt-3 w-full rounded-xl bg-sage text-bg text-xs font-extrabold py-2.5">Start Focus Session</button>
+                        </section>
+
+                        <!-- APPS -->
+                        <section data-tab="apps" class="hidden px-4">
+                            <div class="flex items-center justify-between"><h3 class="text-sm font-extrabold">Shielded Apps</h3><span id="apps-count" class="text-[10px] font-bold text-teal"></span></div>
+                            <p id="apps-lock" class="hidden mt-2 rounded-lg border border-alert/40 bg-alert/10 text-[10px] text-alert px-2.5 py-2 leading-snug">Strict Mode active: app rules are locked until the session ends.</p>
+                            <input id="apps-search" type="search" placeholder="Search installed applications..." aria-label="Search apps" class="mt-2 w-full rounded-lg bg-surface border border-line px-3 py-2 text-[11px] outline-none focus:border-teal">
+                            <div id="apps-list" class="mt-2 space-y-1.5"></div>
+                            <p id="apps-note" class="mt-2 text-[10px] text-faint leading-snug">Free plan: up to 3 shielded apps. Pro unlocks unlimited.</p>
+                        </section>
+
+                        <!-- PRODUCTIVITY -->
+                        <section data-tab="prod" class="hidden px-4">
+                            <h3 class="text-sm font-extrabold">Productivity</h3>
+                            <p class="text-[10px] text-faint">Tools that build daily momentum</p>
+                            <div class="mt-3 rounded-xl bg-surface border border-line p-3">
+                                <p class="text-xs font-bold">Daily goals</p>
+                                <p class="text-[9px] text-faint">Set a focus target and track your habit calendar</p>
+                                <div class="seg grid-cols-3 mt-2">
+                                    <button type="button" data-goal="30" aria-pressed="false">30m</button>
+                                    <button type="button" data-goal="60" aria-pressed="true">60m</button>
+                                    <button type="button" data-goal="90" aria-pressed="false">90m</button>
+                                </div>
+                                <div class="mt-2 h-1.5 rounded-full bg-elevated overflow-hidden"><div id="goal-bar" class="h-full bg-sage rounded-full" style="width:0%;transition:width .5s ease"></div></div>
+                                <p id="goal-text" class="mt-1 text-[10px] text-muted"></p>
+                                <div class="mt-2 flex gap-1" aria-label="Habit calendar sample"><span class="flex-1 h-3 rounded bg-sage/70"></span><span class="flex-1 h-3 rounded bg-sage/70"></span><span class="flex-1 h-3 rounded bg-alert/50"></span><span class="flex-1 h-3 rounded bg-sage/70"></span><span class="flex-1 h-3 rounded bg-sage/70"></span><span class="flex-1 h-3 rounded bg-sage/70"></span><span id="goal-today" class="flex-1 h-3 rounded bg-elevated"></span></div>
+                            </div>
+                            <div class="mt-2 rounded-xl bg-surface border border-line p-3">
+                                <p class="text-xs font-bold">Reminders</p>
+                                <div class="mt-1.5 flex items-center justify-between text-[11px]"><span>Evening wind-down <span class="text-faint">22:30</span></span><button type="button" role="switch" data-key="remind1" aria-checked="true"><span class="switch"></span></button></div>
+                                <div class="mt-1.5 flex items-center justify-between text-[11px]"><span>Stretch break <span class="text-faint">16:00</span></span><button type="button" role="switch" data-key="remind2" aria-checked="false"><span class="switch"></span></button></div>
+                            </div>
+                            <div class="mt-2 rounded-xl bg-surface border border-line p-3">
+                                <p class="text-xs font-bold">Clean Streak</p>
+                                <p class="text-[9px] text-faint">A private daily check-in. Stored only on this device.</p>
+                                <div class="mt-2 flex items-end justify-between"><p class="text-3xl font-black leading-none"><span id="streak-num">3</span><span class="text-[10px] font-bold text-faint ml-1">days</span></p><p id="streak-best" class="text-[10px] text-muted"></p></div>
+                                <button type="button" id="check-btn" class="mt-2 w-full rounded-xl bg-sage text-bg text-[11px] font-extrabold py-2">I stayed clean today</button>
+                                <p class="mt-2 text-[10px] font-bold text-muted">What to expect</p>
+                                <p id="streak-ms" class="text-[10px] text-faint leading-snug"></p>
+                            </div>
+                        </section>
+
+                        <!-- SETTINGS -->
+                        <section data-tab="settings" class="hidden px-4">
+                            <h3 class="text-sm font-extrabold">Settings &amp; Guardrails</h3>
+                            <p class="text-[10px] text-faint">Permissions, focus habits, and discipline rules.</p>
+                            <p class="text-[10px] font-bold text-muted mt-3">Android Permissions</p>
+                            <div class="mt-1 rounded-xl bg-surface border border-line divide-y divide-line/60 text-[10px]">
+                                <div class="flex justify-between px-3 py-1.5"><span>Usage Access</span><span class="text-sage font-bold">Granted</span></div>
+                                <div class="flex justify-between px-3 py-1.5"><span>Accessibility Blocker Service</span><span class="text-sage font-bold">Granted</span></div>
+                                <div class="flex justify-between px-3 py-1.5"><span>Persistent Notifications</span><span class="text-sage font-bold">Granted</span></div>
+                                <div class="flex justify-between px-3 py-1.5"><span>Display Over Apps</span><span class="text-sage font-bold">Granted</span></div>
+                                <div class="flex justify-between px-3 py-1.5"><span>Exact Alarms</span><span class="text-sage font-bold">Granted</span></div>
+                                <div class="flex justify-between px-3 py-1.5"><span>Anti-Uninstall Device Admin</span><span class="text-sage font-bold">Granted</span></div>
+                            </div>
+                            <p class="text-[10px] font-bold text-muted mt-3">Discipline Preferences</p>
+                            <div class="mt-1 rounded-xl bg-surface border border-line px-3 divide-y divide-line/60">
+                                <div class="flex items-start justify-between gap-2 py-2"><div><p class="text-[11px] font-bold">Require Mindful Phrase</p><p class="text-[9px] text-faint leading-snug mt-0.5">Type a phrase before unblocking an app</p></div><button type="button" role="switch" data-key="mindful" aria-checked="true" class="shrink-0 mt-0.5"><span class="switch"></span></button></div>
+                                <div class="flex items-start justify-between gap-2 py-2"><div><p class="text-[11px] font-bold">Block Shorts &amp; Reels <span class="ml-1 rounded bg-teal/15 text-teal text-[8px] px-1 py-px">SURGICAL</span></p><p class="text-[9px] text-faint leading-snug mt-0.5">Cuts YouTube Shorts and Instagram Reels without blocking the full app</p></div><button type="button" role="switch" data-key="feeds" aria-checked="true" class="shrink-0 mt-0.5"><span class="switch"></span></button></div>
+                                <div class="flex items-start justify-between gap-2 py-2"><div><p class="text-[11px] font-bold">Scroll Fatigue Grayscale <span class="ml-1 rounded bg-teal/15 text-teal text-[8px] px-1 py-px">DETOX</span></p><p class="text-[9px] text-faint leading-snug mt-0.5">Screen turns monochrome during excessive scrolling</p></div><button type="button" role="switch" data-key="gray" aria-checked="false" class="shrink-0 mt-0.5"><span class="switch"></span></button></div>
+                                <div class="flex items-start justify-between gap-2 py-2"><div><p class="text-[11px] font-bold">System-Wide AdBlocker</p><p class="text-[9px] text-faint leading-snug mt-0.5">Blocks most in-app ads, popups and trackers with one tap</p></div><button type="button" role="switch" data-key="ads" aria-checked="true" class="shrink-0 mt-0.5"><span class="switch"></span></button></div>
+                                <div class="flex items-start justify-between gap-2 py-2"><div><p class="text-[11px] font-bold">Block 18+ content</p><p class="text-[9px] text-faint leading-snug mt-0.5">Family-safe DNS filter for adult sites</p></div><button type="button" role="switch" data-key="adult" aria-checked="false" class="shrink-0 mt-0.5"><span class="switch"></span></button></div>
+                                <div class="flex items-start justify-between gap-2 py-2"><div><p class="text-[11px] font-bold">Scam Shield</p><p class="text-[9px] text-faint leading-snug mt-0.5">Blocks known scam, phishing and malware links in any browser or app</p></div><button type="button" role="switch" data-key="scam" aria-checked="true" class="shrink-0 mt-0.5"><span class="switch"></span></button></div>
+                            </div>
+                            <p class="text-[10px] font-bold text-muted mt-3">Scheduled Routines</p>
+                            <div class="mt-1 rounded-xl bg-surface border border-line px-3 py-2 text-[10px]"><p class="font-bold text-[11px]">Study</p><p class="text-faint">09:00 - 13:00 &middot; Mon-Fri &middot; Strict Mode protection</p></div>
+                            <p class="mt-4 text-center text-[9px] text-faint">Aegis Focus &bull; v1.5.0</p>
+                        </section>
                     </div>
-                    <div class="mt-3 flex gap-2">
-                        <span class="rounded-full bg-elevated border border-line text-[10px] font-bold px-2.5 py-1 text-teal">Discipline</span>
-                        <span class="rounded-full bg-elevated border border-line text-[10px] font-bold px-2.5 py-1 text-sage">Level</span>
+
+                    <div id="app-nav" class="absolute bottom-0 inset-x-0 h-[60px] bg-surface border-t border-line flex items-start pt-2 justify-around px-1">
+                        <button type="button" data-tabbtn="home" class="flex flex-col items-center gap-0.5 w-[48px] text-teal"><i data-lucide="shield" class="w-[18px] h-[18px]"></i><span class="text-[8px] font-bold">Home</span></button>
+                        <button type="button" data-tabbtn="focus" class="flex flex-col items-center gap-0.5 w-[48px] text-faint"><i data-lucide="hourglass" class="w-[18px] h-[18px]"></i><span class="text-[8px] font-bold">Focus</span></button>
+                        <button type="button" data-tabbtn="apps" class="flex flex-col items-center gap-0.5 w-[48px] text-faint"><i data-lucide="layout-grid" class="w-[18px] h-[18px]"></i><span class="text-[8px] font-bold">Apps</span></button>
+                        <button type="button" data-tabbtn="prod" class="flex flex-col items-center gap-0.5 w-[48px] text-faint"><i data-lucide="list-checks" class="w-[18px] h-[18px]"></i><span class="text-[8px] font-bold">Productivity</span></button>
+                        <button type="button" data-tabbtn="settings" class="flex flex-col items-center gap-0.5 w-[48px] text-faint"><i data-lucide="settings" class="w-[18px] h-[18px]"></i><span class="text-[8px] font-bold">Settings</span></button>
                     </div>
-                </div>
-                <div class="mx-4 rounded-2xl bg-surface border border-line p-4 flex flex-col items-center">
-                    <div id="ring" class="ring w-32 h-32 rounded-full grid place-items-center">
-                        <div class="w-[104px] h-[104px] rounded-full bg-surface grid place-items-center text-center">
-                            <div><p id="time" class="text-2xl font-black tabular-nums" aria-live="off">25:00</p><p id="time-label" class="text-[10px] text-faint">Strict Mode</p></div>
-                        </div>
-                    </div>
-                    <button type="button" id="start-btn" class="mt-3 w-full rounded-xl bg-sage text-bg text-center text-xs font-extrabold py-2.5">Start focus session</button>
-                </div>
-                <div class="mx-4 mt-3 grid grid-cols-2 gap-2">
-                    <div class="rounded-xl bg-surface border border-line p-3"><p class="text-[10px] text-faint">Shorts / Reels</p><p id="tile-feeds" class="text-xs font-bold text-sage mt-0.5">Blocked</p></div>
-                    <div class="rounded-xl bg-surface border border-line p-3"><p class="text-[10px] text-faint">Ad blocker</p><p id="tile-ads" class="text-xs font-bold text-sage mt-0.5">On</p></div>
-                </div>
-                <div class="mx-4 mt-2 rounded-xl bg-surface border border-line p-3 flex items-center gap-3">
-                    <span class="w-8 h-8 rounded-full bg-[#CD7F32]/20 text-[#E0A06A] grid place-items-center"><i data-lucide="shield" class="w-4 h-4"></i></span>
-                    <div class="flex-1"><p class="text-xs font-bold">Bronze shield</p><div class="mt-1.5 h-1.5 rounded-full bg-elevated overflow-hidden"><div id="shield-bar" class="h-full w-1/3 bg-sage rounded-full" style="transition:width .6s ease"></div></div></div>
-                </div>
-                
-                <div class="absolute bottom-0 inset-x-0 h-[60px] bg-surface border-t border-line flex items-start pt-3 justify-around px-3">
-                    <i data-lucide="shield" class="w-5 h-5 text-teal"></i>
-                    <i data-lucide="hourglass" class="w-5 h-5 text-faint"></i>
-                    <i data-lucide="layout-grid" class="w-5 h-5 text-faint"></i>
-                    <i data-lucide="list-checks" class="w-5 h-5 text-faint"></i>
-                    <i data-lucide="settings" class="w-5 h-5 text-faint"></i>
-                </div>
                 </div>
 
                 <!-- other apps (mock) -->
@@ -301,11 +406,17 @@
                     </div>
                 </div>
 
-                <!-- Aegis block screen -->
+                <!-- Aegis block screen (mirrors BlockInterventionActivity) -->
                 <div id="block-overlay" class="absolute inset-0 z-[10] bg-bg/95 backdrop-blur-sm flex flex-col items-center justify-center text-center px-6" role="status">
                     <span class="w-14 h-14 rounded-full bg-sage/15 text-sage grid place-items-center"><i data-lucide="shield-check" class="w-7 h-7"></i></span>
-                    <p id="ov-title" class="mt-4 text-base font-extrabold">Blocked by Aegis Focus</p>
+                    <p id="ov-tag" class="mt-3 text-[9px] font-extrabold tracking-widest text-sage"></p>
+                    <p id="ov-title" class="mt-2 text-base font-extrabold"></p>
                     <p id="ov-body" class="mt-1.5 text-xs text-muted leading-relaxed"></p>
+                    <p id="ov-time" class="hidden mt-2 text-[11px] font-bold text-teal tabular-nums"></p>
+                    <div id="ov-btns" class="hidden mt-4 w-full grid gap-2">
+                        <button type="button" id="ov-return" class="rounded-xl bg-sage text-bg text-xs font-extrabold py-2.5">Return to Focus</button>
+                        <button type="button" id="ov-dash" class="rounded-xl border border-line bg-surface text-xs font-bold py-2.5 text-muted">Open Aegis Dashboard</button>
+                    </div>
                 </div>
 
                 <!-- home / gesture bar -->
@@ -314,7 +425,6 @@
                 </button>
             </div>
             <p id="demo-status" class="mt-4 inline-flex items-center gap-2 rounded-full border border-line bg-surface/80 text-xs text-muted px-3.5 py-1.5" aria-live="polite"><span id="status-dot" class="w-1.5 h-1.5 rounded-full bg-faint"></span><span id="status-text">Idle &middot; press start</span></p>
-            <p class="mt-3 text-[11px] text-faint text-center">Interactive demo &middot; tap the apps like on a real phone &middot; runs at 60x speed</p>
         </div>
 
         <!-- Customizer -->
@@ -325,22 +435,17 @@
             </div>
 
             <p class="mt-4 text-sm font-bold">Mode</p>
-            <div class="seg grid-cols-2 mt-2" id="mode-seg">
+            <div class="seg grid-cols-2 mt-2">
                 <button type="button" data-mode="normal" aria-pressed="false">Normal</button>
                 <button type="button" data-mode="strict" aria-pressed="true">Strict</button>
             </div>
-            <p id="mode-hint" class="mt-2 text-xs text-faint">Strict Mode locks the session. You cannot stop it early.</p>
+            <p id="mode-hint" class="mt-2 text-xs text-faint"></p>
 
             <p class="mt-4 text-sm font-bold">Session length</p>
-            <div class="seg grid-cols-4 mt-2" id="len-seg">
-                <button type="button" data-min="15" aria-pressed="false">15m</button>
-                <button type="button" data-min="25" aria-pressed="true">25m</button>
-                <button type="button" data-min="45" aria-pressed="false">45m</button>
-                <button type="button" data-min="60" aria-pressed="false">60m</button>
-            </div>
+            <div class="seg mt-2" data-len style="grid-template-columns:repeat(5,minmax(0,1fr))"></div>
 
             
-            <p class="mt-auto pt-3 text-xs text-faint">Tip: press Start, tap the bar at the bottom of the phone to go home, then try opening TikTok or Instagram. Switch the layers on the right and try again.</p>
+            <p class="mt-auto pt-3 text-xs text-faint">Tip: everything here also lives inside the phone. Open the Focus, Apps and Settings tabs, start a session, then go home and open an app.</p>
         </div>
 
         <!-- Live protection -->
@@ -350,9 +455,9 @@
                 <p class="text-[11px] text-muted">Blocked in this demo: <b id="blk-count" class="text-sage">0</b></p>
             </div>
             <div class="mt-3 grid gap-2">
-                <button type="button" id="tgl-apps" class="tgl" role="switch" aria-checked="true"><span><span class="block">Block distracting apps</span><span class="block text-[11px] text-faint font-medium mt-0.5">TikTok and other feeds, during sessions</span></span><span class="switch"></span></button>
-                <button type="button" id="tgl-feeds" class="tgl" role="switch" aria-checked="true"><span><span class="block">Block Shorts / Reels</span><span class="block text-[11px] text-faint font-medium mt-0.5">Cut inside Instagram and YouTube</span></span><span class="switch"></span></button>
-                <button type="button" id="tgl-ads" class="tgl" role="switch" aria-checked="true"><span><span class="block">System-wide ad blocker</span><span class="block text-[11px] text-faint font-medium mt-0.5">Ads, trackers and scam sites, always on</span></span><span class="switch"></span></button>
+                <button type="button" id="tgl-apps" class="tgl" role="switch" data-key="apps" aria-checked="true"><span><span class="block">Block distracting apps</span><span class="block text-[11px] text-faint font-medium mt-0.5">Apps you shield in the Apps tab, during sessions</span></span><span class="switch"></span></button>
+                <button type="button" id="tgl-feeds" class="tgl" role="switch" data-key="feeds" aria-checked="true"><span><span class="block">Block Shorts / Reels</span><span class="block text-[11px] text-faint font-medium mt-0.5">Cut inside Instagram and YouTube</span></span><span class="switch"></span></button>
+                <button type="button" id="tgl-ads" class="tgl" role="switch" data-key="ads" aria-checked="true"><span><span class="block">System-wide ad blocker</span><span class="block text-[11px] text-faint font-medium mt-0.5">Ads, trackers and scam sites, always on</span></span><span class="switch"></span></button>
             </div>
             <p class="mt-auto pt-3 text-xs text-faint">Everything runs on-device. These switches only change this demo.</p>
         </div>
@@ -742,192 +847,305 @@
     }
 
 
-    // Interactive demo (hero)
+    // Interactive demo (hero): a working copy of the real app (Home, Focus, Apps, Productivity, Settings)
     (function () {
-        var SPEED = 60; // 1 real second = 1 demo minute
-        var DEF = { mode: 'strict', min: 25, feeds: true, ads: true, apps: true };
-        var st = { mode: DEF.mode, min: DEF.min, feeds: DEF.feeds, ads: DEF.ads, apps: DEF.apps, blocks: 0, running: false, total: 0, startedAt: 0, timer: null, ovTimer: null };
         var $ = function (id) { return document.getElementById(id); };
-        var ring = $('ring'), time = $('time'), label = $('time-label'), startBtn = $('start-btn');
-        var modeBtns = document.querySelectorAll('#mode-seg button'), lenBtns = document.querySelectorAll('#len-seg button');
-        var tglFeeds = $('tgl-feeds'), tglAds = $('tgl-ads'), tglApps = $('tgl-apps');
-        var tileFeeds = $('tile-feeds'), tileAds = $('tile-ads'), shield = $('shield-bar');
-        var overlay = $('block-overlay'), statusText = $('status-text'), dot = $('status-dot');
-        if (!ring || !startBtn) return;
+        var qa = function (sel, root) { return Array.prototype.slice.call((root || document).querySelectorAll(sel)); };
+        var phone = $('phone');
+        if (!phone || !$('start-btn')) return;
 
-        function pad(n) { return (n < 10 ? '0' : '') + n; }
-        function fmt(sec) { sec = Math.max(0, Math.ceil(sec)); return pad(Math.floor(sec / 60)) + ':' + pad(sec % 60); }
-        function modeName() { return st.mode === 'strict' ? 'Strict Mode' : 'Normal Mode'; }
-        function setStatus(text, on) { statusText.textContent = text; dot.style.background = on ? '#9CC5A1' : '#7C9094'; }
-
-        function render() {
-            modeBtns.forEach(function (b) { b.setAttribute('aria-pressed', b.dataset.mode === st.mode); b.disabled = st.running; });
-            lenBtns.forEach(function (b) { b.setAttribute('aria-pressed', +b.dataset.min === st.min); b.disabled = st.running; });
-            tglFeeds.setAttribute('aria-checked', st.feeds);
-            tglAds.setAttribute('aria-checked', st.ads);
-            tglApps.setAttribute('aria-checked', st.apps);
-            $('blk-count').textContent = st.blocks;
-            tileFeeds.textContent = st.feeds ? 'Blocked' : 'Allowed';
-            tileFeeds.className = 'text-xs font-bold mt-0.5 ' + (st.feeds ? 'text-sage' : 'text-alert');
-            tileAds.textContent = st.ads ? 'On' : 'Off';
-            tileAds.className = 'text-xs font-bold mt-0.5 ' + (st.ads ? 'text-sage' : 'text-alert');
-            $('mode-hint').textContent = st.mode === 'strict'
-                ? 'Strict Mode locks the session. You cannot stop it early.'
-                : 'Normal Mode lets you end a session whenever you want.';
-            if (!st.running) {
-                time.textContent = pad(st.min) + ':00';
-                label.textContent = modeName();
-                ring.style.setProperty('--p', '100%');
-                startBtn.disabled = false;
-                startBtn.textContent = 'Start focus session';
-            }
-        }
-
-        function tick() {
-            var elapsed = (Date.now() - st.startedAt) / 1000 * SPEED;
-            var left = st.total - elapsed;
-            if (left <= 0) return finish(true);
-            time.textContent = fmt(left);
-            ring.style.setProperty('--p', (left / st.total * 100).toFixed(2) + '%');
-        }
-
-        function start() {
-            st.running = true; st.total = st.min * 60; st.startedAt = Date.now();
-            label.textContent = modeName() + ' · locked in';
-            if (st.mode === 'strict') { startBtn.disabled = true; startBtn.textContent = 'Locked in'; }
-            else { startBtn.disabled = false; startBtn.textContent = 'End session'; }
-            setStatus('Session running · tap the bar below, then open an app', true);
-            render(); // refresh disabled states
-            tick(); st.timer = setInterval(tick, 250);
-        }
-
-        function finish(done) {
-            clearInterval(st.timer); st.running = false;
-            overlay.classList.remove('show');
-            if (done) {
-                time.textContent = '00:00'; label.textContent = 'Session complete';
-                ring.style.setProperty('--p', '0%');
-                shield.style.width = '58%';
-                setStatus('Session complete', true);
-                startBtn.textContent = 'Start another';
-                modeBtns.forEach(function (b) { b.disabled = false; });
-                lenBtns.forEach(function (b) { b.disabled = false; });
-                startBtn.disabled = false;
-                setTimeout(function () { if (!st.running && time.textContent === '00:00') { render(); setStatus('Idle · press start', false); } }, 4000);
-            } else {
-                render(); setStatus('Session ended early', false);
-            }
-        }
-
-        startBtn.addEventListener('click', function () {
-            if (!st.running) start();
-            else if (st.mode === 'normal') finish(false);
-        });
-
-        modeBtns.forEach(function (b) { b.addEventListener('click', function () { if (st.running) return; st.mode = b.dataset.mode; render(); }); });
-        lenBtns.forEach(function (b) { b.addEventListener('click', function () { if (st.running) return; st.min = +b.dataset.min; render(); }); });
-        tglFeeds.addEventListener('click', function () { st.feeds = !st.feeds; render(); });
-        tglAds.addEventListener('click', function () { st.ads = !st.ads; render(); });
-        tglApps.addEventListener('click', function () { st.apps = !st.apps; render(); });
-
-        $('demo-reset').addEventListener('click', function () {
-            clearInterval(st.timer); clearTimeout(st.ovTimer); st.running = false;
-            overlay.classList.remove('show');
-            st.mode = DEF.mode; st.min = DEF.min; st.feeds = DEF.feeds; st.ads = DEF.ads; st.apps = DEF.apps; st.blocks = 0;
-            shield.style.width = '';
-            if (typeof show === 'function') show('app');
-            render(); setStatus('Idle · press start', false);
-        });
-
-
-        // Phone shell: home screen, app switching, per-app blocking
-        var screens = { home: $('screen-home'), app: $('screen-app'), ext: $('screen-ext') };
-        var cur = 'app';
         var APPS = {
             instagram: { name: 'Instagram', icon: 'instagram', bg: 'linear-gradient(45deg,#feda75,#d62976,#4f5bd5)', color: '#fff', feed: 'Reels' },
             youtube:   { name: 'YouTube', icon: 'youtube', bg: '#E5231B', color: '#fff', feed: 'Shorts' },
-            tiktok:    { name: 'TikTok', icon: 'music-2', bg: '#000', color: '#fff', blocked: true },
+            tiktok:    { name: 'TikTok', icon: 'music-2', bg: '#000', color: '#fff' },
             chrome:    { name: 'Chrome', icon: 'globe', bg: '#fff', color: '#4285F4' },
             messages:  { name: 'Messages', icon: 'message-circle', bg: '#2E7D5B', color: '#fff' },
             camera:    { name: 'Camera', icon: 'camera', bg: '#3A4A52', color: '#fff' },
             maps:      { name: 'Maps', icon: 'map-pin', bg: '#3B7DD8', color: '#fff' }
         };
-        var curApp = null;
+        var PRESETS = { strict: [15, 30, 60, 90, 120], normal: [25, 50, 90] };
+        var FREE_APP_LIMIT = 3;
+        var TIERS = [
+            { n: 'Bronze', min: 0, c: '#E0A06A' }, { n: 'Silver', min: 4, c: '#B8C4CC' },
+            { n: 'Gold', min: 14, c: '#D8B574' }, { n: 'Platinum', min: 30, c: '#8FC9D6' }, { n: 'Diamond', min: 60, c: '#9FB4F0' }
+        ];
+        var MILES = [
+            [1, 'Day 1', 'You made it through the first day. Each urge you ride out gets weaker.'],
+            [3, 'Day 3', 'Energy and sleep often start to feel steadier. Keep evenings busy.'],
+            [7, 'One week', 'Many people report clearer focus and a calmer mood by now.'],
+            [14, 'Two weeks', 'Self-control feels easier and urges come less often.'],
+            [30, 'One month', 'The habit loop is loosening. Motivation and confidence build.']
+        ];
+        function fresh() {
+            return { mode: 'strict', min: 30, feeds: true, ads: true, apps: true, gray: false, adult: false, scam: true, mindful: true,
+                     remind1: true, remind2: false, shield: { tiktok: true }, goalName: 'Focus session', goalTarget: 60,
+                     focusToday: 0, streak: 3, best: 3, checked: false, blocks: 0 };
+        }
+        var st = fresh();
+        var run = { running: false, total: 0, startedAt: 0, left: 0, timer: null, ovTimer: null, ovPersist: false };
+        var cur = 'app', tab = 'home', curApp = null, search = '';
 
+        var ring = $('ring'), time = $('time'), label = $('time-label'), startBtn = $('start-btn'), startBtn2 = $('start-btn2');
+        var overlay = $('block-overlay'), statusText = $('status-text'), dot = $('status-dot');
+        var screens = { home: $('screen-home'), app: $('screen-app'), ext: $('screen-ext') };
+
+        function pad(n) { return (n < 10 ? '0' : '') + n; }
+        function fmt(sec) { sec = Math.max(0, Math.ceil(sec)); return pad(Math.floor(sec / 60)) + ':' + pad(sec % 60); }
+        function strict() { return st.mode === 'strict'; }
+        function locked() { return run.running && strict(); }
+        function modeName() { return strict() ? 'Strict Mode' : 'Normal Mode'; }
+        function setStatus(t, on) { statusText.textContent = t; dot.style.background = on ? '#9CC5A1' : '#7C9094'; }
+        function esc2(t) { return String(t).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+        function shieldedKeys() { return Object.keys(APPS).filter(function (k) { return st.shield[k]; }); }
+        function icons() { if (window.lucide) lucide.createIcons(); }
+        function bump() { st.blocks++; $('blk-count').textContent = st.blocks; }
+
+        /* ---------- rendering ---------- */
+        function renderLen() {
+            qa('[data-len]').forEach(function (box) {
+                var list = PRESETS[st.mode];
+                box.style.gridTemplateColumns = 'repeat(' + list.length + ',minmax(0,1fr))';
+                box.innerHTML = list.map(function (m) {
+                    return '<button type="button" data-min="' + m + '" aria-pressed="' + (m === st.min) + '"' + (run.running ? ' disabled' : '') + '>' + m + 'm</button>';
+                }).join('');
+            });
+        }
+        function renderApps() {
+            var f = search.trim().toLowerCase(), count = shieldedKeys().length, lockedNow = locked();
+            $('apps-count').textContent = count + ' / ' + FREE_APP_LIMIT + ' free';
+            $('apps-lock').classList.toggle('hidden', !lockedNow);
+            $('apps-list').innerHTML = Object.keys(APPS).filter(function (k) { return !f || APPS[k].name.toLowerCase().indexOf(f) !== -1; }).map(function (k) {
+                var a = APPS[k];
+                return '<div class="flex items-center gap-2.5 rounded-xl bg-surface border border-line px-2.5 py-2">' +
+                    '<span class="w-7 h-7 rounded-lg grid place-items-center" style="background:' + a.bg + ';color:' + a.color + '"><i data-lucide="' + a.icon + '" class="w-3.5 h-3.5"></i></span>' +
+                    '<span class="flex-1 text-[11px] font-bold">' + a.name + '</span>' +
+                    '<button type="button" role="switch" data-shield="' + k + '" aria-checked="' + !!st.shield[k] + '" aria-label="Shield ' + a.name + '"' + (lockedNow ? ' disabled style="opacity:.5"' : '') + '><span class="switch"></span></button></div>';
+            }).join('') || '<p class="text-[10px] text-faint">No applications found</p>';
+            icons();
+        }
+        function renderShieldChips() {
+            var ks = shieldedKeys();
+            $('shield-chips').innerHTML = ks.length ? ks.map(function (k) {
+                return '<span class="rounded-full bg-elevated border border-line text-[10px] font-bold px-2 py-0.5 text-sage">' + APPS[k].name + '</span>';
+            }).join('') : '<span class="text-[10px] text-faint">No apps shielded yet. Open the Apps tab to select apps.</span>';
+        }
+        function tierInfo() {
+            var i = 0; TIERS.forEach(function (t, idx) { if (st.streak >= t.min) i = idx; });
+            var t = TIERS[i], n = TIERS[i + 1];
+            return { t: t, n: n, frac: n ? (st.streak - t.min) / (n.min - t.min) : 1, left: n ? n.min - st.streak : 0 };
+        }
+        function render() {
+            qa('[data-mode]').forEach(function (b) { b.setAttribute('aria-pressed', b.dataset.mode === st.mode); b.disabled = run.running; });
+            renderLen();
+            qa('[data-key]').forEach(function (b) { b.setAttribute('aria-checked', !!st[b.dataset.key]); });
+            qa('[data-goal]').forEach(function (b) { b.setAttribute('aria-pressed', +b.dataset.goal === st.goalTarget); });
+            $('tile-feeds').textContent = st.feeds ? 'Blocked' : 'Allowed';
+            $('tile-feeds').className = 'text-xs font-bold mt-0.5 ' + (st.feeds ? 'text-sage' : 'text-alert');
+            $('tile-ads').textContent = st.ads ? 'On' : 'Off';
+            $('tile-ads').className = 'text-xs font-bold mt-0.5 ' + (st.ads ? 'text-sage' : 'text-alert');
+            var hint = strict() ? 'Strict Mode locks the session. You cannot stop it early.' : 'Normal Mode lets you end a session whenever you want.';
+            $('mode-hint').textContent = hint;
+            $('strict-note').textContent = strict() ? 'Strict Mode Free tier: max 2 hours and max 3 shielded apps.' : 'Normal Mode: end the session whenever you want.';
+            $('blk-count').textContent = st.blocks;
+            if (!run.running) {
+                time.textContent = pad(st.min) + ':00'; label.textContent = modeName();
+                ring.style.setProperty('--p', '100%');
+                startBtn.disabled = false; startBtn.textContent = 'Start focus session';
+                startBtn2.disabled = false; startBtn2.textContent = 'Start Focus Session';
+                $('emergency-btn').classList.add('hidden');
+            } else {
+                startBtn2.disabled = true; startBtn2.textContent = 'Session running';
+                $('emergency-btn').classList.toggle('hidden', !strict());
+            }
+            $('goal-name').disabled = run.running;
+            // productivity
+            var pct = Math.min(100, st.focusToday / st.goalTarget * 100);
+            $('goal-bar').style.width = pct + '%';
+            $('goal-text').textContent = 'Focus today: ' + Math.floor(st.focusToday) + 'm of ' + st.goalTarget + 'm' + (pct >= 100 ? ' (goal met)' : '');
+            $('goal-today').className = 'flex-1 h-3 rounded ' + (pct >= 100 ? 'bg-sage/70' : 'bg-elevated');
+            $('streak-num').textContent = st.streak;
+            $('streak-best').textContent = 'Best: ' + st.best;
+            $('check-btn').textContent = st.checked ? 'Checked in today (tap to undo)' : 'I stayed clean today';
+            var ms = null; MILES.forEach(function (m) { if (st.streak >= m[0]) ms = m; });
+            $('streak-ms').textContent = ms ? ms[1] + ': ' + ms[2] : 'Your first day starts today. Check in tonight.';
+            // shield tier
+            var ti = tierInfo();
+            $('shield-name').textContent = ti.t.n + ' shield';
+            $('shield-bar').style.width = Math.max(6, ti.frac * 100) + '%';
+            $('shield-sub').textContent = ti.n ? ti.left + ' day' + (ti.left === 1 ? '' : 's') + ' to ' + ti.n.n : 'Top tier reached';
+            $('shield-ic').style.color = ti.t.c; $('shield-ic').style.background = ti.t.c + '33';
+            renderApps(); renderShieldChips();
+        }
+
+        /* ---------- navigation ---------- */
         function show(name) {
             cur = name;
             Object.keys(screens).forEach(function (k) { screens[k].classList.toggle('hidden', k !== name); });
         }
-        function hint() { return st.running ? 'Focus session running' : 'Idle · press start'; }
-        function overlayShow(title, body, after) {
-            clearTimeout(st.ovTimer);
-            $('ov-title').textContent = title; $('ov-body').textContent = body;
-            overlay.classList.add('show');
-            st.ovTimer = setTimeout(function () {
-                overlay.classList.remove('show');
-                if (after) after();
-                if (st.running && cur === 'home') setStatus('Focus session running', true);
-            }, 2400);
+        function setTab(name) {
+            tab = name;
+            qa('[data-tab]').forEach(function (sec) { sec.classList.toggle('hidden', sec.dataset.tab !== name); });
+            qa('#app-nav [data-tabbtn]').forEach(function (b) {
+                var on = b.dataset.tabbtn === name;
+                b.classList.toggle('text-teal', on); b.classList.toggle('text-faint', !on);
+            });
+            $('tab-scroll').scrollTop = 0;
         }
+
+        /* ---------- block screens ---------- */
+        function hideOverlay() {
+            clearTimeout(run.ovTimer); run.ovPersist = false; overlay.classList.remove('show');
+        }
+        function showOverlay(o) {
+            clearTimeout(run.ovTimer);
+            $('ov-tag').textContent = o.tag; $('ov-title').textContent = o.title; $('ov-body').textContent = o.body;
+            $('ov-time').classList.toggle('hidden', !o.persist); $('ov-btns').classList.toggle('hidden', !o.persist);
+            run.ovPersist = !!o.persist;
+            if (o.persist) $('ov-time').textContent = 'Time Remaining: ' + fmt(run.left);
+            overlay.classList.add('show');
+            if (!o.persist) run.ovTimer = setTimeout(function () { hideOverlay(); if (run.running) setStatus('Focus session running', true); }, 2400);
+        }
+
+        /* ---------- session ---------- */
+        function tick() {
+            var speed = Math.max(60, run.total / 60);
+            var left = run.total - (Date.now() - run.startedAt) / 1000 * speed;
+            if (left <= 0) return finish(true, false);
+            run.left = left;
+            time.textContent = fmt(left);
+            ring.style.setProperty('--p', (left / run.total * 100).toFixed(2) + '%');
+            if (run.ovPersist) $('ov-time').textContent = 'Time Remaining: ' + fmt(left);
+        }
+        function start() {
+            if (run.running) return;
+            st.goalName = ($('goal-name').value || '').trim() || 'Focus session';
+            run.running = true; run.total = st.min * 60; run.left = run.total; run.startedAt = Date.now();
+            label.textContent = modeName() + ' · locked in';
+            render();
+            startBtn.disabled = strict(); startBtn.textContent = strict() ? 'Locked in' : 'End session';
+            setStatus('Session running · tap the bar below, then open an app', true);
+            tick(); run.timer = setInterval(tick, 250);
+        }
+        function finish(done, emergency) {
+            var elapsed = run.total - run.left;
+            clearInterval(run.timer); run.running = false; hideOverlay();
+            st.focusToday += (done ? run.total : Math.max(0, elapsed)) / 60;
+            render();
+            if (done) {
+                time.textContent = '00:00'; label.textContent = 'Session complete'; ring.style.setProperty('--p', '0%');
+                startBtn.textContent = 'Start another';
+                setStatus('Session complete · ' + st.min + ' min added to your daily goal', true);
+                setTimeout(function () { if (!run.running && time.textContent === '00:00') { render(); setStatus('Idle · press start', false); } }, 4000);
+            } else {
+                setStatus(emergency ? 'Emergency breakout used, discipline penalty recorded' : 'Session ended early', false);
+            }
+        }
+        function begin() { if (!run.running) { setTab('home'); start(); } }
+
+        /* ---------- phone apps ---------- */
+        function openApp(key) {
+            if (key === 'aegis') { show('app'); return; }
+            var a = APPS[key]; if (!a) return;
+            curApp = key;
+            var ic = $('ext-icon'); ic.style.background = a.bg; ic.style.color = a.color;
+            ic.innerHTML = '<i data-lucide="' + a.icon + '" class="w-3.5 h-3.5"></i>';
+            $('ext-name').textContent = a.name;
+            var tabs = $('ext-tabs');
+            if (a.feed) { tabs.classList.remove('hidden'); tabs.classList.add('flex'); $('ext-feed-label').textContent = a.feed; }
+            else { tabs.classList.add('hidden'); tabs.classList.remove('flex'); }
+            icons();
+            if (run.running && st.apps && st.shield[key]) {
+                bump(); show('home');
+                setStatus(a.name + ' blocked', true);
+                showOverlay({ tag: strict() ? 'STRICT DISCIPLINE SHIELD' : 'MIND AND FOCUS SHIELD', title: 'Take a Deep Breath',
+                              body: '"' + a.name + '" is paused during your ' + st.goalName + '.', persist: true });
+                return;
+            }
+            var ad = $('ext-ad');
+            if (st.ads) { ad.innerHTML = '<span class="text-sage font-bold">Ad blocked by Aegis Focus</span>'; ad.style.background = ''; bump(); }
+            else { ad.innerHTML = '<span class="font-extrabold text-[#10171B]">Sponsored</span><br><span class="text-[#10171B]/80">You will not believe this one weird trick</span>'; ad.style.background = '#E7C85A'; }
+            screens.ext.style.filter = (run.running && st.gray) ? 'grayscale(1)' : '';
+            show('ext');
+            setStatus(run.running ? a.name + ' is open, session still running' : a.name + ' opens normally, no session', run.running);
+        }
+
+        /* ---------- events ---------- */
+        document.addEventListener('click', function (e) {
+            var t = e.target.closest('#phone [data-app], #phone [data-tabbtn], [data-mode], [data-min], [data-goal], [data-key], [data-shield], [data-quick]');
+            if (!t) return;
+            if (t.disabled) return;
+            if (t.dataset.app) return openApp(t.dataset.app);
+            if (t.dataset.tabbtn) { hideOverlay(); show('app'); setTab(t.dataset.tabbtn); return; }
+            if (t.dataset.mode) {
+                if (run.running) return;
+                st.mode = t.dataset.mode;
+                if (PRESETS[st.mode].indexOf(st.min) === -1) st.min = st.mode === 'strict' ? 30 : 25;
+                return render();
+            }
+            if (t.dataset.min) { if (run.running) return; st.min = +t.dataset.min; return render(); }
+            if (t.dataset.goal) { st.goalTarget = +t.dataset.goal; return render(); }
+            if (t.dataset.key) { st[t.dataset.key] = !st[t.dataset.key]; return render(); }
+            if (t.dataset.shield) {
+                if (locked()) return;
+                var k = t.dataset.shield;
+                if (!st.shield[k] && shieldedKeys().length >= FREE_APP_LIMIT) {
+                    $('apps-note').textContent = 'Free plan limit reached (3 apps). Pro unlocks unlimited shielded apps.';
+                    $('apps-note').className = 'mt-2 text-[10px] text-alert leading-snug'; return;
+                }
+                $('apps-note').textContent = 'Free plan: up to 3 shielded apps. Pro unlocks unlimited.';
+                $('apps-note').className = 'mt-2 text-[10px] text-faint leading-snug';
+                st.shield[k] = !st.shield[k]; if (!st.shield[k]) delete st.shield[k];
+                return render();
+            }
+            if (t.dataset.quick) {
+                if (run.running) return;
+                var q = t.dataset.quick.split(':'); st.min = +q[0]; st.mode = q[1]; render(); return begin();
+            }
+        });
+        startBtn.addEventListener('click', function () {
+            if (!run.running) start(); else if (!strict()) finish(false, false);
+        });
+        startBtn2.addEventListener('click', begin);
+        $('emergency-btn').addEventListener('click', function () { if (run.running) finish(false, true); });
+        $('goal-name').addEventListener('input', function () { st.goalName = this.value.trim() || 'Focus session'; });
+        $('apps-search').addEventListener('input', function () { search = this.value; renderApps(); });
+        $('check-btn').addEventListener('click', function () {
+            if (!st.checked) { st.streak++; st.best = Math.max(st.best, st.streak); st.checked = true; }
+            else { st.streak = Math.max(0, st.streak - 1); st.checked = false; }
+            render();
+        });
+        $('ext-feed-tab').addEventListener('click', function () {
+            var a = APPS[curApp]; if (!a || !a.feed) return;
+            if (run.running && st.feeds) {
+                bump(); setStatus(a.feed + ' blocked', true);
+                showOverlay({ tag: 'SURGICAL BLOCK', title: a.feed + ' blocked', body: 'Aegis Focus stepped you back. The rest of ' + a.name + ' still works.', persist: false });
+            } else {
+                setStatus(a.feed + ' allowed, ' + (run.running ? 'the blocker is off' : 'no session'), false);
+                showOverlay({ tag: 'NO BLOCK', title: a.feed + ' playing', body: run.running ? 'Shorts and Reels blocker is off, so nothing stops the scroll.' : 'No focus session is running, so it opens normally.', persist: false });
+            }
+        });
+        $('home-bar').addEventListener('click', function () {
+            if (cur === 'home' && !run.ovPersist) return;
+            hideOverlay(); show('home');
+            setStatus((run.running ? 'Session running' : 'Idle · press start') + (run.running ? ' · now open an app' : ''), run.running);
+        });
+        $('ov-return').addEventListener('click', function () { hideOverlay(); show('home'); setStatus('Back to focus', true); });
+        $('ov-dash').addEventListener('click', function () { hideOverlay(); show('app'); setTab('home'); });
+        $('demo-reset').addEventListener('click', function () {
+            clearInterval(run.timer); clearTimeout(run.ovTimer);
+            run.running = false; run.ovPersist = false; overlay.classList.remove('show');
+            st = fresh(); search = ''; $('apps-search').value = ''; $('goal-name').value = 'Focus session';
+            screens.ext.style.filter = '';
+            show('app'); setTab('home'); render(); setStatus('Idle · press start', false);
+        });
+
         function clock() {
             var d = new Date(), t = pad(d.getHours()) + ':' + pad(d.getMinutes());
             $('sb-time').textContent = t; $('home-clock').textContent = t;
             $('home-date').textContent = d.toLocaleDateString(undefined, { weekday: 'long', month: 'short', day: 'numeric' });
         }
         clock(); setInterval(clock, 20000);
-
-        function openApp(key) {
-            if (key === 'aegis') { show('app'); return; }
-            var a = APPS[key]; if (!a) return;
-            curApp = key;
-            var ic = $('ext-icon');
-            ic.style.background = a.bg; ic.style.color = a.color;
-            ic.innerHTML = '<i data-lucide="' + a.icon + '" class="w-3.5 h-3.5"></i>';
-            $('ext-name').textContent = a.name;
-            var tabs = $('ext-tabs');
-            if (a.feed) { tabs.classList.remove('hidden'); tabs.classList.add('flex'); $('ext-feed-label').textContent = a.feed; }
-            else { tabs.classList.add('hidden'); tabs.classList.remove('flex'); }
-            if (window.lucide) lucide.createIcons();
-            if (st.running && a.blocked && st.apps) {
-                st.blocks++; $('blk-count').textContent = st.blocks;
-                setStatus(a.name + ' blocked', true);
-                overlayShow(a.name + ' is blocked', 'Aegis Focus is keeping this app closed during your session.', function () { show('home'); });
-                show('home');
-                return;
-            }
-            var ad = $('ext-ad');
-            if (st.ads) { ad.innerHTML = '<span class="text-sage font-bold">Ad blocked by Aegis Focus</span>'; ad.style.background = ''; st.blocks++; $('blk-count').textContent = st.blocks; }
-            else { ad.innerHTML = '<span class="font-extrabold text-[#10171B]">Sponsored</span><br><span class="text-[#10171B]/80">You will not believe this one weird trick</span>'; ad.style.background = '#E7C85A'; }
-            show('ext');
-            setStatus(st.running ? a.name + ' is open, session still running' : a.name + ' opens normally, no session', st.running);
-        }
-
-        document.querySelectorAll('[data-app]').forEach(function (b) {
-            b.addEventListener('click', function () { openApp(b.dataset.app); });
-        });
-
-        $('ext-feed-tab').addEventListener('click', function () {
-            var a = APPS[curApp]; if (!a || !a.feed) return;
-            if (st.running && st.feeds) {
-                st.blocks++; $('blk-count').textContent = st.blocks;
-                setStatus(a.feed + ' blocked', true);
-                overlayShow(a.feed + ' blocked', 'Aegis Focus stepped you back. The rest of ' + a.name + ' still works.', null);
-            } else {
-                setStatus(a.feed + ' allowed, ' + (st.running ? 'the blocker is off' : 'no session'), false);
-                overlayShow(a.feed + ' playing', st.running ? 'Shorts and Reels blocker is off, so nothing stops the scroll.' : 'No focus session is running, so it opens normally.', null);
-            }
-        });
-
-        $('home-bar').addEventListener('click', function () {
-            if (cur === 'home') return;
-            overlay.classList.remove('show');
-            show('home');
-            setStatus(hint() + (st.running ? ' · now open an app' : ''), st.running);
-        });
-
-        show('app');
-
-        render();
+        show('app'); setTab('home'); render(); icons();
     })();
 
     function esc(t) { return String(t).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
