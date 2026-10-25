@@ -78,7 +78,22 @@
         details[open] .chev { transform: rotate(180deg); }
         .chev { transition: transform .2s ease; }
         .phone { width: 272px; height: 548px; border-radius: 2.6rem; background: #0E181D; border: 8px solid #1C2F38; box-shadow: 0 30px 80px -20px rgba(0,0,0,.7), 0 0 0 1px #2B434D; }
-        .ring { background: conic-gradient(#9CC5A1 0 68%, #1C2F38 68% 100%); }
+        .ring { background: conic-gradient(#9CC5A1 0 var(--p,100%), #1C2F38 var(--p,100%) 100%); transition: background .2s linear; }
+        /* interactive demo */
+        #demo { scroll-margin-top: 84px; }
+        .seg { display: grid; gap: .5rem; }
+        .seg button, .tgl { border: 1px solid #2B434D; background: #15242B; color: #A8B9BC; font-weight: 700; font-size: .8rem; border-radius: .75rem; padding: .6rem .5rem; transition: border-color .15s ease, background .15s ease, color .15s ease; }
+        .seg button:hover:not(:disabled) { border-color: #86C5B4; }
+        .seg button[aria-pressed="true"] { background: #1C2F38; border-color: #9CC5A1; color: #EEF2EE; }
+        .seg button:disabled { opacity: .45; cursor: not-allowed; }
+        .switch { width: 42px; height: 24px; border-radius: 999px; background: #2B434D; position: relative; flex: none; transition: background .2s ease; }
+        .switch::after { content: ""; position: absolute; top: 3px; left: 3px; width: 18px; height: 18px; border-radius: 50%; background: #EEF2EE; transition: transform .2s ease; }
+        [aria-checked="true"] > .switch { background: #9CC5A1; }
+        [aria-checked="true"] > .switch::after { transform: translateX(18px); background: #0E181D; }
+        .tgl { display: flex; align-items: center; justify-content: space-between; gap: .75rem; width: 100%; text-align: left; padding: .7rem .9rem; }
+        #block-overlay { opacity: 0; pointer-events: none; transition: opacity .25s ease; }
+        #block-overlay.show { opacity: 1; pointer-events: auto; }
+        #start-btn:disabled { opacity: .7; cursor: not-allowed; }
         #sticky-cta { transform: translateY(120%); transition: transform .3s ease; }
         #sticky-cta.show { transform: none; }
         ::-webkit-scrollbar { width: 6px; } ::-webkit-scrollbar-track { background: #0E181D; } ::-webkit-scrollbar-thumb { background: #2B434D; border-radius: 4px; }
@@ -96,6 +111,7 @@
         </a>
 
         <nav class="hidden lg:flex items-center gap-6 text-sm font-semibold text-muted" aria-label="Main">
+            <a href="#demo" class="hover:text-text transition">Try demo</a>
             <a href="#features" class="hover:text-text transition">Features</a>
             <a href="#how" class="hover:text-text transition">How it works</a>
             <a href="#streak" class="hover:text-text transition">Clean Streak</a>
@@ -118,6 +134,7 @@
     </div>
     <div id="mobile-menu" class="hidden lg:hidden border-t border-line/70 bg-bg">
         <div class="max-w-6xl mx-auto px-4 py-3 grid grid-cols-2 gap-2 text-sm font-semibold">
+            <a href="#demo" class="btn-ghost rounded-xl px-4 py-3">Try demo</a>
             <a href="#features" class="btn-ghost rounded-xl px-4 py-3">Features</a>
             <a href="#how" class="btn-ghost rounded-xl px-4 py-3">How it works</a>
             <a href="#streak" class="btn-ghost rounded-xl px-4 py-3">Clean Streak</a>
@@ -154,8 +171,8 @@
                     <i data-lucide="download" class="w-5 h-5"></i>
                     <span>Download APK <span id="hero-version" class="font-semibold opacity-70"></span></span>
                 </a>
-                <a href="#features" class="btn-ghost rounded-2xl px-7 py-4 text-base inline-flex items-center justify-center gap-2.5 text-teal">
-                    <i data-lucide="sparkles" class="w-5 h-5"></i><span>See what it does</span>
+                <a href="#demo" class="btn-ghost rounded-2xl px-7 py-4 text-base inline-flex items-center justify-center gap-2.5 text-teal">
+                    <i data-lucide="play" class="w-5 h-5"></i><span>Try demo</span>
                 </a>
             </div>
 
@@ -165,11 +182,39 @@
                 <li class="inline-flex items-center gap-1.5"><i data-lucide="check" class="w-4 h-4 text-sage"></i><span id="hero-size">Small download</span></li>
                 <li class="inline-flex items-center gap-1.5"><i data-lucide="check" class="w-4 h-4 text-sage"></i>Your data stays on your phone</li>
             </ul>
+
+            <div id="demo" class="mt-8 card p-5 text-left max-w-xl mx-auto lg:mx-0">
+                <div class="flex items-center justify-between">
+                    <h2 class="text-xs font-extrabold tracking-widest text-faint uppercase">Customize your session</h2>
+                    <button id="demo-reset" type="button" class="btn-ghost rounded-lg px-3 py-1.5 text-xs text-muted">Reset</button>
+                </div>
+
+                <p class="mt-4 text-sm font-bold">Mode</p>
+                <div class="seg grid-cols-2 mt-2" id="mode-seg">
+                    <button type="button" data-mode="normal" aria-pressed="false">Normal</button>
+                    <button type="button" data-mode="strict" aria-pressed="true">Strict</button>
+                </div>
+                <p id="mode-hint" class="mt-2 text-xs text-faint">Strict Mode locks the session. You cannot stop it early.</p>
+
+                <p class="mt-4 text-sm font-bold">Session length</p>
+                <div class="seg grid-cols-4 mt-2" id="len-seg">
+                    <button type="button" data-min="15" aria-pressed="false">15m</button>
+                    <button type="button" data-min="25" aria-pressed="true">25m</button>
+                    <button type="button" data-min="45" aria-pressed="false">45m</button>
+                    <button type="button" data-min="60" aria-pressed="false">60m</button>
+                </div>
+
+                <div class="mt-4 grid sm:grid-cols-2 gap-2">
+                    <button type="button" id="tgl-feeds" class="tgl" role="switch" aria-checked="true"><span>Block Shorts / Reels</span><span class="switch"></span></button>
+                    <button type="button" id="tgl-ads" class="tgl" role="switch" aria-checked="true"><span>Ad blocker</span><span class="switch"></span></button>
+                </div>
+                <p class="mt-3 text-xs text-faint">Tip: start a session, then press &ldquo;Try opening Reels&rdquo; under the phone.</p>
+            </div>
         </div>
 
         <!-- Phone illustration -->
         <div class="flex flex-col items-center">
-            <div class="phone relative overflow-hidden" aria-hidden="true">
+            <div class="phone relative overflow-hidden">
                 <div class="px-4 pt-6 pb-3">
                     <div class="flex items-center justify-between">
                         <div>
@@ -184,20 +229,25 @@
                     </div>
                 </div>
                 <div class="mx-4 rounded-2xl bg-surface border border-line p-4 flex flex-col items-center">
-                    <div class="ring w-32 h-32 rounded-full grid place-items-center">
+                    <div id="ring" class="ring w-32 h-32 rounded-full grid place-items-center">
                         <div class="w-[104px] h-[104px] rounded-full bg-surface grid place-items-center text-center">
-                            <div><p class="text-2xl font-black">25:00</p><p class="text-[10px] text-faint">Strict Mode</p></div>
+                            <div><p id="time" class="text-2xl font-black tabular-nums" aria-live="off">25:00</p><p id="time-label" class="text-[10px] text-faint">Strict Mode</p></div>
                         </div>
                     </div>
-                    <div class="mt-3 w-full rounded-xl bg-sage text-bg text-center text-xs font-extrabold py-2.5">Start focus session</div>
+                    <button type="button" id="start-btn" class="mt-3 w-full rounded-xl bg-sage text-bg text-center text-xs font-extrabold py-2.5">Start focus session</button>
                 </div>
                 <div class="mx-4 mt-3 grid grid-cols-2 gap-2">
-                    <div class="rounded-xl bg-surface border border-line p-3"><p class="text-[10px] text-faint">Shorts / Reels</p><p class="text-xs font-bold text-sage mt-0.5">Blocked</p></div>
-                    <div class="rounded-xl bg-surface border border-line p-3"><p class="text-[10px] text-faint">Ad blocker</p><p class="text-xs font-bold text-sage mt-0.5">On</p></div>
+                    <div class="rounded-xl bg-surface border border-line p-3"><p class="text-[10px] text-faint">Shorts / Reels</p><p id="tile-feeds" class="text-xs font-bold text-sage mt-0.5">Blocked</p></div>
+                    <div class="rounded-xl bg-surface border border-line p-3"><p class="text-[10px] text-faint">Ad blocker</p><p id="tile-ads" class="text-xs font-bold text-sage mt-0.5">On</p></div>
                 </div>
                 <div class="mx-4 mt-2 rounded-xl bg-surface border border-line p-3 flex items-center gap-3">
                     <span class="w-8 h-8 rounded-full bg-[#CD7F32]/20 text-[#E0A06A] grid place-items-center"><i data-lucide="shield" class="w-4 h-4"></i></span>
-                    <div class="flex-1"><p class="text-xs font-bold">Bronze shield</p><div class="mt-1.5 h-1.5 rounded-full bg-elevated overflow-hidden"><div class="h-full w-1/3 bg-sage rounded-full"></div></div></div>
+                    <div class="flex-1"><p class="text-xs font-bold">Bronze shield</p><div class="mt-1.5 h-1.5 rounded-full bg-elevated overflow-hidden"><div id="shield-bar" class="h-full w-1/3 bg-sage rounded-full" style="transition:width .6s ease"></div></div></div>
+                </div>
+                <div id="block-overlay" class="absolute inset-0 z-10 bg-bg/95 backdrop-blur-sm flex flex-col items-center justify-center text-center px-6" role="status">
+                    <span class="w-14 h-14 rounded-full bg-sage/15 text-sage grid place-items-center"><i data-lucide="shield-check" class="w-7 h-7"></i></span>
+                    <p class="mt-4 text-base font-extrabold">Blocked by Aegis Focus</p>
+                    <p class="mt-1.5 text-xs text-muted leading-relaxed">Reels is off during your focus session. Back to what matters.</p>
                 </div>
                 <div class="absolute bottom-0 inset-x-0 h-14 bg-surface border-t border-line flex items-center justify-around px-3">
                     <i data-lucide="shield" class="w-5 h-5 text-teal"></i>
@@ -207,7 +257,9 @@
                     <i data-lucide="settings" class="w-5 h-5 text-faint"></i>
                 </div>
             </div>
-            <p class="mt-3 text-[11px] text-faint">App preview, illustration</p>
+            <p id="demo-status" class="mt-4 inline-flex items-center gap-2 rounded-full border border-line bg-surface/80 text-xs text-muted px-3.5 py-1.5" aria-live="polite"><span id="status-dot" class="w-1.5 h-1.5 rounded-full bg-faint"></span><span id="status-text">Idle &middot; press start</span></p>
+            <button type="button" id="try-reels" class="mt-3 btn-ghost rounded-xl px-4 py-2.5 text-xs inline-flex items-center gap-2 text-teal"><i data-lucide="clapperboard" class="w-4 h-4"></i>Try opening Reels</button>
+            <p class="mt-3 text-[11px] text-faint text-center">Interactive demo &middot; runs at 60x speed &middot; nothing is installed</p>
         </div>
     </div>
 </section>
@@ -592,6 +644,112 @@
     if ('IntersectionObserver' in window && hero) {
         new IntersectionObserver(function (es) { cta.classList.toggle('show', !es[0].isIntersecting); }).observe(hero);
     }
+
+
+    // Interactive demo (hero)
+    (function () {
+        var SPEED = 60; // 1 real second = 1 demo minute
+        var DEF = { mode: 'strict', min: 25, feeds: true, ads: true };
+        var st = { mode: DEF.mode, min: DEF.min, feeds: DEF.feeds, ads: DEF.ads, running: false, total: 0, startedAt: 0, timer: null, ovTimer: null };
+        var $ = function (id) { return document.getElementById(id); };
+        var ring = $('ring'), time = $('time'), label = $('time-label'), startBtn = $('start-btn');
+        var modeBtns = document.querySelectorAll('#mode-seg button'), lenBtns = document.querySelectorAll('#len-seg button');
+        var tglFeeds = $('tgl-feeds'), tglAds = $('tgl-ads');
+        var tileFeeds = $('tile-feeds'), tileAds = $('tile-ads'), shield = $('shield-bar');
+        var overlay = $('block-overlay'), statusText = $('status-text'), dot = $('status-dot');
+        if (!ring || !startBtn) return;
+
+        function pad(n) { return (n < 10 ? '0' : '') + n; }
+        function fmt(sec) { sec = Math.max(0, Math.ceil(sec)); return pad(Math.floor(sec / 60)) + ':' + pad(sec % 60); }
+        function modeName() { return st.mode === 'strict' ? 'Strict Mode' : 'Normal Mode'; }
+        function setStatus(text, on) { statusText.textContent = text; dot.style.background = on ? '#9CC5A1' : '#7C9094'; }
+
+        function render() {
+            modeBtns.forEach(function (b) { b.setAttribute('aria-pressed', b.dataset.mode === st.mode); b.disabled = st.running; });
+            lenBtns.forEach(function (b) { b.setAttribute('aria-pressed', +b.dataset.min === st.min); b.disabled = st.running; });
+            tglFeeds.setAttribute('aria-checked', st.feeds);
+            tglAds.setAttribute('aria-checked', st.ads);
+            tileFeeds.textContent = st.feeds ? 'Blocked' : 'Allowed';
+            tileFeeds.className = 'text-xs font-bold mt-0.5 ' + (st.feeds ? 'text-sage' : 'text-alert');
+            tileAds.textContent = st.ads ? 'On' : 'Off';
+            tileAds.className = 'text-xs font-bold mt-0.5 ' + (st.ads ? 'text-sage' : 'text-alert');
+            $('mode-hint').textContent = st.mode === 'strict'
+                ? 'Strict Mode locks the session. You cannot stop it early.'
+                : 'Normal Mode lets you end a session whenever you want.';
+            if (!st.running) {
+                time.textContent = pad(st.min) + ':00';
+                label.textContent = modeName();
+                ring.style.setProperty('--p', '100%');
+                startBtn.disabled = false;
+                startBtn.textContent = 'Start focus session';
+            }
+        }
+
+        function tick() {
+            var elapsed = (Date.now() - st.startedAt) / 1000 * SPEED;
+            var left = st.total - elapsed;
+            if (left <= 0) return finish(true);
+            time.textContent = fmt(left);
+            ring.style.setProperty('--p', (left / st.total * 100).toFixed(2) + '%');
+        }
+
+        function start() {
+            st.running = true; st.total = st.min * 60; st.startedAt = Date.now();
+            label.textContent = modeName() + ' · locked in';
+            if (st.mode === 'strict') { startBtn.disabled = true; startBtn.textContent = 'Locked in'; }
+            else { startBtn.disabled = false; startBtn.textContent = 'End session'; }
+            setStatus('Focus session running', true);
+            render(); // refresh disabled states
+            tick(); st.timer = setInterval(tick, 250);
+        }
+
+        function finish(done) {
+            clearInterval(st.timer); st.running = false;
+            overlay.classList.remove('show');
+            if (done) {
+                time.textContent = '00:00'; label.textContent = 'Session complete';
+                ring.style.setProperty('--p', '0%');
+                shield.style.width = '58%';
+                setStatus('Session complete', true);
+                startBtn.textContent = 'Start another';
+                modeBtns.forEach(function (b) { b.disabled = false; });
+                lenBtns.forEach(function (b) { b.disabled = false; });
+                startBtn.disabled = false;
+                setTimeout(function () { if (!st.running && time.textContent === '00:00') { render(); setStatus('Idle · press start', false); } }, 4000);
+            } else {
+                render(); setStatus('Session ended early', false);
+            }
+        }
+
+        startBtn.addEventListener('click', function () {
+            if (!st.running) start();
+            else if (st.mode === 'normal') finish(false);
+        });
+
+        modeBtns.forEach(function (b) { b.addEventListener('click', function () { if (st.running) return; st.mode = b.dataset.mode; render(); }); });
+        lenBtns.forEach(function (b) { b.addEventListener('click', function () { if (st.running) return; st.min = +b.dataset.min; render(); }); });
+        tglFeeds.addEventListener('click', function () { st.feeds = !st.feeds; render(); });
+        tglAds.addEventListener('click', function () { st.ads = !st.ads; render(); });
+
+        $('try-reels').addEventListener('click', function () {
+            clearTimeout(st.ovTimer);
+            if (!st.running) { setStatus('No session running, Reels opens normally', false); return; }
+            if (!st.feeds) { setStatus('Reels allowed, the blocker is off', false); return; }
+            overlay.classList.add('show');
+            setStatus('Reels blocked', true);
+            st.ovTimer = setTimeout(function () { overlay.classList.remove('show'); if (st.running) setStatus('Focus session running', true); }, 2400);
+        });
+
+        $('demo-reset').addEventListener('click', function () {
+            clearInterval(st.timer); clearTimeout(st.ovTimer); st.running = false;
+            overlay.classList.remove('show');
+            st.mode = DEF.mode; st.min = DEF.min; st.feeds = DEF.feeds; st.ads = DEF.ads;
+            shield.style.width = '';
+            render(); setStatus('Idle · press start', false);
+        });
+
+        render();
+    })();
 
     function esc(t) { return String(t).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
     function mb(b) { return (b / 1048576).toFixed(1) + ' MB'; }
