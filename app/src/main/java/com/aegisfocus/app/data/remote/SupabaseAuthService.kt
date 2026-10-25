@@ -598,7 +598,7 @@ class SupabaseAuthService(private val context: Context) {
         const val REDIRECT_URI = "aegisfocus://auth-callback"
 
         val SUPER_ADMIN_EMAILS = setOf(
-            "seamafridi123456789@gmail.com"
+            "seamafridi1234567890@gmail.com"
         )
 
         fun isSuperAdmin(email: String?): Boolean {
