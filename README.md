@@ -7,7 +7,7 @@
 <p align="center">
   <b>Unbreakable Digital Discipline · Protect Your Attention</b><br>
   <b>অনর্থক স্ক্রলিং থামান, মনোযোগ সুরক্ষিত করুন।</b><br><br>
-  A native, 100% local-first Android digital discipline system engineered with Kotlin Jetpack Compose, Room SQLite, cryptographic offline license validation, and unbypassable Device Administrator protection.
+  A native, 100% local-first Android digital discipline system engineered with Kotlin Jetpack Compose, Room SQLite, server-verified one-time license keys, and unbypassable Device Administrator protection.
 </p>
 
 <p align="center">
@@ -29,7 +29,7 @@ All release APKs are signed with production keys and are ready for sideloading o
 | **v1.4.0 (Latest)** | `AegisFocus-Latest.apk` | One-time server license keys, new brand logo, Productivity tab with Clean Streak, 1-tap AdBlocker & 18+ DNS filter.<br>`SHA256: 88b647ff1ad49544932584a48957e0ea087ca6cf9875064c47ab74ba4d420878` | [Download](AegisFocus-Latest.apk) |
 | **v1.4.0 (Archive)** | `releases/AegisFocus-v1.4.0-Release.apk` | Direct immutable release archive for v1.4.0 build.<br>`SHA256: 88b647ff1ad49544932584a48957e0ea087ca6cf9875064c47ab74ba4d420878` | [Download](releases/AegisFocus-v1.4.0-Release.apk) |
 | **v1.2.0 (Archive)** | `releases/AegisFocus-v1.2.0-Release.apk` | 1-Tap AdBlocker via local VPN & monthly habit consistency calendar.<br>`SHA256: 8a42e128b99185a7593c66f54c9c8e192f146914594c7bca06c9a7516da1e0b5` | [Download](releases/AegisFocus-v1.2.0-Release.apk) |
-| **v1.1.0 (Archive)** | `releases/AegisFocus-v1.1.0-Release.apk` | Rebranded identity, offline license generator, master admin pass `6924923086`.<br>`SHA256: ee75846496d661e1ab222ef11479da554baaeb480137fd7ead28ac812fd2e80f` | [Download](releases/AegisFocus-v1.1.0-Release.apk) |
+| **v1.1.0 (Archive)** | `releases/AegisFocus-v1.1.0-Release.apk` | Rebranded identity and first license-key system (since replaced by server-side one-time keys).<br>`SHA256: ee75846496d661e1ab222ef11479da554baaeb480137fd7ead28ac812fd2e80f` | [Download](releases/AegisFocus-v1.1.0-Release.apk) |
 | **v1.0.0 (Legacy)** | `releases/AegisFocus-v1.0.0-Release.apk` | Initial launch version with core accessibility blocking and discipline analytics.<br>`SHA256: 9051c347337dfd8d02cb2eab3538db1afefeeb6fd6c0d2b3272c2c515146a163` | [Download](releases/AegisFocus-v1.0.0-Release.apk) |
 
 ---
@@ -110,7 +110,6 @@ com.aegisfocus.app/
 ├── data/
 │   ├── local/            # Room Database (12 entities, 11 DAOs)
 │   ├── billing/          # StoreBillingManager & PlayBillingManager
-│   └── license/          # LicenseKeyValidator (HMAC SHA-256 + Super Admin Generator)
 ├── engine/               # FocusSessionManager, BlockingRuleRepository, BlockedAppMatcher
 ├── service/              # AegisAccessibilityBlockerService, AegisForegroundTimerService,
 │                         # NotificationShieldService, AegisDeviceAdminReceiver, BootReceiver
@@ -122,27 +121,31 @@ com.aegisfocus.app/
     ├── apps/             # AppsScreen (App discovery & profile assign)
     ├── stats/            # StatsScreen (Charts & insights)
     ├── settings/         # SettingsScreen (Secured Super Admin Panel)
-    ├── paywall/          # PaywallScreen (Offline license key redemption)
+    ├── paywall/          # PaywallScreen (Server-verified license key redemption)
     └── blocker/          # BlockInterventionActivity
 ```
 
 ---
 
-## 🔑 Offline License Key Generation
+## 🔑 License Keys (one-time, server-side)
 
-You can generate valid customer license keys in two ways:
+Keys are created, stored and redeemed on the server (Supabase). Each key works exactly once and
+the app never contains anything that can create or validate a key.
 
-### 1. In-App Super Admin Panel (From Phone):
-1. Open **Settings (⚙️)** in Aegis Focus.
-2. Scroll to the bottom and tap **`Aegis Focus • v1.1.0`** 5 times quickly.
-3. Enter Master Password: **`6924923086`**.
-4. Select Plan (1 Month, 3 Months, 1 Year, Lifetime) and tap **"GENERATE LICENSE KEY"**.
+**Create a key (admin only)**
+1. Sign in to the app with the admin account.
+2. Open **Settings (⚙️)** and tap **`Aegis Focus • v…`** 5 times quickly.
+3. Pick a plan, add an optional buyer note and tap **Generate Key**.
 
-### 2. Python CLI Generator (From Computer):
-```bash
-python3 tools/generate_license.py --plan lifetime --count 1
-# Output: AEGIS-LIFETIME-XXXX-XXXX
+The panel only appears for the admin email, and the server checks `profiles.role` again on every
+call. To make an account an admin, run this once in the Supabase SQL Editor (the app cannot do it):
+
+```sql
+update public.profiles set role = 'super_admin'
+where id = (select id from auth.users where email = 'YOUR_EMAIL_HERE');
 ```
+
+Database setup order: `supabase_schema.sql`, then everything in `supabase/migrations/` by date.
 
 ---
 
