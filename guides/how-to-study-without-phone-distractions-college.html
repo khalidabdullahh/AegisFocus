@@ -33,14 +33,14 @@
     <!-- Google Fonts & Tailwind -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cabin+Sketch:wght@400;700&family=Chelsea+Market&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
             darkMode: 'class',
             theme: {
                 extend: {
-                    fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] },
+                    fontFamily: { sans: ['"Chelsea Market"', 'system-ui', 'sans-serif'], display: ['"Cabin Sketch"', '"Chelsea Market"', 'sans-serif'] },
                     colors: {
                         asr: {
                             bg:       '#0A0D14',
@@ -85,6 +85,13 @@
                 linear-gradient(90deg, rgba(56,189,248,0.03) 1px, transparent 1px);
             background-size: 40px 40px;
         }
+    </style>
+    <style>
+        /* Site fonts: same pairing as the GestureVolume site */
+        body { font-family: "Chelsea Market", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+        h1, h2, .font-display { font-family: "Cabin Sketch", "Chelsea Market", system-ui, sans-serif !important; font-weight: 700; }
+        .phone, .phone * { font-family: Inter, system-ui, -apple-system, Roboto, "Segoe UI", sans-serif; }
+        code, pre, kbd { font-family: ui-monospace, Menlo, Consolas, monospace; }
     </style>
 </head>
 <body class="bg-asr-bg text-asr-text font-sans antialiased min-h-screen flex flex-col justify-between">

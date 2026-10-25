@@ -11,15 +11,22 @@
     <link rel="icon" type="image/png" href="assets/favicon.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cabin+Sketch:wght@400;700&family=Chelsea+Market&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = { theme: { extend: {
-            fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] },
+            fontFamily: { sans: ['"Chelsea Market"', 'system-ui', 'sans-serif'], display: ['"Cabin Sketch"', '"Chelsea Market"', 'sans-serif'] },
             colors: { bg: '#0E181D', surface: '#15242B', elevated: '#1C2F38', line: '#2B434D',
                       sage: '#9CC5A1', teal: '#86C5B4', text: '#EEF2EE', muted: '#A8B9BC' }
         } } };
     </script>
+    <style>
+        /* Site fonts: same pairing as the GestureVolume site */
+        body { font-family: "Chelsea Market", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+        h1, h2, .font-display { font-family: "Cabin Sketch", "Chelsea Market", system-ui, sans-serif !important; font-weight: 700; }
+        .phone, .phone * { font-family: Inter, system-ui, -apple-system, Roboto, "Segoe UI", sans-serif; }
+        code, pre, kbd { font-family: ui-monospace, Menlo, Consolas, monospace; }
+    </style>
 </head>
 <body class="bg-bg text-text font-sans antialiased">
 

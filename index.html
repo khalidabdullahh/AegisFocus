@@ -32,14 +32,14 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cabin+Sketch:wght@400;700&family=Chelsea+Market&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
             theme: {
                 extend: {
-                    fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] },
+                    fontFamily: { sans: ['"Chelsea Market"', 'system-ui', 'sans-serif'], display: ['"Cabin Sketch"', '"Chelsea Market"', 'sans-serif'] },
                     colors: {
                         bg: '#0E181D', surface: '#15242B', elevated: '#1C2F38', line: '#2B434D',
                         sage: '#9CC5A1', teal: '#86C5B4', text: '#EEF2EE', muted: '#A8B9BC', faint: '#7C9094',
@@ -85,7 +85,7 @@
         @media (min-width: 820px) {
             .hero-grid { grid-template-columns: 1.05fr .95fr; grid-template-areas: "copy stage" "custom stage"; column-gap: 3.5rem; row-gap: 1.5rem; align-items: start; }
             .hero-copy { grid-area: copy; }
-            .hero-stage { grid-area: stage; position: sticky; top: 92px; }
+            .hero-stage { grid-area: stage; }
             .hero-custom { grid-area: custom; }
         }
         .hero-custom { width: 100%; max-width: 36rem; margin-inline: auto; }
@@ -108,6 +108,13 @@
         #sticky-cta.show { transform: none; }
         ::-webkit-scrollbar { width: 6px; } ::-webkit-scrollbar-track { background: #0E181D; } ::-webkit-scrollbar-thumb { background: #2B434D; border-radius: 4px; }
     </style>
+    <style>
+        /* Site fonts: same pairing as the GestureVolume site */
+        body { font-family: "Chelsea Market", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+        h1, h2, .font-display { font-family: "Cabin Sketch", "Chelsea Market", system-ui, sans-serif !important; font-weight: 700; }
+        .phone, .phone * { font-family: Inter, system-ui, -apple-system, Roboto, "Segoe UI", sans-serif; }
+        code, pre, kbd { font-family: ui-monospace, Menlo, Consolas, monospace; }
+    </style>
 </head>
 
 <body class="text-text font-sans antialiased">
@@ -117,7 +124,7 @@
     <div class="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-3">
         <a href="/" class="flex items-center gap-2.5 shrink-0" aria-label="Aegis Focus home">
             <img src="assets/favicon.png" alt="Aegis Focus logo" width="36" height="36" class="w-9 h-9 rounded-xl border border-line">
-            <span class="font-extrabold tracking-tight text-lg">Aegis Focus</span>
+            <span class="font-display tracking-tight text-xl">Aegis Focus</span>
         </a>
 
         <nav class="hidden lg:flex items-center gap-6 text-sm font-semibold text-muted" aria-label="Main">
@@ -286,7 +293,7 @@
                         <span id="ext-name" class="text-sm font-extrabold"></span>
                     </div>
                     <div class="flex-1 p-4 space-y-3 overflow-hidden">
-                        <div class="h-24 rounded-xl bg-elevated/70"></div>
+                        <div id="ext-ad" class="h-24 rounded-xl bg-elevated/70 grid place-items-center text-center text-[10px] px-3"></div>
                         <div class="h-3 w-3/4 rounded bg-elevated/70"></div>
                         <div class="h-3 w-1/2 rounded bg-elevated/70"></div>
                         <div class="h-24 rounded-xl bg-elevated/70"></div>
@@ -313,6 +320,18 @@
             </div>
             <p id="demo-status" class="mt-4 inline-flex items-center gap-2 rounded-full border border-line bg-surface/80 text-xs text-muted px-3.5 py-1.5" aria-live="polite"><span id="status-dot" class="w-1.5 h-1.5 rounded-full bg-faint"></span><span id="status-text">Idle &middot; press start</span></p>
             <p class="mt-3 text-[11px] text-faint text-center">Interactive demo &middot; tap the apps like on a real phone &middot; runs at 60x speed</p>
+            <div class="hero-live card p-4 mt-5 w-full max-w-[340px] text-left">
+                <div class="flex items-center justify-between gap-3">
+                    <h2 class="text-xs font-extrabold tracking-widest text-faint uppercase">Live protection</h2>
+                    <p class="text-[11px] text-muted">Blocked in this demo: <b id="blk-count" class="text-sage">0</b></p>
+                </div>
+                <div class="mt-3 grid gap-2">
+                    <button type="button" id="tgl-apps" class="tgl" role="switch" aria-checked="true"><span><span class="block">Block distracting apps</span><span class="block text-[11px] text-faint font-medium mt-0.5">TikTok and other feeds, during sessions</span></span><span class="switch"></span></button>
+                    <button type="button" id="tgl-feeds" class="tgl" role="switch" aria-checked="true"><span><span class="block">Block Shorts / Reels</span><span class="block text-[11px] text-faint font-medium mt-0.5">Cut inside Instagram and YouTube</span></span><span class="switch"></span></button>
+                    <button type="button" id="tgl-ads" class="tgl" role="switch" aria-checked="true"><span><span class="block">System-wide ad blocker</span><span class="block text-[11px] text-faint font-medium mt-0.5">Ads, trackers and scam sites, always on</span></span><span class="switch"></span></button>
+                </div>
+                <p class="mt-3 text-[11px] text-faint leading-relaxed">Everything runs on-device. These switches only change this demo.</p>
+            </div>
         </div>
 
         <!-- Customizer -->
@@ -337,11 +356,8 @@
                 <button type="button" data-min="60" aria-pressed="false">60m</button>
             </div>
 
-            <div class="mt-4 grid sm:grid-cols-2 gap-2">
-                <button type="button" id="tgl-feeds" class="tgl" role="switch" aria-checked="true"><span>Block Shorts / Reels</span><span class="switch"></span></button>
-                <button type="button" id="tgl-ads" class="tgl" role="switch" aria-checked="true"><span>Ad blocker</span><span class="switch"></span></button>
-            </div>
-            <p class="mt-3 text-xs text-faint">Tip: start a session, tap the bar at the bottom of the phone to go home, then try opening TikTok or Instagram.</p>
+            
+            <p class="mt-3 text-xs text-faint">Tip: press Start, tap the bar at the bottom of the phone to go home, then try opening TikTok or Instagram. Change the layers on the right and try again.</p>
         </div>
 
     </div>
@@ -350,16 +366,16 @@
 <!-- QUICK FACTS -->
 <section class="border-y border-line/70 bg-surface/60">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 py-6 grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
-        <div><p class="text-xl sm:text-2xl font-black text-sage">Free</p><p class="text-xs text-muted mt-0.5">core features, no sign-up</p></div>
-        <div><p class="text-xl sm:text-2xl font-black text-sage">On-device</p><p class="text-xs text-muted mt-0.5">your usage never leaves the phone</p></div>
-        <div><p class="text-xl sm:text-2xl font-black text-sage">0 ads</p><p class="text-xs text-muted mt-0.5">and it blocks them elsewhere too</p></div>
-        <div><p class="text-xl sm:text-2xl font-black text-sage" id="fact-size">Light</p><p class="text-xs text-muted mt-0.5">APK size, installs in seconds</p></div>
+        <div><p class="font-display text-2xl sm:text-3xl text-sage">Free</p><p class="text-xs text-muted mt-0.5">core features, no sign-up</p></div>
+        <div><p class="font-display text-2xl sm:text-3xl text-sage">On-device</p><p class="text-xs text-muted mt-0.5">your usage never leaves the phone</p></div>
+        <div><p class="font-display text-2xl sm:text-3xl text-sage">0 ads</p><p class="text-xs text-muted mt-0.5">and it blocks them elsewhere too</p></div>
+        <div><p class="font-display text-2xl sm:text-3xl text-sage" id="fact-size">Light</p><p class="text-xs text-muted mt-0.5">APK size, installs in seconds</p></div>
     </div>
 </section>
 
 <!-- WHY -->
 <section class="max-w-4xl mx-auto px-4 sm:px-6 py-16 sm:py-24 text-center reveal">
-    <p class="text-sm font-bold text-teal">Why it exists</p>
+    <p class="font-display text-base text-teal">Why it exists</p>
     <h2 class="mt-2 text-3xl sm:text-4xl font-extrabold tracking-tight">Willpower loses to apps built to hook you</h2>
     <p class="mt-5 text-muted leading-relaxed text-base sm:text-lg">
         Infinite feeds, autoplay and notifications are designed so you never reach a natural stopping point. Reminders and good intentions do not hold up at 11 pm. Aegis Focus works on the environment instead: it makes the distracting thing hard to reach, and makes the focused thing the easy default.
@@ -370,7 +386,7 @@
 <section id="features" class="py-16 sm:py-24 bg-surface/50 border-y border-line/70">
     <div class="max-w-6xl mx-auto px-4 sm:px-6">
         <div class="text-center max-w-2xl mx-auto reveal">
-            <p class="text-sm font-bold text-teal">Features</p>
+            <p class="font-display text-base text-teal">Features</p>
             <h2 class="mt-2 text-3xl sm:text-4xl font-extrabold tracking-tight">Everything you need, nothing you do not</h2>
             <p class="mt-4 text-muted">A focused toolkit in one calm app. No clutter, no fake numbers, no dark patterns.</p>
         </div>
@@ -443,7 +459,7 @@
 <!-- HOW IT WORKS -->
 <section id="how" class="max-w-6xl mx-auto px-4 sm:px-6 py-16 sm:py-24">
     <div class="text-center max-w-2xl mx-auto reveal">
-        <p class="text-sm font-bold text-teal">How it works</p>
+        <p class="font-display text-base text-teal">How it works</p>
         <h2 class="mt-2 text-3xl sm:text-4xl font-extrabold tracking-tight">Set up once, protected every day</h2>
     </div>
     <ol class="mt-12 grid sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
@@ -458,7 +474,7 @@
 <section id="streak" class="py-16 sm:py-24 bg-surface/50 border-y border-line/70">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
         <div class="reveal">
-            <p class="text-sm font-bold text-teal">Clean Streak</p>
+            <p class="font-display text-base text-teal">Clean Streak</p>
             <h2 class="mt-2 text-3xl sm:text-4xl font-extrabold tracking-tight">Break a bad habit loop, privately</h2>
             <p class="mt-4 text-muted leading-relaxed">Pornography, endless scrolling, any loop you want out of. Open the Productivity tab and tick one box each day you stay clean. That is all the tracker asks of you.</p>
             <ul class="mt-6 space-y-3 text-sm">
@@ -487,7 +503,7 @@
 <!-- BLOCKERS DETAIL -->
 <section id="simulator" class="max-w-6xl mx-auto px-4 sm:px-6 py-16 sm:py-24">
     <div class="text-center max-w-2xl mx-auto reveal">
-        <p class="text-sm font-bold text-teal">Blocking, explained</p>
+        <p class="font-display text-base text-teal">Blocking, explained</p>
         <h2 class="mt-2 text-3xl sm:text-4xl font-extrabold tracking-tight">Three layers between you and the scroll</h2>
     </div>
     <div class="mt-12 grid md:grid-cols-3 gap-4 sm:gap-5">
@@ -513,7 +529,7 @@
 <section id="privacy" class="py-16 sm:py-24 bg-surface/50 border-y border-line/70">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 grid lg:grid-cols-2 gap-10 lg:gap-16">
         <div class="reveal">
-            <p class="text-sm font-bold text-teal">Privacy and permissions</p>
+            <p class="font-display text-base text-teal">Privacy and permissions</p>
             <h2 class="mt-2 text-3xl sm:text-4xl font-extrabold tracking-tight">Your habits are your business</h2>
             <p class="mt-4 text-muted leading-relaxed">Focus sessions, goals, reminders, streaks and usage stats are stored on your device. There are no ads and no analytics trackers in the app. An account is only needed if you want to redeem a Pro key, and then only to attach that key to you.</p>
             <p class="mt-4 text-muted leading-relaxed">Android asks for some powerful permissions to block apps. Here is exactly what each one is for:</p>
@@ -533,7 +549,7 @@
 <!-- PRICING -->
 <section id="pricing" class="max-w-6xl mx-auto px-4 sm:px-6 py-16 sm:py-24">
     <div class="text-center max-w-2xl mx-auto reveal">
-        <p class="text-sm font-bold text-teal">Pricing</p>
+        <p class="font-display text-base text-teal">Pricing</p>
         <h2 class="mt-2 text-3xl sm:text-4xl font-extrabold tracking-tight">Free to start. Pro when you want more.</h2>
         <p class="mt-4 text-muted">Pay once per plan, no auto-renewal. You receive a one-time key and activate it inside the app.</p>
     </div>
@@ -591,7 +607,7 @@
 <section id="install" class="py-16 sm:py-24 bg-surface/50 border-y border-line/70">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 grid lg:grid-cols-2 gap-10 lg:gap-16">
         <div class="reveal">
-            <p class="text-sm font-bold text-teal">Install</p>
+            <p class="font-display text-base text-teal">Install</p>
             <h2 class="mt-2 text-3xl sm:text-4xl font-extrabold tracking-tight">Up and running in two minutes</h2>
             <ol class="mt-6 space-y-4 text-sm text-muted">
                 <li class="flex gap-3"><span class="w-7 h-7 rounded-full bg-sage text-bg font-black grid place-items-center shrink-0">1</span><span><strong class="text-text">Download the APK</strong> on your Android phone with the button below.</span></li>
@@ -623,7 +639,7 @@
 <!-- FAQ -->
 <section id="faq" class="max-w-3xl mx-auto px-4 sm:px-6 py-16 sm:py-24">
     <div class="text-center reveal">
-        <p class="text-sm font-bold text-teal">FAQ</p>
+        <p class="font-display text-base text-teal">FAQ</p>
         <h2 class="mt-2 text-3xl sm:text-4xl font-extrabold tracking-tight">Questions, answered straight</h2>
     </div>
     <div class="mt-10 space-y-3 reveal">
@@ -732,12 +748,12 @@
     // Interactive demo (hero)
     (function () {
         var SPEED = 60; // 1 real second = 1 demo minute
-        var DEF = { mode: 'strict', min: 25, feeds: true, ads: true };
-        var st = { mode: DEF.mode, min: DEF.min, feeds: DEF.feeds, ads: DEF.ads, running: false, total: 0, startedAt: 0, timer: null, ovTimer: null };
+        var DEF = { mode: 'strict', min: 25, feeds: true, ads: true, apps: true };
+        var st = { mode: DEF.mode, min: DEF.min, feeds: DEF.feeds, ads: DEF.ads, apps: DEF.apps, blocks: 0, running: false, total: 0, startedAt: 0, timer: null, ovTimer: null };
         var $ = function (id) { return document.getElementById(id); };
         var ring = $('ring'), time = $('time'), label = $('time-label'), startBtn = $('start-btn');
         var modeBtns = document.querySelectorAll('#mode-seg button'), lenBtns = document.querySelectorAll('#len-seg button');
-        var tglFeeds = $('tgl-feeds'), tglAds = $('tgl-ads');
+        var tglFeeds = $('tgl-feeds'), tglAds = $('tgl-ads'), tglApps = $('tgl-apps');
         var tileFeeds = $('tile-feeds'), tileAds = $('tile-ads'), shield = $('shield-bar');
         var overlay = $('block-overlay'), statusText = $('status-text'), dot = $('status-dot');
         if (!ring || !startBtn) return;
@@ -752,6 +768,8 @@
             lenBtns.forEach(function (b) { b.setAttribute('aria-pressed', +b.dataset.min === st.min); b.disabled = st.running; });
             tglFeeds.setAttribute('aria-checked', st.feeds);
             tglAds.setAttribute('aria-checked', st.ads);
+            tglApps.setAttribute('aria-checked', st.apps);
+            $('blk-count').textContent = st.blocks;
             tileFeeds.textContent = st.feeds ? 'Blocked' : 'Allowed';
             tileFeeds.className = 'text-xs font-bold mt-0.5 ' + (st.feeds ? 'text-sage' : 'text-alert');
             tileAds.textContent = st.ads ? 'On' : 'Off';
@@ -813,11 +831,12 @@
         lenBtns.forEach(function (b) { b.addEventListener('click', function () { if (st.running) return; st.min = +b.dataset.min; render(); }); });
         tglFeeds.addEventListener('click', function () { st.feeds = !st.feeds; render(); });
         tglAds.addEventListener('click', function () { st.ads = !st.ads; render(); });
+        tglApps.addEventListener('click', function () { st.apps = !st.apps; render(); });
 
         $('demo-reset').addEventListener('click', function () {
             clearInterval(st.timer); clearTimeout(st.ovTimer); st.running = false;
             overlay.classList.remove('show');
-            st.mode = DEF.mode; st.min = DEF.min; st.feeds = DEF.feeds; st.ads = DEF.ads;
+            st.mode = DEF.mode; st.min = DEF.min; st.feeds = DEF.feeds; st.ads = DEF.ads; st.apps = DEF.apps; st.blocks = 0;
             shield.style.width = '';
             if (typeof show === 'function') show('app');
             render(); setStatus('Idle · press start', false);
@@ -872,12 +891,16 @@
             if (a.feed) { tabs.classList.remove('hidden'); tabs.classList.add('flex'); $('ext-feed-label').textContent = a.feed; }
             else { tabs.classList.add('hidden'); tabs.classList.remove('flex'); }
             if (window.lucide) lucide.createIcons();
-            if (st.running && a.blocked) {
+            if (st.running && a.blocked && st.apps) {
+                st.blocks++; $('blk-count').textContent = st.blocks;
                 setStatus(a.name + ' blocked', true);
                 overlayShow(a.name + ' is blocked', 'Aegis Focus is keeping this app closed during your session.', function () { show('home'); });
                 show('home');
                 return;
             }
+            var ad = $('ext-ad');
+            if (st.ads) { ad.innerHTML = '<span class="text-sage font-bold">Ad blocked by Aegis Focus</span>'; ad.style.background = ''; st.blocks++; $('blk-count').textContent = st.blocks; }
+            else { ad.innerHTML = '<span class="font-extrabold text-[#10171B]">Sponsored</span><br><span class="text-[#10171B]/80">You will not believe this one weird trick</span>'; ad.style.background = '#E7C85A'; }
             show('ext');
             setStatus(st.running ? a.name + ' is open, session still running' : a.name + ' opens normally, no session', st.running);
         }
@@ -889,6 +912,7 @@
         $('ext-feed-tab').addEventListener('click', function () {
             var a = APPS[curApp]; if (!a || !a.feed) return;
             if (st.running && st.feeds) {
+                st.blocks++; $('blk-count').textContent = st.blocks;
                 setStatus(a.feed + ' blocked', true);
                 overlayShow(a.feed + ' blocked', 'Aegis Focus stepped you back. The rest of ' + a.name + ' still works.', null);
             } else {
