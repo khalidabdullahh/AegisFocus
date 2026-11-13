@@ -144,6 +144,14 @@ class SettingsRepositoryImpl(
         prefs.edit().putBoolean(KEY_ONBOARDING_DONE, completed).apply()
     }
 
+    override fun isNsfwBlurEnabled(): Boolean {
+        return prefs.getBoolean(KEY_NSFW_BLUR_ENABLED, false)
+    }
+
+    override fun setNsfwBlurEnabled(enabled: Boolean) {
+        prefs.edit().putBoolean(KEY_NSFW_BLUR_ENABLED, enabled).apply()
+    }
+
     override fun isShortsBlockerEnabled(): Boolean {
         return prefs.getBoolean(KEY_SHORTS_BLOCKER_ENABLED, true)
     }
@@ -197,6 +205,7 @@ class SettingsRepositoryImpl(
         private const val KEY_DARK_THEME = "dark_theme"
         private const val KEY_ONBOARDING_DONE = "onboarding_done"
         private const val KEY_SHORTS_BLOCKER_ENABLED = "shorts_blocker_enabled"
+        private const val KEY_NSFW_BLUR_ENABLED = "nsfw_blur_enabled"
         private const val KEY_GRAYSCALE_FATIGUE_ENABLED = "grayscale_fatigue_enabled"
         private const val KEY_ADBLOCKER_VPN_ENABLED = "adblocker_vpn_enabled"
         private const val KEY_ADULT_BLOCK_ENABLED = "adult_block_enabled"

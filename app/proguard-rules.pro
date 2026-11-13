@@ -29,3 +29,7 @@
     @androidx.compose.runtime.Composable *;
 }
 -dontwarn androidx.compose.**
+
+# TensorFlow Lite (on-device NSFW blur)
+-keep class org.tensorflow.lite.** { *; }
+-dontwarn org.tensorflow.lite.**
