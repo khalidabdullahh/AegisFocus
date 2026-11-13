@@ -300,7 +300,15 @@ fun AegisNavHost(
                         dailyGoalDao = container.dailyGoalDao,
                         focusSessionDao = container.focusSessionDao,
                         settingsRepository = container.settingsRepository,
-                        userXpDao = container.userXpDao
+                        userXpDao = container.userXpDao,
+                        habitStore = container.habitStore,
+                        firstUseDate = try {
+                            java.time.Instant.ofEpochMilli(
+                                appContext.packageManager.getPackageInfo(appContext.packageName, 0).firstInstallTime
+                            ).atZone(java.time.ZoneId.systemDefault()).toLocalDate()
+                        } catch (e: Exception) {
+                            java.time.LocalDate.now()
+                        }
                     )
                 }
                 GoalsScreen(

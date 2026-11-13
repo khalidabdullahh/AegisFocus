@@ -931,8 +931,16 @@ fun SettingsScreen(
                     )
                     Spacer(modifier = Modifier.width(12.dp))
                     Column(modifier = Modifier.weight(1f)) {
+                        val versionCtx = androidx.compose.ui.platform.LocalContext.current
+                        val appVersion = remember {
+                            try {
+                                versionCtx.packageManager.getPackageInfo(versionCtx.packageName, 0).versionName ?: ""
+                            } catch (e: Exception) {
+                                ""
+                            }
+                        }
                         Text(
-                            text = "Aegis Focus • v1.5.0",
+                            text = if (appVersion.isNotEmpty()) "Aegis Focus • v$appVersion" else "Aegis Focus",
                             fontSize = 14.sp,
                             fontWeight = FontWeight.SemiBold,
                             color = TextPrimary

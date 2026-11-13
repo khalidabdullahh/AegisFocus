@@ -2,11 +2,14 @@ package com.aegisfocus.app.presentation.goals
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.aegisfocus.app.data.local.Habit
+import com.aegisfocus.app.data.local.HabitStore
 import com.aegisfocus.app.data.local.dao.DailyGoalDao
 import com.aegisfocus.app.data.local.dao.FocusSessionDao
 import com.aegisfocus.app.data.local.dao.UserXpDao
 import com.aegisfocus.app.domain.repository.SettingsRepository
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
@@ -22,7 +25,8 @@ enum class DayGoalStatus {
     SUCCESS_MET,       // Met or exceeded daily goal
     MISSED,            // Missed goal in the past
     TODAY_IN_PROGRESS, // Today with active progress
-    FUTURE             // Upcoming day in the month
+    FUTURE,            // Upcoming day in the month
+    BEFORE_START       // Before the user started using the app: not counted
 }
 
 data class GoalDayUiModel(
@@ -52,12 +56,54 @@ data class GoalsUiState(
     val firstDayOffset: Int = 0 // Mon=0..Sun=6
 )
 
+data class HabitUi(
+    val habit: Habit,
+    val scheduledToday: Boolean,
+    val doneToday: Boolean,
+    val streak: Int,
+    val week: List<Boolean?>
+)
+
 class GoalsViewModel(
     private val dailyGoalDao: DailyGoalDao,
     private val focusSessionDao: FocusSessionDao,
     private val settingsRepository: SettingsRepository,
-    private val userXpDao: UserXpDao
+    private val userXpDao: UserXpDao,
+    private val habitStore: HabitStore,
+    private val firstUseDate: LocalDate
 ) : ViewModel() {
+
+    private val _habits = MutableStateFlow(loadHabits())
+    val habits: StateFlow<List<HabitUi>> = _habits.asStateFlow()
+
+    private fun loadHabits(): List<HabitUi> {
+        val today = LocalDate.now(ZoneId.systemDefault())
+        return habitStore.getHabits().map { h ->
+            HabitUi(
+                habit = h,
+                scheduledToday = h.days.contains(today.dayOfWeek.value),
+                doneToday = habitStore.isDone(h.id, today),
+                streak = habitStore.streak(h, today),
+                week = habitStore.lastSevenDays(h, today)
+            )
+        }
+    }
+
+    fun addHabit(title: String, days: Set<Int>) {
+        habitStore.addHabit(title, days)
+        _habits.value = loadHabits()
+    }
+
+    fun toggleHabit(habit: Habit) {
+        val today = LocalDate.now(ZoneId.systemDefault())
+        habitStore.setDone(habit.id, today, !habitStore.isDone(habit.id, today))
+        _habits.value = loadHabits()
+    }
+
+    fun deleteHabit(habit: Habit) {
+        habitStore.deleteHabit(habit.id)
+        _habits.value = loadHabits()
+    }
 
     private val _currentYearMonth = MutableStateFlow(YearMonth.now())
     private val _selectedDate = MutableStateFlow(LocalDate.now())
@@ -115,6 +161,10 @@ class GoalsViewModel(
             sessionCountMap[key] = (sessionCountMap[key] ?: 0) + 1
         }
 
+        // Days before the user started using the app (or their first session) are not "missed"
+        val earliestSession = sessionDurationMap.keys.minOrNull()?.let { LocalDate.parse(it) }
+        val startDate = if (earliestSession != null && earliestSession.isBefore(firstUseDate)) earliestSession else firstUseDate
+
         var totalMonthMinutes = 0
         var daysWon = 0
         var daysMissed = 0
@@ -136,19 +186,22 @@ class GoalsViewModel(
             val isGoalMet = (achievedMinutes >= params.target) || (dbGoal?.isGoalMet == true)
 
             val status = when {
+                date.isBefore(startDate) -> DayGoalStatus.BEFORE_START
                 isFuture -> DayGoalStatus.FUTURE
                 isToday -> if (isGoalMet) DayGoalStatus.SUCCESS_MET else DayGoalStatus.TODAY_IN_PROGRESS
                 else -> if (isGoalMet) DayGoalStatus.SUCCESS_MET else DayGoalStatus.MISSED
             }
 
-            if (!isFuture) {
-                daysElapsed++
+            if (!isFuture && status != DayGoalStatus.BEFORE_START) {
                 totalMonthMinutes += achievedMinutes
                 if (status == DayGoalStatus.SUCCESS_MET) {
+                    daysElapsed++
                     daysWon++
                 } else if (status == DayGoalStatus.MISSED) {
+                    daysElapsed++
                     daysMissed++
                 }
+                // today still in progress is not counted yet
             }
 
             GoalDayUiModel(

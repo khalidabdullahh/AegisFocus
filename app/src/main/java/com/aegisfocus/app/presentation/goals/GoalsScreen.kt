@@ -321,6 +321,7 @@ fun GoalsScreen(
                             DayGoalStatus.MISSED -> CrimsonDanger
                             DayGoalStatus.TODAY_IN_PROGRESS -> AmberWarning
                             DayGoalStatus.FUTURE -> TextMuted
+                            DayGoalStatus.BEFORE_START -> TextMuted
                         },
                         trackColor = ElevatedSurface
                     )
@@ -377,7 +378,11 @@ fun GoalsScreen(
                 ) {
                     listOf(30, 60, 90, 120, 180, 240).forEach { mins ->
                         val isSelected = uiState.targetMinutes == mins
-                        val label = if (mins >= 60) "${mins / 60}h" else "${mins}m"
+                        val label = when {
+                            mins < 60 -> "${mins}m"
+                            mins % 60 == 0 -> "${mins / 60}h"
+                            else -> "${mins / 60}.${(mins % 60) * 10 / 60}h"
+                        }
                         Surface(
                             modifier = Modifier
                                 .weight(1f)
@@ -402,6 +407,17 @@ fun GoalsScreen(
                 }
             }
         }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // ─── My Habits (custom daily goals) ───────────────────────────────────
+        val habits by viewModel.habits.collectAsState()
+        HabitsSection(
+            habits = habits,
+            onToggle = { viewModel.toggleHabit(it) },
+            onAdd = { title, days -> viewModel.addHabit(title, days) },
+            onDelete = { viewModel.deleteHabit(it) }
+        )
 
         Spacer(modifier = Modifier.height(28.dp))
     }
@@ -433,6 +449,11 @@ private fun CalendarDayTile(
             ElevatedSurface.copy(alpha = 0.3f),
             Color.Transparent,
             TextMuted.copy(alpha = 0.6f)
+        )
+        DayGoalStatus.BEFORE_START -> Triple(
+            Color.Transparent,
+            Color.Transparent,
+            TextMuted.copy(alpha = 0.35f)
         )
     }
 
@@ -484,6 +505,7 @@ private fun StatusPill(status: DayGoalStatus) {
         DayGoalStatus.MISSED -> Triple("MISSED", CrimsonDanger.copy(alpha = 0.2f), CrimsonDanger)
         DayGoalStatus.TODAY_IN_PROGRESS -> Triple("IN PROGRESS", AmberWarning.copy(alpha = 0.2f), AmberWarning)
         DayGoalStatus.FUTURE -> Triple("UPCOMING", ElevatedSurface, TextMuted)
+        DayGoalStatus.BEFORE_START -> Triple("NO DATA", ElevatedSurface, TextMuted)
     }
 
     Surface(
