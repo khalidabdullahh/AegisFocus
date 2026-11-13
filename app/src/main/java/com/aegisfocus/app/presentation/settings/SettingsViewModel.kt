@@ -45,6 +45,7 @@ data class SettingsUiState(
     val activePlan: SubscriptionPlan = SubscriptionPlan.FREE,
     val daysRemaining: Long = 0L,
     val isShortsBlockerEnabled: Boolean = true,
+    val isNsfwBlurEnabled: Boolean = false,
     val isGrayscaleFatigueEnabled: Boolean = false,
     val isAdBlockerVpnEnabled: Boolean = false,
     val isAdultBlockEnabled: Boolean = false,
@@ -130,6 +131,7 @@ class SettingsViewModel(
             activePlan = plan,
             daysRemaining = remaining,
             isShortsBlockerEnabled = settingsRepository.isShortsBlockerEnabled(),
+            isNsfwBlurEnabled = settingsRepository.isNsfwBlurEnabled(),
             isGrayscaleFatigueEnabled = settingsRepository.isGrayscaleFatigueEnabled(),
             isAdBlockerVpnEnabled = settingsRepository.isAdBlockerVpnEnabled(),
             isAdultBlockEnabled = settingsRepository.isAdultContentBlockEnabled(),
@@ -137,6 +139,11 @@ class SettingsViewModel(
             currentUser = user
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), SettingsUiState())
+
+    fun toggleNsfwBlur(enabled: Boolean) {
+        settingsRepository.setNsfwBlurEnabled(enabled)
+        refreshPermissions()
+    }
 
     fun toggleShortsBlocker(enabled: Boolean) {
         settingsRepository.setShortsBlockerEnabled(enabled)

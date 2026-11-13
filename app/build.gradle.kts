@@ -13,8 +13,8 @@ android {
         applicationId = "com.aegisfocus.app"
         minSdk = 26
         targetSdk = 35
-        versionCode = 6
-        versionName = "1.5.0"
+        versionCode = 7
+        versionName = "1.6.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -91,6 +91,7 @@ android {
 dependencies {
     // Core Android & Lifecycle
     implementation("androidx.core:core-ktx:1.15.0")
+    implementation("org.tensorflow:tensorflow-lite:2.14.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.7")
     implementation("androidx.lifecycle:lifecycle-runtime-compose:2.8.7")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.7")

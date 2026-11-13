@@ -420,6 +420,44 @@ fun SettingsScreen(
 
                 Spacer(modifier = Modifier.height(18.dp))
 
+                // 18+ visual blur toggle
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Column(modifier = Modifier.weight(1f)) {
+                        Text(
+                            text = "Blur 18+ visuals",
+                            fontSize = 15.sp,
+                            fontWeight = FontWeight.SemiBold,
+                            color = TextPrimary
+                        )
+                        Text(
+                            text = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R)
+                                "Scans social and browser apps on-device and hides explicit images. Needs the accessibility service. Not 100% accurate."
+                            else
+                                "Needs Android 11 or newer",
+                            fontSize = 12.sp,
+                            color = TextSecondary
+                        )
+                    }
+
+                    Switch(
+                        checked = uiState.isNsfwBlurEnabled,
+                        onCheckedChange = { viewModel.toggleNsfwBlur(it) },
+                        enabled = android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R,
+                        colors = SwitchDefaults.colors(
+                            checkedThumbColor = ObsidianBg,
+                            checkedTrackColor = EmeraldFocus,
+                            uncheckedThumbColor = TextMuted,
+                            uncheckedTrackColor = DeepSurface
+                        )
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(18.dp))
+
                 // Surgical Shorts / Reels Blocker Toggle
                 Row(
                     modifier = Modifier.fillMaxWidth(),
