@@ -194,6 +194,20 @@ fun ProductivityScreen(
 
         Spacer(Modifier.height(20.dp))
 
+        // App Limits
+        val limits by viewModel.limits.collectAsState()
+        AppLimitsSection(
+            limits = limits,
+            apps = apps,
+            hasUsageAccess = viewModel.hasUsageAccess,
+            onLoadApps = { viewModel.loadApps() },
+            onSave = { viewModel.saveLimit(it) },
+            onToggle = { l, on -> viewModel.setLimitEnabled(l, on) },
+            onDelete = { viewModel.deleteLimit(it) }
+        )
+
+        Spacer(Modifier.height(20.dp))
+
         // Reminders
         Row(
             modifier = Modifier.fillMaxWidth(),

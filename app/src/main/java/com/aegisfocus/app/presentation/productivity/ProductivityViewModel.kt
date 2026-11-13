@@ -7,7 +7,12 @@ import com.aegisfocus.app.data.local.MindfulGate
 import com.aegisfocus.app.data.local.MindfulGateStore
 import com.aegisfocus.app.domain.model.AppInfo
 import com.aegisfocus.app.domain.repository.AppDiscoveryRepository
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import com.aegisfocus.app.data.local.AppLimit
+import com.aegisfocus.app.data.local.AppLimitStore
+import com.aegisfocus.app.engine.AppUsageTracker
 import com.aegisfocus.app.data.local.CleanStreakState
 import com.aegisfocus.app.data.local.ProductivityStore
 import com.aegisfocus.app.data.local.Reminder
@@ -22,12 +27,60 @@ data class ProductivityUiState(
     val gates: List<MindfulGate> = emptyList()
 )
 
+data class AppLimitUi(
+    val limit: AppLimit,
+    val usedMinutes: Int?,
+    val opensToday: Int
+)
+
 class ProductivityViewModel(
     private val store: ProductivityStore,
     private val appContext: Context,
     private val gateStore: MindfulGateStore,
-    private val appDiscoveryRepository: AppDiscoveryRepository
+    private val appDiscoveryRepository: AppDiscoveryRepository,
+    private val limitStore: AppLimitStore,
+    private val usageTracker: AppUsageTracker
 ) : ViewModel() {
+
+    private val _limits = MutableStateFlow<List<AppLimitUi>>(emptyList())
+    val limits: StateFlow<List<AppLimitUi>> = _limits.asStateFlow()
+
+    val hasUsageAccess: Boolean get() = usageTracker.hasUsageAccess()
+
+    init {
+        refreshLimits()
+    }
+
+    fun refreshLimits() {
+        viewModelScope.launch {
+            val built = withContext(Dispatchers.IO) {
+                val access = usageTracker.hasUsageAccess()
+                limitStore.getLimits().sortedBy { it.appName.lowercase() }.map { l ->
+                    AppLimitUi(
+                        limit = l,
+                        usedMinutes = if (access) (usageTracker.todayUsageMs(l.packageName) / 60_000L).toInt() else null,
+                        opensToday = limitStore.opensToday(l.packageName)
+                    )
+                }
+            }
+            _limits.value = built
+        }
+    }
+
+    fun saveLimit(limit: AppLimit) {
+        limitStore.saveLimit(limit)
+        refreshLimits()
+    }
+
+    fun setLimitEnabled(limit: AppLimit, enabled: Boolean) {
+        limitStore.setEnabled(limit.packageName, enabled)
+        refreshLimits()
+    }
+
+    fun deleteLimit(limit: AppLimit) {
+        limitStore.deleteLimit(limit.packageName)
+        refreshLimits()
+    }
 
     private val _state = MutableStateFlow(load())
     val state: StateFlow<ProductivityUiState> = _state.asStateFlow()

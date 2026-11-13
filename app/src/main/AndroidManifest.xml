@@ -64,6 +64,15 @@
             android:noHistory="true"
             android:theme="@style/Theme.AegisFocus.Intervention" />
 
+        <!-- Per-app daily limit reached screen -->
+        <activity
+            android:name=".presentation.limits.LimitReachedActivity"
+            android:exported="false"
+            android:excludeFromRecents="true"
+            android:launchMode="singleTask"
+            android:noHistory="true"
+            android:theme="@style/Theme.AegisFocus.Intervention" />
+
         <!-- Mindful Gate: self-written checklist required before a chosen app opens -->
         <activity
             android:name=".presentation.mindful.MindfulGateActivity"

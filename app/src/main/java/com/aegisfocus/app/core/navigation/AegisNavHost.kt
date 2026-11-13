@@ -243,13 +243,17 @@ fun AegisNavHost(
                         store = container.productivityStore,
                         appContext = appContext,
                         gateStore = container.mindfulGateStore,
-                        appDiscoveryRepository = container.appDiscoveryRepository
+                        appDiscoveryRepository = container.appDiscoveryRepository,
+                        limitStore = container.appLimitStore,
+                        usageTracker = container.appUsageTracker
                     )
                 }
-                ProductivityScreen(
-                    viewModel = vm,
-                    onNavigateToGoals = { navController.navigate(Screen.Goals.route) }
-                )
+                com.aegisfocus.app.presentation.security.PinProtected(container.pinStore) {
+                    ProductivityScreen(
+                        viewModel = vm,
+                        onNavigateToGoals = { navController.navigate(Screen.Goals.route) }
+                    )
+                }
             }
 
             composable(Screen.Settings.route) {
@@ -262,11 +266,13 @@ fun AegisNavHost(
                         paymentService = container.supabasePaymentService
                     )
                 }
-                SettingsScreen(
-                    viewModel = vm,
-                    onNavigateToPaywall = { navController.navigate(Screen.Paywall.route) },
-                    onNavigateToAuth = { navController.navigate(Screen.Auth.route) }
-                )
+                com.aegisfocus.app.presentation.security.PinProtected(container.pinStore) {
+                    SettingsScreen(
+                        viewModel = vm,
+                        onNavigateToPaywall = { navController.navigate(Screen.Paywall.route) },
+                        onNavigateToAuth = { navController.navigate(Screen.Auth.route) }
+                    )
+                }
             }
 
             composable(Screen.Paywall.route) {
