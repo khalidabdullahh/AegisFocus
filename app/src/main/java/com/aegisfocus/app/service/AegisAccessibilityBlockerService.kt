@@ -11,6 +11,7 @@ class AegisAccessibilityBlockerService : AccessibilityService() {
     private var lastBackMs = 0L
     private var lastAdultCheckMs = 0L
     private var nsfwBlur: NsfwBlurController? = null
+    private var appLimit: AppLimitController? = null
 
     override fun onAccessibilityEvent(event: AccessibilityEvent?) {
         if (event == null) return
@@ -96,11 +97,66 @@ class AegisAccessibilityBlockerService : AccessibilityService() {
                 return
             }
 
+            // 4. Per-app daily limits (time and number of opens)
+            if (!blockedBySession) {
+                val limits = appLimit ?: AppLimitController(
+                    applicationContext,
+                    container.appLimitStore,
+                    container.appUsageTracker
+                ).also { appLimit = it }
+                if (limits.onForeground(packageName)) return
+            }
+
             container.foregroundAppMonitor.onAccessibilityEvent(packageName)
         }
     }
 
+    override fun onUnbind(intent: android.content.Intent?): Boolean {
+        postProtectionOffAlert()
+        return super.onUnbind(intent)
+    }
+
+    /** Tells the user when the accessibility service (all blocking) has been switched off. */
+    private fun postProtectionOffAlert() {
+        try {
+            val manager = getSystemService(android.app.NotificationManager::class.java) ?: return
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                manager.createNotificationChannel(
+                    android.app.NotificationChannel(
+                        ALERT_CHANNEL_ID,
+                        "Protection alerts",
+                        android.app.NotificationManager.IMPORTANCE_HIGH
+                    )
+                )
+            }
+            val open = android.app.PendingIntent.getActivity(
+                this,
+                0,
+                android.content.Intent(android.provider.Settings.ACTION_ACCESSIBILITY_SETTINGS)
+                    .addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK),
+                android.app.PendingIntent.FLAG_IMMUTABLE or android.app.PendingIntent.FLAG_UPDATE_CURRENT
+            )
+            val notification = androidx.core.app.NotificationCompat.Builder(this, ALERT_CHANNEL_ID)
+                .setSmallIcon(com.aegisfocus.app.R.drawable.ic_aegis_shield)
+                .setContentTitle("Aegis protection is off")
+                .setContentText("The accessibility service was turned off, so blocking and limits stopped. Tap to turn it back on.")
+                .setStyle(
+                    androidx.core.app.NotificationCompat.BigTextStyle()
+                        .bigText("The accessibility service was turned off, so blocking and limits stopped. Tap to turn it back on.")
+                )
+                .setContentIntent(open)
+                .setAutoCancel(true)
+                .setPriority(androidx.core.app.NotificationCompat.PRIORITY_HIGH)
+                .build()
+            manager.notify(ALERT_NOTIFICATION_ID, notification)
+        } catch (e: Exception) {
+            // notifications may be disabled; nothing else to do
+        }
+    }
+
     override fun onDestroy() {
+        appLimit?.release()
+        appLimit = null
         nsfwBlur?.release()
         nsfwBlur = null
         super.onDestroy()
@@ -116,5 +172,10 @@ class AegisAccessibilityBlockerService : AccessibilityService() {
         ServiceLocator.getContainer(applicationContext)
             .settingsRepository
             .refreshPermissionState()
+    }
+
+    companion object {
+        private const val ALERT_CHANNEL_ID = "aegis_protection_alerts"
+        private const val ALERT_NOTIFICATION_ID = 4101
     }
 }

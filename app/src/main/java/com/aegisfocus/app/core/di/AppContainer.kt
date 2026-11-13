@@ -54,6 +54,9 @@ class AppContainer(private val context: Context) {
     val websiteRuleDao by lazy { database.websiteRuleDao() }
 
     val productivityStore by lazy { com.aegisfocus.app.data.local.ProductivityStore(context) }
+    val appLimitStore by lazy { com.aegisfocus.app.data.local.AppLimitStore(context) }
+    val appUsageTracker by lazy { com.aegisfocus.app.engine.AppUsageTracker(context) }
+    val pinStore by lazy { com.aegisfocus.app.data.local.PinStore(context) }
     val habitStore by lazy { com.aegisfocus.app.data.local.HabitStore(context) }
     val mindfulGateStore by lazy { com.aegisfocus.app.data.local.MindfulGateStore(context) }
 
