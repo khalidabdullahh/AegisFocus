@@ -241,7 +241,9 @@ fun AegisNavHost(
                 val vm = androidx.lifecycle.viewmodel.compose.viewModel {
                     ProductivityViewModel(
                         store = container.productivityStore,
-                        appContext = appContext
+                        appContext = appContext,
+                        gateStore = container.mindfulGateStore,
+                        appDiscoveryRepository = container.appDiscoveryRepository
                     )
                 }
                 ProductivityScreen(
