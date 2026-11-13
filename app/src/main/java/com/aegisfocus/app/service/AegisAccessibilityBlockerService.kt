@@ -6,6 +6,11 @@ import com.aegisfocus.app.core.di.ServiceLocator
 
 class AegisAccessibilityBlockerService : AccessibilityService() {
 
+    private var lastGateLaunchMs = 0L
+    private var lastShortsCheckMs = 0L
+    private var lastBackMs = 0L
+    private var lastAdultCheckMs = 0L
+
     override fun onAccessibilityEvent(event: AccessibilityEvent?) {
         if (event == null) return
 
@@ -19,10 +24,33 @@ class AegisAccessibilityBlockerService : AccessibilityService() {
         val container = com.aegisfocus.app.core.di.ServiceLocator.getContainer(applicationContext)
 
         // 1. Surgical Shorts & Reels Blocker
-        if (container.settingsRepository.isShortsBlockerEnabled()) {
-            if (packageName.contains("youtube") || packageName.contains("instagram") || packageName.contains("facebook")) {
-                val root = rootInActiveWindow
-                if (root != null && com.aegisfocus.app.domain.blocker.ShortsBlockerEngine.isShortsOrReelsActive(packageName, root)) {
+        if (com.aegisfocus.app.domain.blocker.ShortsBlockerEngine.isSupportedPackage(packageName) &&
+            container.settingsRepository.isShortsBlockerEnabled()
+        ) {
+            val now = android.os.SystemClock.elapsedRealtime()
+            if (now - lastShortsCheckMs >= 250L && now - lastBackMs > 900L) {
+                lastShortsCheckMs = now
+                if (com.aegisfocus.app.domain.blocker.ShortsBlockerEngine
+                        .isShortsOrReelsActive(packageName, rootInActiveWindow)
+                ) {
+                    lastBackMs = now
+                    performGlobalAction(GLOBAL_ACTION_BACK)
+                    return
+                }
+            }
+        }
+
+        // 1b. Adult content second layer (browser address bar), complements the DNS filter
+        if (com.aegisfocus.app.domain.blocker.ShortsBlockerEngine.isBrowserPackage(packageName) &&
+            container.settingsRepository.isAdultContentBlockEnabled()
+        ) {
+            val now = android.os.SystemClock.elapsedRealtime()
+            if (now - lastAdultCheckMs >= 400L && now - lastBackMs > 900L) {
+                lastAdultCheckMs = now
+                if (com.aegisfocus.app.domain.blocker.AdultContentGuard
+                        .isAdultPageActive(packageName, rootInActiveWindow)
+                ) {
+                    lastBackMs = now
                     performGlobalAction(GLOBAL_ACTION_BACK)
                     return
                 }
@@ -31,6 +59,29 @@ class AegisAccessibilityBlockerService : AccessibilityService() {
 
         // 2. Full App Blocking Detection
         if (event.eventType == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
+            val blockedBySession = container.blockingRuleRepository
+                .isBlocked(packageName, applicationContext.packageName)
+
+            // 3. Mindful Gate (a focus-session block always takes priority)
+            if (!blockedBySession && container.mindfulGateStore.gateRequiredFor(packageName) != null) {
+                val now = android.os.SystemClock.elapsedRealtime()
+                if (now - lastGateLaunchMs > 1500L) {
+                    lastGateLaunchMs = now
+                    val gateIntent = android.content.Intent(
+                        applicationContext,
+                        com.aegisfocus.app.presentation.mindful.MindfulGateActivity::class.java
+                    ).apply {
+                        putExtra(
+                            com.aegisfocus.app.presentation.mindful.MindfulGateActivity.EXTRA_PACKAGE,
+                            packageName
+                        )
+                        addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK)
+                    }
+                    startActivity(gateIntent)
+                }
+                return
+            }
+
             container.foregroundAppMonitor.onAccessibilityEvent(packageName)
         }
     }

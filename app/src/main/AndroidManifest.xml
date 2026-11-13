@@ -64,6 +64,15 @@
             android:noHistory="true"
             android:theme="@style/Theme.AegisFocus.Intervention" />
 
+        <!-- Mindful Gate: self-written checklist required before a chosen app opens -->
+        <activity
+            android:name=".presentation.mindful.MindfulGateActivity"
+            android:exported="false"
+            android:excludeFromRecents="true"
+            android:launchMode="singleTask"
+            android:noHistory="true"
+            android:theme="@style/Theme.AegisFocus.Intervention" />
+
         <!-- Real-Time Foreground App Detection & Intervention Accessibility Service -->
         <service
             android:name=".service.AegisAccessibilityBlockerService"

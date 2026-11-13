@@ -2,6 +2,12 @@ package com.aegisfocus.app.presentation.productivity
 
 import android.content.Context
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.aegisfocus.app.data.local.MindfulGate
+import com.aegisfocus.app.data.local.MindfulGateStore
+import com.aegisfocus.app.domain.model.AppInfo
+import com.aegisfocus.app.domain.repository.AppDiscoveryRepository
+import kotlinx.coroutines.launch
 import com.aegisfocus.app.data.local.CleanStreakState
 import com.aegisfocus.app.data.local.ProductivityStore
 import com.aegisfocus.app.data.local.Reminder
@@ -12,12 +18,15 @@ import kotlinx.coroutines.flow.asStateFlow
 
 data class ProductivityUiState(
     val reminders: List<Reminder> = emptyList(),
-    val streak: CleanStreakState
+    val streak: CleanStreakState,
+    val gates: List<MindfulGate> = emptyList()
 )
 
 class ProductivityViewModel(
     private val store: ProductivityStore,
-    private val appContext: Context
+    private val appContext: Context,
+    private val gateStore: MindfulGateStore,
+    private val appDiscoveryRepository: AppDiscoveryRepository
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(load())
@@ -25,8 +34,39 @@ class ProductivityViewModel(
 
     private fun load() = ProductivityUiState(
         reminders = store.getReminders(),
-        streak = store.getCleanStreakState()
+        streak = store.getCleanStreakState(),
+        gates = gateStore.getGates().sortedBy { it.appName.lowercase() }
     )
+
+    private val _apps = MutableStateFlow<List<AppInfo>>(emptyList())
+    val apps: StateFlow<List<AppInfo>> = _apps.asStateFlow()
+
+    /** Loads launchable, non-system apps for the Mindful Gate app picker. */
+    fun loadApps() {
+        if (_apps.value.isNotEmpty()) return
+        viewModelScope.launch {
+            _apps.value = appDiscoveryRepository.loadInstalledApps()
+                .filter { !it.isSystemApp && it.packageName != appContext.packageName }
+                .sortedBy { it.appName.lowercase() }
+        }
+    }
+
+    // Mindful Gate
+
+    fun saveGate(gate: MindfulGate) {
+        gateStore.saveGate(gate)
+        refresh()
+    }
+
+    fun setGateEnabled(gate: MindfulGate, enabled: Boolean) {
+        gateStore.setEnabled(gate.packageName, enabled)
+        refresh()
+    }
+
+    fun deleteGate(gate: MindfulGate) {
+        gateStore.deleteGate(gate.packageName)
+        refresh()
+    }
 
     fun refresh() {
         _state.value = load()

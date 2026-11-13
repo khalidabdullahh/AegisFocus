@@ -66,6 +66,13 @@ import com.aegisfocus.app.core.theme.TextMuted
 import com.aegisfocus.app.core.theme.TextPrimary
 import com.aegisfocus.app.core.theme.TextSecondary
 import com.aegisfocus.app.data.local.Reminder
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.filled.Edit
+import com.aegisfocus.app.data.local.MindfulGate
+import com.aegisfocus.app.data.local.MindfulGateStore
+import com.aegisfocus.app.domain.model.AppInfo
 import java.time.format.TextStyle
 import java.util.Locale
 
@@ -94,6 +101,9 @@ fun ProductivityScreen(
     val state by viewModel.state.collectAsState()
     var showAddReminder by rememberSaveable { mutableStateOf(false) }
     var showStartOver by rememberSaveable { mutableStateOf(false) }
+    var showGateDialog by remember { mutableStateOf(false) }
+    var editingGate by remember { mutableStateOf<MindfulGate?>(null) }
+    val apps by viewModel.apps.collectAsState()
 
     LaunchedEffect(Unit) { viewModel.refresh() }
 
@@ -134,6 +144,55 @@ fun ProductivityScreen(
         }
 
         Spacer(Modifier.height(16.dp))
+
+        // Mindful Gate
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Column(Modifier.weight(1f)) {
+                Text("Mindful Gate", fontSize = 16.sp, fontWeight = FontWeight.Bold, color = TextPrimary)
+                Text("Tick your own reminders before an app opens", fontSize = 11.sp, color = TextSecondary)
+            }
+            AegisCompactButton(text = "Add", onClick = {
+                editingGate = null
+                viewModel.loadApps()
+                showGateDialog = true
+            })
+        }
+        Spacer(Modifier.height(8.dp))
+        if (state.gates.isEmpty()) {
+            Surface(
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(12.dp),
+                color = DeepSurface,
+                border = BorderStroke(1.dp, SubtleBorder)
+            ) {
+                Text(
+                    "No gates yet. Pick an app and write what you want to remember before using it.",
+                    modifier = Modifier.padding(14.dp),
+                    fontSize = 12.sp,
+                    color = TextSecondary
+                )
+            }
+        } else {
+            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                state.gates.forEach { gate ->
+                    GateRow(
+                        gate = gate,
+                        onToggle = { viewModel.setGateEnabled(gate, it) },
+                        onEdit = {
+                            editingGate = gate
+                            showGateDialog = true
+                        },
+                        onDelete = { viewModel.deleteGate(gate) }
+                    )
+                }
+            }
+        }
+
+        Spacer(Modifier.height(20.dp))
 
         // Reminders
         Row(
@@ -301,6 +360,18 @@ fun ProductivityScreen(
         Spacer(Modifier.height(32.dp))
     }
 
+    if (showGateDialog) {
+        GateDialog(
+            initial = editingGate,
+            apps = apps,
+            onDismiss = { showGateDialog = false },
+            onSave = { gate ->
+                viewModel.saveGate(gate)
+                showGateDialog = false
+            }
+        )
+    }
+
     if (showAddReminder) {
         AddReminderDialog(
             onDismiss = { showAddReminder = false },
@@ -446,4 +517,169 @@ private fun Stepper(value: Int, onChange: (Int) -> Unit, step: Int = 1) {
             Icon(Icons.Default.Remove, contentDescription = "Decrease", tint = CyanAccent, modifier = Modifier.size(18.dp))
         }
     }
+}
+
+@Composable
+private fun GateRow(
+    gate: MindfulGate,
+    onToggle: (Boolean) -> Unit,
+    onEdit: () -> Unit,
+    onDelete: () -> Unit
+) {
+    Surface(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(12.dp),
+        color = DeepSurface,
+        border = BorderStroke(1.dp, if (gate.enabled) CyanAccent.copy(alpha = 0.35f) else SubtleBorder)
+    ) {
+        Row(
+            modifier = Modifier.padding(start = 12.dp, end = 4.dp, top = 6.dp, bottom = 6.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            IconTile(Icons.Default.Lock, CyanAccent)
+            Column(Modifier.weight(1f).padding(start = 10.dp)) {
+                Text(gate.appName, fontSize = 14.sp, fontWeight = FontWeight.SemiBold, color = if (gate.enabled) TextPrimary else TextMuted, maxLines = 1)
+                Text(
+                    "${gate.items.size} reminder" + (if (gate.items.size == 1) "" else "s") + " · unlocked ${gate.graceMinutes} min",
+                    fontSize = 11.sp,
+                    color = TextSecondary
+                )
+            }
+            Switch(
+                checked = gate.enabled,
+                onCheckedChange = onToggle,
+                colors = SwitchDefaults.colors(
+                    checkedThumbColor = ObsidianBg,
+                    checkedTrackColor = EmeraldFocus,
+                    uncheckedThumbColor = TextMuted,
+                    uncheckedTrackColor = DeepSurface
+                )
+            )
+            IconButton(onClick = onEdit) {
+                Icon(Icons.Default.Edit, contentDescription = "Edit gate", tint = TextMuted, modifier = Modifier.size(18.dp))
+            }
+            IconButton(onClick = onDelete) {
+                Icon(Icons.Default.Delete, contentDescription = "Delete gate", tint = TextMuted, modifier = Modifier.size(18.dp))
+            }
+        }
+    }
+}
+
+@Composable
+private fun GateDialog(
+    initial: MindfulGate?,
+    apps: List<AppInfo>,
+    onDismiss: () -> Unit,
+    onSave: (MindfulGate) -> Unit
+) {
+    var selectedPkg by remember { mutableStateOf(initial?.packageName) }
+    var selectedName by remember { mutableStateOf(initial?.appName ?: "") }
+    var itemsText by remember { mutableStateOf(initial?.items?.joinToString("\n") ?: "") }
+    var grace by remember { mutableStateOf(initial?.graceMinutes ?: 5) }
+    var query by remember { mutableStateOf("") }
+
+    val parsedItems = itemsText.lines()
+        .map { it.trim() }
+        .filter { it.isNotEmpty() }
+        .take(MindfulGateStore.MAX_ITEMS)
+    val canSave = selectedPkg != null && parsedItems.isNotEmpty()
+    val filtered = apps.filter { query.isBlank() || it.appName.contains(query, ignoreCase = true) }
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        containerColor = DeepSurface,
+        title = { Text(if (initial == null) "New Mindful Gate" else "Edit Mindful Gate", color = TextPrimary, fontSize = 16.sp) },
+        text = {
+            Column(Modifier.verticalScroll(rememberScrollState())) {
+                if (initial == null) {
+                    Text(
+                        if (selectedPkg == null) "Choose an app" else "App: $selectedName",
+                        color = if (selectedPkg == null) TextSecondary else CyanAccent,
+                        fontSize = 12.sp
+                    )
+                    Spacer(Modifier.height(6.dp))
+                    OutlinedTextField(
+                        value = query,
+                        onValueChange = { query = it },
+                        label = { Text("Search apps", color = TextSecondary, fontSize = 12.sp) },
+                        singleLine = true,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                    Spacer(Modifier.height(6.dp))
+                    LazyColumn(modifier = Modifier.fillMaxWidth().height(150.dp)) {
+                        items(filtered, key = { it.packageName }) { app ->
+                            val isSel = app.packageName == selectedPkg
+                            Text(
+                                app.appName,
+                                fontSize = 14.sp,
+                                color = if (isSel) CyanAccent else TextPrimary,
+                                fontWeight = if (isSel) FontWeight.Bold else FontWeight.Normal,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .clickable {
+                                        selectedPkg = app.packageName
+                                        selectedName = app.appName
+                                    }
+                                    .padding(vertical = 9.dp, horizontal = 4.dp)
+                            )
+                        }
+                    }
+                    Spacer(Modifier.height(12.dp))
+                } else {
+                    Text("App: $selectedName", color = CyanAccent, fontSize = 13.sp)
+                    Spacer(Modifier.height(10.dp))
+                }
+
+                OutlinedTextField(
+                    value = itemsText,
+                    onValueChange = { itemsText = it.take(600) },
+                    label = { Text("Your reminders (one per line)", color = TextSecondary, fontSize = 12.sp) },
+                    minLines = 3,
+                    maxLines = 6,
+                    modifier = Modifier.fillMaxWidth()
+                )
+                Spacer(Modifier.height(12.dp))
+                Text("Stay unlocked after opening", color = TextSecondary, fontSize = 12.sp)
+                Spacer(Modifier.height(6.dp))
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    listOf(1, 5, 10, 15, 30).forEach { m ->
+                        val on = grace == m
+                        Surface(
+                            shape = RoundedCornerShape(10.dp),
+                            color = if (on) CyanAccent.copy(alpha = 0.2f) else ElevatedSurface,
+                            border = BorderStroke(1.dp, if (on) CyanAccent else SubtleBorder),
+                            modifier = Modifier.clickable { grace = m }
+                        ) {
+                            Text(
+                                "${m}m",
+                                fontSize = 12.sp,
+                                color = if (on) CyanAccent else TextPrimary,
+                                modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp)
+                            )
+                        }
+                    }
+                }
+            }
+        },
+        confirmButton = {
+            TextButton(
+                onClick = {
+                    val pkg = selectedPkg ?: return@TextButton
+                    onSave(
+                        MindfulGate(
+                            packageName = pkg,
+                            appName = selectedName,
+                            items = parsedItems,
+                            graceMinutes = grace,
+                            enabled = initial?.enabled ?: true
+                        )
+                    )
+                },
+                enabled = canSave
+            ) { Text("Save", color = if (canSave) CyanAccent else TextMuted) }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) { Text("Cancel", color = TextSecondary) }
+        }
+    )
 }
