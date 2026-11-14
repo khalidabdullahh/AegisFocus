@@ -12,6 +12,7 @@ class AegisAccessibilityBlockerService : AccessibilityService() {
     private var lastAdultCheckMs = 0L
     private var nsfwBlur: NsfwBlurController? = null
     private var appLimit: AppLimitController? = null
+    private var youtubeIntent: YouTubeIntentController? = null
 
     override fun onAccessibilityEvent(event: AccessibilityEvent?) {
         if (event == null) return
@@ -53,6 +54,13 @@ class AegisAccessibilityBlockerService : AccessibilityService() {
                     return
                 }
             }
+        }
+
+        // 1c. YouTube Intent Mode: only videos that match the user's own topics
+        if (packageName == "com.google.android.youtube" && container.intentStore.isEnabled()) {
+            val intentController = youtubeIntent ?: YouTubeIntentController(this, container.intentStore)
+                .also { youtubeIntent = it }
+            if (intentController.check(rootInActiveWindow)) return
         }
 
         // 1b. Adult content second layer (browser address bar), complements the DNS filter

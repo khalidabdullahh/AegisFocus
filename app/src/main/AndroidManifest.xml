@@ -64,6 +64,15 @@
             android:noHistory="true"
             android:theme="@style/Theme.AegisFocus.Intervention" />
 
+        <!-- YouTube Intent Mode: video does not match the user's topics -->
+        <activity
+            android:name=".presentation.intent.IntentBlockedActivity"
+            android:exported="false"
+            android:excludeFromRecents="true"
+            android:launchMode="singleTask"
+            android:noHistory="true"
+            android:theme="@style/Theme.AegisFocus.Intervention" />
+
         <!-- Per-app daily limit reached screen -->
         <activity
             android:name=".presentation.limits.LimitReachedActivity"

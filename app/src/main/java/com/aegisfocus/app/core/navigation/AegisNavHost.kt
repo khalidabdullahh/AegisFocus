@@ -245,7 +245,8 @@ fun AegisNavHost(
                         gateStore = container.mindfulGateStore,
                         appDiscoveryRepository = container.appDiscoveryRepository,
                         limitStore = container.appLimitStore,
-                        usageTracker = container.appUsageTracker
+                        usageTracker = container.appUsageTracker,
+                        intentStore = container.intentStore
                     )
                 }
                 com.aegisfocus.app.presentation.security.PinProtected(container.pinStore) {
