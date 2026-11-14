@@ -145,6 +145,17 @@ fun ProductivityScreen(
 
         Spacer(Modifier.height(16.dp))
 
+        // YouTube Intent Mode
+        val intentUi by viewModel.intent.collectAsState()
+        IntentSection(
+            intent = intentUi,
+            onToggle = { viewModel.setIntentEnabled(it) },
+            onSave = { t, c, b -> viewModel.saveIntent(t, c, b) },
+            onRefresh = { viewModel.refreshIntent() }
+        )
+
+        Spacer(Modifier.height(20.dp))
+
         // Mindful Gate
         Row(
             modifier = Modifier.fillMaxWidth(),

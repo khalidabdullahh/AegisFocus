@@ -39,8 +39,35 @@ class ProductivityViewModel(
     private val gateStore: MindfulGateStore,
     private val appDiscoveryRepository: AppDiscoveryRepository,
     private val limitStore: AppLimitStore,
-    private val usageTracker: AppUsageTracker
+    private val usageTracker: AppUsageTracker,
+    private val intentStore: com.aegisfocus.app.data.local.IntentStore
 ) : ViewModel() {
+
+    private fun buildIntent() = IntentUi(
+        enabled = intentStore.isEnabled(),
+        topicsText = intentStore.topicsText(),
+        channelsText = intentStore.channelsText(),
+        blockedText = intentStore.blockedText(),
+        lastCheck = intentStore.lastCheck(),
+        exceptions = intentStore.exceptionLog()
+    )
+
+    private val _intent = MutableStateFlow(buildIntent())
+    val intent: StateFlow<IntentUi> = _intent.asStateFlow()
+
+    fun refreshIntent() {
+        _intent.value = buildIntent()
+    }
+
+    fun setIntentEnabled(enabled: Boolean) {
+        intentStore.setEnabled(enabled)
+        refreshIntent()
+    }
+
+    fun saveIntent(topics: String, channels: String, blocked: String) {
+        intentStore.save(topics, channels, blocked)
+        refreshIntent()
+    }
 
     private val _limits = MutableStateFlow<List<AppLimitUi>>(emptyList())
     val limits: StateFlow<List<AppLimitUi>> = _limits.asStateFlow()
