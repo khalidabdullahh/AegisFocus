@@ -11,7 +11,7 @@ import androidx.compose.ui.graphics.Color
  * Every colour name used across the app (ObsidianBg, TextPrimary, CyanAccent ...) is a property that
  * returns the dark or light value depending on [AegisPalette.isDark]. [AegisFocusTheme] sets that flag,
  * and because it is Compose state, screens redraw when the theme is switched.
- * The fixed Dark*/Light* values below are used where a colour must not change (for example Material schemes).
+ * The fixed DarkXxx and LightXxx values below are used where a colour must not change (for example Material schemes).
  */
 object AegisPalette {
     var isDark by mutableStateOf(true)
