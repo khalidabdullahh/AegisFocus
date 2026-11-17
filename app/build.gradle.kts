@@ -13,8 +13,8 @@ android {
         applicationId = "com.aegisfocus.app"
         minSdk = 26
         targetSdk = 35
-        versionCode = 11
-        versionName = "1.9.1"
+        versionCode = 12
+        versionName = "1.9.2"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -50,7 +50,8 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
+            isShrinkResources = true
             signingConfig = signingConfigs.getByName("release").takeIf { it.storeFile != null }
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
@@ -91,7 +92,6 @@ android {
 dependencies {
     // Core Android & Lifecycle
     implementation("androidx.core:core-ktx:1.15.0")
-    implementation("org.tensorflow:tensorflow-lite:2.14.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.7")
     implementation("androidx.lifecycle:lifecycle-runtime-compose:2.8.7")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.7")

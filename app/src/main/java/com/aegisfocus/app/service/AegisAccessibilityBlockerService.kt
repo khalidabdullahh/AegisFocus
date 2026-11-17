@@ -10,7 +10,6 @@ class AegisAccessibilityBlockerService : AccessibilityService() {
     private var lastShortsCheckMs = 0L
     private var lastBackMs = 0L
     private var lastAdultCheckMs = 0L
-    private var nsfwBlur: NsfwBlurController? = null
     private var appLimit: AppLimitController? = null
     private var youtubeIntent: YouTubeIntentController? = null
 
@@ -19,19 +18,6 @@ class AegisAccessibilityBlockerService : AccessibilityService() {
 
         val packageName = event.packageName?.toString() ?: return
         val className = event.className?.toString() ?: ""
-
-        // 0. 18+ visual blur: track which app is in the foreground
-        if (event.eventType == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED &&
-            !(className.contains("InputMethod") || className.contains("VolumeDialog"))
-        ) {
-            val settings = ServiceLocator.getContainer(applicationContext).settingsRepository
-            if (settings.isNsfwBlurEnabled() || nsfwBlur != null) {
-                val blur = nsfwBlur ?: NsfwBlurController(this) {
-                    ServiceLocator.getContainer(applicationContext).settingsRepository.isNsfwBlurEnabled()
-                }.also { nsfwBlur = it }
-                blur.onForegroundChanged(packageName)
-            }
-        }
 
         // Avoid triggering self or system transient system UI dialogs
         if (packageName == applicationContext.packageName) return
@@ -165,8 +151,6 @@ class AegisAccessibilityBlockerService : AccessibilityService() {
     override fun onDestroy() {
         appLimit?.release()
         appLimit = null
-        nsfwBlur?.release()
-        nsfwBlur = null
         super.onDestroy()
     }
 
