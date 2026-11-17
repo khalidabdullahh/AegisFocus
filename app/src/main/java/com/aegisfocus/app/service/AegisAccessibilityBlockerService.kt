@@ -10,6 +10,8 @@ class AegisAccessibilityBlockerService : AccessibilityService() {
     private var lastShortsCheckMs = 0L
     private var lastBackMs = 0L
     private var lastAdultCheckMs = 0L
+    private var lastSettingsGuardMs = 0L
+    private var lastSettingsToastMs = 0L
     private var appLimit: AppLimitController? = null
     private var youtubeIntent: YouTubeIntentController? = null
 
@@ -66,6 +68,30 @@ class AegisAccessibilityBlockerService : AccessibilityService() {
             }
         }
 
+        // 1d. Strict Mode keeps Android Settings usable (Wi-Fi, display, sound) but backs out of
+        // any screen that shows Aegis Focus: Accessibility, Device admin, App info, Apps list.
+        if (packageName == com.aegisfocus.app.domain.blocker.SettingsTamperGuard.SETTINGS_PACKAGE &&
+            container.blockingRuleRepository.isStrictGuarded()
+        ) {
+            val now = android.os.SystemClock.elapsedRealtime()
+            if (now - lastSettingsGuardMs >= 300L) {
+                lastSettingsGuardMs = now
+                val texts = readScreenTexts(rootInActiveWindow)
+                if (com.aegisfocus.app.domain.blocker.SettingsTamperGuard.isTamperScreen(texts)) {
+                    performGlobalAction(GLOBAL_ACTION_BACK)
+                    if (now - lastSettingsToastMs > 2500L) {
+                        lastSettingsToastMs = now
+                        android.widget.Toast.makeText(
+                            applicationContext,
+                            "Strict Mode: this screen is protected until the session ends",
+                            android.widget.Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                    return
+                }
+            }
+        }
+
         // 2. Full App Blocking Detection
         if (event.eventType == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
             val blockedBySession = container.blockingRuleRepository
@@ -103,6 +129,25 @@ class AegisAccessibilityBlockerService : AccessibilityService() {
 
             container.foregroundAppMonitor.onAccessibilityEvent(packageName)
         }
+    }
+
+    /** Visible text and descriptions of the current window (capped so a big screen stays cheap). */
+    private fun readScreenTexts(root: android.view.accessibility.AccessibilityNodeInfo?): List<String> {
+        if (root == null) return emptyList()
+        val out = ArrayList<String>()
+        val queue = ArrayDeque<android.view.accessibility.AccessibilityNodeInfo>()
+        queue.add(root)
+        var visited = 0
+        while (queue.isNotEmpty() && visited < 500) {
+            val node = queue.removeFirst()
+            visited++
+            node.text?.toString()?.takeIf { it.isNotBlank() }?.let { out.add(it) }
+            node.contentDescription?.toString()?.takeIf { it.isNotBlank() }?.let { out.add(it) }
+            for (i in 0 until node.childCount) {
+                node.getChild(i)?.let { queue.add(it) }
+            }
+        }
+        return out
     }
 
     override fun onUnbind(intent: android.content.Intent?): Boolean {

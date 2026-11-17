@@ -17,8 +17,8 @@ class BlockedAppMatcher {
         "com.android.emergency"
     )
 
+    // Android Settings is not listed here: SettingsTamperGuard closes only its sensitive screens.
     private val antiTamperProtectedPackages = setOf(
-        "com.android.settings",
         "com.google.android.packageinstaller",
         "com.android.packageinstaller"
     )
@@ -34,7 +34,7 @@ class BlockedAppMatcher {
         if (packageName == myPackageName) return false
         if (systemWhitelistedPackages.contains(packageName)) return false
 
-        // During Strict Mode, guard system settings and package installer from tampering
+        // During Strict Mode, guard the package installer (uninstall dialog) from tampering
         if (isStrictModeActive && antiTamperProtectedPackages.contains(packageName)) {
             return true
         }
