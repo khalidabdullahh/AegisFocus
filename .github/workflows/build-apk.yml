@@ -86,6 +86,17 @@ jobs:
           set -o pipefail
           ./gradlew assembleRelease --no-daemon --stacktrace 2>&1 | tee build.log
 
+      - name: Surface test failures (temporary debug)
+        if: always()
+        run: |
+          python3 - <<'PY'
+          import glob, re
+          for f in glob.glob('app/build/test-results/**/*.xml', recursive=True):
+              t = open(f, encoding='utf-8', errors='ignore').read()
+              for m in re.finditer(r'<testcase name="([^"]+)" classname="([^"]+)"[^>]*>\s*<failure message="([^"]{0,300})', t):
+                  print(f"::error::TEST FAILED {m.group(2)}.{m.group(1)}: {m.group(3)}")
+          PY
+
       - name: Surface build errors (temporary debug)
         if: failure()
         run: |
