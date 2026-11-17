@@ -76,15 +76,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.aegisfocus.app.R
 import com.aegisfocus.app.core.components.SectionHeader
-import com.aegisfocus.app.core.theme.CyanAccent
-import com.aegisfocus.app.core.theme.DeepSurface
-import com.aegisfocus.app.core.theme.EmeraldFocus
-import com.aegisfocus.app.core.theme.ElevatedSurface
-import com.aegisfocus.app.core.theme.ObsidianBg
-import com.aegisfocus.app.core.theme.SubtleBorder
-import com.aegisfocus.app.core.theme.TextMuted
-import com.aegisfocus.app.core.theme.TextPrimary
-import com.aegisfocus.app.core.theme.TextSecondary
+import com.aegisfocus.app.core.theme.DarkCyanAccent
+import com.aegisfocus.app.core.theme.DarkDeepSurface
+import com.aegisfocus.app.core.theme.DarkEmeraldFocus
+import com.aegisfocus.app.core.theme.DarkElevatedSurface
+import com.aegisfocus.app.core.theme.DarkObsidianBg
+import com.aegisfocus.app.core.theme.DarkSubtleBorder
+import com.aegisfocus.app.core.theme.DarkTextMuted
+import com.aegisfocus.app.core.theme.DarkTextPrimary
+import com.aegisfocus.app.core.theme.DarkTextSecondary
 import com.aegisfocus.app.domain.campfire.CampfireMode
 import com.aegisfocus.app.domain.campfire.CampfirePresets
 import com.aegisfocus.app.domain.campfire.CampfireSound
@@ -102,12 +102,12 @@ private fun CampfireSound.icon(): ImageVector = when (this) {
 }
 
 /** Cards are slightly see-through so the mode background shows behind them. */
-private val Glass = DeepSurface.copy(alpha = 0.76f)
+private val Glass = DarkDeepSurface.copy(alpha = 0.76f)
 
 private fun CampfireMode.accentColor(): Color = when (this) {
     CampfireMode.SLEEP -> Color(0xFFF2A65A)   // campfire amber
     CampfireMode.STUDY -> Color(0xFFE9C46A)   // highlighter gold
-    CampfireMode.FOCUS -> EmeraldFocus        // desk-lamp green
+    CampfireMode.FOCUS -> DarkEmeraldFocus        // desk-lamp green
 }
 
 private fun CampfireMode.backgroundRes(): Int = when (this) {
@@ -215,7 +215,7 @@ fun CampfireScreen(
     var showSaveDialog by remember { mutableStateOf(false) }
     val accent by animateColorAsState(state.mode.accentColor(), tween(450), label = "accent")
 
-    Box(modifier = Modifier.fillMaxSize().background(ObsidianBg)) {
+    Box(modifier = Modifier.fillMaxSize().background(DarkObsidianBg)) {
     CampfireBackground(mode = state.mode, isPlaying = state.isPlaying)
 
     LazyColumn(
@@ -226,11 +226,11 @@ fun CampfireScreen(
         // ----- Header -----
         item {
             Column {
-                Text("Campfire", fontSize = 26.sp, fontWeight = FontWeight.Bold, color = TextPrimary)
+                Text("Campfire", fontSize = 26.sp, fontWeight = FontWeight.Bold, color = DarkTextPrimary)
                 Text(
                     "Layer calming sounds for deep sleep or a calm study session.",
                     fontSize = 13.sp,
-                    color = TextSecondary
+                    color = DarkTextSecondary
                 )
             }
         }
@@ -242,7 +242,7 @@ fun CampfireScreen(
                     .fillMaxWidth()
                     .clip(RoundedCornerShape(14.dp))
                     .background(Glass)
-                    .border(BorderStroke(1.dp, SubtleBorder), RoundedCornerShape(14.dp))
+                    .border(BorderStroke(1.dp, DarkSubtleBorder), RoundedCornerShape(14.dp))
                     .padding(4.dp),
                 horizontalArrangement = Arrangement.spacedBy(4.dp)
             ) {
@@ -252,7 +252,7 @@ fun CampfireScreen(
                         modifier = Modifier
                             .weight(1f)
                             .clip(RoundedCornerShape(10.dp))
-                            .background(if (selected) ElevatedSurface else Color.Transparent)
+                            .background(if (selected) DarkElevatedSurface else Color.Transparent)
                             .clickable { viewModel.selectMode(mode) }
                             .padding(vertical = 10.dp),
                         horizontalArrangement = Arrangement.Center,
@@ -261,7 +261,7 @@ fun CampfireScreen(
                         Icon(
                             imageVector = mode.icon(),
                             contentDescription = null,
-                            tint = if (selected) accent else TextMuted,
+                            tint = if (selected) accent else DarkTextMuted,
                             modifier = Modifier.size(16.dp)
                         )
                         Spacer(Modifier.width(5.dp))
@@ -271,7 +271,7 @@ fun CampfireScreen(
                             overflow = TextOverflow.Ellipsis,
                             fontSize = 12.5.sp,
                             fontWeight = if (selected) FontWeight.Bold else FontWeight.Medium,
-                            color = if (selected) TextPrimary else TextMuted
+                            color = if (selected) DarkTextPrimary else DarkTextMuted
                         )
                     }
                 }
@@ -286,7 +286,7 @@ fun CampfireScreen(
                     .fillMaxWidth()
                     .clip(RoundedCornerShape(20.dp))
                     .background(Glass)
-                    .border(BorderStroke(1.dp, SubtleBorder), RoundedCornerShape(20.dp))
+                    .border(BorderStroke(1.dp, DarkSubtleBorder), RoundedCornerShape(20.dp))
                     .padding(20.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
@@ -294,14 +294,14 @@ fun CampfireScreen(
                     modifier = Modifier
                         .size(76.dp)
                         .clip(CircleShape)
-                        .background(if (active > 0) accent else SubtleBorder)
+                        .background(if (active > 0) accent else DarkSubtleBorder)
                         .clickable(enabled = active > 0) { viewModel.togglePlay() },
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(
                         imageVector = if (state.isPlaying) Icons.Filled.Pause else Icons.Filled.PlayArrow,
                         contentDescription = if (state.isPlaying) "Pause" else "Play",
-                        tint = ObsidianBg,
+                        tint = DarkObsidianBg,
                         modifier = Modifier.size(40.dp)
                     )
                 }
@@ -313,7 +313,7 @@ fun CampfireScreen(
                         else -> "Paused • $active ${if (active == 1) "sound" else "sounds"} ready"
                     },
                     fontSize = 14.sp,
-                    color = TextSecondary
+                    color = DarkTextSecondary
                 )
                 if (state.timerRemainingMs > 0) {
                     Spacer(Modifier.size(4.dp))
@@ -362,7 +362,7 @@ fun CampfireScreen(
                                 .width(158.dp)
                                 .clip(RoundedCornerShape(16.dp))
                                 .background(Glass)
-                                .border(BorderStroke(1.dp, SubtleBorder), RoundedCornerShape(16.dp))
+                                .border(BorderStroke(1.dp, DarkSubtleBorder), RoundedCornerShape(16.dp))
                                 .clickable {
                                     if (locked) onNavigateToPaywall() else viewModel.applyPreset(preset)
                                 }
@@ -372,7 +372,7 @@ fun CampfireScreen(
                                 Icon(
                                     imageVector = if (locked) Icons.Filled.Lock else Icons.Filled.LocalFireDepartment,
                                     contentDescription = null,
-                                    tint = if (locked) TextMuted else accent,
+                                    tint = if (locked) DarkTextMuted else accent,
                                     modifier = Modifier.size(16.dp)
                                 )
                                 Spacer(Modifier.width(6.dp))
@@ -380,12 +380,12 @@ fun CampfireScreen(
                                     preset.name,
                                     fontSize = 14.sp,
                                     fontWeight = FontWeight.Bold,
-                                    color = TextPrimary,
+                                    color = DarkTextPrimary,
                                     maxLines = 1
                                 )
                             }
                             Spacer(Modifier.size(4.dp))
-                            Text(preset.tagline, fontSize = 12.sp, color = TextMuted, maxLines = 2)
+                            Text(preset.tagline, fontSize = 12.sp, color = DarkTextMuted, maxLines = 2)
                         }
                     }
                 }
@@ -402,7 +402,7 @@ fun CampfireScreen(
                     .fillMaxWidth()
                     .clip(RoundedCornerShape(14.dp))
                     .background(Glass)
-                    .border(BorderStroke(1.dp, SubtleBorder), RoundedCornerShape(14.dp))
+                    .border(BorderStroke(1.dp, DarkSubtleBorder), RoundedCornerShape(14.dp))
                     .then(if (locked) Modifier.clickable { onNavigateToPaywall() } else Modifier)
                     .padding(horizontal = 14.dp, vertical = 6.dp),
                 verticalAlignment = Alignment.CenterVertically
@@ -410,14 +410,14 @@ fun CampfireScreen(
                 Icon(
                     imageVector = sound.icon(),
                     contentDescription = null,
-                    tint = if (level > 0f) accent else TextMuted,
+                    tint = if (level > 0f) accent else DarkTextMuted,
                     modifier = Modifier.size(22.dp)
                 )
                 Spacer(Modifier.width(12.dp))
                 Column(modifier = Modifier.weight(1f)) {
-                    Text(sound.label, fontSize = 14.sp, fontWeight = FontWeight.Medium, color = TextPrimary)
+                    Text(sound.label, fontSize = 14.sp, fontWeight = FontWeight.Medium, color = DarkTextPrimary)
                     if (locked) {
-                        Text("Pro sound", fontSize = 12.sp, color = TextMuted)
+                        Text("Pro sound", fontSize = 12.sp, color = DarkTextMuted)
                     } else {
                         Slider(
                             value = level,
@@ -427,13 +427,13 @@ fun CampfireScreen(
                             colors = SliderDefaults.colors(
                                 thumbColor = accent,
                                 activeTrackColor = accent,
-                                inactiveTrackColor = SubtleBorder
+                                inactiveTrackColor = DarkSubtleBorder
                             )
                         )
                     }
                 }
                 if (locked) {
-                    Icon(Icons.Filled.Lock, contentDescription = "Pro", tint = TextMuted, modifier = Modifier.size(18.dp))
+                    Icon(Icons.Filled.Lock, contentDescription = "Pro", tint = DarkTextMuted, modifier = Modifier.size(18.dp))
                 }
             }
         }
@@ -453,7 +453,7 @@ fun CampfireScreen(
                     Text(
                         "Dial in a mix you love, then tap Save current.",
                         fontSize = 13.sp,
-                        color = TextMuted
+                        color = DarkTextMuted
                     )
                 } else {
                     state.savedMixes.forEach { mix ->
@@ -463,23 +463,23 @@ fun CampfireScreen(
                                 .padding(bottom = 8.dp)
                                 .clip(RoundedCornerShape(12.dp))
                                 .background(Glass)
-                                .border(BorderStroke(1.dp, SubtleBorder), RoundedCornerShape(12.dp))
+                                .border(BorderStroke(1.dp, DarkSubtleBorder), RoundedCornerShape(12.dp))
                                 .clickable { viewModel.applySaved(mix) }
                                 .padding(horizontal = 14.dp, vertical = 12.dp),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Column(modifier = Modifier.weight(1f)) {
-                                Text(mix.name, fontSize = 14.sp, fontWeight = FontWeight.SemiBold, color = TextPrimary)
+                                Text(mix.name, fontSize = 14.sp, fontWeight = FontWeight.SemiBold, color = DarkTextPrimary)
                                 Text(
                                     "${mix.mode.label} • ${mix.levels.size} sounds",
                                     fontSize = 12.sp,
-                                    color = TextMuted
+                                    color = DarkTextMuted
                                 )
                             }
                             Icon(
                                 Icons.Filled.Close,
                                 contentDescription = "Delete mix",
-                                tint = TextMuted,
+                                tint = DarkTextMuted,
                                 modifier = Modifier
                                     .size(28.dp)
                                     .clip(CircleShape)
@@ -499,8 +499,8 @@ fun CampfireScreen(
         var name by remember { mutableStateOf("") }
         AlertDialog(
             onDismissRequest = { showSaveDialog = false },
-            containerColor = DeepSurface,
-            title = { Text("Name your mix", color = TextPrimary) },
+            containerColor = DarkDeepSurface,
+            title = { Text("Name your mix", color = DarkTextPrimary) },
             text = {
                 OutlinedTextField(
                     value = name,
@@ -513,10 +513,10 @@ fun CampfireScreen(
                 TextButton(onClick = {
                     viewModel.saveCurrentMix(name)
                     showSaveDialog = false
-                }) { Text("Save", color = CyanAccent) }
+                }) { Text("Save", color = DarkCyanAccent) }
             },
             dismissButton = {
-                TextButton(onClick = { showSaveDialog = false }) { Text("Cancel", color = TextMuted) }
+                TextButton(onClick = { showSaveDialog = false }) { Text("Cancel", color = DarkTextMuted) }
             }
         )
     }
@@ -528,11 +528,11 @@ private fun Chip(label: String, tint: Color, highlight: Boolean = false, onClick
         text = label,
         fontSize = 13.sp,
         fontWeight = FontWeight.Medium,
-        color = if (highlight) tint else TextPrimary,
+        color = if (highlight) tint else DarkTextPrimary,
         modifier = Modifier
             .clip(RoundedCornerShape(50))
             .background(Glass)
-            .border(BorderStroke(1.dp, if (highlight) tint else SubtleBorder), RoundedCornerShape(50))
+            .border(BorderStroke(1.dp, if (highlight) tint else DarkSubtleBorder), RoundedCornerShape(50))
             .clickable(onClick = onClick)
             .padding(horizontal = 16.dp, vertical = 9.dp)
     )

@@ -18,51 +18,53 @@ import androidx.core.view.WindowCompat
 const val UI_SCALE = 0.88f
 
 /** Overall text scale relative to system default. */
-const val TEXT_SCALE = 0.93f
+const val TEXT_SCALE = 1.0f
 
 private val DarkColorScheme = darkColorScheme(
-    primary = CyanAccent,
-    onPrimary = ObsidianBg,
-    primaryContainer = CyanAccentMuted,
-    onPrimaryContainer = TextPrimary,
-    secondary = IndigoAccent,
-    onSecondary = TextPrimary,
-    tertiary = EmeraldFocus,
-    onTertiary = ObsidianBg,
-    background = ObsidianBg,
-    onBackground = TextPrimary,
-    surface = DeepSurface,
-    onSurface = TextPrimary,
-    surfaceVariant = ElevatedSurface,
-    onSurfaceVariant = TextSecondary,
-    outline = SubtleBorder,
-    error = AlertStrict,
-    onError = TextPrimary
+    primary = DarkCyanAccent,
+    onPrimary = DarkObsidianBg,
+    primaryContainer = DarkCyanAccentMuted,
+    onPrimaryContainer = DarkTextPrimary,
+    secondary = DarkIndigoAccent,
+    onSecondary = DarkTextPrimary,
+    tertiary = DarkEmeraldFocus,
+    onTertiary = DarkObsidianBg,
+    background = DarkObsidianBg,
+    onBackground = DarkTextPrimary,
+    surface = DarkDeepSurface,
+    onSurface = DarkTextPrimary,
+    surfaceVariant = DarkElevatedSurface,
+    onSurfaceVariant = DarkTextSecondary,
+    outline = DarkSubtleBorder,
+    error = DarkAlertStrict,
+    onError = DarkTextPrimary
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary = CyanAccentMuted,
-    onPrimary = LightSurface,
-    secondary = IndigoAccent,
-    onSecondary = LightSurface,
-    tertiary = EmeraldFocus,
-    onTertiary = LightSurface,
-    background = LightBg,
+    primary = LightCyanAccent,
+    onPrimary = LightDeepSurface,
+    secondary = LightIndigoAccent,
+    onSecondary = LightDeepSurface,
+    tertiary = LightEmeraldFocus,
+    onTertiary = LightDeepSurface,
+    background = LightObsidianBg,
     onBackground = LightTextPrimary,
-    surface = LightSurface,
+    surface = LightDeepSurface,
     onSurface = LightTextPrimary,
     surfaceVariant = LightElevatedSurface,
     onSurfaceVariant = LightTextSecondary,
-    outline = LightBorder,
-    error = AlertStrict,
-    onError = LightSurface
+    outline = LightSubtleBorder,
+    error = LightAlertStrict,
+    onError = LightDeepSurface
 )
 
 @Composable
 fun AegisFocusTheme(
-    darkTheme: Boolean = true, // Dark mode is primary experience
+    darkTheme: Boolean = rememberAegisDarkTheme(),
     content: @Composable () -> Unit
 ) {
+    // Every colour name in the app reads this flag, so set it before anything is drawn
+    if (AegisPalette.isDark != darkTheme) AegisPalette.isDark = darkTheme
     val colorScheme = if (darkTheme) DarkColorScheme else LightColorScheme
     val view = LocalView.current
     if (!view.isInEditMode) {

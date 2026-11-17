@@ -66,7 +66,7 @@ class BlockInterventionActivity : ComponentActivity() {
         }
 
         setContent {
-            AegisFocusTheme(darkTheme = true) {
+            AegisFocusTheme() {
                 BlockInterventionScreen(
                     appName = appName,
                     sessionName = sessionName,

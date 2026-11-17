@@ -42,7 +42,7 @@ class LimitReachedActivity : ComponentActivity() {
         })
 
         setContent {
-            AegisFocusTheme(darkTheme = true) {
+            AegisFocusTheme() {
                 Column(
                     modifier = Modifier
                         .fillMaxSize()

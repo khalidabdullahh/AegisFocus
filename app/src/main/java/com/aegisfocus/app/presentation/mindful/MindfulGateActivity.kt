@@ -70,7 +70,7 @@ class MindfulGateActivity : ComponentActivity() {
         })
 
         setContent {
-            AegisFocusTheme(darkTheme = true) {
+            AegisFocusTheme() {
                 MindfulGateScreen(
                     appName = gate.appName,
                     items = gate.items,

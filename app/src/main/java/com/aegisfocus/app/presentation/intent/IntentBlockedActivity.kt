@@ -52,7 +52,7 @@ class IntentBlockedActivity : ComponentActivity() {
         })
 
         setContent {
-            AegisFocusTheme(darkTheme = true) {
+            AegisFocusTheme() {
                 var asking by remember { mutableStateOf(false) }
                 var why by remember { mutableStateOf("") }
 

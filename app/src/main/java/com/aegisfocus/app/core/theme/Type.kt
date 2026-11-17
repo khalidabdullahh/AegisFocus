@@ -2,10 +2,12 @@ package com.aegisfocus.app.core.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.compose.ui.unit.sp
+import com.aegisfocus.app.R
 
 /**
  * Aegis Focus Typography System — iOS-inspired clean hierarchy with robust bilingual
@@ -16,72 +18,79 @@ private val defaultLineHeightStyle = LineHeightStyle(
     trim = LineHeightStyle.Trim.None
 )
 
+/** Josefin Sans (with Bangla letters from Hind Siliguri) for all normal text. */
+val AegisBodyFamily = FontFamily(
+    Font(R.font.aegis_body_400, FontWeight.Normal),
+    Font(R.font.aegis_body_500, FontWeight.Medium),
+    Font(R.font.aegis_body_600, FontWeight.SemiBold),
+    Font(R.font.aegis_body_700, FontWeight.Bold)
+)
+
+/** Cabin Sketch (with Bangla letters) for titles and big numbers. Use only at 18sp and larger. */
+val AegisTitleFamily = FontFamily(
+    Font(R.font.aegis_title_regular, FontWeight.Normal),
+    Font(R.font.aegis_title_bold, FontWeight.Bold)
+)
+
 val AegisTypography = Typography(
     displayLarge = TextStyle(
-        fontFamily = FontFamily.SansSerif,
+        fontFamily = AegisTitleFamily,
         fontWeight = FontWeight.Bold,
         fontSize = 36.sp,
         lineHeight = 44.sp,
         letterSpacing = (-0.8).sp,
         lineHeightStyle = defaultLineHeightStyle,
-        color = TextPrimary
     ),
     displayMedium = TextStyle(
-        fontFamily = FontFamily.SansSerif,
+        fontFamily = AegisTitleFamily,
         fontWeight = FontWeight.Bold,
         fontSize = 28.sp,
         lineHeight = 36.sp,
         letterSpacing = (-0.5).sp,
         lineHeightStyle = defaultLineHeightStyle,
-        color = TextPrimary
     ),
     headlineLarge = TextStyle(
-        fontFamily = FontFamily.SansSerif,
+        fontFamily = AegisTitleFamily,
         fontWeight = FontWeight.SemiBold,
         fontSize = 22.sp,
         lineHeight = 30.sp,
         letterSpacing = (-0.3).sp,
         lineHeightStyle = defaultLineHeightStyle,
-        color = TextPrimary
     ),
     headlineMedium = TextStyle(
-        fontFamily = FontFamily.SansSerif,
+        fontFamily = AegisTitleFamily,
         fontWeight = FontWeight.SemiBold,
         fontSize = 18.sp,
         lineHeight = 26.sp,
         letterSpacing = (-0.1).sp,
         lineHeightStyle = defaultLineHeightStyle,
-        color = TextPrimary
     ),
     titleLarge = TextStyle(
-        fontFamily = FontFamily.SansSerif,
+        fontFamily = AegisBodyFamily,
         fontWeight = FontWeight.SemiBold,
         fontSize = 16.sp,
         lineHeight = 22.sp,
         letterSpacing = 0.sp,
         lineHeightStyle = defaultLineHeightStyle,
-        color = TextPrimary
     ),
     titleMedium = TextStyle(
-        fontFamily = FontFamily.SansSerif,
+        fontFamily = AegisBodyFamily,
         fontWeight = FontWeight.Medium,
         fontSize = 14.sp,
         lineHeight = 20.sp,
         letterSpacing = 0.1.sp,
         lineHeightStyle = defaultLineHeightStyle,
-        color = TextPrimary
     ),
     bodyLarge = TextStyle(
-        fontFamily = FontFamily.SansSerif,
+        fontFamily = AegisBodyFamily,
         fontWeight = FontWeight.Normal,
         fontSize = 14.sp,
         lineHeight = 21.sp,
         letterSpacing = 0.15.sp,
         lineHeightStyle = defaultLineHeightStyle,
-        color = TextPrimary
     ),
     bodyMedium = TextStyle(
-        fontFamily = FontFamily.SansSerif,
+        fontFamily = AegisBodyFamily,
         fontWeight = FontWeight.Normal,
         fontSize = 13.sp,
         lineHeight = 19.sp,
@@ -90,7 +99,7 @@ val AegisTypography = Typography(
         color = TextSecondary
     ),
     bodySmall = TextStyle(
-        fontFamily = FontFamily.SansSerif,
+        fontFamily = AegisBodyFamily,
         fontWeight = FontWeight.Normal,
         fontSize = 11.sp,
         lineHeight = 16.sp,
@@ -99,16 +108,15 @@ val AegisTypography = Typography(
         color = TextMuted
     ),
     labelLarge = TextStyle(
-        fontFamily = FontFamily.SansSerif,
+        fontFamily = AegisBodyFamily,
         fontWeight = FontWeight.SemiBold,
         fontSize = 13.sp,
         lineHeight = 18.sp,
         letterSpacing = 0.3.sp,
         lineHeightStyle = defaultLineHeightStyle,
-        color = TextPrimary
     ),
     labelMedium = TextStyle(
-        fontFamily = FontFamily.SansSerif,
+        fontFamily = AegisBodyFamily,
         fontWeight = FontWeight.Medium,
         fontSize = 11.sp,
         lineHeight = 15.sp,
