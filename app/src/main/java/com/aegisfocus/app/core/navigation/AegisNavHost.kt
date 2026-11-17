@@ -45,6 +45,8 @@ import com.aegisfocus.app.core.theme.SubtleBorder
 import com.aegisfocus.app.core.theme.TextMuted
 import com.aegisfocus.app.presentation.apps.AppsScreen
 import com.aegisfocus.app.presentation.apps.AppsViewModel
+import com.aegisfocus.app.presentation.campfire.CampfireScreen
+import com.aegisfocus.app.presentation.campfire.CampfireViewModel
 import com.aegisfocus.app.presentation.focus.FocusScreen
 import com.aegisfocus.app.presentation.focus.FocusViewModel
 import com.aegisfocus.app.presentation.goals.GoalsScreen
@@ -118,7 +120,9 @@ fun AegisNavHost(
                                 label = {
                                     Text(
                                         text = screen.title,
-                                        fontSize = 11.sp,
+                                        fontSize = 10.sp,
+                                        maxLines = 1,
+                                        softWrap = false,
                                         fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal
                                     )
                                 },
@@ -255,6 +259,20 @@ fun AegisNavHost(
                         onNavigateToGoals = { navController.navigate(Screen.Goals.route) }
                     )
                 }
+            }
+
+            composable(Screen.Campfire.route) {
+                val vm = androidx.lifecycle.viewmodel.compose.viewModel {
+                    CampfireViewModel(
+                        engine = container.campfireEngine,
+                        store = container.campfireStore,
+                        entitlementManager = container.entitlementManager
+                    )
+                }
+                CampfireScreen(
+                    viewModel = vm,
+                    onNavigateToPaywall = { navController.navigate(Screen.Paywall.route) }
+                )
             }
 
             composable(Screen.Settings.route) {

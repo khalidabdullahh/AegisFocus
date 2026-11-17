@@ -60,6 +60,8 @@ class AppContainer(private val context: Context) {
     val intentStore by lazy { com.aegisfocus.app.data.local.IntentStore(context) }
     val habitStore by lazy { com.aegisfocus.app.data.local.HabitStore(context) }
     val mindfulGateStore by lazy { com.aegisfocus.app.data.local.MindfulGateStore(context) }
+    val campfireStore by lazy { com.aegisfocus.app.data.local.CampfireStore(context) }
+    val campfireEngine by lazy { com.aegisfocus.app.engine.CampfireAudioEngine(context) }
 
     // ─── Repositories ────────────────────────────────────────────────────────
     val focusSessionRepository: FocusSessionRepository by lazy {

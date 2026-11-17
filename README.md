@@ -43,6 +43,8 @@ All release APKs are signed with production keys and are ready for sideloading o
   - Pro keys purchased via direct contact (WhatsApp / Instagram / Facebook) and redeemed securely via Supabase RPCs. Each key works exactly once.
 - **Calm, Compact UI & Tier Shield**:
   - Calmer palette (slate teal, soft sage), compact layout without emojis, and dynamic navbar shield that upgrades across Bronze, Silver, Gold, Platinum, and Diamond.
+- **Campfire Sounds (Sleep, Study, Deep Focus)**:
+  * Layered ambient mixer with campfire, rain, crickets, wind and noise, per-sound volume, timers with fade-out and background playback. All sounds are synthesized in-repo (`tools/generate_campfire_sounds.py`), so they are fully offline.
 - **Productivity & Clean Streak Tab**:
   - Daily goals, customizable routine reminders with real notifications, and private Clean Streak check-ins with body and mind milestone timelines.
 - **System-Wide AdBlocker & 18+ Content DNS Blocker**:
