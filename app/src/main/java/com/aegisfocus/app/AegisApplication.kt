@@ -35,6 +35,7 @@ class AegisApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         container = ServiceLocator.getContainer(this)
+        com.aegisfocus.app.core.theme.AegisThemeState.load(this)
         createNotificationChannels()
         enqueueBackgroundWorkers()
 

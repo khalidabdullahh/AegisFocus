@@ -42,7 +42,7 @@ class MainActivity : ComponentActivity() {
         handleAuthIntent(intent)
 
         setContent {
-            AegisFocusTheme(darkTheme = true) {
+            AegisFocusTheme() {
                 Box(
                     modifier = Modifier
                         .fillMaxSize()

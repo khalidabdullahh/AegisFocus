@@ -821,6 +821,10 @@ fun SettingsScreen(
 
         Spacer(modifier = Modifier.height(28.dp))
 
+        AppearanceCard()
+
+        Spacer(modifier = Modifier.height(28.dp))
+
         com.aegisfocus.app.presentation.security.PinSettingsCard()
 
         Spacer(modifier = Modifier.height(28.dp))
