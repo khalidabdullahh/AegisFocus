@@ -79,8 +79,9 @@ data class SavedMix(
     val levels: Map<CampfireSound, Float>
 )
 
+private typealias S = CampfireSound
+
 object CampfirePresets {
-    private val S = CampfireSound
 
     val all: List<CampfirePreset> = listOf(
         // ----- Deep Sleep -----
