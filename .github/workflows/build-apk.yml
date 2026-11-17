@@ -82,14 +82,7 @@ jobs:
           echo "KEY_PASSWORD=$KEY_PASS" >> "$GITHUB_ENV"
 
       - name: Build Release APK
-        run: |
-          set -o pipefail
-          ./gradlew assembleRelease --no-daemon --stacktrace 2>&1 | tee build.log
-
-      - name: Surface build errors (temporary debug)
-        if: failure()
-        run: |
-          grep -E "^e: |error:|What went wrong|Execution failed|Unresolved|AAPT" -A2 build.log | sed 's/\x1b\[[0-9;]*m//g' | head -40 | while IFS= read -r l; do echo "::error::${l:0:480}"; done || true
+        run: ./gradlew assembleRelease --no-daemon --stacktrace
 
       - name: Package APK
         id: package

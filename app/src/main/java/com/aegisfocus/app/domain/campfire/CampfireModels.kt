@@ -34,7 +34,8 @@ enum class CampfireMode(
         label = "Deep Sleep",
         sounds = listOf(
             CampfireSound.CAMPFIRE, CampfireSound.CRICKETS, CampfireSound.OWL,
-            CampfireSound.WIND, CampfireSound.RAIN, CampfireSound.THUNDER, CampfireSound.BROWN
+            CampfireSound.WIND, CampfireSound.RAIN, CampfireSound.THUNDER,
+            CampfireSound.STREAM, CampfireSound.BROWN
         ),
         timerMinutes = listOf(15, 30, 60, 90)
     ),
@@ -79,8 +80,9 @@ data class SavedMix(
     val levels: Map<CampfireSound, Float>
 )
 
+private typealias S = CampfireSound
+
 object CampfirePresets {
-    private val S = CampfireSound
 
     val all: List<CampfirePreset> = listOf(
         // ----- Deep Sleep -----
