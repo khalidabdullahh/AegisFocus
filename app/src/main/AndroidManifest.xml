@@ -9,6 +9,8 @@
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
     <uses-permission android:name="android.permission.USE_EXACT_ALARM" />
@@ -113,6 +115,12 @@
                 android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
                 android:value="Maintains countdown timer and persistent notification for active focus sessions" />
         </service>
+
+        <!-- Campfire: keeps sleep/study sounds playing with the screen off -->
+        <service
+            android:name=".service.CampfireAudioService"
+            android:foregroundServiceType="mediaPlayback"
+            android:exported="false" />
 
         <!-- On-Device 1-Tap AdBlocker DNS VPN Service -->
         <service

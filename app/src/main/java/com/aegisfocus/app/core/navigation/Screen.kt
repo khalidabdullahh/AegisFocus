@@ -5,6 +5,7 @@ import androidx.compose.material.icons.filled.Apps
 import androidx.compose.material.icons.filled.BarChart
 import androidx.compose.material.icons.filled.TaskAlt
 import androidx.compose.material.icons.filled.HourglassTop
+import androidx.compose.material.icons.filled.LocalFireDepartment
 import androidx.compose.material.icons.filled.Security
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Shield
@@ -12,6 +13,7 @@ import androidx.compose.material.icons.outlined.Apps
 import androidx.compose.material.icons.outlined.BarChart
 import androidx.compose.material.icons.outlined.TaskAlt
 import androidx.compose.material.icons.outlined.HourglassTop
+import androidx.compose.material.icons.outlined.LocalFireDepartment
 import androidx.compose.material.icons.outlined.Security
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material.icons.outlined.Shield
@@ -51,6 +53,13 @@ sealed class Screen(
         unselectedIcon = Icons.Outlined.TaskAlt
     )
 
+    data object Campfire : Screen(
+        route = "campfire",
+        title = "Campfire",
+        selectedIcon = Icons.Filled.LocalFireDepartment,
+        unselectedIcon = Icons.Outlined.LocalFireDepartment
+    )
+
     data object Settings : Screen(
         route = "settings",
         title = "Settings",
@@ -81,5 +90,6 @@ val BottomNavScreens = listOf(
     Screen.Focus,
     Screen.Apps,
     Screen.Productivity,
+    Screen.Campfire,
     Screen.Settings
 )

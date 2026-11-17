@@ -65,6 +65,9 @@ class EntitlementManager(private val subscriptionDao: SubscriptionDao) {
     suspend fun canUseAdvancedSchedules(): Boolean = isPro()
     suspend fun canViewDeepAnalytics(): Boolean = isPro()
 
+    /** Campfire: free = 3 core sounds and 1 saved mix; Pro = every sound and preset. */
+    suspend fun canUseAllCampfireSounds(): Boolean = isPro()
+
     /** Maximum number of focus profiles for this tier. Free = 4, Pro = unlimited. */
     suspend fun maxProfiles(): Int = if (isPro()) Int.MAX_VALUE else 4
 
