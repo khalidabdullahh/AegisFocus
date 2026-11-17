@@ -21,6 +21,9 @@ import com.aegisfocus.app.service.worker.DailyUsageSnapshotWorker
 import com.aegisfocus.app.service.worker.ScheduleCheckWorker
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
 
@@ -34,6 +37,15 @@ class AegisApplication : Application() {
         container = ServiceLocator.getContainer(this)
         createNotificationChannels()
         enqueueBackgroundWorkers()
+
+        // After login or reinstall: bring back Pro plan, name and photo from the cloud
+        CoroutineScope(Dispatchers.IO).launch {
+            container.supabaseAuthService.currentUser
+                .map { it?.id }
+                .filterNotNull()
+                .distinctUntilChanged()
+                .collect { container.cloudRestoreService.restoreAll() }
+        }
 
         // Restore active focus session on application startup
         CoroutineScope(Dispatchers.IO).launch {

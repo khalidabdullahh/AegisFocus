@@ -476,10 +476,16 @@ class SupabaseAuthService(private val context: Context) {
         _currentUser.value = null
     }
 
-    fun updateDisplayName(newName: String) {
+    fun updateDisplayName(newName: String, sync: Boolean = true) {
         val current = _currentUser.value ?: return
         val updated = current.copy(displayName = newName.trim().ifBlank { current.displayName })
         saveSession(updated)
+        if (sync) {
+            val name = updated.displayName ?: return
+            CoroutineScope(Dispatchers.IO).launch {
+                ServiceLocator.getContainer(context).cloudRestoreService.pushDisplayName(name)
+            }
+        }
     }
 
     suspend fun updatePassword(newPassword: String): AuthResult = withContext(Dispatchers.IO) {
@@ -548,10 +554,15 @@ class SupabaseAuthService(private val context: Context) {
         }
     }
 
-    fun updateAvatarUri(uri: String) {
+    fun updateAvatarUri(uri: String, sync: Boolean = true) {
         val current = _currentUser.value ?: return
         val updated = current.copy(avatarUri = uri)
         saveSession(updated)
+        if (sync) {
+            CoroutineScope(Dispatchers.IO).launch {
+                ServiceLocator.getContainer(context).cloudRestoreService.pushAvatar(uri)
+            }
+        }
     }
 
     private fun saveSession(user: AuthUser, refreshToken: String? = null) {
