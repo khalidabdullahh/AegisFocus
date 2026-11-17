@@ -44,15 +44,16 @@ class BlockedAppMatcherTest {
     }
 
     @Test
-    fun matcher_guardsSettingsAndInstaller_whenStrictModeActive() {
-        // Normal mode (isStrict = false) -> settings not blocked
+    fun matcher_guardsInstallerButNotSettings_whenStrictModeActive() {
+        // Normal mode (isStrict = false) -> nothing extra blocked
         matcher.updateBlockedPackages(listOf("com.instagram.android"), isStrict = false)
         assertFalse(matcher.isAppBlocked("com.android.settings", myPackage))
         assertFalse(matcher.isAppBlocked("com.google.android.packageinstaller", myPackage))
 
-        // Strict mode (isStrict = true) -> settings & installer guarded
+        // Strict mode (isStrict = true) -> installer guarded; Settings stays usable and its
+        // sensitive screens are closed by SettingsTamperGuard instead
         matcher.updateBlockedPackages(listOf("com.instagram.android"), isStrict = true)
-        assertTrue(matcher.isAppBlocked("com.android.settings", myPackage))
+        assertFalse(matcher.isAppBlocked("com.android.settings", myPackage))
         assertTrue(matcher.isAppBlocked("com.google.android.packageinstaller", myPackage))
         assertTrue(matcher.isStrictGuarded())
     }
@@ -61,11 +62,11 @@ class BlockedAppMatcherTest {
     fun matcher_clearsProperly() {
         matcher.updateBlockedPackages(listOf("com.instagram.android"), isStrict = true)
         assertTrue(matcher.isAppBlocked("com.instagram.android", myPackage))
-        assertTrue(matcher.isAppBlocked("com.android.settings", myPackage))
+        assertTrue(matcher.isAppBlocked("com.android.packageinstaller", myPackage))
 
         matcher.clear()
         assertFalse(matcher.isAppBlocked("com.instagram.android", myPackage))
-        assertFalse(matcher.isAppBlocked("com.android.settings", myPackage))
+        assertFalse(matcher.isAppBlocked("com.android.packageinstaller", myPackage))
         assertFalse(matcher.isStrictGuarded())
     }
 }
