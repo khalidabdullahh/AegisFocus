@@ -79,7 +79,7 @@
         .chev { transition: transform .2s ease; }
         /* ---- phone frames: one wrapper, look chosen by data-device ---- */
         .phone-wrap { --pw: 8px; --pr: 2.5rem; --pb: #202327; --pe: #3a3f46; --pbb: 8px; position: relative; display: inline-block; }
-        .phone { width: 288px; height: 580px; border-radius: var(--pr); background: #0E181D; border: var(--pw) solid var(--pb); border-bottom-width: var(--pbb); box-shadow: 0 30px 80px -20px rgba(0,0,0,.7), 0 0 0 var(--rim, 1px) var(--pe), inset 0 0 0 1px rgba(255,255,255,.04); transition: border-radius .35s ease, border-color .35s ease; }
+        .phone { width: 288px; height: 560px; border-radius: var(--pr); background: #0E181D; border: var(--pw) solid var(--pb); border-bottom-width: var(--pbb); box-shadow: 0 30px 80px -20px rgba(0,0,0,.7), 0 0 0 var(--rim, 1px) var(--pe), inset 0 0 0 1px rgba(255,255,255,.04); transition: border-radius .35s ease, border-color .35s ease; }
         .phone-wrap::before, .phone-wrap::after { content: ""; position: absolute; width: 3px; border-radius: 2px; background: var(--pe); transition: background .35s ease; }
         .phone-wrap::before { right: -3px; top: 132px; height: 54px; }
         .phone-wrap::after { left: -3px; top: 110px; height: 80px; }
@@ -116,7 +116,7 @@
         .phone-wrap[data-desk="1"] .desk-line { display: block; position: absolute; left: 50%; bottom: -30px; width: 380px; max-width: 90vw; height: 34px; transform: translateX(-50%); background: radial-gradient(ellipse at 50% 0%, rgba(156,197,161,.28), transparent 70%); pointer-events: none; }
         .phone-wrap[data-device="classic"] .desk-line { display: block; position: absolute; left: 50%; bottom: -30px; width: 330px; max-width: 90vw; height: 34px; transform: translateX(-50%); background: radial-gradient(ellipse at 50% 0%, rgba(0,0,0,.6), transparent 70%); pointer-events: none; }
         .cf-range { width: 100%; height: 14px; margin: 0; cursor: pointer; }
-        .tchip { border: 1px solid #2B434D; border-radius: 9999px; padding: .28rem .65rem; font-size: 11px; color: #A8B9BC; background: rgba(21,36,43,.7); transition: all .15s ease; }
+        .tchip { border: 1px solid #2B434D; border-radius: 9999px; padding: .45rem .9rem; font-size: 12.5px; color: #A8B9BC; background: rgba(21,36,43,.7); transition: all .15s ease; }
         .tchip:hover { color: #EEF2EE; border-color: #9CC5A1; }
         .dchip { flex-shrink: 0; border: 1px solid var(--line, #2B434D); border-radius: 9999px; padding: .28rem .7rem; font-size: 11px; color: #A8B9BC; background: transparent; transition: all .15s ease; }
         .dchip:hover { color: #EEF2EE; }
@@ -246,7 +246,7 @@
                 <li class="inline-flex items-center gap-1.5"><i data-lucide="check" class="w-4 h-4 text-sage"></i><span id="hero-size">Small download</span></li>
                 <li class="inline-flex items-center gap-1.5"><i data-lucide="check" class="w-4 h-4 text-sage"></i>Your data stays on your phone</li>
             </ul>
-            <p class="mt-5 flex items-start gap-2 text-xs text-faint max-w-md mx-auto min-[820px]:mx-0 text-left"><i data-lucide="smartphone" class="w-4 h-4 text-teal shrink-0 mt-0.5"></i><span>Interactive demo. The phone is a working copy of the real app: tap the tabs (Home, Focus, Apps, Productivity, Campfire, Settings), start a session, then use the bar at the bottom to go home and open an app. Sessions are sped up, so a full one takes about a minute.</span></p>
+            <p class="mt-5 flex items-start gap-2 text-xs text-faint max-w-md mx-auto min-[820px]:mx-0 text-left"><i data-lucide="smartphone" class="w-4 h-4 text-teal shrink-0 mt-0.5"></i><span>Interactive demo. The phone is a working copy of the real app: tap the tabs (Home, Focus, Apps, Productivity, Campfire, Settings), start a session, then use the bar at the bottom to go home and open an app. Sessions are sped up, so a full one takes about a minute. Want to see everything? Use &ldquo;Explore every feature&rdquo; below.</span></p>
 
         </div>
 
@@ -477,15 +477,6 @@
             </div>
             </div>
             <p id="demo-status" class="mt-4 inline-flex items-center gap-2 rounded-full border border-line bg-surface/80 text-xs text-muted px-3.5 py-1.5" aria-live="polite"><span id="status-dot" class="w-1.5 h-1.5 rounded-full bg-faint"></span><span id="status-text">Idle &middot; press start</span></p>
-            <div class="mt-5 w-full max-w-[24rem]">
-                <p class="text-center text-xs font-bold text-muted">Explore every feature in the phone</p>
-                <div id="tour-chips" class="mt-2 flex flex-wrap justify-center gap-1.5"></div>
-            </div>
-            <div class="mt-4 w-full max-w-[22rem]">
-                <p id="device-caption" class="text-center text-[11px] text-faint" aria-live="polite"></p>
-                <div id="device-chips" class="mt-2 flex gap-1.5 overflow-x-auto no-scrollbar pb-1" role="group" aria-label="Preview phone style"></div>
-                <p class="mt-1 text-center text-[10px] text-faint">The phone style is picked in your browser. Nothing is sent anywhere.</p>
-            </div>
         </div>
 
         <!-- Customizer -->
@@ -523,6 +514,23 @@
             <p class="mt-auto pt-3 text-xs text-faint">Everything runs on-device. These switches only change this demo.</p>
         </div>
 
+    </div>
+</section>
+
+<!-- EXPLORE THE PHONE -->
+<section id="explore" class="pb-10">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6">
+        <div class="card p-5 sm:p-6 text-left">
+            <h2 class="text-xs font-extrabold tracking-widest text-faint uppercase">Explore every feature</h2>
+            <p class="mt-2 text-sm text-muted">Tap a feature and the phone above jumps straight to it. Everything inside the phone works, including the Campfire sounds.</p>
+            <div id="tour-chips" class="mt-4 flex flex-wrap gap-2"></div>
+            <div class="mt-5 pt-4 border-t border-line/70">
+                <p class="text-xs font-bold text-muted">Phone style</p>
+                <p id="device-caption" class="mt-1 text-[11px] text-faint" aria-live="polite"></p>
+                <div id="device-chips" class="mt-2 flex flex-wrap gap-1.5" role="group" aria-label="Preview phone style"></div>
+                <p class="mt-2 text-[10px] text-faint">The phone style is picked in your browser. Nothing is sent anywhere.</p>
+            </div>
+        </div>
     </div>
 </section>
 
@@ -1306,6 +1314,8 @@
                     choice = d.id;
                     try { if (choice === 'auto') localStorage.removeItem(KEY); else localStorage.setItem(KEY, choice); } catch (e) {}
                     apply();
+                    var ph = document.getElementById('phone-wrap');
+                    if (ph && ph.scrollIntoView) ph.scrollIntoView({ behavior: 'smooth', block: 'center' });
                 });
                 chips.appendChild(btn);
             });
@@ -1551,6 +1561,8 @@
         ];
         function go(tab, text) {
             var D = window.__aegisDemo; if (!D) return;
+            var ph = document.getElementById('phone-wrap');
+            if (ph && ph.scrollIntoView) ph.scrollIntoView({ behavior: 'smooth', block: 'center' });
             D.show('app'); D.setTab(tab);
             if (!text) return;
             var sc = document.getElementById('tab-scroll');
