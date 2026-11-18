@@ -73,7 +73,7 @@ fun HabitsSection(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Column(modifier = Modifier.weight(1f)) {
-                    Text("My Habits", fontSize = 14.sp, fontWeight = FontWeight.Bold, color = TextPrimary)
+                    com.aegisfocus.app.core.components.AegisSectionTitle("My Habits")
                     Text("Add your own daily goals and tick them off", fontSize = 11.sp, color = TextSecondary)
                 }
                 Surface(

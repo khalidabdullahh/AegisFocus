@@ -157,13 +157,7 @@ fun SettingsScreen(
             verticalAlignment = Alignment.Top
         ) {
             Column(modifier = Modifier.weight(1f)) {
-                Text(
-                    text = "Settings & Guardrails",
-                    fontSize = 22.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = TextPrimary,
-                    letterSpacing = (-0.3).sp
-                )
+                com.aegisfocus.app.core.components.AegisScreenTitle(text = "Settings")
                 Text(
                     text = "Permissions, focus habits, and discipline rules.",
                     fontSize = 13.sp,

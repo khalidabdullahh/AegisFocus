@@ -109,12 +109,7 @@ fun GoalsScreen(
             Spacer(modifier = Modifier.width(12.dp))
 
             Column {
-                Text(
-                    text = "Goals & Habit Calendar",
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = TextPrimary
-                )
+                com.aegisfocus.app.core.components.AegisSectionTitle("Goals & Habit Calendar")
                 Text(
                     text = "Track your daily focus wins & consistency",
                     fontSize = 12.sp,

@@ -31,8 +31,11 @@ fun SectionHeader(
     ) {
         Text(
             text = title,
-            fontSize = 18.sp,
-            fontWeight = FontWeight.Bold,
+            style = androidx.compose.ui.text.TextStyle(
+                fontFamily = com.aegisfocus.app.core.theme.AegisTitleFamily,
+                fontWeight = FontWeight.Bold,
+                fontSize = 20.sp
+            ),
             color = TextPrimary
         )
 

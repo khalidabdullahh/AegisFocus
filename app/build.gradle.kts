@@ -13,8 +13,8 @@ android {
         applicationId = "com.aegisfocus.app"
         minSdk = 26
         targetSdk = 35
-        versionCode = 17
-        versionName = "1.12.1"
+        versionCode = 18
+        versionName = "1.13.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {

@@ -60,6 +60,7 @@ import com.aegisfocus.app.domain.model.AppCategory
 fun AppsScreen(
     viewModel: AppsViewModel,
     onNavigateToPaywall: () -> Unit = {},
+    onBack: (() -> Unit)? = null,
     modifier: Modifier = Modifier
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -79,18 +80,15 @@ fun AppsScreen(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Column {
-                Text(
+                com.aegisfocus.app.core.components.AegisScreenTitle(
                     text = "Shielded Apps",
-                    fontSize = 28.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = TextPrimary,
-                    letterSpacing = (-0.5).sp
+                    subtitle = "${uiState.blockedPackages.size} / ${if (uiState.isPro) "∞" else "3"} apps selected • ${if (uiState.isPro) "Pro Tier" else "Free Tier (Max 3)"}"
                 )
-                Text(
-                    text = "${uiState.blockedPackages.size} / ${if (uiState.isPro) "∞" else "3"} apps selected • ${if (uiState.isPro) "Pro Tier" else "Free Tier (Max 3)"}",
-                    fontSize = 13.sp,
-                    color = if (uiState.isPro) CyanAccent else TextSecondary
-                )
+            }
+            if (onBack != null) {
+                androidx.compose.material3.TextButton(onClick = onBack) {
+                    Text("Done", color = CyanAccent, fontWeight = FontWeight.Bold)
+                }
             }
         }
 

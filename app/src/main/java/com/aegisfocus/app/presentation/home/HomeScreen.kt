@@ -96,16 +96,22 @@ fun HomeScreen(
                 Spacer(modifier = Modifier.height(2.dp))
                 Text(
                     text = uiState.greeting,
-                    fontSize = 22.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = TextPrimary,
-                    letterSpacing = (-0.3).sp
+                    style = androidx.compose.ui.text.TextStyle(
+                        fontFamily = com.aegisfocus.app.core.theme.AegisTitleFamily,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 26.sp
+                    ),
+                    color = TextPrimary
                 )
             }
 
         }
 
-        Spacer(modifier = Modifier.height(20.dp))
+        Spacer(modifier = Modifier.height(16.dp))
+
+        HomeTodayCard()
+
+        Spacer(modifier = Modifier.height(16.dp))
 
         // Discipline score and level as two small chips
         val hasActivity = uiState.currentXp > 0 ||

@@ -235,6 +235,7 @@ fun AegisNavHost(
                 }
                 AppsScreen(
                     viewModel = vm,
+                    onBack = { navController.popBackStack() },
                     onNavigateToPaywall = {
                         navController.navigate(Screen.Paywall.route)
                     }
