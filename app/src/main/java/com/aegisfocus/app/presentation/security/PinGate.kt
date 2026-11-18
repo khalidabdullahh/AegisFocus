@@ -16,6 +16,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
@@ -178,7 +180,7 @@ fun PinSettingsCard() {
             title = "App PIN lock",
             subtitle = if (hasPin) "Settings and Productivity ask for your PIN"
             else "Add a 4 digit PIN so limits can't be changed on impulse",
-            icon = androidx.compose.material.icons.Icons.Default.Lock,
+            icon = Icons.Default.Lock,
             onClick = { showSheet = true },
             trailing = {
                 Surface(
