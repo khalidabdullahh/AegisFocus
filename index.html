@@ -79,7 +79,7 @@
         .chev { transition: transform .2s ease; }
         /* ---- phone frames: one wrapper, look chosen by data-device ---- */
         .phone-wrap { --pw: 8px; --pr: 2.5rem; --pb: #202327; --pe: #3a3f46; --pbb: 8px; position: relative; display: inline-block; }
-        .phone { width: 272px; height: 548px; border-radius: var(--pr); background: #0E181D; border: var(--pw) solid var(--pb); border-bottom-width: var(--pbb); box-shadow: 0 30px 80px -20px rgba(0,0,0,.7), 0 0 0 1px var(--pe), inset 0 0 0 1px rgba(255,255,255,.04); transition: border-radius .35s ease, border-color .35s ease; }
+        .phone { width: 288px; height: 580px; border-radius: var(--pr); background: #0E181D; border: var(--pw) solid var(--pb); border-bottom-width: var(--pbb); box-shadow: 0 30px 80px -20px rgba(0,0,0,.7), 0 0 0 var(--rim, 1px) var(--pe), inset 0 0 0 1px rgba(255,255,255,.04); transition: border-radius .35s ease, border-color .35s ease; }
         .phone-wrap::before, .phone-wrap::after { content: ""; position: absolute; width: 3px; border-radius: 2px; background: var(--pe); transition: background .35s ease; }
         .phone-wrap::before { right: -3px; top: 132px; height: 54px; }
         .phone-wrap::after { left: -3px; top: 110px; height: 80px; }
@@ -104,8 +104,20 @@
         .phone-wrap[data-device="iphone"] .sb-bar { height: 40px; padding: 4px 26px 0 30px; font-size: 11.5px; }
         .phone-wrap[data-device="iphone"] #home-bar span { width: 112px; height: 4.5px; background: #fff; opacity: .85; }
         .phone-wrap[data-device="samsung"] #home-bar span { width: 64px; height: 3px; }
+        /* "Classic" = the plain silver-rim phone with a notch (default look) */
+        .phone-wrap[data-device="classic"] { --pw: 9px; --pr: 2.9rem; --pb: #09090b; --pe: #a0a0a6; --rim: 3px; }
+        .phone-wrap[data-device="classic"] .sb-cut { top: -1px; width: 108px; height: 22px; border-radius: 0 0 16px 16px; box-shadow: none; }
+        .phone-wrap[data-device="classic"] .sb-cut::before { content: ""; position: absolute; left: 50%; top: 8px; width: 38px; height: 4px; border-radius: 2px; background: #26262b; transform: translateX(-50%); }
+        .phone-wrap[data-device="classic"] .sb-cut::after { content: ""; position: absolute; left: calc(50% + 30px); top: 7px; width: 6px; height: 6px; border-radius: 9999px; background: #15233d; }
+        .phone-wrap[data-device="classic"]::after { top: 92px; height: 24px; box-shadow: 0 40px 0 0 var(--pe), 0 84px 0 0 var(--pe); }
+        .phone-wrap[data-device="classic"]::before { height: 60px; }
+        .phone-wrap[data-device="classic"] .sb-bar { padding: 4px 26px 0 28px; height: 32px; }
         .desk-line { display: none; }
         .phone-wrap[data-desk="1"] .desk-line { display: block; position: absolute; left: 50%; bottom: -30px; width: 380px; max-width: 90vw; height: 34px; transform: translateX(-50%); background: radial-gradient(ellipse at 50% 0%, rgba(156,197,161,.28), transparent 70%); pointer-events: none; }
+        .phone-wrap[data-device="classic"] .desk-line { display: block; position: absolute; left: 50%; bottom: -30px; width: 330px; max-width: 90vw; height: 34px; transform: translateX(-50%); background: radial-gradient(ellipse at 50% 0%, rgba(0,0,0,.6), transparent 70%); pointer-events: none; }
+        .cf-range { width: 100%; height: 14px; margin: 0; cursor: pointer; }
+        .tchip { border: 1px solid #2B434D; border-radius: 9999px; padding: .28rem .65rem; font-size: 11px; color: #A8B9BC; background: rgba(21,36,43,.7); transition: all .15s ease; }
+        .tchip:hover { color: #EEF2EE; border-color: #9CC5A1; }
         .dchip { flex-shrink: 0; border: 1px solid var(--line, #2B434D); border-radius: 9999px; padding: .28rem .7rem; font-size: 11px; color: #A8B9BC; background: transparent; transition: all .15s ease; }
         .dchip:hover { color: #EEF2EE; }
         .dchip[aria-pressed="true"] { border-color: #9CC5A1; color: #9CC5A1; background: rgba(156,197,161,.12); }
@@ -226,16 +238,7 @@
                 </a>
             </div>
 
-            <div id="platform-note" class="hidden mt-5 rounded-2xl border border-line bg-surface/70 p-4 max-w-xl mx-auto min-[820px]:mx-0 text-left">
-                <div class="flex items-center gap-4">
-                    <img src="assets/qr-aegisfocus.svg" alt="QR code that opens aegisfocus.pages.dev" width="88" height="88" class="rounded-lg bg-white p-1.5 shrink-0">
-                    <div class="min-w-0">
-                        <p id="platform-title" class="font-bold text-sm"></p>
-                        <p id="platform-text" class="mt-1 text-xs text-muted leading-relaxed"></p>
-                        <button type="button" id="copy-link" class="mt-2 btn-ghost rounded-lg px-3 py-1.5 text-xs">Copy link</button>
-                    </div>
-                </div>
-            </div>
+            <p id="platform-note" class="hidden mt-4 text-xs text-muted leading-relaxed max-w-xl mx-auto min-[820px]:mx-0 text-center min-[820px]:text-left">Aegis Focus is Android only, so iPhone and iPad cannot install it. You can still try everything in the phone demo here.</p>
 
             <ul class="mt-6 flex flex-wrap gap-x-5 gap-y-2 justify-center min-[820px]:justify-start text-xs sm:text-sm text-muted">
                 <li class="inline-flex items-center gap-1.5"><i data-lucide="check" class="w-4 h-4 text-sage"></i>No ads</li>
@@ -243,13 +246,13 @@
                 <li class="inline-flex items-center gap-1.5"><i data-lucide="check" class="w-4 h-4 text-sage"></i><span id="hero-size">Small download</span></li>
                 <li class="inline-flex items-center gap-1.5"><i data-lucide="check" class="w-4 h-4 text-sage"></i>Your data stays on your phone</li>
             </ul>
-            <p class="mt-5 flex items-start gap-2 text-xs text-faint max-w-md mx-auto min-[820px]:mx-0 text-left"><i data-lucide="smartphone" class="w-4 h-4 text-teal shrink-0 mt-0.5"></i><span>Interactive demo. The phone is a working copy of the real app: tap the tabs (Home, Focus, Apps, Productivity, Settings), start a session, then use the bar at the bottom to go home and open an app. Sessions are sped up, so a full one takes about a minute.</span></p>
+            <p class="mt-5 flex items-start gap-2 text-xs text-faint max-w-md mx-auto min-[820px]:mx-0 text-left"><i data-lucide="smartphone" class="w-4 h-4 text-teal shrink-0 mt-0.5"></i><span>Interactive demo. The phone is a working copy of the real app: tap the tabs (Home, Focus, Apps, Productivity, Campfire, Settings), start a session, then use the bar at the bottom to go home and open an app. Sessions are sped up, so a full one takes about a minute.</span></p>
 
         </div>
 
         <!-- Phone illustration -->
         <div id="demo" class="hero-stage flex flex-col items-center">
-            <div class="phone-wrap" id="phone-wrap" data-device="pixel" data-desk="">
+            <div class="phone-wrap" id="phone-wrap" data-device="classic" data-desk="">
             <div class="desk-line" aria-hidden="true"></div>
             <div class="phone relative overflow-hidden" id="phone">
                 <!-- status bar (look changes with the chosen phone) -->
@@ -393,6 +396,9 @@
                             </div>
                         </section>
 
+                        <!-- CAMPFIRE (working sound mixer) -->
+                        <section data-tab="campfire" class="hidden" id="cf-pane"></section>
+
                         <!-- SETTINGS -->
                         <section data-tab="settings" class="hidden px-4">
                             <h3 class="text-sm font-extrabold">Settings &amp; Guardrails</h3>
@@ -422,11 +428,12 @@
                     </div>
 
                     <div id="app-nav" class="absolute bottom-0 inset-x-0 h-[60px] bg-surface border-t border-line flex items-start pt-2 justify-around px-1">
-                        <button type="button" data-tabbtn="home" class="flex flex-col items-center gap-0.5 w-[48px] text-teal"><i data-lucide="shield" class="w-[18px] h-[18px]"></i><span class="text-[8px] font-bold">Home</span></button>
-                        <button type="button" data-tabbtn="focus" class="flex flex-col items-center gap-0.5 w-[48px] text-faint"><i data-lucide="hourglass" class="w-[18px] h-[18px]"></i><span class="text-[8px] font-bold">Focus</span></button>
-                        <button type="button" data-tabbtn="apps" class="flex flex-col items-center gap-0.5 w-[48px] text-faint"><i data-lucide="layout-grid" class="w-[18px] h-[18px]"></i><span class="text-[8px] font-bold">Apps</span></button>
-                        <button type="button" data-tabbtn="prod" class="flex flex-col items-center gap-0.5 w-[48px] text-faint"><i data-lucide="list-checks" class="w-[18px] h-[18px]"></i><span class="text-[8px] font-bold">Productivity</span></button>
-                        <button type="button" data-tabbtn="settings" class="flex flex-col items-center gap-0.5 w-[48px] text-faint"><i data-lucide="settings" class="w-[18px] h-[18px]"></i><span class="text-[8px] font-bold">Settings</span></button>
+                        <button type="button" data-tabbtn="home" class="flex flex-col items-center gap-0.5 flex-1 min-w-0 text-teal"><i data-lucide="shield" class="w-[18px] h-[18px]"></i><span class="text-[7px] font-bold">Home</span></button>
+                        <button type="button" data-tabbtn="focus" class="flex flex-col items-center gap-0.5 flex-1 min-w-0 text-faint"><i data-lucide="hourglass" class="w-[18px] h-[18px]"></i><span class="text-[7px] font-bold">Focus</span></button>
+                        <button type="button" data-tabbtn="apps" class="flex flex-col items-center gap-0.5 flex-1 min-w-0 text-faint"><i data-lucide="layout-grid" class="w-[18px] h-[18px]"></i><span class="text-[7px] font-bold">Apps</span></button>
+                        <button type="button" data-tabbtn="prod" class="flex flex-col items-center gap-0.5 flex-1 min-w-0 text-faint"><i data-lucide="list-checks" class="w-[18px] h-[18px]"></i><span class="text-[7px] font-bold">Productivity</span></button>
+                        <button type="button" data-tabbtn="campfire" class="flex flex-col items-center gap-0.5 flex-1 min-w-0 text-faint"><i data-lucide="flame" class="w-[18px] h-[18px]"></i><span class="text-[7px] font-bold">Campfire</span></button>
+                        <button type="button" data-tabbtn="settings" class="flex flex-col items-center gap-0.5 flex-1 min-w-0 text-faint"><i data-lucide="settings" class="w-[18px] h-[18px]"></i><span class="text-[7px] font-bold">Settings</span></button>
                     </div>
                 </div>
 
@@ -470,6 +477,10 @@
             </div>
             </div>
             <p id="demo-status" class="mt-4 inline-flex items-center gap-2 rounded-full border border-line bg-surface/80 text-xs text-muted px-3.5 py-1.5" aria-live="polite"><span id="status-dot" class="w-1.5 h-1.5 rounded-full bg-faint"></span><span id="status-text">Idle &middot; press start</span></p>
+            <div class="mt-5 w-full max-w-[24rem]">
+                <p class="text-center text-xs font-bold text-muted">Explore every feature in the phone</p>
+                <div id="tour-chips" class="mt-2 flex flex-wrap justify-center gap-1.5"></div>
+            </div>
             <div class="mt-4 w-full max-w-[22rem]">
                 <p id="device-caption" class="text-center text-[11px] text-faint" aria-live="polite"></p>
                 <div id="device-chips" class="mt-2 flex gap-1.5 overflow-x-auto no-scrollbar pb-1" role="group" aria-label="Preview phone style"></div>
@@ -1046,6 +1057,7 @@
             });
             $('tab-scroll').scrollTop = 0;
         }
+        window.__aegisDemo = { show: show, setTab: setTab };
 
         /* ---------- block screens ---------- */
         function hideOverlay() {
@@ -1246,7 +1258,7 @@
         var wrap = document.getElementById('phone-wrap');
         if (!wrap) return;
         var DEVICES = [
-            { id: 'samsung', label: 'Samsung' }, { id: 'pixel', label: 'Pixel' },
+            { id: 'classic', label: 'Classic' }, { id: 'samsung', label: 'Samsung' }, { id: 'pixel', label: 'Pixel' },
             { id: 'xiaomi', label: 'Xiaomi / Redmi' }, { id: 'oppo', label: 'Oppo / OnePlus' },
             { id: 'realme', label: 'Realme' }, { id: 'vivo', label: 'Vivo' },
             { id: 'infinix', label: 'Infinix / Tecno' }, { id: 'iphone', label: 'iPhone' }
@@ -1266,12 +1278,14 @@
             return null;
         }
 
-        var det = { platform: 'desktop', device: 'pixel', known: false };
+        // "Desktop site" mode in a phone browser reports a Linux computer, so touch tells it apart.
+        var touchPhone = (navigator.maxTouchPoints || 0) > 0 && !!window.matchMedia && window.matchMedia('(pointer: coarse)').matches && /X11|Linux/.test(ua);
+        var det = { platform: 'desktop', device: 'classic', known: false };
         if (/iPhone|iPad|iPod/.test(ua) || (/Mac/.test(navigator.platform || '') && (navigator.maxTouchPoints || 0) > 1)) {
             det = { platform: 'ios', device: 'iphone', known: true };
-        } else if (/Android/i.test(ua)) {
+        } else if (/Android/i.test(ua) || touchPhone) {
             var b = brandOf(ua, '');
-            det = { platform: 'android', device: b || 'pixel', known: !!b };
+            det = { platform: 'android', device: b || 'classic', known: !!b };
         }
 
         var choice = 'auto';
@@ -1302,9 +1316,9 @@
             wrap.setAttribute('data-desk', choice === 'auto' && det.platform === 'desktop' ? '1' : '');
             var text;
             if (choice !== 'auto') text = labelOf(id) + ' style (your pick)';
-            else if (det.platform === 'desktop') text = 'Generic Android phone, shown on your computer';
+            else if (det.platform === 'desktop') text = 'Classic phone, shown on your computer';
             else if (det.known) text = labelOf(id) + ' style, matched to your device';
-            else text = 'Generic Android phone';
+            else text = 'Classic phone';
             caption.textContent = text;
             renderChips();
         }
@@ -1320,25 +1334,244 @@
             }).catch(function () {});
         }
 
-        // iPhone and computer visitors cannot install an APK, so say so clearly.
+        // iPhone and iPad cannot install an APK, so say so instead of offering a useless download.
         var note = document.getElementById('platform-note');
-        if (note && (det.platform === 'ios' || det.platform === 'desktop')) {
-            var ios = det.platform === 'ios';
-            document.getElementById('platform-title').textContent = ios ? 'Aegis Focus is Android only' : 'On a computer?';
-            document.getElementById('platform-text').textContent = ios
-                ? 'iPhone and iPad cannot install it. Open this page on an Android phone, or scan the code with one.'
-                : 'Scan the code with your Android phone to open this page there, or download the APK here and move it over.';
+        if (note && det.platform === 'ios') {
             note.classList.remove('hidden');
-            if (ios) { var dl = document.getElementById('hero-download'); if (dl) dl.classList.add('hidden'); }
-            var cp = document.getElementById('copy-link');
-            cp.addEventListener('click', function () {
-                var url = location.origin + '/';
-                var done = function () { cp.textContent = 'Copied'; setTimeout(function () { cp.textContent = 'Copy link'; }, 1800); };
-                if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(url).then(done).catch(function () {});
-                else done();
-            });
+            var dl = document.getElementById('hero-download'); if (dl) dl.classList.add('hidden');
         }
     })();
 </script>
+<script>
+    // Campfire tab of the demo phone: the same modes, presets, timers and mixer as the app, with real sound.
+    // Sounds are loaded only when you press play. Demo timers are sped up (1 minute = 1 second).
+    (function () {
+        var pane = document.getElementById('cf-pane');
+        if (!pane) return;
+        var SOUNDS = {
+            campfire: { label: 'Campfire', file: 'campfire_crackle', icon: 'flame' },
+            rain: { label: 'Rain on tent', file: 'rain_on_tent', icon: 'droplets' },
+            brown: { label: 'Brown noise', file: 'brown_noise', icon: 'activity', pro: false },
+            crickets: { label: 'Night crickets', file: 'night_crickets', icon: 'bug', pro: true },
+            owl: { label: 'Distant owl', file: 'distant_owl', icon: 'eye', pro: true },
+            wind: { label: 'Soft wind', file: 'soft_wind', icon: 'wind', pro: true },
+            thunder: { label: 'Far thunder', file: 'far_thunder', icon: 'zap', pro: true },
+            stream: { label: 'Forest stream', file: 'forest_stream', icon: 'waves', pro: true },
+            pink: { label: 'Pink noise', file: 'pink_noise', icon: 'radio', pro: true }
+        };
+        var MODES = {
+            sleep: { label: 'Deep Sleep', icon: 'moon', accent: '#F2A65A', img: 'hero-sleep', tag: 'Drift off to calming sounds', title: 'Sleep timer',
+                sounds: ['campfire', 'crickets', 'owl', 'wind', 'rain', 'thunder', 'stream', 'brown'], timers: [15, 30, 60, 90] },
+            study: { label: 'Study', icon: 'graduation-cap', accent: '#E9C46A', img: 'hero-study', tag: 'Stay calm and absorb more', title: 'Study timer',
+                sounds: ['campfire', 'rain', 'stream', 'pink', 'brown', 'wind'], timers: [25, 50, 90, 120] },
+            focus: { label: 'Deep Focus', icon: 'scan', accent: '#9CC5A1', img: 'hero-focus', tag: 'Shut out the noise and go deep', title: 'Focus timer',
+                sounds: ['brown', 'pink', 'rain', 'campfire', 'wind'], timers: [25, 50, 90, 120] }
+        };
+        var PRESETS = [
+            { n: 'Warm Fire', t: 'Soft crackle and a low hum', m: 'sleep', l: { campfire: .55, brown: .25 } },
+            { n: 'Deep Sleep Night', t: 'Fire, crickets, a faraway owl', m: 'sleep', l: { campfire: .45, crickets: .5, owl: .25, brown: .3 } },
+            { n: 'Cabin Storm', t: 'Rain, thunder and a warm fire', m: 'sleep', l: { rain: .6, thunder: .45, campfire: .4, wind: .2 } },
+            { n: 'Forest Night', t: 'Stream, crickets and wind', m: 'sleep', l: { crickets: .55, owl: .3, stream: .3, wind: .2 } },
+            { n: 'Exam Focus', t: 'Quiet fire, steady low noise', m: 'study', l: { campfire: .35, brown: .25 } },
+            { n: 'Rainy Desk', t: 'Rain with a little fire', m: 'study', l: { rain: .5, campfire: .3, brown: .15 } },
+            { n: 'Forest Library', t: 'Stream and a distant fire', m: 'study', l: { stream: .35, campfire: .3, wind: .12 } },
+            { n: 'Night Coding', t: 'Low hum and soft rain', m: 'focus', l: { brown: .35, rain: .25, campfire: .2 } },
+            { n: 'Deep Work', t: 'Pink noise to mask distractions', m: 'focus', l: { pink: .3, campfire: .25, wind: .1 } },
+            { n: 'Quiet Desk', t: 'Barely-there noise, zero distraction', m: 'focus', l: { pink: .22, brown: .2, rain: .1 } }
+        ];
+        var st = { mode: 'sleep', levels: copy(PRESETS[0].l), playing: false, timerEnd: 0, timerTotal: 0, error: false };
+        var ctx = null, master = null, buffers = {}, nodes = {}, tick = null;
+
+        function copy(o) { var r = {}; Object.keys(o).forEach(function (k) { r[k] = o[k]; }); return r; }
+        function count() { return Object.keys(st.levels).filter(function (k) { return st.levels[k] > 0.01; }).length; }
+        function mm(ms) { var t = Math.max(0, Math.round(ms / 1000)); return ('0' + Math.floor(t / 60)).slice(-2) + ':' + ('0' + (t % 60)).slice(-2); }
+        function icons() { if (window.lucide) window.lucide.createIcons(); }
+
+        // ---------- audio ----------
+        function ensureCtx() {
+            if (!ctx) {
+                var AC = window.AudioContext || window.webkitAudioContext;
+                if (!AC) return false;
+                ctx = new AC(); master = ctx.createGain(); master.connect(ctx.destination);
+            }
+            return true;
+        }
+        function loadBuf(id) {
+            if (buffers[id]) return Promise.resolve(buffers[id]);
+            return fetch('assets/campfire/' + SOUNDS[id].file + '.ogg')
+                .then(function (r) { if (!r.ok) throw new Error('load'); return r.arrayBuffer(); })
+                .then(function (ab) { return new Promise(function (res, rej) { ctx.decodeAudioData(ab, res, rej); }); })
+                .then(function (b) { buffers[id] = b; return b; });
+        }
+        function gainOf(id) { var l = st.levels[id] || 0; return l * l; }
+        function startNode(id) {
+            if (nodes[id]) return;
+            nodes[id] = { pending: true };
+            loadBuf(id).then(function (b) {
+                if (!st.playing || !(st.levels[id] > 0.01)) { delete nodes[id]; return; }
+                var src = ctx.createBufferSource(); src.buffer = b; src.loop = true;
+                var g = ctx.createGain(); g.gain.value = gainOf(id);
+                src.connect(g); g.connect(master); src.start();
+                nodes[id] = { src: src, gain: g };
+            }).catch(function () { delete nodes[id]; st.error = true; st.playing = false; render(); });
+        }
+        function stopNode(id) {
+            var n = nodes[id]; if (!n) return;
+            if (n.src) { try { n.src.stop(); } catch (e) {} }
+            delete nodes[id];
+        }
+        function applyGains() { Object.keys(nodes).forEach(function (id) { if (nodes[id].gain) nodes[id].gain.gain.value = gainOf(id); }); }
+        function sync() {
+            if (!st.playing) return;
+            Object.keys(SOUNDS).forEach(function (id) { if (st.levels[id] > 0.01) startNode(id); else stopNode(id); });
+            applyGains();
+        }
+        function play() {
+            if (!count()) return;
+            if (!ensureCtx()) { st.error = true; render(); return; }
+            st.error = false;
+            if (ctx.resume) ctx.resume();
+            master.gain.value = 1; st.playing = true; sync(); render();
+        }
+        function pause() {
+            st.playing = false; cancelTimer();
+            Object.keys(nodes).forEach(stopNode);
+            render();
+        }
+        function startTimer(min) {
+            if (!st.playing) play();
+            if (!st.playing) return;
+            st.timerTotal = min * 1000; st.timerEnd = Date.now() + st.timerTotal;
+            clearInterval(tick);
+            tick = setInterval(function () {
+                var left = st.timerEnd - Date.now();
+                var fade = Math.min(5000, st.timerTotal / 2);
+                if (left <= 0) { pause(); return; }
+                if (master) master.gain.value = left < fade ? left / fade : 1;
+                var el = document.getElementById('cf-timer'); if (el) el.textContent = 'Fades out in ' + mm(left) + ' (sped up in this demo)';
+            }, 250);
+            render();
+        }
+        function cancelTimer() {
+            clearInterval(tick); tick = null; st.timerEnd = 0;
+            if (master) master.gain.value = 1;
+        }
+        document.addEventListener('visibilitychange', function () { if (document.hidden && st.playing) pause(); });
+
+        // ---------- screen ----------
+        function render() {
+            var M = MODES[st.mode], ac = M.accent, n = count();
+            var status = st.error ? 'Sound preview is not supported in this browser'
+                : n === 0 ? 'Pick a sound or preset to begin'
+                : (st.playing ? 'Playing' : 'Paused') + ' \u2022 ' + n + (n === 1 ? ' sound' : ' sounds') + (st.playing ? '' : ' ready');
+            var h = '';
+            h += '<div class="-mt-9 relative" style="aspect-ratio:1080/1000"><img src="assets/campfire/' + M.img + '.webp" alt="" class="w-full h-full object-cover">' +
+                 '<div class="absolute inset-0" style="background:linear-gradient(to bottom,rgba(0,0,0,.42),transparent 20%,transparent 58%,#0E181D)"></div></div>';
+            h += '<div class="px-4 -mt-2"><p class="font-display text-2xl leading-none">Campfire</p><p class="text-[10px] text-muted mt-1">' + M.tag + '</p>';
+            h += '<div class="mt-3 grid grid-cols-3 gap-1 p-1 rounded-xl bg-surface border border-line">';
+            Object.keys(MODES).forEach(function (k) {
+                var on = k === st.mode;
+                h += '<button type="button" data-cf="mode:' + k + '" class="h-8 rounded-lg text-[9px] font-bold flex items-center justify-center gap-1 ' + (on ? 'bg-elevated text-text' : 'text-faint') + '">' +
+                     '<i data-lucide="' + MODES[k].icon + '" class="w-3 h-3" style="color:' + (on ? MODES[k].accent : 'inherit') + '"></i>' + MODES[k].label + '</button>';
+            });
+            h += '</div>';
+            h += '<div class="mt-3 rounded-2xl bg-surface border border-line p-3 text-center">' +
+                 '<button type="button" data-cf="play" aria-label="' + (st.playing ? 'Pause' : 'Play') + '" class="w-14 h-14 rounded-full grid place-items-center mx-auto ' + (n ? '' : 'opacity-40') + '" style="background:' + ac + ';color:#0E181D"><i data-lucide="' + (st.playing ? 'pause' : 'play') + '" class="w-6 h-6"></i></button>' +
+                 '<p class="text-[10px] text-muted mt-2" id="cf-status">' + status + '</p>' +
+                 (st.timerEnd ? '<p id="cf-timer" class="text-[10px] font-bold mt-0.5" style="color:' + ac + '">Fades out in ' + mm(st.timerEnd - Date.now()) + ' (sped up in this demo)</p>' : '') + '</div>';
+            h += '<div class="mt-3 flex items-center justify-between"><p class="text-[11px] font-extrabold">' + M.title + '</p>' +
+                 (st.timerEnd ? '<button type="button" data-cf="cancel" class="text-[10px] font-bold text-teal">Cancel timer</button>' : '') + '</div>';
+            h += '<div class="mt-1.5 grid grid-cols-4 gap-1.5">';
+            M.timers.forEach(function (t) { h += '<button type="button" data-cf="timer:' + t + '" class="h-8 rounded-full border border-line bg-surface text-[9px] font-semibold">' + t + ' min</button>'; });
+            h += '</div>';
+            h += '<p class="mt-3 text-[11px] font-extrabold">Presets</p><div class="mt-1.5 -mx-4 px-4 flex gap-2 overflow-x-auto no-scrollbar">';
+            PRESETS.forEach(function (pr, i) {
+                if (pr.m !== st.mode) return;
+                h += '<button type="button" data-cf="preset:' + i + '" class="shrink-0 w-[128px] h-[68px] rounded-xl border border-line bg-surface p-2 text-left">' +
+                     '<span class="flex items-center gap-1 text-[10px] font-bold"><i data-lucide="flame" class="w-3 h-3" style="color:' + ac + '"></i><span class="truncate">' + pr.n + '</span></span>' +
+                     '<span class="block mt-1 text-[9px] text-faint leading-tight">' + pr.t + '</span></button>';
+            });
+            h += '</div>';
+            h += '<p class="mt-3 text-[11px] font-extrabold">Mixer</p><div class="mt-1.5 space-y-1.5">';
+            M.sounds.forEach(function (id) {
+                var S = SOUNDS[id], v = st.levels[id] || 0;
+                h += '<div class="h-[58px] rounded-xl border border-line bg-surface px-3 flex items-center gap-2">' +
+                     '<i data-lucide="' + S.icon + '" class="w-4 h-4 shrink-0" style="color:' + (v > 0.01 ? ac : '#7A8E93') + '"></i>' +
+                     '<div class="flex-1 min-w-0"><p class="text-[10px] font-semibold flex items-center gap-1.5">' + S.label + (S.pro ? ' <span class="text-[7px] font-extrabold rounded-full px-1.5 py-px bg-elevated text-muted">PRO</span>' : '') + '</p>' +
+                     '<input type="range" min="0" max="100" value="' + Math.round(v * 100) + '" data-snd="' + id + '" class="cf-range mt-1" style="accent-color:' + ac + '" aria-label="' + S.label + ' volume"></div></div>';
+            });
+            h += '</div><p class="mt-2 text-[9px] text-faint leading-snug">Demo: Pro sounds are unlocked here. In the app, free has 3 sounds, Pro has all 9. Timers run 60x faster in this demo.</p></div><div class="h-3"></div>';
+            pane.innerHTML = h;
+            icons();
+        }
+
+        pane.addEventListener('click', function (e) {
+            var b = e.target.closest('[data-cf]'); if (!b) return;
+            var a = b.getAttribute('data-cf').split(':'), cmd = a[0], arg = a[1];
+            if (cmd === 'play') { if (st.playing) pause(); else play(); }
+            else if (cmd === 'mode') {
+                st.mode = arg;
+                var keep = {}; MODES[arg].sounds.forEach(function (id) { if (st.levels[id] > 0.01) keep[id] = st.levels[id]; });
+                st.levels = keep; Object.keys(nodes).forEach(function (id) { if (!keep[id]) stopNode(id); });
+                if (st.playing && !count()) pause(); else { sync(); render(); }
+            }
+            else if (cmd === 'preset') { var pr = PRESETS[+arg]; st.mode = pr.m; st.levels = copy(pr.l); Object.keys(nodes).forEach(function (id) { if (!st.levels[id]) stopNode(id); }); render(); play(); }
+            else if (cmd === 'timer') startTimer(+arg);
+            else if (cmd === 'cancel') { cancelTimer(); render(); }
+        });
+        pane.addEventListener('input', function (e) {
+            var id = e.target.getAttribute && e.target.getAttribute('data-snd'); if (!id) return;
+            var v = (+e.target.value) / 100;
+            if (v > 0.01) st.levels[id] = v; else delete st.levels[id];
+            sync();
+            var s = document.getElementById('cf-status');
+            if (s && !st.error) { var n = count(); s.textContent = n === 0 ? 'Pick a sound or preset to begin' : (st.playing ? 'Playing' : 'Paused') + ' \u2022 ' + n + (n === 1 ? ' sound' : ' sounds') + (st.playing ? '' : ' ready'); }
+            if (st.playing && !count()) pause();
+        });
+        render();
+    })();
+</script>
+<script>
+    // "Explore every feature": jump the demo phone to a screen and scroll to the feature.
+    (function () {
+        var box = document.getElementById('tour-chips');
+        if (!box) return;
+        var TOUR = [
+            ['Strict focus session', 'focus', 'Configure Session'],
+            ['Shield apps', 'apps', 'Shielded'],
+            ['Block Shorts / Reels', 'home', 'Shorts / Reels'],
+            ['Daily goals', 'prod', 'Daily goals'],
+            ['Reminders', 'prod', 'Reminders'],
+            ['Clean Streak', 'prod', 'Clean Streak'],
+            ['Campfire sounds', 'campfire', null],
+            ['Permissions', 'settings', 'Android Permissions'],
+            ['Mindful phrase', 'settings', 'Require Mindful Phrase'],
+            ['Scam Shield', 'settings', 'Scam Shield'],
+            ['Scheduled routines', 'settings', 'Scheduled Routines']
+        ];
+        function go(tab, text) {
+            var D = window.__aegisDemo; if (!D) return;
+            D.show('app'); D.setTab(tab);
+            if (!text) return;
+            var sc = document.getElementById('tab-scroll');
+            var pane = sc.querySelector('[data-tab="' + tab + '"]');
+            if (!pane) return;
+            var el = [].slice.call(pane.querySelectorAll('p,h3,span,div,button')).filter(function (n) {
+                return n.children.length === 0 && n.textContent.indexOf(text) > -1;
+            })[0];
+            if (el) {
+                var top = sc.scrollTop + el.getBoundingClientRect().top - sc.getBoundingClientRect().top - 12;
+                if (sc.scrollTo) sc.scrollTo({ top: Math.max(0, top), behavior: 'smooth' }); else sc.scrollTop = Math.max(0, top);
+            }
+        }
+        TOUR.forEach(function (t) {
+            var b = document.createElement('button');
+            b.type = 'button'; b.className = 'tchip'; b.textContent = t[0];
+            b.addEventListener('click', function () { go(t[1], t[2]); });
+            box.appendChild(b);
+        });
+    })();
+</script>
 </body>
+
 </html>
