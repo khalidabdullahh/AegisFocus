@@ -66,7 +66,7 @@ fun IntentSection(
         Column(modifier = Modifier.padding(16.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Column(modifier = Modifier.weight(1f)) {
-                    Text("YouTube Intent Mode", fontSize = 15.sp, fontWeight = FontWeight.Bold, color = TextPrimary)
+                    com.aegisfocus.app.core.components.AegisSectionTitle("YouTube Intent Mode")
                     Text(
                         "Write what you want to watch. Videos that don't match get blocked.",
                         fontSize = 12.sp,

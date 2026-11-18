@@ -180,27 +180,18 @@ private fun FocusConfigurationScreen(
 ) {
     val scrollState = rememberScrollState()
 
+    Box(modifier = modifier.fillMaxSize().background(ObsidianBg)) {
     Column(
-        modifier = modifier
+        modifier = Modifier
             .fillMaxSize()
-            .background(ObsidianBg)
             .padding(horizontal = 20.dp)
             .verticalScroll(scrollState)
     ) {
         Spacer(modifier = Modifier.height(24.dp))
 
-        Text(
-            text = "Configure Session",
-            fontSize = 28.sp,
-            fontWeight = FontWeight.Bold,
-            color = TextPrimary,
-            letterSpacing = (-0.5).sp
-        )
-
-        Text(
-            text = "Deliberate focus, undisturbed mind.",
-            fontSize = 13.sp,
-            color = TextSecondary
+        com.aegisfocus.app.core.components.AegisScreenTitle(
+            text = "Focus",
+            subtitle = "Deliberate focus, undisturbed mind."
         )
 
         // Error message banner
@@ -421,6 +412,7 @@ private fun FocusConfigurationScreen(
                         blockedAppsList.forEach { app ->
                             SelectedAppChip(
                                 appName = app.appName,
+                                packageName = app.packageName,
                                 onRemove = { onRemoveApp(app.packageName) }
                             )
                         }
@@ -503,21 +495,33 @@ private fun FocusConfigurationScreen(
             }
         }
 
-        Spacer(modifier = Modifier.height(32.dp))
+        Spacer(modifier = Modifier.height(120.dp))
+    }
 
-        // Primary Start CTA
+    // Start button stays visible at the bottom while the page scrolls
+    Box(
+        modifier = Modifier
+            .align(Alignment.BottomCenter)
+            .fillMaxWidth()
+            .background(
+                androidx.compose.ui.graphics.Brush.verticalGradient(
+                    listOf(androidx.compose.ui.graphics.Color.Transparent, ObsidianBg)
+                )
+            )
+            .padding(start = 20.dp, end = 20.dp, top = 28.dp, bottom = 14.dp)
+    ) {
         AegisPrimaryButton(
             text = if (uiState.selectedMode == SessionMode.STRICT) "LOCK IN & START STRICT FOCUS" else "START FOCUS SESSION",
             onClick = onStartSession
         )
-
-        Spacer(modifier = Modifier.height(36.dp))
+    }
     }
 }
 
 @Composable
 private fun SelectedAppChip(
     appName: String,
+    packageName: String,
     onRemove: () -> Unit
 ) {
     Surface(
@@ -529,20 +533,7 @@ private fun SelectedAppChip(
             modifier = Modifier.padding(start = 10.dp, end = 6.dp, top = 6.dp, bottom = 6.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Box(
-                modifier = Modifier
-                    .size(20.dp)
-                    .clip(CircleShape)
-                    .background(CyanAccent),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    text = appName.take(1).uppercase(),
-                    color = ObsidianBg,
-                    fontSize = 11.sp,
-                    fontWeight = FontWeight.Bold
-                )
-            }
+            com.aegisfocus.app.core.components.AppIcon(packageName = packageName, appName = appName, size = 24.dp)
             Spacer(modifier = Modifier.width(6.dp))
             Text(
                 text = appName,
@@ -583,20 +574,7 @@ private fun QuickAddAppChip(
             modifier = Modifier.padding(horizontal = 8.dp, vertical = 6.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Box(
-                modifier = Modifier
-                    .size(18.dp)
-                    .clip(CircleShape)
-                    .background(TextMuted.copy(alpha = 0.3f)),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    text = app.appName.take(1).uppercase(),
-                    color = TextPrimary,
-                    fontSize = 10.sp,
-                    fontWeight = FontWeight.Bold
-                )
-            }
+            com.aegisfocus.app.core.components.AppIcon(packageName = app.packageName, appName = app.appName, size = 22.dp)
             Spacer(modifier = Modifier.width(6.dp))
             Text(
                 text = app.appName,

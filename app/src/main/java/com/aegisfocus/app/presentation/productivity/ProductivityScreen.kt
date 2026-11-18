@@ -115,8 +115,10 @@ fun ProductivityScreen(
             .verticalScroll(rememberScrollState())
     ) {
         Spacer(Modifier.height(16.dp))
-        Text("Productivity", fontSize = 22.sp, fontWeight = FontWeight.Bold, color = TextPrimary)
-        Text("Tools that build daily momentum", fontSize = 12.sp, color = TextSecondary)
+        com.aegisfocus.app.core.components.AegisScreenTitle(
+            text = "Productivity",
+            subtitle = "Tools that build daily momentum"
+        )
 
         Spacer(Modifier.height(16.dp))
 
@@ -163,7 +165,7 @@ fun ProductivityScreen(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Column(Modifier.weight(1f)) {
-                Text("Mindful Gate", fontSize = 16.sp, fontWeight = FontWeight.Bold, color = TextPrimary)
+                com.aegisfocus.app.core.components.AegisSectionTitle("Mindful Gate")
                 Text("Tick your own reminders before an app opens", fontSize = 11.sp, color = TextSecondary)
             }
             AegisCompactButton(text = "Add", onClick = {
@@ -225,7 +227,7 @@ fun ProductivityScreen(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text("Reminders", fontSize = 16.sp, fontWeight = FontWeight.Bold, color = TextPrimary)
+            com.aegisfocus.app.core.components.AegisSectionTitle("Reminders")
             AegisCompactButton(text = "Add", onClick = { showAddReminder = true })
         }
         Spacer(Modifier.height(8.dp))

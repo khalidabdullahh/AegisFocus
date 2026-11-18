@@ -88,7 +88,6 @@ sealed class Screen(
 val BottomNavScreens = listOf(
     Screen.Home,
     Screen.Focus,
-    Screen.Apps,
     Screen.Productivity,
     Screen.Campfire,
     Screen.Settings

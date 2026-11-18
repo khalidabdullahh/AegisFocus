@@ -62,22 +62,7 @@ fun AppSelectionRow(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.weight(1f)
             ) {
-                // App Icon Placeholder
-                Surface(
-                    shape = CircleShape,
-                    color = ElevatedSurface,
-                    modifier = Modifier.size(40.dp),
-                    border = BorderStroke(1.dp, SubtleBorder)
-                ) {
-                    Box(contentAlignment = Alignment.Center) {
-                        Icon(
-                            imageVector = Icons.Default.Apps,
-                            contentDescription = null,
-                            tint = if (isSelected) CyanAccent else TextSecondary,
-                            modifier = Modifier.size(20.dp)
-                        )
-                    }
-                }
+                AppIcon(packageName = app.packageName, appName = app.appName, size = 42.dp)
 
                 Spacer(modifier = Modifier.width(12.dp))
 

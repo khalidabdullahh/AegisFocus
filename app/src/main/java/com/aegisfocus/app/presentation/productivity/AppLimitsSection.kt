@@ -68,7 +68,7 @@ fun AppLimitsSection(
         verticalAlignment = Alignment.CenterVertically
     ) {
         Column(Modifier.weight(1f)) {
-            Text("App Limits", fontSize = 16.sp, fontWeight = FontWeight.Bold, color = TextPrimary)
+            com.aegisfocus.app.core.components.AegisSectionTitle("App Limits")
             Text("Daily time and open-count limits per app", fontSize = 11.sp, color = TextSecondary)
         }
         Surface(
