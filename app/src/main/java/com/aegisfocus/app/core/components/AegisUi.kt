@@ -18,6 +18,11 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -129,4 +134,53 @@ fun AegisSettingRow(
         }
         if (trailing != null) trailing()
     }
+}
+
+/** A typed duration field: "90", "1h 30m", "1:30" or "1.5h". Calls [onMinutesChange] for every valid value. */
+@Composable
+fun AegisDurationField(
+    minutes: Int,
+    maxMinutes: Int,
+    onMinutesChange: (Int) -> Unit,
+    modifier: Modifier = Modifier,
+    minMinutes: Int = 5
+) {
+    var text by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(minutes.toString()) }
+
+    // Follow changes made elsewhere (for example the quick buttons)
+    androidx.compose.runtime.LaunchedEffect(minutes) {
+        if (com.aegisfocus.app.core.common.DurationInput.parse(text) != minutes) text = minutes.toString()
+    }
+
+    val parsed = com.aegisfocus.app.core.common.DurationInput.parse(text)
+    val error: String? = when {
+        text.isBlank() -> null
+        parsed == null -> "Type like 90, 1h 30m or 1:30"
+        parsed < minMinutes -> "At least $minMinutes min"
+        parsed > maxMinutes -> "At most ${com.aegisfocus.app.core.common.DurationInput.format(maxMinutes)}"
+        else -> null
+    }
+
+    androidx.compose.material3.OutlinedTextField(
+        value = text,
+        onValueChange = {
+            text = it.take(12)
+            val p = com.aegisfocus.app.core.common.DurationInput.parse(text)
+            if (p != null && p in minMinutes..maxMinutes) onMinutesChange(p)
+        },
+        modifier = modifier.fillMaxWidth(),
+        singleLine = true,
+        isError = error != null,
+        label = { Text("Custom duration", color = TextSecondary, fontSize = 12.sp) },
+        supportingText = {
+            Text(
+                error ?: ("= " + com.aegisfocus.app.core.common.DurationInput.format(parsed ?: minutes)),
+                fontSize = 11.sp
+            )
+        },
+        keyboardOptions = androidx.compose.foundation.text.KeyboardOptions(
+            keyboardType = androidx.compose.ui.text.input.KeyboardType.Ascii
+        ),
+        shape = RoundedCornerShape(14.dp)
+    )
 }
