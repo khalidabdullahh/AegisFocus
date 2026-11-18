@@ -162,35 +162,75 @@ private fun PinEntryScreen(pinStore: PinStore, onUnlocked: () -> Unit) {
     }
 }
 
-/** Settings card to set, change or remove the app PIN. */
+/** Settings card: one tidy row for the app PIN. Tap it to set, change or remove the PIN. */
+@OptIn(androidx.compose.material3.ExperimentalMaterial3Api::class)
 @Composable
 fun PinSettingsCard() {
     val context = LocalContext.current
     val pinStore = remember { ServiceLocator.getContainer(context.applicationContext).pinStore }
     var hasPin by remember { mutableStateOf(pinStore.hasPin()) }
+    var showSheet by remember { mutableStateOf(false) }
     var dialog by remember { mutableStateOf<String?>(null) } // "set", "change", "remove"
 
-    Surface(
-        modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(16.dp),
-        color = DeepSurface,
-        border = BorderStroke(1.dp, SubtleBorder)
-    ) {
-        Column(modifier = Modifier.padding(16.dp)) {
-            Text("App PIN lock", fontSize = 15.sp, fontWeight = FontWeight.SemiBold, color = TextPrimary)
-            Text(
-                if (hasPin) "Settings and Productivity ask for your PIN, so limits and gates can't be changed on impulse."
-                else "Set a 4 digit PIN so you can't turn off your own limits on impulse. If you forget it you must clear app data.",
-                fontSize = 12.sp,
-                color = TextSecondary
-            )
-            Spacer(Modifier.height(12.dp))
-            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+    com.aegisfocus.app.core.components.AegisCard {
+        com.aegisfocus.app.core.components.AegisSectionTitle("Security")
+        com.aegisfocus.app.core.components.AegisSettingRow(
+            title = "App PIN lock",
+            subtitle = if (hasPin) "Settings and Productivity ask for your PIN"
+            else "Add a 4 digit PIN so limits can't be changed on impulse",
+            icon = androidx.compose.material.icons.Icons.Default.Lock,
+            onClick = { showSheet = true },
+            trailing = {
+                Surface(
+                    shape = RoundedCornerShape(50),
+                    color = (if (hasPin) CyanAccent else ElevatedSurface).copy(alpha = if (hasPin) 0.18f else 1f),
+                    border = BorderStroke(1.dp, if (hasPin) CyanAccent else SubtleBorder)
+                ) {
+                    Text(
+                        if (hasPin) "ON" else "OFF",
+                        modifier = Modifier.padding(horizontal = 12.dp, vertical = 5.dp),
+                        fontSize = 11.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = if (hasPin) CyanAccent else TextSecondary
+                    )
+                }
+            }
+        )
+    }
+
+    if (showSheet) {
+        androidx.compose.material3.ModalBottomSheet(
+            onDismissRequest = { showSheet = false },
+            containerColor = DeepSurface
+        ) {
+            Column(
+                modifier = Modifier.padding(horizontal = 24.dp).padding(bottom = 32.dp),
+                verticalArrangement = Arrangement.spacedBy(10.dp)
+            ) {
+                com.aegisfocus.app.core.components.AegisSectionTitle("App PIN lock")
+                Text(
+                    "A 4 digit PIN keeps Settings and Productivity locked. If you forget it you must clear app data.",
+                    fontSize = 12.sp,
+                    color = TextSecondary
+                )
+                Spacer(Modifier.height(6.dp))
                 if (!hasPin) {
-                    PinChip("Set PIN") { dialog = "set" }
+                    com.aegisfocus.app.core.components.AegisPrimaryButton(
+                        text = "Set PIN",
+                        onClick = { showSheet = false; dialog = "set" },
+                        modifier = Modifier.fillMaxWidth()
+                    )
                 } else {
-                    PinChip("Change PIN") { dialog = "change" }
-                    PinChip("Remove PIN") { dialog = "remove" }
+                    com.aegisfocus.app.core.components.AegisPrimaryButton(
+                        text = "Change PIN",
+                        onClick = { showSheet = false; dialog = "change" },
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                    com.aegisfocus.app.core.components.AegisOutlinedButton(
+                        text = "Remove PIN",
+                        onClick = { showSheet = false; dialog = "remove" },
+                        modifier = Modifier.fillMaxWidth()
+                    )
                 }
             }
         }

@@ -376,66 +376,12 @@ private fun FocusConfigurationScreen(
 
         Spacer(modifier = Modifier.height(10.dp))
 
-        // Custom Duration Stepper
-        Surface(
-            modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(14.dp),
-            color = DeepSurface,
-            border = BorderStroke(1.dp, SubtleBorder)
-        ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 8.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Text(
-                    text = "Custom Duration",
-                    fontSize = 14.sp,
-                    color = TextSecondary
-                )
-
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    IconButton(
-                        onClick = {
-                            if (uiState.selectedDurationMinutes > 5) {
-                                onDurationChange(uiState.selectedDurationMinutes - 5)
-                            }
-                        }
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Remove,
-                            contentDescription = "Decrease",
-                            tint = CyanAccent
-                        )
-                    }
-
-                    Text(
-                        text = "${uiState.selectedDurationMinutes} min",
-                        fontSize = 15.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = TextPrimary,
-                        modifier = Modifier.padding(horizontal = 8.dp)
-                    )
-
-                    IconButton(
-                        onClick = {
-                            val maxLimit = if (uiState.selectedMode == SessionMode.STRICT && !uiState.isPro) 120 else 720
-                            if (uiState.selectedDurationMinutes < maxLimit) {
-                                onDurationChange(uiState.selectedDurationMinutes + 5)
-                            }
-                        }
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Add,
-                            contentDescription = "Increase",
-                            tint = CyanAccent
-                        )
-                    }
-                }
-            }
-        }
+        // Custom duration, typed
+        com.aegisfocus.app.core.components.AegisDurationField(
+            minutes = uiState.selectedDurationMinutes,
+            maxMinutes = if (uiState.selectedMode == SessionMode.STRICT && !uiState.isPro) 120 else 720,
+            onMinutesChange = onDurationChange
+        )
 
         Spacer(modifier = Modifier.height(24.dp))
 

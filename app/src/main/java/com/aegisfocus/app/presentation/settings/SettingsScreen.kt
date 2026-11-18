@@ -1021,6 +1021,59 @@ private fun AddScheduleDialog(
     var daysBitmask by remember { mutableIntStateOf(62) } // Mon - Fri
 
     val dayNames = listOf("Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat")
+    var showStartPicker by remember { mutableStateOf(false) }
+    var showEndPicker by remember { mutableStateOf(false) }
+    var showAppPicker by remember { mutableStateOf(false) }
+    var selectedApps by remember { mutableStateOf(setOf<String>()) }
+
+    val dialogContext = androidx.compose.ui.platform.LocalContext.current
+    val installedApps by androidx.compose.runtime.produceState(initialValue = emptyList<com.aegisfocus.app.domain.model.AppInfo>()) {
+        value = kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) {
+            com.aegisfocus.app.core.di.ServiceLocator.getContainer(dialogContext.applicationContext)
+                .appDiscoveryRepository.loadInstalledApps()
+                .filter { !it.isSystemApp && it.packageName != dialogContext.packageName }
+                .sortedBy { it.appName.lowercase() }
+        }
+    }
+
+    if (showStartPicker) {
+        com.aegisfocus.app.core.components.AegisTimePickerDialog(
+            title = "Start time",
+            initialHour = startHour,
+            initialMinute = startMinute,
+            onDismiss = { showStartPicker = false },
+            onConfirm = { h, m ->
+                startHour = h
+                startMinute = m
+                showStartPicker = false
+            }
+        )
+    }
+    if (showEndPicker) {
+        com.aegisfocus.app.core.components.AegisTimePickerDialog(
+            title = "End time",
+            initialHour = endHour,
+            initialMinute = endMinute,
+            onDismiss = { showEndPicker = false },
+            onConfirm = { h, m ->
+                endHour = h
+                endMinute = m
+                showEndPicker = false
+            }
+        )
+    }
+    if (showAppPicker) {
+        com.aegisfocus.app.core.components.AegisAppPickerDialog(
+            title = "Block these apps",
+            apps = installedApps,
+            selected = selectedApps,
+            onDismiss = { showAppPicker = false },
+            onConfirm = {
+                selectedApps = it
+                showAppPicker = false
+            }
+        )
+    }
 
     BasicAlertDialog(onDismissRequest = onDismiss) {
         Surface(
@@ -1065,95 +1118,34 @@ private fun AddScheduleDialog(
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                // Start Time Stepper
-                Text(text = "Start Time", fontSize = 13.sp, color = TextSecondary, fontWeight = FontWeight.SemiBold)
+                // Start / end time: tap to type or use the clock
+                Text(text = "Time", fontSize = 13.sp, color = TextSecondary, fontWeight = FontWeight.SemiBold)
                 Spacer(modifier = Modifier.height(6.dp))
-                Surface(
-                    shape = RoundedCornerShape(12.dp),
-                    color = ElevatedSurface,
-                    border = BorderStroke(1.dp, SubtleBorder),
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 12.dp, vertical = 6.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(
-                            text = com.aegisfocus.app.core.common.TimeUtils.formatTimeOfDay(startHour, startMinute),
-                            fontSize = 15.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = CyanAccent
-                        )
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            IconButton(onClick = {
-                                if (startHour > 0) startHour-- else startHour = 23
-                            }) {
-                                Icon(Icons.Default.Remove, contentDescription = "-1h", tint = CyanAccent, modifier = Modifier.size(16.dp))
-                            }
-                            Text("${String.format("%02d", startHour)}h", fontSize = 13.sp, color = TextPrimary)
-                            IconButton(onClick = {
-                                if (startHour < 23) startHour++ else startHour = 0
-                            }) {
-                                Icon(Icons.Default.Add, contentDescription = "+1h", tint = CyanAccent, modifier = Modifier.size(16.dp))
-                            }
-                            Spacer(modifier = Modifier.width(4.dp))
-                            IconButton(onClick = {
-                                startMinute = (startMinute + 15) % 60
-                            }) {
-                                Text("+15m", fontSize = 11.sp, color = CyanAccent, fontWeight = FontWeight.Bold)
-                            }
-                        }
-                    }
+                Row(horizontalArrangement = Arrangement.spacedBy(10.dp), modifier = Modifier.fillMaxWidth()) {
+                    ScheduleTimeField(
+                        label = "From",
+                        value = com.aegisfocus.app.core.common.TimeUtils.formatTimeOfDay(startHour, startMinute),
+                        modifier = Modifier.weight(1f),
+                        onClick = { showStartPicker = true }
+                    )
+                    ScheduleTimeField(
+                        label = "To",
+                        value = com.aegisfocus.app.core.common.TimeUtils.formatTimeOfDay(endHour, endMinute),
+                        modifier = Modifier.weight(1f),
+                        onClick = { showEndPicker = true }
+                    )
                 }
-
-                Spacer(modifier = Modifier.height(12.dp))
-
-                // End Time Stepper
-                Text(text = "End Time", fontSize = 13.sp, color = TextSecondary, fontWeight = FontWeight.SemiBold)
+                val routineMinutes = run {
+                    val s0 = startHour * 60 + startMinute
+                    val e0 = endHour * 60 + endMinute
+                    if (e0 >= s0) e0 - s0 else (24 * 60 - s0) + e0
+                }
                 Spacer(modifier = Modifier.height(6.dp))
-                Surface(
-                    shape = RoundedCornerShape(12.dp),
-                    color = ElevatedSurface,
-                    border = BorderStroke(1.dp, SubtleBorder),
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 12.dp, vertical = 6.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(
-                            text = com.aegisfocus.app.core.common.TimeUtils.formatTimeOfDay(endHour, endMinute),
-                            fontSize = 15.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = CyanAccent
-                        )
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            IconButton(onClick = {
-                                if (endHour > 0) endHour-- else endHour = 23
-                            }) {
-                                Icon(Icons.Default.Remove, contentDescription = "-1h", tint = CyanAccent, modifier = Modifier.size(16.dp))
-                            }
-                            Text("${String.format("%02d", endHour)}h", fontSize = 13.sp, color = TextPrimary)
-                            IconButton(onClick = {
-                                if (endHour < 23) endHour++ else endHour = 0
-                            }) {
-                                Icon(Icons.Default.Add, contentDescription = "+1h", tint = CyanAccent, modifier = Modifier.size(16.dp))
-                            }
-                            Spacer(modifier = Modifier.width(4.dp))
-                            IconButton(onClick = {
-                                endMinute = (endMinute + 15) % 60
-                            }) {
-                                Text("+15m", fontSize = 11.sp, color = CyanAccent, fontWeight = FontWeight.Bold)
-                            }
-                        }
-                    }
-                }
+                Text(
+                    text = "Runs for ${com.aegisfocus.app.core.common.DurationInput.format(routineMinutes)}",
+                    fontSize = 12.sp,
+                    color = TextSecondary
+                )
 
                 Spacer(modifier = Modifier.height(14.dp))
 
@@ -1231,6 +1223,36 @@ private fun AddScheduleDialog(
 
                 Spacer(modifier = Modifier.height(16.dp))
 
+                // Apps blocked during this routine
+                Text(text = "Blocked apps", fontSize = 13.sp, color = TextSecondary, fontWeight = FontWeight.SemiBold)
+                Spacer(modifier = Modifier.height(6.dp))
+                Surface(
+                    shape = RoundedCornerShape(12.dp),
+                    color = ElevatedSurface,
+                    border = BorderStroke(1.dp, SubtleBorder),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable { showAppPicker = true }
+                ) {
+                    Column(modifier = Modifier.padding(horizontal = 14.dp, vertical = 10.dp)) {
+                        val names = installedApps.filter { it.packageName in selectedApps }.map { it.appName }
+                        Text(
+                            text = if (selectedApps.isEmpty()) "Tap to choose apps" else "${selectedApps.size} apps chosen",
+                            fontSize = 13.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = CyanAccent
+                        )
+                        Text(
+                            text = if (selectedApps.isEmpty()) "If you choose none, your default blocked apps are used." else names.joinToString(", "),
+                            fontSize = 11.sp,
+                            color = TextSecondary,
+                            maxLines = 3
+                        )
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+
                 // Strict Mode Toggle
                 Surface(
                     shape = RoundedCornerShape(12.dp),
@@ -1282,6 +1304,7 @@ private fun AddScheduleDialog(
                                     endHour = endHour,
                                     endMinute = endMinute,
                                     daysOfWeekBitmask = if (daysBitmask == 0) 127 else daysBitmask,
+                                    blockedPackageNames = selectedApps.toList(),
                                     isStrictMode = isStrict,
                                     isEnabled = true
                                 )
@@ -1438,6 +1461,21 @@ private fun SuperAdminKeyGeneratorCard(
                     }
                 }
             }
+        }
+    }
+}
+
+@Composable
+private fun ScheduleTimeField(label: String, value: String, modifier: Modifier = Modifier, onClick: () -> Unit) {
+    Surface(
+        shape = RoundedCornerShape(12.dp),
+        color = ElevatedSurface,
+        border = BorderStroke(1.dp, SubtleBorder),
+        modifier = modifier.clickable { onClick() }
+    ) {
+        Column(modifier = Modifier.padding(horizontal = 14.dp, vertical = 10.dp)) {
+            Text(text = label, fontSize = 11.sp, color = TextSecondary)
+            Text(text = value, fontSize = 17.sp, fontWeight = FontWeight.Bold, color = CyanAccent)
         }
     }
 }

@@ -88,7 +88,7 @@ fun ScheduleCard(
                 Spacer(modifier = Modifier.height(2.dp))
 
                 Text(
-                    text = "$daysFormatted • ${schedule.durationMinutes} min",
+                    text = "$daysFormatted • ${com.aegisfocus.app.core.common.DurationInput.format(schedule.durationMinutes)}",
                     fontSize = 12.sp,
                     color = TextSecondary
                 )
