@@ -19,8 +19,10 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -37,8 +39,8 @@ import androidx.compose.material.icons.filled.CenterFocusStrong
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.GraphicEq
 import androidx.compose.material.icons.filled.Grass
-import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.LocalFireDepartment
+import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.School
@@ -65,21 +67,22 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.aegisfocus.app.R
-import com.aegisfocus.app.core.components.SectionHeader
+import com.aegisfocus.app.core.theme.AegisTitleFamily
 import com.aegisfocus.app.core.theme.DarkCyanAccent
 import com.aegisfocus.app.core.theme.DarkDeepSurface
-import com.aegisfocus.app.core.theme.DarkEmeraldFocus
 import com.aegisfocus.app.core.theme.DarkElevatedSurface
+import com.aegisfocus.app.core.theme.DarkEmeraldFocus
 import com.aegisfocus.app.core.theme.DarkObsidianBg
 import com.aegisfocus.app.core.theme.DarkSubtleBorder
 import com.aegisfocus.app.core.theme.DarkTextMuted
@@ -88,6 +91,15 @@ import com.aegisfocus.app.core.theme.DarkTextSecondary
 import com.aegisfocus.app.domain.campfire.CampfireMode
 import com.aegisfocus.app.domain.campfire.CampfirePresets
 import com.aegisfocus.app.domain.campfire.CampfireSound
+
+// The Campfire screen is always dark (it sits on photos), whatever theme the rest of the app uses.
+
+/** Every preset card and mixer row uses the same size so nothing jumps around. */
+private val PresetCardWidth = 178.dp
+private val PresetCardHeight = 92.dp
+private val MixerRowHeight = 84.dp
+private val ChipHeight = 42.dp
+private val ScreenPadding = 16.dp
 
 private fun CampfireSound.icon(): ImageVector = when (this) {
     CampfireSound.CAMPFIRE -> Icons.Filled.LocalFireDepartment
@@ -101,16 +113,13 @@ private fun CampfireSound.icon(): ImageVector = when (this) {
     CampfireSound.PINK -> Icons.Filled.Waves
 }
 
-/** Cards are slightly see-through so the mode background shows behind them. */
-private val Glass = DarkDeepSurface.copy(alpha = 0.76f)
-
 private fun CampfireMode.accentColor(): Color = when (this) {
     CampfireMode.SLEEP -> Color(0xFFF2A65A)   // campfire amber
     CampfireMode.STUDY -> Color(0xFFE9C46A)   // highlighter gold
-    CampfireMode.FOCUS -> DarkEmeraldFocus        // desk-lamp green
+    CampfireMode.FOCUS -> DarkEmeraldFocus    // desk-lamp green
 }
 
-private fun CampfireMode.backgroundRes(): Int = when (this) {
+private fun CampfireMode.heroRes(): Int = when (this) {
     CampfireMode.SLEEP -> R.drawable.bg_campfire_sleep
     CampfireMode.STUDY -> R.drawable.bg_study_desk
     CampfireMode.FOCUS -> R.drawable.bg_deep_focus
@@ -122,22 +131,30 @@ private fun CampfireMode.icon(): ImageVector = when (this) {
     CampfireMode.FOCUS -> Icons.Filled.CenterFocusStrong
 }
 
+private fun CampfireMode.tagline(): String = when (this) {
+    CampfireMode.SLEEP -> "Drift off to calming sounds"
+    CampfireMode.STUDY -> "Stay calm and absorb more"
+    CampfireMode.FOCUS -> "Shut out the noise and go deep"
+}
+
+private fun formatRemaining(ms: Long): String {
+    val totalSec = (ms / 1000).coerceAtLeast(0)
+    val h = totalSec / 3600
+    val m = (totalSec % 3600) / 60
+    val s = totalSec % 60
+    return if (h > 0) "%d:%02d:%02d".format(h, m, s) else "%02d:%02d".format(m, s)
+}
+
 /**
- * Full-screen background that follows the selected mode (crossfade). While sound is playing it
- * gets a slow zoom, plus a flickering firelight glow in Deep Sleep. Nothing animates when paused,
- * so it costs no battery.
+ * Clear picture at the top of the screen (no dark overlay, no zoom). It fades into the page
+ * background at the bottom. Only the Deep Sleep fire gets a soft flicker, and only while playing.
  */
 @Composable
-private fun CampfireBackground(mode: CampfireMode, isPlaying: Boolean) {
-    var zoom = 1f
+private fun CampfireHero(mode: CampfireMode, isPlaying: Boolean) {
     var flicker = 0f
-    if (isPlaying) {
-        val t = rememberInfiniteTransition(label = "campfire-motion")
-        zoom = 1f + 0.05f * t.animateFloat(
-            initialValue = 0f, targetValue = 1f,
-            animationSpec = infiniteRepeatable(tween(28_000, easing = LinearEasing), RepeatMode.Reverse),
-            label = "zoom"
-        ).value
+    val fireOn = isPlaying && mode == CampfireMode.SLEEP
+    if (fireOn) {
+        val t = rememberInfiniteTransition(label = "fire")
         val f1 = t.animateFloat(
             initialValue = 0f, targetValue = 1f,
             animationSpec = infiniteRepeatable(tween(1_700, easing = LinearEasing), RepeatMode.Reverse),
@@ -148,62 +165,68 @@ private fun CampfireBackground(mode: CampfireMode, isPlaying: Boolean) {
             animationSpec = infiniteRepeatable(tween(2_300, easing = LinearEasing), RepeatMode.Reverse),
             label = "flicker-b"
         ).value
-        flicker = 0.5f * (f1 + f2)   // two periods mixed => uneven, fire-like
+        flicker = 0.5f * (f1 + f2)
     }
 
-    Crossfade(targetState = mode, animationSpec = tween(450), label = "campfire-bg") { m ->
-        Box(modifier = Modifier.fillMaxSize()) {
+    Box(modifier = Modifier.fillMaxWidth().aspectRatio(1080f / 1000f)) {
+        Crossfade(targetState = mode, animationSpec = tween(450), label = "hero") { m ->
             Image(
-                painter = painterResource(m.backgroundRes()),
+                painter = painterResource(m.heroRes()),
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .fillMaxSize()
-                    .graphicsLayer {
-                        scaleX = zoom
-                        scaleY = zoom
-                    }
+                modifier = Modifier.fillMaxSize()
             )
-            if (m == CampfireMode.SLEEP && isPlaying) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .drawBehind {
-                            drawRect(
-                                Brush.radialGradient(
-                                    colors = listOf(
-                                        Color(0xFFFF8A3D).copy(alpha = 0.10f + 0.16f * flicker),
-                                        Color.Transparent
-                                    ),
-                                    center = Offset(size.width * 0.58f, size.height * 0.62f),
-                                    radius = size.minDimension * 0.7f
-                                )
-                            )
-                        }
-                )
-            }
-            // dark scrim so text and sliders stay readable on any photo
+        }
+        if (fireOn) {
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(
-                        Brush.verticalGradient(
-                            0f to Color(0x66000000),
-                            0.35f to Color(0x99060D10),
-                            1f to Color(0xEE060D10)
+                    .drawBehind {
+                        drawRect(
+                            Brush.radialGradient(
+                                colors = listOf(
+                                    Color(0xFFFF8A3D).copy(alpha = 0.04f + 0.14f * flicker),
+                                    Color.Transparent
+                                ),
+                                center = Offset(size.width * 0.55f, size.height * 0.6f),
+                                radius = size.minDimension * 0.55f
+                            )
                         )
-                    )
+                    }
             )
         }
+        // soft top edge for the status bar and a long fade into the page below the picture
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(
+                    Brush.verticalGradient(
+                        0f to Color(0x66000000),
+                        0.18f to Color.Transparent,
+                        0.62f to Color.Transparent,
+                        1f to DarkObsidianBg
+                    )
+                )
+        )
     }
 }
 
-private fun formatRemaining(ms: Long): String {
-    val totalSec = (ms / 1000).coerceAtLeast(0)
-    val h = totalSec / 3600
-    val m = (totalSec % 3600) / 60
-    val s = totalSec % 60
-    return if (h > 0) "%d:%02d:%02d".format(h, m, s) else "%02d:%02d".format(m, s)
+@Composable
+private fun Header(title: String, actionText: String? = null, onAction: (() -> Unit)? = null) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = ScreenPadding),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(title, fontSize = 18.sp, fontWeight = FontWeight.Bold, color = DarkTextPrimary)
+        if (actionText != null && onAction != null) {
+            TextButton(onClick = onAction) {
+                Text(actionText, fontSize = 13.sp, color = DarkCyanAccent)
+            }
+        }
+    }
 }
 
 @Composable
@@ -215,23 +238,29 @@ fun CampfireScreen(
     var showSaveDialog by remember { mutableStateOf(false) }
     val accent by animateColorAsState(state.mode.accentColor(), tween(450), label = "accent")
 
-    Box(modifier = Modifier.fillMaxSize().background(DarkObsidianBg)) {
-    CampfireBackground(mode = state.mode, isPlaying = state.isPlaying)
-
     LazyColumn(
-        modifier = Modifier.fillMaxSize(),
-        contentPadding = PaddingValues(horizontal = 16.dp, vertical = 16.dp),
+        modifier = Modifier
+            .fillMaxSize()
+            .background(DarkObsidianBg),
+        contentPadding = PaddingValues(bottom = 24.dp),
         verticalArrangement = Arrangement.spacedBy(14.dp)
     ) {
-        // ----- Header -----
+        // ----- Hero picture -----
+        item { CampfireHero(mode = state.mode, isPlaying = state.isPlaying) }
+
+        // ----- Title (sits on the faded part of the picture) -----
         item {
-            Column {
-                Text("Campfire", fontSize = 26.sp, fontWeight = FontWeight.Bold, color = DarkTextPrimary)
+            Column(modifier = Modifier.padding(horizontal = ScreenPadding)) {
                 Text(
-                    "Layer calming sounds for deep sleep or a calm study session.",
-                    fontSize = 13.sp,
-                    color = DarkTextSecondary
+                    "Campfire",
+                    style = TextStyle(
+                        fontFamily = AegisTitleFamily,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 30.sp
+                    ),
+                    color = DarkTextPrimary
                 )
+                Text(state.mode.tagline(), fontSize = 13.sp, color = DarkTextSecondary)
             }
         }
 
@@ -239,9 +268,10 @@ fun CampfireScreen(
         item {
             Row(
                 modifier = Modifier
+                    .padding(horizontal = ScreenPadding)
                     .fillMaxWidth()
                     .clip(RoundedCornerShape(14.dp))
-                    .background(Glass)
+                    .background(DarkDeepSurface)
                     .border(BorderStroke(1.dp, DarkSubtleBorder), RoundedCornerShape(14.dp))
                     .padding(4.dp),
                 horizontalArrangement = Arrangement.spacedBy(4.dp)
@@ -251,10 +281,10 @@ fun CampfireScreen(
                     Row(
                         modifier = Modifier
                             .weight(1f)
+                            .height(40.dp)
                             .clip(RoundedCornerShape(10.dp))
                             .background(if (selected) DarkElevatedSurface else Color.Transparent)
-                            .clickable { viewModel.selectMode(mode) }
-                            .padding(vertical = 10.dp),
+                            .clickable { viewModel.selectMode(mode) },
                         horizontalArrangement = Arrangement.Center,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
@@ -283,11 +313,12 @@ fun CampfireScreen(
             val active = state.levels.size
             Column(
                 modifier = Modifier
+                    .padding(horizontal = ScreenPadding)
                     .fillMaxWidth()
                     .clip(RoundedCornerShape(20.dp))
-                    .background(Glass)
+                    .background(DarkDeepSurface)
                     .border(BorderStroke(1.dp, DarkSubtleBorder), RoundedCornerShape(20.dp))
-                    .padding(20.dp),
+                    .padding(vertical = 18.dp, horizontal = 20.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Box(
@@ -327,46 +358,56 @@ fun CampfireScreen(
             }
         }
 
-        // ----- Timer -----
+        // ----- Timer: four equal buttons -----
         item {
-            Column {
-                SectionHeader(
+            Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                Header(
                     title = when (state.mode) {
                         CampfireMode.SLEEP -> "Sleep timer"
                         CampfireMode.STUDY -> "Study timer"
                         CampfireMode.FOCUS -> "Focus timer"
-                    }
+                    },
+                    actionText = if (state.timerRemainingMs > 0) "Cancel timer" else null,
+                    onAction = { viewModel.cancelTimer() }
                 )
-                LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    items(state.mode.timerMinutes) { minutes ->
-                        Chip(label = if (minutes >= 60 && minutes % 60 == 0) "${minutes / 60} h" else "$minutes min", tint = accent) {
-                            viewModel.startTimer(minutes)
-                        }
-                    }
-                    if (state.timerRemainingMs > 0) {
-                        item { Chip(label = "Cancel timer", tint = accent, highlight = true) { viewModel.cancelTimer() } }
+                Row(
+                    modifier = Modifier
+                        .padding(horizontal = ScreenPadding)
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    state.mode.timerMinutes.forEach { minutes ->
+                        TimerChip(
+                            label = "$minutes min",
+                            modifier = Modifier.weight(1f)
+                        ) { viewModel.startTimer(minutes) }
                     }
                 }
             }
         }
 
-        // ----- Presets -----
+        // ----- Presets: all the same size -----
         item {
-            Column {
-                SectionHeader(title = "Presets")
-                LazyRow(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+            Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                Header(title = "Presets")
+                LazyRow(
+                    contentPadding = PaddingValues(horizontal = ScreenPadding),
+                    horizontalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
                     items(CampfirePresets.forMode(state.mode)) { preset ->
                         val locked = !preset.isFree && !state.isPro
                         Column(
                             modifier = Modifier
-                                .width(158.dp)
+                                .width(PresetCardWidth)
+                                .height(PresetCardHeight)
                                 .clip(RoundedCornerShape(16.dp))
-                                .background(Glass)
+                                .background(DarkDeepSurface)
                                 .border(BorderStroke(1.dp, DarkSubtleBorder), RoundedCornerShape(16.dp))
                                 .clickable {
                                     if (locked) onNavigateToPaywall() else viewModel.applyPreset(preset)
                                 }
-                                .padding(14.dp)
+                                .padding(14.dp),
+                            verticalArrangement = Arrangement.Top
                         ) {
                             Row(verticalAlignment = Alignment.CenterVertically) {
                                 Icon(
@@ -378,14 +419,21 @@ fun CampfireScreen(
                                 Spacer(Modifier.width(6.dp))
                                 Text(
                                     preset.name,
-                                    fontSize = 14.sp,
+                                    fontSize = 13.sp,
                                     fontWeight = FontWeight.Bold,
                                     color = DarkTextPrimary,
-                                    maxLines = 1
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis
                                 )
                             }
-                            Spacer(Modifier.size(4.dp))
-                            Text(preset.tagline, fontSize = 12.sp, color = DarkTextMuted, maxLines = 2)
+                            Spacer(Modifier.size(6.dp))
+                            Text(
+                                preset.tagline,
+                                fontSize = 12.sp,
+                                color = DarkTextMuted,
+                                maxLines = 2,
+                                overflow = TextOverflow.Ellipsis
+                            )
                         }
                     }
                 }
@@ -393,18 +441,20 @@ fun CampfireScreen(
         }
 
         // ----- Mixer -----
-        item { SectionHeader(title = "Mixer") }
+        item { Header(title = "Mixer") }
         items(state.mode.sounds) { sound ->
             val locked = !sound.isFree && !state.isPro
             val level = state.levels[sound] ?: 0f
             Row(
                 modifier = Modifier
+                    .padding(horizontal = ScreenPadding)
                     .fillMaxWidth()
+                    .height(MixerRowHeight)
                     .clip(RoundedCornerShape(14.dp))
-                    .background(Glass)
+                    .background(DarkDeepSurface)
                     .border(BorderStroke(1.dp, DarkSubtleBorder), RoundedCornerShape(14.dp))
                     .then(if (locked) Modifier.clickable { onNavigateToPaywall() } else Modifier)
-                    .padding(horizontal = 14.dp, vertical = 6.dp),
+                    .padding(horizontal = 14.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Icon(
@@ -414,10 +464,13 @@ fun CampfireScreen(
                     modifier = Modifier.size(22.dp)
                 )
                 Spacer(Modifier.width(12.dp))
-                Column(modifier = Modifier.weight(1f)) {
+                Column(
+                    modifier = Modifier.weight(1f),
+                    verticalArrangement = Arrangement.Center
+                ) {
                     Text(sound.label, fontSize = 14.sp, fontWeight = FontWeight.Medium, color = DarkTextPrimary)
                     if (locked) {
-                        Text("Pro sound", fontSize = 12.sp, color = DarkTextMuted)
+                        Text("Pro sound • tap to unlock", fontSize = 12.sp, color = DarkTextMuted)
                     } else {
                         Slider(
                             value = level,
@@ -433,18 +486,23 @@ fun CampfireScreen(
                     }
                 }
                 if (locked) {
-                    Icon(Icons.Filled.Lock, contentDescription = "Pro", tint = DarkTextMuted, modifier = Modifier.size(18.dp))
+                    Icon(
+                        Icons.Filled.Lock,
+                        contentDescription = "Pro",
+                        tint = DarkTextMuted,
+                        modifier = Modifier.size(18.dp)
+                    )
                 }
             }
         }
 
         // ----- Saved mixes -----
         item {
-            Column {
-                SectionHeader(
+            Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                Header(
                     title = "My mixes",
                     actionText = if (state.levels.isNotEmpty()) "Save current" else null,
-                    onActionClick = {
+                    onAction = {
                         if (!state.isPro && state.savedMixes.isNotEmpty()) onNavigateToPaywall()
                         else showSaveDialog = true
                     }
@@ -453,16 +511,18 @@ fun CampfireScreen(
                     Text(
                         "Dial in a mix you love, then tap Save current.",
                         fontSize = 13.sp,
-                        color = DarkTextMuted
+                        color = DarkTextMuted,
+                        modifier = Modifier.padding(horizontal = ScreenPadding)
                     )
                 } else {
                     state.savedMixes.forEach { mix ->
                         Row(
                             modifier = Modifier
+                                .padding(horizontal = ScreenPadding)
                                 .fillMaxWidth()
-                                .padding(bottom = 8.dp)
+                                .padding(bottom = 6.dp)
                                 .clip(RoundedCornerShape(12.dp))
-                                .background(Glass)
+                                .background(DarkDeepSurface)
                                 .border(BorderStroke(1.dp, DarkSubtleBorder), RoundedCornerShape(12.dp))
                                 .clickable { viewModel.applySaved(mix) }
                                 .padding(horizontal = 14.dp, vertical = 12.dp),
@@ -493,8 +553,6 @@ fun CampfireScreen(
         }
     }
 
-    } // end Box
-
     if (showSaveDialog) {
         var name by remember { mutableStateOf("") }
         AlertDialog(
@@ -522,18 +580,25 @@ fun CampfireScreen(
     }
 }
 
+/** Same height everywhere; width comes from the caller (weight) so all four are equal. */
 @Composable
-private fun Chip(label: String, tint: Color, highlight: Boolean = false, onClick: () -> Unit) {
-    Text(
-        text = label,
-        fontSize = 13.sp,
-        fontWeight = FontWeight.Medium,
-        color = if (highlight) tint else DarkTextPrimary,
-        modifier = Modifier
+private fun TimerChip(label: String, modifier: Modifier = Modifier, onClick: () -> Unit) {
+    Box(
+        modifier = modifier
+            .height(ChipHeight)
             .clip(RoundedCornerShape(50))
-            .background(Glass)
-            .border(BorderStroke(1.dp, if (highlight) tint else DarkSubtleBorder), RoundedCornerShape(50))
-            .clickable(onClick = onClick)
-            .padding(horizontal = 16.dp, vertical = 9.dp)
-    )
+            .background(DarkDeepSurface)
+            .border(BorderStroke(1.dp, DarkSubtleBorder), RoundedCornerShape(50))
+            .clickable(onClick = onClick),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = label,
+            fontSize = 13.sp,
+            fontWeight = FontWeight.Medium,
+            color = DarkTextPrimary,
+            textAlign = TextAlign.Center,
+            maxLines = 1
+        )
+    }
 }
