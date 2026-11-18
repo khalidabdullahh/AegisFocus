@@ -77,7 +77,38 @@
         details > summary::-webkit-details-marker { display: none; }
         details[open] .chev { transform: rotate(180deg); }
         .chev { transition: transform .2s ease; }
-        .phone { width: 272px; height: 548px; border-radius: 2.6rem; background: #0E181D; border: 8px solid #1C2F38; box-shadow: 0 30px 80px -20px rgba(0,0,0,.7), 0 0 0 1px #2B434D; }
+        /* ---- phone frames: one wrapper, look chosen by data-device ---- */
+        .phone-wrap { --pw: 8px; --pr: 2.5rem; --pb: #202327; --pe: #3a3f46; --pbb: 8px; position: relative; display: inline-block; }
+        .phone { width: 272px; height: 548px; border-radius: var(--pr); background: #0E181D; border: var(--pw) solid var(--pb); border-bottom-width: var(--pbb); box-shadow: 0 30px 80px -20px rgba(0,0,0,.7), 0 0 0 1px var(--pe), inset 0 0 0 1px rgba(255,255,255,.04); transition: border-radius .35s ease, border-color .35s ease; }
+        .phone-wrap::before, .phone-wrap::after { content: ""; position: absolute; width: 3px; border-radius: 2px; background: var(--pe); transition: background .35s ease; }
+        .phone-wrap::before { right: -3px; top: 132px; height: 54px; }
+        .phone-wrap::after { left: -3px; top: 110px; height: 80px; }
+        .sb-bar { position: absolute; top: 0; left: 0; right: 0; z-index: 30; height: 28px; padding: 0 20px; display: flex; align-items: center; justify-content: space-between; font-size: 10px; font-weight: 700; pointer-events: none; }
+        .sb-icons { display: flex; align-items: center; gap: 4px; }
+        .sb-cut { position: absolute; left: 50%; top: 8px; width: 10px; height: 10px; border-radius: 9999px; background: #000; box-shadow: 0 0 0 1px #2B434D; transform: translateX(-50%); transition: all .35s ease; }
+        .phone-wrap[data-device="samsung"] { --pw: 7px; --pr: 2.1rem; --pb: #16171a; --pe: #33353b; }
+        .phone-wrap[data-device="samsung"] .sb-cut { width: 9px; height: 9px; top: 9px; }
+        .phone-wrap[data-device="pixel"] { --pw: 8px; --pr: 2.5rem; --pb: #202327; --pe: #3a3f46; }
+        .phone-wrap[data-device="xiaomi"] { --pw: 11px; --pr: 1.8rem; --pb: #0d0e10; --pe: #2b2d31; --pbb: 15px; }
+        .phone-wrap[data-device="xiaomi"] .sb-cut { width: 9px; height: 9px; }
+        .phone-wrap[data-device="oppo"] { --pw: 6px; --pr: 2.7rem; --pb: #23262b; --pe: #4a4f57; }
+        .phone-wrap[data-device="oppo"] .sb-cut { left: 30px; transform: none; top: 9px; }
+        .phone-wrap[data-device="realme"] { --pw: 8px; --pr: 2.2rem; --pb: #2b2a24; --pe: #4b4837; }
+        .phone-wrap[data-device="realme"] .sb-cut { left: 28px; transform: none; top: 9px; width: 9px; height: 9px; }
+        .phone-wrap[data-device="vivo"] { --pw: 8px; --pr: 2.3rem; --pb: #1a1c20; --pe: #363a41; }
+        .phone-wrap[data-device="vivo"] .sb-cut { top: -1px; width: 40px; height: 16px; border-radius: 0 0 14px 14px; box-shadow: none; }
+        .phone-wrap[data-device="infinix"] { --pw: 12px; --pr: 1.7rem; --pb: #111214; --pe: #2f3136; --pbb: 17px; }
+        .phone-wrap[data-device="infinix"] .sb-cut { top: 10px; }
+        .phone-wrap[data-device="iphone"] { --pw: 9px; --pr: 3.2rem; --pb: #2e2e33; --pe: #6b6b73; }
+        .phone-wrap[data-device="iphone"] .sb-cut { top: 9px; width: 76px; height: 22px; box-shadow: none; }
+        .phone-wrap[data-device="iphone"] .sb-bar { height: 40px; padding: 4px 26px 0 30px; font-size: 11.5px; }
+        .phone-wrap[data-device="iphone"] #home-bar span { width: 112px; height: 4.5px; background: #fff; opacity: .85; }
+        .phone-wrap[data-device="samsung"] #home-bar span { width: 64px; height: 3px; }
+        .desk-line { display: none; }
+        .phone-wrap[data-desk="1"] .desk-line { display: block; position: absolute; left: 50%; bottom: -30px; width: 380px; max-width: 90vw; height: 34px; transform: translateX(-50%); background: radial-gradient(ellipse at 50% 0%, rgba(156,197,161,.28), transparent 70%); pointer-events: none; }
+        .dchip { flex-shrink: 0; border: 1px solid var(--line, #2B434D); border-radius: 9999px; padding: .28rem .7rem; font-size: 11px; color: #A8B9BC; background: transparent; transition: all .15s ease; }
+        .dchip:hover { color: #EEF2EE; }
+        .dchip[aria-pressed="true"] { border-color: #9CC5A1; color: #9CC5A1; background: rgba(156,197,161,.12); }
         .ring { background: conic-gradient(#9CC5A1 0 var(--p,100%), #1C2F38 var(--p,100%) 100%); transition: background .2s linear; }
         /* interactive demo */
         /* hero layout: row 1 = copy | phone, row 2 = two equal boxes (customizer | live protection) */
@@ -184,8 +215,8 @@
                 Aegis Focus blocks the apps that pull you in, cuts Shorts and Reels, removes ads system-wide and locks your focus sessions so you cannot talk yourself out of them. Everything runs on your phone.
             </p>
 
-            <div class="mt-8 flex flex-col sm:flex-row gap-3 justify-center min-[820px]:justify-start">
-                <a href="https://github.com/khalidabdullahh/AegisFocus/releases/latest/download/AegisFocus-Latest.apk" data-apk
+            <div class="mt-8 flex flex-wrap gap-3 justify-center min-[820px]:justify-start">
+                <a href="https://github.com/khalidabdullahh/AegisFocus/releases/latest/download/AegisFocus-Latest.apk" data-apk id="hero-download"
                    class="btn-primary rounded-2xl px-7 py-4 text-base inline-flex items-center justify-center gap-2.5 shadow-xl shadow-sage/20">
                     <i data-lucide="download" class="w-5 h-5"></i>
                     <span>Download APK <span id="hero-version" class="font-semibold opacity-70"></span></span>
@@ -193,6 +224,17 @@
                 <a href="#demo" class="btn-ghost rounded-2xl px-7 py-4 text-base inline-flex items-center justify-center gap-2.5 text-teal">
                     <i data-lucide="play" class="w-5 h-5"></i><span>Try demo</span>
                 </a>
+            </div>
+
+            <div id="platform-note" class="hidden mt-5 rounded-2xl border border-line bg-surface/70 p-4 max-w-xl mx-auto min-[820px]:mx-0 text-left">
+                <div class="flex items-center gap-4">
+                    <img src="assets/qr-aegisfocus.svg" alt="QR code that opens aegisfocus.pages.dev" width="88" height="88" class="rounded-lg bg-white p-1.5 shrink-0">
+                    <div class="min-w-0">
+                        <p id="platform-title" class="font-bold text-sm"></p>
+                        <p id="platform-text" class="mt-1 text-xs text-muted leading-relaxed"></p>
+                        <button type="button" id="copy-link" class="mt-2 btn-ghost rounded-lg px-3 py-1.5 text-xs">Copy link</button>
+                    </div>
+                </div>
             </div>
 
             <ul class="mt-6 flex flex-wrap gap-x-5 gap-y-2 justify-center min-[820px]:justify-start text-xs sm:text-sm text-muted">
@@ -207,12 +249,14 @@
 
         <!-- Phone illustration -->
         <div id="demo" class="hero-stage flex flex-col items-center">
+            <div class="phone-wrap" id="phone-wrap" data-device="pixel" data-desk="">
+            <div class="desk-line" aria-hidden="true"></div>
             <div class="phone relative overflow-hidden" id="phone">
-                <!-- status bar -->
-                <div class="absolute top-0 inset-x-0 z-30 h-7 px-5 flex items-center justify-between text-[10px] font-bold pointer-events-none">
+                <!-- status bar (look changes with the chosen phone) -->
+                <div class="sb-bar">
                     <span id="sb-time">9:41</span>
-                    <span class="absolute left-1/2 -translate-x-1/2 top-2 w-2.5 h-2.5 rounded-full bg-black ring-1 ring-line"></span>
-                    <span class="flex items-center gap-1 text-text/90"><i data-lucide="signal" class="w-3 h-3"></i><i data-lucide="wifi" class="w-3 h-3"></i><i data-lucide="battery-full" class="w-3.5 h-3.5"></i></span>
+                    <span class="sb-cut"></span>
+                    <span class="sb-icons text-text/90"><i data-lucide="signal" class="w-3 h-3"></i><i data-lucide="wifi" class="w-3 h-3"></i><i data-lucide="battery-full" class="w-3.5 h-3.5"></i></span>
                 </div>
 
                 <!-- home screen -->
@@ -424,7 +468,13 @@
                     <span class="block w-24 h-1 rounded-full bg-text/70"></span>
                 </button>
             </div>
+            </div>
             <p id="demo-status" class="mt-4 inline-flex items-center gap-2 rounded-full border border-line bg-surface/80 text-xs text-muted px-3.5 py-1.5" aria-live="polite"><span id="status-dot" class="w-1.5 h-1.5 rounded-full bg-faint"></span><span id="status-text">Idle &middot; press start</span></p>
+            <div class="mt-4 w-full max-w-[22rem]">
+                <p id="device-caption" class="text-center text-[11px] text-faint" aria-live="polite"></p>
+                <div id="device-chips" class="mt-2 flex gap-1.5 overflow-x-auto no-scrollbar pb-1" role="group" aria-label="Preview phone style"></div>
+                <p class="mt-1 text-center text-[10px] text-faint">The phone style is picked in your browser. Nothing is sent anywhere.</p>
+            </div>
         </div>
 
         <!-- Customizer -->
@@ -1188,6 +1238,107 @@
                 '<li class="py-3 text-muted">Could not load the list. <a class="text-teal hover:underline" href="https://github.com/' + repo + '/releases">Open releases on GitHub</a>.</li>';
         });
 })();
+</script>
+<script>
+    // Phone frame that matches the visitor's device (best effort), plus a manual switcher.
+    // Detection runs only in the browser; nothing is sent or stored except the visitor's own pick.
+    (function () {
+        var wrap = document.getElementById('phone-wrap');
+        if (!wrap) return;
+        var DEVICES = [
+            { id: 'samsung', label: 'Samsung' }, { id: 'pixel', label: 'Pixel' },
+            { id: 'xiaomi', label: 'Xiaomi / Redmi' }, { id: 'oppo', label: 'Oppo / OnePlus' },
+            { id: 'realme', label: 'Realme' }, { id: 'vivo', label: 'Vivo' },
+            { id: 'infinix', label: 'Infinix / Tecno' }, { id: 'iphone', label: 'iPhone' }
+        ];
+        var KEY = 'aegis-device';
+        var ua = navigator.userAgent || '';
+
+        function brandOf(text, model) {
+            if (/SAMSUNG|SM-[A-Z]\d|GT-[A-Z]\d|SamsungBrowser/i.test(text)) return 'samsung';
+            if (/Pixel/i.test(text)) return 'pixel';
+            if (/realme|RMX\d{4}/i.test(text)) return 'realme';
+            if (/OPPO|OnePlus|CPH\d|\bPH[A-Z]\d{3}\b|\b(LE|IN|KB|GM|HD|NE|BE|DE)\d{4}\b/.test(text)) return 'oppo';
+            if (/vivo|iQOO|\bV\d{4}[A-Z]?\b|\bI\d{4}\b/i.test(text)) return 'vivo';
+            if (/Redmi|POCO|Xiaomi|MIUI|HyperOS|\bMI \d/i.test(text)) return 'xiaomi';
+            if (model && /^(M\d{4}[A-Z0-9]+|(1[89]|2\d)\d{2}[0-9A-Z]{3,8})$/.test(model)) return 'xiaomi';
+            if (/Infinix|TECNO|itel|\bX\d{3,4}[A-Z]?\b|\b(KG|KF|KI|CK|CL|CI|BG|BF|LG|LH)\d[A-Za-z0-9]{1,3}\b/i.test(text)) return 'infinix';
+            return null;
+        }
+
+        var det = { platform: 'desktop', device: 'pixel', known: false };
+        if (/iPhone|iPad|iPod/.test(ua) || (/Mac/.test(navigator.platform || '') && (navigator.maxTouchPoints || 0) > 1)) {
+            det = { platform: 'ios', device: 'iphone', known: true };
+        } else if (/Android/i.test(ua)) {
+            var b = brandOf(ua, '');
+            det = { platform: 'android', device: b || 'pixel', known: !!b };
+        }
+
+        var choice = 'auto';
+        try { var saved = localStorage.getItem(KEY); if (saved && DEVICES.some(function (d) { return d.id === saved; })) choice = saved; } catch (e) {}
+
+        function labelOf(id) { return DEVICES.filter(function (d) { return d.id === id; })[0].label; }
+
+        var chips = document.getElementById('device-chips');
+        var caption = document.getElementById('device-caption');
+        function renderChips() {
+            var items = [{ id: 'auto', label: 'Auto' }].concat(DEVICES);
+            chips.innerHTML = '';
+            items.forEach(function (d) {
+                var btn = document.createElement('button');
+                btn.type = 'button'; btn.className = 'dchip'; btn.textContent = d.label;
+                btn.setAttribute('aria-pressed', String(d.id === choice));
+                btn.addEventListener('click', function () {
+                    choice = d.id;
+                    try { if (choice === 'auto') localStorage.removeItem(KEY); else localStorage.setItem(KEY, choice); } catch (e) {}
+                    apply();
+                });
+                chips.appendChild(btn);
+            });
+        }
+        function apply() {
+            var id = choice === 'auto' ? det.device : choice;
+            wrap.setAttribute('data-device', id);
+            wrap.setAttribute('data-desk', choice === 'auto' && det.platform === 'desktop' ? '1' : '');
+            var text;
+            if (choice !== 'auto') text = labelOf(id) + ' style (your pick)';
+            else if (det.platform === 'desktop') text = 'Generic Android phone, shown on your computer';
+            else if (det.known) text = labelOf(id) + ' style, matched to your device';
+            else text = 'Generic Android phone';
+            caption.textContent = text;
+            renderChips();
+        }
+        apply();
+
+        // Newer Chrome hides the phone model in the user agent; ask for it explicitly.
+        var uad = navigator.userAgentData;
+        if (det.platform === 'android' && uad && uad.getHighEntropyValues) {
+            uad.getHighEntropyValues(['model']).then(function (v) {
+                var m = (v && v.model) || '';
+                var b2 = m ? brandOf(ua + ' ' + m, m) : null;
+                if (b2) { det = { platform: 'android', device: b2, known: true }; apply(); }
+            }).catch(function () {});
+        }
+
+        // iPhone and computer visitors cannot install an APK, so say so clearly.
+        var note = document.getElementById('platform-note');
+        if (note && (det.platform === 'ios' || det.platform === 'desktop')) {
+            var ios = det.platform === 'ios';
+            document.getElementById('platform-title').textContent = ios ? 'Aegis Focus is Android only' : 'On a computer?';
+            document.getElementById('platform-text').textContent = ios
+                ? 'iPhone and iPad cannot install it. Open this page on an Android phone, or scan the code with one.'
+                : 'Scan the code with your Android phone to open this page there, or download the APK here and move it over.';
+            note.classList.remove('hidden');
+            if (ios) { var dl = document.getElementById('hero-download'); if (dl) dl.classList.add('hidden'); }
+            var cp = document.getElementById('copy-link');
+            cp.addEventListener('click', function () {
+                var url = location.origin + '/';
+                var done = function () { cp.textContent = 'Copied'; setTimeout(function () { cp.textContent = 'Copy link'; }, 1800); };
+                if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(url).then(done).catch(function () {});
+                else done();
+            });
+        }
+    })();
 </script>
 </body>
 </html>
