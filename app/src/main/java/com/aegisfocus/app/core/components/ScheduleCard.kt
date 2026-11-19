@@ -1,6 +1,7 @@
 package com.aegisfocus.app.core.components
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -38,14 +39,15 @@ import com.aegisfocus.app.domain.model.Schedule
 fun ScheduleCard(
     schedule: Schedule,
     onToggle: (Boolean) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onClick: (() -> Unit)? = null
 ) {
     val startTimeFormatted = TimeUtils.formatTimeOfDay(schedule.startHour, schedule.startMinute)
     val endTimeFormatted = TimeUtils.formatTimeOfDay(schedule.endHour, schedule.endMinute)
     val daysFormatted = TimeUtils.formatDaysOfWeek(schedule.daysOfWeekBitmask)
 
     Surface(
-        modifier = modifier.fillMaxWidth(),
+        modifier = if (onClick != null) modifier.fillMaxWidth().clickable { onClick() } else modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
         color = DeepSurface,
         border = BorderStroke(1.dp, SubtleBorder)

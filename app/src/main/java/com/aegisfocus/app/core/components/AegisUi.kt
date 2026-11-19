@@ -51,7 +51,6 @@ fun AegisScreenTitle(text: String, modifier: Modifier = Modifier, subtitle: Stri
             style = TextStyle(fontFamily = AegisTitleFamily, fontWeight = FontWeight.Bold, fontSize = 30.sp),
             color = TextPrimary
         )
-        WavyUnderline(color = CyanAccent)
         if (subtitle != null) {
             Spacer(Modifier.height(6.dp))
             Text(subtitle, fontSize = 13.sp, color = TextSecondary)
@@ -68,24 +67,6 @@ fun AegisSectionTitle(text: String, modifier: Modifier = Modifier) {
         style = TextStyle(fontFamily = AegisTitleFamily, fontWeight = FontWeight.Bold, fontSize = 20.sp),
         color = TextPrimary
     )
-}
-
-@Composable
-private fun WavyUnderline(color: Color) {
-    Canvas(modifier = Modifier.padding(top = 2.dp).width(92.dp).height(9.dp)) {
-        val waves = 6
-        val step = size.width / waves
-        val mid = size.height / 2f
-        val path = Path().apply {
-            moveTo(0f, mid)
-            var x = 0f
-            for (i in 0 until waves) {
-                quadraticBezierTo(x + step / 2f, if (i % 2 == 0) 0f else size.height, x + step, mid)
-                x += step
-            }
-        }
-        drawPath(path, color = color, style = Stroke(width = 3.dp.toPx(), cap = StrokeCap.Round))
-    }
 }
 
 /** The standard rounded card used by every screen. */

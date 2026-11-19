@@ -34,6 +34,30 @@ class IntentStore(context: Context) {
         blockedWords = IntentMatcher.splitList(blockedText())
     )
 
+    fun isLearningMode(): Boolean = prefs.getBoolean(KEY_LEARNING, false)
+    fun setLearningMode(enabled: Boolean) = prefs.edit().putBoolean(KEY_LEARNING, enabled).apply()
+
+    /** In learning mode nothing is blocked; each decision is only written here so you can judge the matching. */
+    fun addLearnLog(line: String) {
+        val stamp = SimpleDateFormat("MM-dd HH:mm", Locale.US).format(Date())
+        val log = (listOf("$stamp | ${line.take(140)}") + learnLog()).take(MAX_LEARN_LOG)
+        prefs.edit().putString(KEY_LEARN_LOG, log.joinToString("\n")).apply()
+    }
+
+    fun learnLog(): List<String> =
+        (prefs.getString(KEY_LEARN_LOG, null) ?: "").lines().filter { it.isNotBlank() }
+
+    fun clearLearnLog() = prefs.edit().remove(KEY_LEARN_LOG).apply()
+
+    /** Adds a channel to the always-allowed list (ignored if it is already there). */
+    fun addAllowedChannel(name: String) {
+        val clean = name.trim()
+        if (clean.isEmpty()) return
+        val existing = IntentMatcher.splitList(channelsText())
+        if (existing.any { it.equals(clean, ignoreCase = true) }) return
+        prefs.edit().putString(KEY_CHANNELS, (existing + clean).joinToString(", ")).apply()
+    }
+
     // "Allow this video" exceptions (reason is logged)
 
     fun isAllowedOnce(title: String): Boolean = allowedTitles.contains(IntentMatcher.normalize(title))
@@ -60,6 +84,9 @@ class IntentStore(context: Context) {
         private const val KEY_CHANNELS = "channels"
         private const val KEY_BLOCKED = "blocked"
         private const val KEY_LOG = "exception_log"
+        private const val KEY_LEARNING = "learning_mode"
+        private const val KEY_LEARN_LOG = "learn_log"
+        private const val MAX_LEARN_LOG = 25
         private const val MAX_LOG = 30
 
         private val allowedTitles = java.util.concurrent.ConcurrentHashMap.newKeySet<String>()

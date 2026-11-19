@@ -49,11 +49,27 @@ class ProductivityViewModel(
         channelsText = intentStore.channelsText(),
         blockedText = intentStore.blockedText(),
         lastCheck = intentStore.lastCheck(),
-        exceptions = intentStore.exceptionLog()
+        exceptions = intentStore.exceptionLog(),
+        learningMode = intentStore.isLearningMode(),
+        learnLog = intentStore.learnLog()
     )
 
     private val _intent = MutableStateFlow(buildIntent())
     val intent: StateFlow<IntentUi> = _intent.asStateFlow()
+
+    fun setLearningMode(enabled: Boolean) {
+        intentStore.setLearningMode(enabled)
+        refreshIntent()
+    }
+
+    fun clearLearnLog() {
+        intentStore.clearLearnLog()
+        refreshIntent()
+    }
+
+    /** Checks a title the same way the live YouTube check does, so matching can be tried without YouTube. */
+    fun testIntentTitle(text: String): com.aegisfocus.app.domain.intent.MatchResult =
+        com.aegisfocus.app.domain.intent.IntentMatcher.evaluate(listOf(text), intentStore.getConfig())
 
     fun refreshIntent() {
         _intent.value = buildIntent()

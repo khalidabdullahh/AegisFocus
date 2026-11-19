@@ -44,7 +44,9 @@ data class IntentUi(
     val channelsText: String,
     val blockedText: String,
     val lastCheck: String,
-    val exceptions: List<String>
+    val exceptions: List<String>,
+    val learningMode: Boolean = false,
+    val learnLog: List<String> = emptyList()
 )
 
 /** "YouTube Intent Mode": the user writes what they want to watch; other videos are blocked. */
@@ -53,9 +55,13 @@ fun IntentSection(
     intent: IntentUi,
     onToggle: (Boolean) -> Unit,
     onSave: (topics: String, channels: String, blocked: String) -> Unit,
-    onRefresh: () -> Unit
+    onRefresh: () -> Unit,
+    onLearningToggle: (Boolean) -> Unit = {},
+    onClearLearnLog: () -> Unit = {},
+    onTestTitle: (String) -> com.aegisfocus.app.domain.intent.MatchResult = { com.aegisfocus.app.domain.intent.MatchResult(true, "") }
 ) {
     var showEdit by remember { mutableStateOf(false) }
+    var showTester by remember { mutableStateOf(false) }
 
     Surface(
         modifier = Modifier.fillMaxWidth(),
@@ -97,6 +103,43 @@ fun IntentSection(
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 ActionChip("Edit topics") { showEdit = true }
                 ActionChip("Refresh check") { onRefresh() }
+                ActionChip("Test a title") { showTester = true }
+            }
+
+            Spacer(Modifier.height(12.dp))
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Column(modifier = Modifier.weight(1f)) {
+                    Text("Learning mode", fontSize = 13.sp, fontWeight = FontWeight.SemiBold, color = TextPrimary)
+                    Text(
+                        "Blocks nothing. Only notes what would have been blocked, so you can check the matching first.",
+                        fontSize = 11.sp,
+                        color = TextSecondary
+                    )
+                }
+                Switch(
+                    checked = intent.learningMode,
+                    onCheckedChange = onLearningToggle,
+                    colors = SwitchDefaults.colors(
+                        checkedThumbColor = ObsidianBg,
+                        checkedTrackColor = EmeraldFocus,
+                        uncheckedThumbColor = TextMuted,
+                        uncheckedTrackColor = DeepSurface
+                    )
+                )
+            }
+            if (intent.learnLog.isNotEmpty()) {
+                Spacer(Modifier.height(8.dp))
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text("Would have blocked", fontSize = 12.sp, color = TextMuted)
+                    androidx.compose.material3.TextButton(onClick = onClearLearnLog) {
+                        Text("Clear", color = CyanAccent, fontSize = 12.sp)
+                    }
+                }
+                intent.learnLog.take(5).forEach { Text(it, fontSize = 11.sp, color = TextSecondary, maxLines = 2) }
             }
 
             Spacer(Modifier.height(12.dp))
@@ -115,6 +158,38 @@ fun IntentSection(
                 color = TextMuted
             )
         }
+    }
+
+    if (showTester) {
+        var testText by remember { mutableStateOf("") }
+        val result = if (testText.isBlank()) null else onTestTitle(testText)
+        AlertDialog(
+            onDismissRequest = { showTester = false },
+            containerColor = DeepSurface,
+            title = { Text("Test a video title", color = TextPrimary, fontSize = 16.sp) },
+            text = {
+                Column {
+                    OutlinedTextField(
+                        value = testText,
+                        onValueChange = { testText = it },
+                        label = { Text("Paste or type a title", color = TextSecondary, fontSize = 12.sp) },
+                        minLines = 2,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                    Spacer(Modifier.height(10.dp))
+                    if (result != null) {
+                        Text(
+                            (if (result.allowed) "ALLOWED" else "BLOCKED"),
+                            fontSize = 15.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = if (result.allowed) EmeraldFocus else com.aegisfocus.app.core.theme.CrimsonDanger
+                        )
+                        Text(result.reason, fontSize = 12.sp, color = TextSecondary)
+                    }
+                }
+            },
+            confirmButton = { TextButton(onClick = { showTester = false }) { Text("Close", color = CyanAccent) } }
+        )
     }
 
     if (showEdit) {

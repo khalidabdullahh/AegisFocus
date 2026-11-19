@@ -153,7 +153,10 @@ fun ProductivityScreen(
             intent = intentUi,
             onToggle = { viewModel.setIntentEnabled(it) },
             onSave = { t, c, b -> viewModel.saveIntent(t, c, b) },
-            onRefresh = { viewModel.refreshIntent() }
+            onRefresh = { viewModel.refreshIntent() },
+            onLearningToggle = { viewModel.setLearningMode(it) },
+            onClearLearnLog = { viewModel.clearLearnLog() },
+            onTestTitle = { viewModel.testIntentTitle(it) }
         )
 
         Spacer(Modifier.height(20.dp))

@@ -380,6 +380,9 @@ fun HomeScreen(
         if (activeSession == null) {
             SectionHeader(title = "Quick Focus Routines")
 
+            val strictConfirm = androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf<Int?>(null) }
+            val homeContext = androidx.compose.ui.platform.LocalContext.current
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(10.dp)
@@ -394,13 +397,59 @@ fun HomeScreen(
                     minutes = 50,
                     label = "Deep Work",
                     modifier = Modifier.weight(1f),
-                    onClick = { viewModel.startQuickFocus(50, isStrict = true) }
+                    onClick = { strictConfirm.value = 50 }
                 )
                 QuickPresetButton(
                     minutes = 90,
                     label = "Immersion",
                     modifier = Modifier.weight(1f),
-                    onClick = { viewModel.startQuickFocus(90, isStrict = true) }
+                    onClick = { strictConfirm.value = 90 }
+                )
+            }
+
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = "Deep Work and Immersion start Strict Mode. It cannot be ended early.",
+                fontSize = 11.sp,
+                color = TextSecondary
+            )
+
+            strictConfirm.value?.let { minutes ->
+                androidx.compose.material3.AlertDialog(
+                    onDismissRequest = { strictConfirm.value = null },
+                    containerColor = DeepSurface,
+                    title = { Text("Start Strict Mode?", color = TextPrimary, fontSize = 16.sp) },
+                    text = {
+                        Text(
+                            "Your blocked apps stay locked for $minutes minutes and you cannot end the session early. Start now?",
+                            color = TextSecondary,
+                            fontSize = 13.sp
+                        )
+                    },
+                    confirmButton = {
+                        androidx.compose.material3.TextButton(onClick = {
+                            strictConfirm.value = null
+                            val dpm = homeContext.getSystemService(android.content.Context.DEVICE_POLICY_SERVICE)
+                                as? android.app.admin.DevicePolicyManager
+                            val adminOn = dpm?.isAdminActive(
+                                android.content.ComponentName(
+                                    homeContext,
+                                    com.aegisfocus.app.service.receiver.AegisDeviceAdminReceiver::class.java
+                                )
+                            ) == true
+                            if (adminOn) {
+                                viewModel.startQuickFocus(minutes, isStrict = true)
+                            } else {
+                                // Strict needs the uninstall-protection permission, which the Focus screen asks for
+                                onNavigateToFocus()
+                            }
+                        }) { Text("Start Strict", color = AlertStrict) }
+                    },
+                    dismissButton = {
+                        androidx.compose.material3.TextButton(onClick = { strictConfirm.value = null }) {
+                            Text("Cancel", color = TextSecondary)
+                        }
+                    }
                 )
             }
         }

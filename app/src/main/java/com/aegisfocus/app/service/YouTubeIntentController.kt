@@ -16,6 +16,7 @@ class YouTubeIntentController(
 ) {
     private var lastCheckMs = 0L
     private var lastBlockMs = 0L
+    private var lastLearnedTitle = ""
 
     /** Returns true if a video was blocked. */
     fun check(root: AccessibilityNodeInfo?): Boolean {
@@ -41,12 +42,21 @@ class YouTubeIntentController(
             return false
         }
 
-        val result = IntentMatcher.evaluate(reading.texts.joinToString(" | "), store.getConfig())
+        val result = IntentMatcher.evaluate(reading.texts, store.getConfig())
         store.setLastCheck(
             (if (result.allowed) "ALLOWED" else "BLOCKED") + " - " + result.reason +
                 "\nRead: " + reading.texts.joinToString(" | ")
         )
         if (result.allowed) return false
+
+        // Learning mode: only note what would have been blocked
+        if (store.isLearningMode()) {
+            if (title != lastLearnedTitle) {
+                lastLearnedTitle = title
+                store.addLearnLog("WOULD BLOCK | $title | ${result.reason}")
+            }
+            return false
+        }
 
         if (now - lastBlockMs > BLOCK_COOLDOWN_MS) {
             lastBlockMs = now
@@ -55,6 +65,7 @@ class YouTubeIntentController(
             val intent = Intent(service, IntentBlockedActivity::class.java).apply {
                 putExtra(IntentBlockedActivity.EXTRA_TITLE, title)
                 putExtra(IntentBlockedActivity.EXTRA_REASON, result.reason)
+                putExtra(IntentBlockedActivity.EXTRA_CHANNEL, reading.texts.getOrNull(1).orEmpty())
                 addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             }
             service.startActivity(intent)

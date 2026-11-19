@@ -235,6 +235,12 @@ class SettingsViewModel(
         }
     }
 
+    fun deleteSchedule(schedule: Schedule) {
+        viewModelScope.launch {
+            scheduleRepository.deleteSchedule(schedule)
+        }
+    }
+
     fun openAddScheduleDialog() {
         _localState.value = _localState.value.copy(isAddScheduleOpen = true)
     }
