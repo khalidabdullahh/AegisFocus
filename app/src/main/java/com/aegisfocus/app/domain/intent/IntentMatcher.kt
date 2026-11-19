@@ -34,6 +34,83 @@ object IntentMatcher {
         return MatchResult(false, "Does not match any of your topics")
     }
 
+    /**
+     * Weighted check for what was read on the video page: the first two texts (title and channel)
+     * count as strong evidence. Topic words found only further down need at least two different hits.
+     * Small spelling mistakes and word endings (trader / trading) are tolerated.
+     */
+    fun evaluate(texts: List<String>, config: IntentConfig): MatchResult {
+        val cleaned = texts.map { normalize(it) }.filter { it.isNotBlank() }
+        if (cleaned.isEmpty()) return MatchResult(true, "Nothing to check")
+        val all = cleaned.joinToString(" | ")
+        val strong = cleaned.take(2).joinToString(" | ")
+
+        config.blockedWords.firstOrNull { matches(all, it) }?.let {
+            return MatchResult(false, "Contains blocked word \"$it\"")
+        }
+        config.allowedChannels.firstOrNull { matches(all, it) }?.let {
+            return MatchResult(true, "Allowed channel \"$it\"")
+        }
+        for (topic in config.topics) {
+            val hit = topic.keywords.firstOrNull { matches(strong, it) }
+            if (hit != null) return MatchResult(true, "Topic \"${topic.name}\" (matched \"$hit\")")
+        }
+        val weakHits = config.topics.flatMap { it.keywords }.filter { matches(all, it) }.distinct()
+        if (weakHits.size >= 2) {
+            return MatchResult(true, "Several topic words (${weakHits.take(2).joinToString(", ")})")
+        }
+        return MatchResult(false, "Does not match any of your topics")
+    }
+
+    private fun matches(haystack: String, keyword: String): Boolean =
+        containsWord(haystack, keyword) || fuzzyMatch(haystack, keyword)
+
+    private fun fuzzyMatch(haystack: String, keyword: String): Boolean {
+        val k = normalize(keyword)
+        if (k.length < 5 || k.contains(' ') || !k.all { it.code < 128 && it.isLetter() }) return false
+        val stemmedKeyword = stem(k)
+        return haystack.split(Regex("[^a-z0-9]+")).any { token ->
+            token.length >= 5 && (
+                (k.length >= 6 && stem(token) == stemmedKeyword) ||
+                    (token[0] == k[0] && withinOneEdit(token, k))
+                )
+        }
+    }
+
+    /** Cuts common English endings: trader, trading -> trad. */
+    fun stem(word: String): String {
+        for (suffix in listOf("ing", "ers", "er", "ed", "es", "s")) {
+            if (word.length > suffix.length + 3 && word.endsWith(suffix)) return word.dropLast(suffix.length)
+        }
+        return word
+    }
+
+    private fun withinOneEdit(a: String, b: String): Boolean {
+        if (kotlin.math.abs(a.length - b.length) > 1) return false
+        var i = 0
+        var j = 0
+        var edits = 0
+        while (i < a.length && j < b.length) {
+            if (a[i] == b[j]) {
+                i++
+                j++
+            } else {
+                edits++
+                if (edits > 1) return false
+                when {
+                    a.length > b.length -> i++
+                    a.length < b.length -> j++
+                    else -> {
+                        i++
+                        j++
+                    }
+                }
+            }
+        }
+        edits += (a.length - i) + (b.length - j)
+        return edits <= 1
+    }
+
     fun normalize(text: String): String =
         text.lowercase().replace(Regex("\\s+"), " ").trim()
 

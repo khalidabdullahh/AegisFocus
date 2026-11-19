@@ -102,6 +102,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.foundation.text.KeyboardOptions
 import com.aegisfocus.app.domain.model.Schedule
+import com.aegisfocus.app.domain.model.isActiveNow
 import com.aegisfocus.app.domain.subscription.SubscriptionPlan
 
 @Composable
@@ -114,6 +115,12 @@ fun SettingsScreen(
     val uiState by viewModel.uiState.collectAsState()
     val context = LocalContext.current
     val scrollState = rememberScrollState()
+
+    // Routine actions: tap a routine card to edit or delete it
+    var selectedSchedule by remember { mutableStateOf<Schedule?>(null) }
+    var editingSchedule by remember { mutableStateOf<Schedule?>(null) }
+    var deletingSchedule by remember { mutableStateOf<Schedule?>(null) }
+    var routineLockedMessage by remember { mutableStateOf<String?>(null) }
 
     // Remembers which switch asked for the VPN permission ("ad" or "adult")
     var pendingVpnFor by remember { mutableStateOf("ad") }
@@ -865,7 +872,14 @@ fun SettingsScreen(
                 uiState.schedules.forEach { schedule ->
                     ScheduleCard(
                         schedule = schedule,
-                        onToggle = { isChecked -> viewModel.toggleSchedule(schedule.id, isChecked) }
+                        onToggle = { isChecked ->
+                            if (!isChecked && schedule.isStrictMode && schedule.isActiveNow()) {
+                                routineLockedMessage = "This strict routine is running now, so it cannot be switched off. Try again after it ends."
+                            } else {
+                                viewModel.toggleSchedule(schedule.id, isChecked)
+                            }
+                        },
+                        onClick = { selectedSchedule = schedule }
                     )
                 }
             }
@@ -991,6 +1005,53 @@ fun SettingsScreen(
         Spacer(modifier = Modifier.height(36.dp))
     }
 
+    selectedSchedule?.let { schedule ->
+        ScheduleActionSheet(
+            schedule = schedule,
+            onDismiss = { selectedSchedule = null },
+            onEdit = {
+                selectedSchedule = null
+                if (schedule.isStrictMode && schedule.isActiveNow()) {
+                    routineLockedMessage = "This strict routine is running now, so it cannot be changed. Edit it after it ends."
+                } else {
+                    editingSchedule = schedule
+                }
+            },
+            onDelete = {
+                selectedSchedule = null
+                if (schedule.isStrictMode && schedule.isActiveNow()) {
+                    routineLockedMessage = "This strict routine is running now, so it cannot be deleted. Delete it after it ends."
+                } else {
+                    deletingSchedule = schedule
+                }
+            }
+        )
+    }
+    deletingSchedule?.let { schedule ->
+        ScheduleDeleteDialog(
+            schedule = schedule,
+            onConfirm = {
+                viewModel.deleteSchedule(schedule)
+                com.aegisfocus.app.service.receiver.ScheduleAlarmScheduler.cancelAlarm(context, schedule.id)
+                deletingSchedule = null
+            },
+            onDismiss = { deletingSchedule = null }
+        )
+    }
+    routineLockedMessage?.let { message ->
+        ScheduleInfoDialog(message = message, onDismiss = { routineLockedMessage = null })
+    }
+    editingSchedule?.let { schedule ->
+        AddScheduleDialog(
+            initial = schedule,
+            onDismiss = { editingSchedule = null },
+            onSave = { updated ->
+                viewModel.addSchedule(updated)
+                editingSchedule = null
+            }
+        )
+    }
+
     if (uiState.isAddScheduleDialogOpen) {
         AddScheduleDialog(
             onDismiss = { viewModel.closeAddScheduleDialog() },
@@ -1004,21 +1065,22 @@ fun SettingsScreen(
 @Composable
 private fun AddScheduleDialog(
     onDismiss: () -> Unit,
-    onSave: (Schedule) -> Unit
+    onSave: (Schedule) -> Unit,
+    initial: Schedule? = null
 ) {
-    var name by remember { mutableStateOf("Daily Deep Work") }
-    var startHour by remember { mutableIntStateOf(9) }
-    var startMinute by remember { mutableIntStateOf(0) }
-    var endHour by remember { mutableIntStateOf(11) }
-    var endMinute by remember { mutableIntStateOf(0) }
-    var isStrict by remember { mutableStateOf(true) }
-    var daysBitmask by remember { mutableIntStateOf(62) } // Mon - Fri
+    var name by remember { mutableStateOf(initial?.name ?: "Daily Deep Work") }
+    var startHour by remember { mutableIntStateOf(initial?.startHour ?: 9) }
+    var startMinute by remember { mutableIntStateOf(initial?.startMinute ?: 0) }
+    var endHour by remember { mutableIntStateOf(initial?.endHour ?: 11) }
+    var endMinute by remember { mutableIntStateOf(initial?.endMinute ?: 0) }
+    var isStrict by remember { mutableStateOf(initial?.isStrictMode ?: true) }
+    var daysBitmask by remember { mutableIntStateOf(initial?.daysOfWeekBitmask ?: 62) } // Mon - Fri
 
     val dayNames = listOf("Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat")
     var showStartPicker by remember { mutableStateOf(false) }
     var showEndPicker by remember { mutableStateOf(false) }
     var showAppPicker by remember { mutableStateOf(false) }
-    var selectedApps by remember { mutableStateOf(setOf<String>()) }
+    var selectedApps by remember { mutableStateOf(initial?.blockedPackageNames?.toSet() ?: setOf<String>()) }
 
     val dialogContext = androidx.compose.ui.platform.LocalContext.current
     val installedApps by androidx.compose.runtime.produceState(initialValue = emptyList<com.aegisfocus.app.domain.model.AppInfo>()) {
@@ -1292,6 +1354,8 @@ private fun AddScheduleDialog(
                         onClick = {
                             onSave(
                                 Schedule(
+                                    id = initial?.id ?: 0L,
+                                    profileId = initial?.profileId,
                                     name = name.ifBlank { "Focus Routine" },
                                     startHour = startHour,
                                     startMinute = startMinute,
@@ -1300,7 +1364,7 @@ private fun AddScheduleDialog(
                                     daysOfWeekBitmask = if (daysBitmask == 0) 127 else daysBitmask,
                                     blockedPackageNames = selectedApps.toList(),
                                     isStrictMode = isStrict,
-                                    isEnabled = true
+                                    isEnabled = initial?.isEnabled ?: true
                                 )
                             )
                         },

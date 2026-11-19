@@ -43,6 +43,7 @@ class IntentBlockedActivity : ComponentActivity() {
 
         val title = intent.getStringExtra(EXTRA_TITLE).orEmpty()
         val reason = intent.getStringExtra(EXTRA_REASON).orEmpty()
+        val channel = intent.getStringExtra(EXTRA_CHANNEL).orEmpty()
         val store = ServiceLocator.getContainer(applicationContext).intentStore
 
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
@@ -91,6 +92,19 @@ class IntentBlockedActivity : ComponentActivity() {
                     )
                     Spacer(Modifier.height(8.dp))
 
+                    if (channel.isNotBlank() && channel.length <= 60) {
+                        AegisOutlinedButton(
+                            text = "Always allow \"$channel\"",
+                            onClick = {
+                                store.addAllowedChannel(channel)
+                                store.allowOnce(title, "Channel always allowed: $channel")
+                                finish()
+                            },
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                        Spacer(Modifier.height(8.dp))
+                    }
+
                     if (!asking) {
                         AegisOutlinedButton(
                             text = "This one is useful",
@@ -134,5 +148,6 @@ class IntentBlockedActivity : ComponentActivity() {
     companion object {
         const val EXTRA_TITLE = "extra_intent_title"
         const val EXTRA_REASON = "extra_intent_reason"
+        const val EXTRA_CHANNEL = "extra_intent_channel"
     }
 }
