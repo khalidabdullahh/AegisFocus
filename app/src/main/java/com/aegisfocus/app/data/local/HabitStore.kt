@@ -19,6 +19,17 @@ class HabitStore(context: Context) {
 
     private val prefs = context.getSharedPreferences("aegis_habits", Context.MODE_PRIVATE)
 
+    fun exportRaw(): JSONObject = JSONObject()
+        .put("habits", prefs.getString(KEY_HABITS, "") ?: "")
+        .put("done", prefs.getString(KEY_DONE, "") ?: "")
+
+    fun importRaw(o: JSONObject) {
+        prefs.edit()
+            .putString(KEY_HABITS, o.optString("habits", ""))
+            .putString(KEY_DONE, o.optString("done", ""))
+            .apply()
+    }
+
     fun getHabits(): List<Habit> {
         val raw = prefs.getString(KEY_HABITS, null) ?: return emptyList()
         return try {

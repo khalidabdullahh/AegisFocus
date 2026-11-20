@@ -13,6 +13,27 @@ class IntentStore(context: Context) {
 
     private val prefs = context.getSharedPreferences("aegis_intent", Context.MODE_PRIVATE)
 
+    fun exportJson(): org.json.JSONObject = org.json.JSONObject()
+        .put("enabled", isEnabled())
+        .put("learning", isLearningMode())
+        .put("topics", topicsText())
+        .put("channels", channelsText())
+        .put("blocked", blockedText())
+
+    fun importJson(o: org.json.JSONObject) {
+        prefs.edit()
+            .putBoolean(KEY_ENABLED, o.optBoolean("enabled", false))
+            .putBoolean(KEY_LEARNING, o.optBoolean("learning", false))
+            .putString(KEY_TOPICS, o.optString("topics", IntentDefaults.TOPICS_TEXT))
+            .putString(KEY_CHANNELS, o.optString("channels", ""))
+            .putString(KEY_BLOCKED, o.optString("blocked", IntentDefaults.BLOCKED_TEXT))
+            .apply()
+    }
+
+    /** True if the user never changed the topics, channels or blocked words. */
+    fun isUntouched(): Boolean =
+        !prefs.contains(KEY_TOPICS) && !prefs.contains(KEY_CHANNELS) && !prefs.contains(KEY_BLOCKED)
+
     fun isEnabled(): Boolean = prefs.getBoolean(KEY_ENABLED, false)
     fun setEnabled(enabled: Boolean) = prefs.edit().putBoolean(KEY_ENABLED, enabled).apply()
 

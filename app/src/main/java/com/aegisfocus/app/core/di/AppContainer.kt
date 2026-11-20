@@ -58,6 +58,13 @@ class AppContainer(private val context: Context) {
     val appUsageTracker by lazy { com.aegisfocus.app.engine.AppUsageTracker(context) }
     val pinStore by lazy { com.aegisfocus.app.data.local.PinStore(context) }
     val intentStore by lazy { com.aegisfocus.app.data.local.IntentStore(context) }
+    val statsStore by lazy { com.aegisfocus.app.data.local.StatsStore(context) }
+    val settingsBackupService by lazy {
+        com.aegisfocus.app.data.remote.SettingsBackupService(
+            context, cloudRestoreService, supabaseAuthService,
+            habitStore, mindfulGateStore, appLimitStore, intentStore, scheduleRepository
+        )
+    }
     val habitStore by lazy { com.aegisfocus.app.data.local.HabitStore(context) }
     val mindfulGateStore by lazy { com.aegisfocus.app.data.local.MindfulGateStore(context) }
     val campfireStore by lazy { com.aegisfocus.app.data.local.CampfireStore(context) }

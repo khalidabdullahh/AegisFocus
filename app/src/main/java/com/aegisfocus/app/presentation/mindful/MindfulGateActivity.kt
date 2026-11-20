@@ -56,7 +56,9 @@ class MindfulGateActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         val packageName = intent.getStringExtra(EXTRA_PACKAGE).orEmpty()
-        val store = ServiceLocator.getContainer(applicationContext).mindfulGateStore
+        val container = ServiceLocator.getContainer(applicationContext)
+        val store = container.mindfulGateStore
+        val stats = container.statsStore
         val gate = store.getGate(packageName)
         if (gate == null || !gate.enabled || gate.items.isEmpty()) {
             finish()
@@ -69,6 +71,8 @@ class MindfulGateActivity : ComponentActivity() {
             }
         })
 
+        stats.record(com.aegisfocus.app.data.local.StatsStore.Event.GATE_SHOWN)
+
         setContent {
             AegisFocusTheme() {
                 MindfulGateScreen(
@@ -77,6 +81,7 @@ class MindfulGateActivity : ComponentActivity() {
                     graceMinutes = gate.graceMinutes,
                     onOpenApp = {
                         store.markUnlocked(packageName, gate.graceMinutes)
+                        stats.record(com.aegisfocus.app.data.local.StatsStore.Event.GATE_OPENED)
                         val launch = packageManager.getLaunchIntentForPackage(packageName)
                         if (launch != null) {
                             launch.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
@@ -113,7 +118,15 @@ private fun MindfulGateScreen(
     onNotNow: () -> Unit
 ) {
     val checked = remember(items) { mutableStateListOf<Boolean>().apply { items.forEach { add(false) } } }
+    val secondsLeft = remember { androidx.compose.runtime.mutableIntStateOf(5) }
+    androidx.compose.runtime.LaunchedEffect(Unit) {
+        while (secondsLeft.intValue > 0) {
+            kotlinx.coroutines.delay(1000)
+            secondsLeft.intValue = secondsLeft.intValue - 1
+        }
+    }
     val allChecked = checked.isNotEmpty() && checked.all { it }
+    val ready = allChecked && secondsLeft.intValue == 0
 
     Column(
         modifier = Modifier
@@ -177,9 +190,9 @@ private fun MindfulGateScreen(
         )
         Spacer(Modifier.height(10.dp))
         AegisPrimaryButton(
-            text = "Open $appName",
+            text = if (secondsLeft.intValue > 0) "Take a breath... ${secondsLeft.intValue}" else "Open $appName",
             onClick = onOpenApp,
-            enabled = allChecked,
+            enabled = ready,
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(Modifier.height(8.dp))

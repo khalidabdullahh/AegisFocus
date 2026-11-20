@@ -87,6 +87,8 @@ class AppLimitController(
                 addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             }
             context.startActivity(intent)
+            com.aegisfocus.app.core.di.ServiceLocator.getContainer(context).statsStore
+                .record(com.aegisfocus.app.data.local.StatsStore.Event.LIMIT_BLOCKED)
         }
         return true
     }

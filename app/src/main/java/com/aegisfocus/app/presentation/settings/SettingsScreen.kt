@@ -307,76 +307,6 @@ fun SettingsScreen(
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        // System Permissions Section
-        SectionHeader(
-            title = "Android Permissions",
-            actionText = "Refresh",
-            onActionClick = { viewModel.refreshPermissions() }
-        )
-
-        PermissionStatusRow(
-            title = "Usage Access",
-            description = "Enables screen time tracking, behavioral analytics, and background foreground verification.",
-            isGranted = uiState.permissions.hasUsageAccess,
-            onGrantClick = { viewModel.openUsageAccessSettings(context) },
-            icon = Icons.Default.BarChart
-        )
-
-        Spacer(modifier = Modifier.height(10.dp))
-
-        PermissionStatusRow(
-            title = "Accessibility Blocker Service",
-            description = "Enables real-time instantaneous detection and gentle blocking intervention when distracting apps are opened.",
-            isGranted = uiState.permissions.hasAccessibilityService,
-            onGrantClick = { viewModel.openAccessibilitySettings(context) },
-            icon = Icons.Default.AccessibilityNew
-        )
-
-        Spacer(modifier = Modifier.height(10.dp))
-
-        PermissionStatusRow(
-            title = "Persistent Notifications",
-            description = "Keeps active focus timers visible and prevents Android from killing ongoing discipline sessions.",
-            isGranted = uiState.permissions.hasNotificationPermission,
-            onGrantClick = { viewModel.openNotificationSettings(context) },
-            icon = Icons.Default.Notifications
-        )
-
-        Spacer(modifier = Modifier.height(10.dp))
-
-        PermissionStatusRow(
-            title = "Display Over Apps",
-            description = "Permits calm full-screen intervention overlays over blocked applications.",
-            isGranted = uiState.permissions.hasOverlayPermission,
-            onGrantClick = { viewModel.openOverlaySettings(context) },
-            icon = Icons.Default.Layers,
-            isRequired = false
-        )
-
-        Spacer(modifier = Modifier.height(10.dp))
-
-        PermissionStatusRow(
-            title = "Exact Alarms",
-            description = "Ensures scheduled routines trigger precisely at configured times.",
-            isGranted = uiState.permissions.hasExactAlarmPermission,
-            onGrantClick = { viewModel.openExactAlarmSettings(context) },
-            icon = Icons.Default.Alarm,
-            isRequired = false
-        )
-
-        Spacer(modifier = Modifier.height(10.dp))
-
-        PermissionStatusRow(
-            title = "Anti-Uninstall Device Admin",
-            description = "Prevents unauthorized uninstallation or bypass during active Strict Mode focus sessions.",
-            isGranted = uiState.permissions.hasDeviceAdminPermission,
-            onGrantClick = { viewModel.openDeviceAdminSettings(context) },
-            icon = Icons.Default.Security,
-            isRequired = false
-        )
-
-        Spacer(modifier = Modifier.height(28.dp))
-
         // Focus & Strict Mode Preferences
         SectionHeader(title = "Discipline Preferences")
 
@@ -822,14 +752,6 @@ fun SettingsScreen(
 
         Spacer(modifier = Modifier.height(28.dp))
 
-        AppearanceCard()
-
-        Spacer(modifier = Modifier.height(28.dp))
-
-        com.aegisfocus.app.presentation.security.PinSettingsCard()
-
-        Spacer(modifier = Modifier.height(28.dp))
-
         // Scheduled Routines Section
         SectionHeader(
             title = "Scheduled Routines",
@@ -884,6 +806,88 @@ fun SettingsScreen(
                 }
             }
         }
+
+        Spacer(modifier = Modifier.height(28.dp))
+
+        AppearanceCard()
+
+        Spacer(modifier = Modifier.height(28.dp))
+
+        com.aegisfocus.app.presentation.security.PinSettingsCard()
+
+        Spacer(modifier = Modifier.height(28.dp))
+
+        BackupCard()
+
+        Spacer(modifier = Modifier.height(28.dp))
+
+        // System Permissions Section
+        SectionHeader(
+            title = "Android Permissions",
+            actionText = "Refresh",
+            onActionClick = { viewModel.refreshPermissions() }
+        )
+
+        PermissionStatusRow(
+            title = "Usage Access",
+            description = "Enables screen time tracking, behavioral analytics, and background foreground verification.",
+            isGranted = uiState.permissions.hasUsageAccess,
+            onGrantClick = { viewModel.openUsageAccessSettings(context) },
+            icon = Icons.Default.BarChart
+        )
+
+        Spacer(modifier = Modifier.height(10.dp))
+
+        PermissionStatusRow(
+            title = "Accessibility Blocker Service",
+            description = "Enables real-time instantaneous detection and gentle blocking intervention when distracting apps are opened.",
+            isGranted = uiState.permissions.hasAccessibilityService,
+            onGrantClick = { viewModel.openAccessibilitySettings(context) },
+            icon = Icons.Default.AccessibilityNew
+        )
+
+        Spacer(modifier = Modifier.height(10.dp))
+
+        PermissionStatusRow(
+            title = "Persistent Notifications",
+            description = "Keeps active focus timers visible and prevents Android from killing ongoing discipline sessions.",
+            isGranted = uiState.permissions.hasNotificationPermission,
+            onGrantClick = { viewModel.openNotificationSettings(context) },
+            icon = Icons.Default.Notifications
+        )
+
+        Spacer(modifier = Modifier.height(10.dp))
+
+        PermissionStatusRow(
+            title = "Display Over Apps",
+            description = "Permits calm full-screen intervention overlays over blocked applications.",
+            isGranted = uiState.permissions.hasOverlayPermission,
+            onGrantClick = { viewModel.openOverlaySettings(context) },
+            icon = Icons.Default.Layers,
+            isRequired = false
+        )
+
+        Spacer(modifier = Modifier.height(10.dp))
+
+        PermissionStatusRow(
+            title = "Exact Alarms",
+            description = "Ensures scheduled routines trigger precisely at configured times.",
+            isGranted = uiState.permissions.hasExactAlarmPermission,
+            onGrantClick = { viewModel.openExactAlarmSettings(context) },
+            icon = Icons.Default.Alarm,
+            isRequired = false
+        )
+
+        Spacer(modifier = Modifier.height(10.dp))
+
+        PermissionStatusRow(
+            title = "Anti-Uninstall Device Admin",
+            description = "Prevents unauthorized uninstallation or bypass during active Strict Mode focus sessions.",
+            isGranted = uiState.permissions.hasDeviceAdminPermission,
+            onGrantClick = { viewModel.openDeviceAdminSettings(context) },
+            icon = Icons.Default.Security,
+            isRequired = false
+        )
 
         Spacer(modifier = Modifier.height(28.dp))
 
@@ -1173,6 +1177,26 @@ private fun AddScheduleDialog(
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
+
+                if (initial == null) {
+                    Text(text = "Quick templates", fontSize = 13.sp, color = TextSecondary, fontWeight = FontWeight.SemiBold)
+                    Spacer(modifier = Modifier.height(6.dp))
+                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                        TemplateChip("Study") {
+                            name = "Study Time"; startHour = 9; startMinute = 0; endHour = 13; endMinute = 0
+                            daysBitmask = 62; isStrict = true
+                        }
+                        TemplateChip("Bedtime") {
+                            name = "Bedtime Lock"; startHour = 23; startMinute = 0; endHour = 7; endMinute = 0
+                            daysBitmask = 127; isStrict = true
+                        }
+                        TemplateChip("Morning") {
+                            name = "Morning No-Phone"; startHour = 6; startMinute = 0; endHour = 8; endMinute = 0
+                            daysBitmask = 127; isStrict = false
+                        }
+                    }
+                    Spacer(modifier = Modifier.height(14.dp))
+                }
 
                 // Start / end time: tap to type or use the clock
                 Text(text = "Time", fontSize = 13.sp, color = TextSecondary, fontWeight = FontWeight.SemiBold)
@@ -1535,5 +1559,23 @@ private fun ScheduleTimeField(label: String, value: String, modifier: Modifier =
             Text(text = label, fontSize = 11.sp, color = TextSecondary)
             Text(text = value, fontSize = 17.sp, fontWeight = FontWeight.Bold, color = CyanAccent)
         }
+    }
+}
+
+@Composable
+private fun TemplateChip(label: String, onClick: () -> Unit) {
+    Surface(
+        shape = RoundedCornerShape(10.dp),
+        color = ElevatedSurface,
+        border = BorderStroke(1.dp, SubtleBorder),
+        modifier = Modifier.clickable { onClick() }
+    ) {
+        Text(
+            text = label,
+            modifier = Modifier.padding(horizontal = 12.dp, vertical = 7.dp),
+            fontSize = 12.sp,
+            fontWeight = FontWeight.SemiBold,
+            color = CyanAccent
+        )
     }
 }

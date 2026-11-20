@@ -69,6 +69,8 @@ class YouTubeIntentController(
                 addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             }
             service.startActivity(intent)
+            com.aegisfocus.app.core.di.ServiceLocator.getContainer(service.applicationContext).statsStore
+                .record(com.aegisfocus.app.data.local.StatsStore.Event.INTENT_BLOCKED)
         }
         return true
     }
