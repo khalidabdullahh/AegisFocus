@@ -155,6 +155,10 @@ fun AegisNavHost(
         NavHost(
             navController = navController,
             startDestination = startDestination,
+            enterTransition = { androidx.compose.animation.fadeIn(androidx.compose.animation.core.tween(220)) },
+            exitTransition = { androidx.compose.animation.fadeOut(androidx.compose.animation.core.tween(140)) },
+            popEnterTransition = { androidx.compose.animation.fadeIn(androidx.compose.animation.core.tween(220)) },
+            popExitTransition = { androidx.compose.animation.fadeOut(androidx.compose.animation.core.tween(140)) },
             modifier = Modifier
                 .fillMaxSize()
                 .background(ObsidianBg)

@@ -26,6 +26,13 @@ class MindfulGateStore(context: Context) {
     @Volatile
     private var cache: List<MindfulGate>? = null
 
+    fun exportRaw(): String = prefs.getString(KEY_GATES, "") ?: ""
+
+    fun importRaw(raw: String) {
+        prefs.edit().putString(KEY_GATES, raw).apply()
+        cache = null
+    }
+
     fun getGates(): List<MindfulGate> {
         cache?.let { return it }
         val loaded = readFromPrefs()

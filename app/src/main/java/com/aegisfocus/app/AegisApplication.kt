@@ -45,8 +45,36 @@ class AegisApplication : Application() {
                 .map { it?.id }
                 .filterNotNull()
                 .distinctUntilChanged()
-                .collect { container.cloudRestoreService.restoreAll() }
+                .collect {
+                    container.cloudRestoreService.restoreAll()
+                    container.settingsBackupService.restoreIfFresh()
+                }
         }
+
+        // Back up the user's setup when the app goes to the background (only uploads if something changed)
+        registerActivityLifecycleCallbacks(object : android.app.Application.ActivityLifecycleCallbacks {
+            private var started = 0
+            override fun onActivityStarted(activity: android.app.Activity) {
+                started++
+            }
+            override fun onActivityStopped(activity: android.app.Activity) {
+                started--
+                if (started <= 0) {
+                    CoroutineScope(Dispatchers.IO).launch {
+                        try {
+                            container.settingsBackupService.backupIfChanged()
+                        } catch (e: Exception) {
+                            // backup is best effort
+                        }
+                    }
+                }
+            }
+            override fun onActivityCreated(activity: android.app.Activity, savedInstanceState: android.os.Bundle?) {}
+            override fun onActivityResumed(activity: android.app.Activity) {}
+            override fun onActivityPaused(activity: android.app.Activity) {}
+            override fun onActivitySaveInstanceState(activity: android.app.Activity, outState: android.os.Bundle) {}
+            override fun onActivityDestroyed(activity: android.app.Activity) {}
+        })
 
         // Restore active focus session on application startup
         CoroutineScope(Dispatchers.IO).launch {

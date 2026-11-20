@@ -88,6 +88,24 @@ class SupabaseCloudRestoreService(
         }
     }
 
+    /** Returns (reachable, json). reachable is false when the server column is missing or there is no network. */
+    suspend fun fetchSettingsJson(): Pair<Boolean, String?> = withContext(Dispatchers.IO) {
+        val user = authService.currentUser.value ?: return@withContext Pair(false, null)
+        val response = request("GET", "profiles?id=eq.${user.id}&select=settings_json", null)
+            ?: return@withContext Pair(false, null)
+        if (response.first !in 200..299) return@withContext Pair(false, null)
+        val rows = JSONArray(response.second)
+        val text = if (rows.length() > 0) rows.getJSONObject(0).optString("settings_json", "") else ""
+        Pair(true, text.takeIf { it.isNotBlank() && it != "null" })
+    }
+
+    suspend fun pushSettingsJson(json: String): Boolean = withContext(Dispatchers.IO) {
+        val user = authService.currentUser.value ?: return@withContext false
+        val body = JSONObject().put("settings_json", json).toString()
+        val response = request("PATCH", "profiles?id=eq.${user.id}", body)
+        response != null && response.first in 200..299
+    }
+
     suspend fun pushDisplayName(name: String) = withContext(Dispatchers.IO) {
         val user = authService.currentUser.value ?: return@withContext
         val body = JSONObject().put("display_name", name).toString()

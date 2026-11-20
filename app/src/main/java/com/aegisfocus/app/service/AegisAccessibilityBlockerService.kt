@@ -39,6 +39,7 @@ class AegisAccessibilityBlockerService : AccessibilityService() {
                 ) {
                     lastBackMs = now
                     performGlobalAction(GLOBAL_ACTION_BACK)
+                    container.statsStore.record(com.aegisfocus.app.data.local.StatsStore.Event.SHORTS_BLOCKED)
                     return
                 }
             }

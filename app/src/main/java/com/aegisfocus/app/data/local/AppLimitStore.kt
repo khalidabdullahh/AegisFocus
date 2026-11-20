@@ -22,6 +22,13 @@ class AppLimitStore(context: Context) {
     @Volatile
     private var cache: List<AppLimit>? = null
 
+    fun exportRaw(): String = prefs.getString(KEY_LIMITS, "") ?: ""
+
+    fun importRaw(raw: String) {
+        prefs.edit().putString(KEY_LIMITS, raw).apply()
+        cache = null
+    }
+
     fun getLimits(): List<AppLimit> {
         cache?.let { return it }
         val loaded = read()
