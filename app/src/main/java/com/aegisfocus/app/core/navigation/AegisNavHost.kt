@@ -287,7 +287,8 @@ fun AegisNavHost(
                         scheduleRepository = container.scheduleRepository,
                         entitlementManager = container.entitlementManager,
                         authService = container.supabaseAuthService,
-                        paymentService = container.supabasePaymentService
+                        paymentService = container.supabasePaymentService,
+                        scheduleCoordinator = container.scheduleCoordinator
                     )
                 }
                 com.aegisfocus.app.presentation.security.PinProtected(container.pinStore) {

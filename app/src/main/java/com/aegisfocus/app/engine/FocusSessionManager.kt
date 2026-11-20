@@ -82,7 +82,8 @@ class FocusSessionManager(
             _activeSession.value = session
             blockingRuleRepository.updateFromSession(session)
             startTicker(session)
-            startForegroundService(session)
+            // Android may refuse a foreground service started from the background; blocking must still work
+            runCatching { startForegroundService(session) }
             foregroundAppMonitor.startFallbackPolling()
         }
 

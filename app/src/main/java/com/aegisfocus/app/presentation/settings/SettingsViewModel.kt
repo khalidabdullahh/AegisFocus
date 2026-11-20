@@ -72,7 +72,8 @@ class SettingsViewModel(
     private val scheduleRepository: ScheduleRepository,
     private val entitlementManager: EntitlementManager? = null,
     private val authService: SupabaseAuthService? = null,
-    private val paymentService: SupabasePaymentService? = null
+    private val paymentService: SupabasePaymentService? = null,
+    private val scheduleCoordinator: com.aegisfocus.app.engine.ScheduleCoordinator? = null
 ) : ViewModel() {
 
     private val _schedules = MutableStateFlow<List<Schedule>>(emptyList())
@@ -225,12 +226,16 @@ class SettingsViewModel(
     fun toggleSchedule(scheduleId: Long, isEnabled: Boolean) {
         viewModelScope.launch {
             scheduleRepository.setScheduleEnabled(scheduleId, isEnabled)
+            scheduleRepository.getScheduleById(scheduleId)?.let { scheduleCoordinator?.onRoutineChanged(it) }
         }
     }
 
     fun addSchedule(schedule: Schedule) {
         viewModelScope.launch {
-            scheduleRepository.saveSchedule(schedule)
+            val newId = scheduleRepository.saveSchedule(schedule)
+            val saved = if (schedule.id == 0L) schedule.copy(id = newId) else schedule
+            // Sets the start alarm, and starts right away if the routine's time window is open now
+            scheduleCoordinator?.onRoutineChanged(saved)
             _localState.value = _localState.value.copy(isAddScheduleOpen = false)
         }
     }
@@ -238,6 +243,7 @@ class SettingsViewModel(
     fun deleteSchedule(schedule: Schedule) {
         viewModelScope.launch {
             scheduleRepository.deleteSchedule(schedule)
+            scheduleCoordinator?.onRoutineDeleted(schedule)
         }
     }
 
