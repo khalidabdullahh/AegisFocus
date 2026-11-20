@@ -84,13 +84,16 @@ jobs:
       - name: Build Release APK
         run: |
           set -o pipefail
-          ./gradlew assembleRelease --no-daemon --stacktrace 2>&1 | tee build.log || {
-            # Show the first compiler/R8 errors as annotations so they are readable without the raw log
-            grep -E "^e: |error: |Unresolved reference|Execution failed|R8:|AAPT" build.log | head -12 | while IFS= read -r line; do
-              echo "::error::${line:0:600}"
-            done
-            exit 1
-          }
+          # The release build sometimes fails once for no code reason, so try a second time before giving up
+          if ! ./gradlew assembleRelease --no-daemon --stacktrace 2>&1 | tee build.log; then
+            echo "First attempt failed, trying once more"
+            if ! ./gradlew assembleRelease --no-daemon --stacktrace 2>&1 | tee build.log; then
+              grep -E "^e: |error: |Unresolved reference|Execution failed|R8:|AAPT" build.log | head -12 | while IFS= read -r line; do
+                echo "::error::${line:0:600}"
+              done
+              exit 1
+            fi
+          fi
 
       - name: Package APK
         id: package

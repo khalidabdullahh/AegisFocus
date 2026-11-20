@@ -28,6 +28,11 @@ class SupabaseCloudRestoreService(
 ) {
     private val tag = "CloudRestore"
 
+    /** What the last server call answered, so the screen can show the real reason when something fails. */
+    @Volatile
+    var lastDetail: String = ""
+        private set
+
     suspend fun restoreAll() = withContext(Dispatchers.IO) {
         try {
             restoreSubscription()
@@ -135,7 +140,11 @@ class SupabaseCloudRestoreService(
     }
 
     private fun request(method: String, path: String, body: String?): Pair<Int, String>? {
-        val token = authService.freshAccessToken() ?: return null
+        val token = authService.freshAccessToken()
+        if (token == null) {
+            lastDetail = "not signed in or the session expired"
+            return null
+        }
         return try {
             val conn = URL("${SupabaseConfig.REST_ENDPOINT}/$path").openConnection() as HttpURLConnection
             conn.requestMethod = method
@@ -153,9 +162,11 @@ class SupabaseCloudRestoreService(
             val stream = if (code in 200..299) conn.inputStream else conn.errorStream
             val text = stream?.bufferedReader()?.use { it.readText() } ?: ""
             conn.disconnect()
+            lastDetail = if (code in 200..299) "" else "server said $code: ${text.take(160)}"
             Pair(code, text)
         } catch (e: Exception) {
             Log.w(tag, "$method $path failed: ${e.message}")
+            lastDetail = "${e.javaClass.simpleName}: ${e.message}"
             null
         }
     }

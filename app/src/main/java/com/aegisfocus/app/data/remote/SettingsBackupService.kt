@@ -68,7 +68,7 @@ class SettingsBackupService(
             markUploaded(json)
             "Backed up."
         } else {
-            "Backup failed. Check the internet, or run the one-time server SQL for backups."
+            "Backup failed: ${cloud.lastDetail.ifBlank { "unknown reason" }}"
         }
     }
 
@@ -84,7 +84,7 @@ class SettingsBackupService(
     suspend fun restoreNow(): String {
         if (!signedIn()) return "Sign in first to restore."
         val (reachable, json) = cloud.fetchSettingsJson()
-        if (!reachable) return "Could not reach the backup. Check the internet, or run the one-time server SQL."
+        if (!reachable) return "Could not read the backup: ${cloud.lastDetail.ifBlank { "unknown reason" }}"
         if (json == null) return "No backup found for this account yet."
         apply(JSONObject(json), clearSchedules = true)
         markUploaded(buildSnapshot().toString())
