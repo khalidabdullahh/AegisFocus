@@ -23,9 +23,8 @@ class BootCompletedReceiver : BroadcastReceiver() {
                     // 1. Restore active focus session if still valid
                     container.focusSessionManager.restoreActiveSession()
 
-                    // 2. Reschedule enabled routines
-                    val enabledSchedules = container.scheduleRepository.getEnabledSchedules()
-                    // ScheduleAlarmReceiver can trigger checks or WorkManager can sync
+                    // 2. Re-arm enabled routines and start the one that should be running now
+                    container.scheduleCoordinator.syncAll()
 
                     // 3. Restore daily reminders from the Productivity tab
                     ReminderScheduler.rescheduleAll(context)

@@ -160,4 +160,12 @@ class AppContainer(private val context: Context) {
             foregroundAppMonitor = foregroundAppMonitor
         )
     }
+    val scheduleCoordinator by lazy {
+        com.aegisfocus.app.engine.ScheduleCoordinator(
+            context = context,
+            scheduleRepository = scheduleRepository,
+            focusSessionRepository = focusSessionRepository,
+            focusSessionManager = focusSessionManager
+        )
+    }
 }

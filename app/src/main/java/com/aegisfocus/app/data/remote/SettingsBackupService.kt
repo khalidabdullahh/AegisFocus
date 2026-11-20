@@ -122,8 +122,7 @@ class SettingsBackupService(
         for (i in 0 until array.length()) {
             val s = array.getJSONObject(i)
             val apps = s.optJSONArray("apps") ?: JSONArray()
-            scheduleRepository.saveSchedule(
-                Schedule(
+            val restored = Schedule(
                     name = s.optString("name", "Routine"),
                     startHour = s.optInt("sh"), startMinute = s.optInt("sm"),
                     endHour = s.optInt("eh"), endMinute = s.optInt("em"),
@@ -131,8 +130,9 @@ class SettingsBackupService(
                     blockedPackageNames = (0 until apps.length()).map { apps.getString(it) },
                     isStrictMode = s.optBoolean("strict", false),
                     isEnabled = s.optBoolean("enabled", true)
-                )
             )
+            val newId = scheduleRepository.saveSchedule(restored)
+            ScheduleAlarmScheduler.scheduleNextAlarm(context, restored.copy(id = newId))
         }
     }
 

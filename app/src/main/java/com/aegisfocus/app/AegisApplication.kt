@@ -39,6 +39,11 @@ class AegisApplication : Application() {
         createNotificationChannels()
         enqueueBackgroundWorkers()
 
+        // Routines created before this fix never had an alarm: arm them all on every app start
+        CoroutineScope(Dispatchers.IO).launch {
+            runCatching { container.scheduleCoordinator.syncAll() }
+        }
+
         // After login or reinstall: bring back Pro plan, name and photo from the cloud
         CoroutineScope(Dispatchers.IO).launch {
             container.supabaseAuthService.currentUser
