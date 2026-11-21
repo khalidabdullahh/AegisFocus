@@ -44,17 +44,17 @@ class BlockedAppMatcherTest {
     }
 
     @Test
-    fun matcher_guardsInstallerButNotSettings_whenStrictModeActive() {
-        // Normal mode (isStrict = false) -> nothing extra blocked
+    fun matcher_keepsSettingsAndInstallerUsable_whenStrictModeActive() {
+        // Normal mode -> nothing extra blocked
         matcher.updateBlockedPackages(listOf("com.instagram.android"), isStrict = false)
         assertFalse(matcher.isAppBlocked("com.android.settings", myPackage))
         assertFalse(matcher.isAppBlocked("com.google.android.packageinstaller", myPackage))
 
-        // Strict mode (isStrict = true) -> installer guarded; Settings stays usable and its
-        // sensitive screens are closed by SettingsTamperGuard instead
+        // Strict mode -> Settings and the installer stay fully usable (installing and updating apps works).
+        // Only Aegis Focus's own sensitive screens are closed, by SettingsTamperGuard in the service.
         matcher.updateBlockedPackages(listOf("com.instagram.android"), isStrict = true)
         assertFalse(matcher.isAppBlocked("com.android.settings", myPackage))
-        assertTrue(matcher.isAppBlocked("com.google.android.packageinstaller", myPackage))
+        assertFalse(matcher.isAppBlocked("com.google.android.packageinstaller", myPackage))
         assertTrue(matcher.isStrictGuarded())
     }
 
@@ -62,7 +62,7 @@ class BlockedAppMatcherTest {
     fun matcher_clearsProperly() {
         matcher.updateBlockedPackages(listOf("com.instagram.android"), isStrict = true)
         assertTrue(matcher.isAppBlocked("com.instagram.android", myPackage))
-        assertTrue(matcher.isAppBlocked("com.android.packageinstaller", myPackage))
+        assertFalse(matcher.isAppBlocked("com.android.packageinstaller", myPackage))
 
         matcher.clear()
         assertFalse(matcher.isAppBlocked("com.instagram.android", myPackage))

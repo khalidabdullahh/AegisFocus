@@ -12,6 +12,7 @@ class AegisAccessibilityBlockerService : AccessibilityService() {
     private var lastAdultCheckMs = 0L
     private var lastSettingsGuardMs = 0L
     private var lastSettingsToastMs = 0L
+    private var lastInstallerGuardMs = 0L
     private var appLimit: AppLimitController? = null
     private var youtubeIntent: YouTubeIntentController? = null
 
@@ -78,13 +79,40 @@ class AegisAccessibilityBlockerService : AccessibilityService() {
             if (now - lastSettingsGuardMs >= 300L) {
                 lastSettingsGuardMs = now
                 val texts = readScreenTexts(rootInActiveWindow)
-                if (com.aegisfocus.app.domain.blocker.SettingsTamperGuard.isTamperScreen(texts)) {
+                val englishUi = java.util.Locale.getDefault().language == "en"
+                if (com.aegisfocus.app.domain.blocker.SettingsTamperGuard.isTamperScreen(texts, englishUi)) {
                     performGlobalAction(GLOBAL_ACTION_BACK)
                     if (now - lastSettingsToastMs > 2500L) {
                         lastSettingsToastMs = now
                         android.widget.Toast.makeText(
                             applicationContext,
                             "Strict Mode: this screen is protected until the session ends",
+                            android.widget.Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                    return
+                }
+            }
+        }
+
+        // 1e. Strict Mode: installing and updating apps stays free. Only the uninstall dialog for
+        // Aegis Focus itself is closed (other apps can still be uninstalled).
+        if (com.aegisfocus.app.domain.blocker.SettingsTamperGuard.isInstallerPackage(packageName) &&
+            container.blockingRuleRepository.isStrictGuarded()
+        ) {
+            val now = android.os.SystemClock.elapsedRealtime()
+            if (now - lastInstallerGuardMs >= 300L) {
+                lastInstallerGuardMs = now
+                val texts = readScreenTexts(rootInActiveWindow)
+                if (com.aegisfocus.app.domain.blocker.SettingsTamperGuard
+                        .isAegisUninstallScreen(event.className?.toString(), texts)
+                ) {
+                    performGlobalAction(GLOBAL_ACTION_BACK)
+                    if (now - lastSettingsToastMs > 2500L) {
+                        lastSettingsToastMs = now
+                        android.widget.Toast.makeText(
+                            applicationContext,
+                            "Strict Mode: Aegis Focus cannot be uninstalled until the session ends",
                             android.widget.Toast.LENGTH_SHORT
                         ).show()
                     }
