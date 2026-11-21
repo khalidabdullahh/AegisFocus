@@ -41,9 +41,11 @@
                 extend: {
                     fontFamily: { sans: ['"Chelsea Market"', 'system-ui', 'sans-serif'], display: ['"Cabin Sketch"', '"Chelsea Market"', 'sans-serif'] },
                     colors: {
-                        bg: '#0E181D', surface: '#15242B', elevated: '#1C2F38', line: '#2B434D',
-                        sage: '#9CC5A1', teal: '#86C5B4', text: '#EEF2EE', muted: '#A8B9BC', faint: '#7C9094',
-                        alert: '#C77D7D'
+                        bg: 'rgb(var(--c-bg) / <alpha-value>)', surface: 'rgb(var(--c-surface) / <alpha-value>)',
+                        elevated: 'rgb(var(--c-elevated) / <alpha-value>)', line: 'rgb(var(--c-line) / <alpha-value>)',
+                        sage: 'rgb(var(--c-sage) / <alpha-value>)', teal: 'rgb(var(--c-teal) / <alpha-value>)',
+                        text: 'rgb(var(--c-text) / <alpha-value>)', muted: 'rgb(var(--c-muted) / <alpha-value>)',
+                        faint: 'rgb(var(--c-faint) / <alpha-value>)', alert: 'rgb(var(--c-alert) / <alpha-value>)'
                     }
                 }
             }
@@ -77,9 +79,18 @@
         details > summary::-webkit-details-marker { display: none; }
         details[open] .chev { transform: rotate(180deg); }
         .chev { transition: transform .2s ease; }
+        /* theme colours as variables: dark everywhere, the demo phone can switch to Light like the app */
+        :root { --c-bg: 14 24 29; --c-surface: 21 36 43; --c-elevated: 28 47 56; --c-line: 43 67 77; --c-sage: 156 197 161; --c-teal: 134 197 180; --c-text: 238 242 238; --c-muted: 168 185 188; --c-faint: 124 144 148; --c-alert: 199 125 125; }
+        .phone.light { --c-bg: 247 243 234; --c-surface: 255 252 246; --c-elevated: 239 232 218; --c-line: 216 207 188; --c-sage: 63 154 88; --c-teal: 46 139 120; --c-text: 29 42 46; --c-muted: 79 97 102; --c-faint: 116 134 138; --c-alert: 178 75 75; }
+        #cf-pane { --c-bg: 14 24 29; --c-surface: 21 36 43; --c-elevated: 28 47 56; --c-line: 43 67 77; --c-sage: 156 197 161; --c-teal: 134 197 180; --c-text: 238 242 238; --c-muted: 168 185 188; --c-faint: 124 144 148; --c-alert: 199 125 125; background: rgb(var(--c-bg)); color: rgb(var(--c-text)); }
+        .tbtn, .rtchip { border: 1px solid rgb(var(--c-line)); border-radius: 9999px; padding: .35rem .5rem; font-size: 9px; font-weight: 700; color: rgb(var(--c-muted)); background: transparent; }
+        .tbtn[aria-pressed="true"], .rtchip[aria-pressed="true"] { border-color: rgb(var(--c-teal)); color: rgb(var(--c-teal)); background: rgb(var(--c-teal) / .12); }
+        .rtdot { width: 22px; height: 22px; border-radius: 9999px; border: 1px solid rgb(var(--c-line)); font-size: 8px; font-weight: 800; color: rgb(var(--c-muted)); }
+        .rtdot[aria-pressed="true"] { background: rgb(var(--c-teal)); border-color: rgb(var(--c-teal)); color: rgb(var(--c-bg)); }
+        .pbtn { width: 100%; height: 100%; display: grid; place-items: center; border-radius: 9999px; background: rgb(var(--c-elevated)); font-size: 14px; font-weight: 700; }
         /* ---- phone frames: one wrapper, look chosen by data-device ---- */
         .phone-wrap { --pw: 8px; --pr: 2.5rem; --pb: #202327; --pe: #3a3f46; --pbb: 8px; position: relative; display: inline-block; }
-        .phone { width: 288px; height: 560px; border-radius: var(--pr); background: #0E181D; border: var(--pw) solid var(--pb); border-bottom-width: var(--pbb); box-shadow: 0 30px 80px -20px rgba(0,0,0,.7), 0 0 0 var(--rim, 1px) var(--pe), inset 0 0 0 1px rgba(255,255,255,.04); transition: border-radius .35s ease, border-color .35s ease; }
+        .phone { width: 288px; height: 560px; border-radius: var(--pr); background: rgb(var(--c-bg)); border: var(--pw) solid var(--pb); border-bottom-width: var(--pbb); box-shadow: 0 30px 80px -20px rgba(0,0,0,.7), 0 0 0 var(--rim, 1px) var(--pe), inset 0 0 0 1px rgba(255,255,255,.04); transition: border-radius .35s ease, border-color .35s ease; }
         .phone-wrap::before, .phone-wrap::after { content: ""; position: absolute; width: 3px; border-radius: 2px; background: var(--pe); transition: background .35s ease; }
         .phone-wrap::before { right: -3px; top: 132px; height: 54px; }
         .phone-wrap::after { left: -3px; top: 110px; height: 80px; }
@@ -244,7 +255,7 @@
                 <li class="inline-flex items-center gap-1.5"><i data-lucide="check" class="w-4 h-4 text-sage"></i>No ads</li>
                 <li class="inline-flex items-center gap-1.5"><i data-lucide="check" class="w-4 h-4 text-sage"></i>Android 8.0 or newer</li>
                 <li class="inline-flex items-center gap-1.5"><i data-lucide="check" class="w-4 h-4 text-sage"></i><span id="hero-size">Small download</span></li>
-                <li class="inline-flex items-center gap-1.5"><i data-lucide="check" class="w-4 h-4 text-sage"></i>Your data stays on your phone</li>
+                <li class="inline-flex items-center gap-1.5"><i data-lucide="check" class="w-4 h-4 text-sage"></i>Your usage data stays on your phone</li>
             </ul>
             <p class="mt-5 flex items-start gap-2 text-xs text-faint max-w-md mx-auto min-[820px]:mx-0 text-left"><i data-lucide="smartphone" class="w-4 h-4 text-teal shrink-0 mt-0.5"></i><span>Interactive demo. The phone is a working copy of the real app: tap the tabs (Home, Focus, Apps, Productivity, Campfire, Settings), start a session, then use the bar at the bottom to go home and open an app. Sessions are sped up, so a full one takes about a minute. Want to see everything? Use &ldquo;Explore every feature&rdquo; below.</span></p>
 
@@ -421,9 +432,21 @@
                                 <div class="flex items-start justify-between gap-2 py-2"><div><p class="text-[11px] font-bold">Block 18+ content</p><p class="text-[9px] text-faint leading-snug mt-0.5">Family-safe DNS filter for adult sites</p></div><button type="button" role="switch" data-key="adult" aria-checked="false" class="shrink-0 mt-0.5"><span class="switch"></span></button></div>
                                 <div class="flex items-start justify-between gap-2 py-2"><div><p class="text-[11px] font-bold">Scam Shield</p><p class="text-[9px] text-faint leading-snug mt-0.5">Blocks known scam, phishing and malware links in any browser or app</p></div><button type="button" role="switch" data-key="scam" aria-checked="true" class="shrink-0 mt-0.5"><span class="switch"></span></button></div>
                             </div>
-                            <p class="text-[10px] font-bold text-muted mt-3">Scheduled Routines</p>
-                            <div class="mt-1 rounded-xl bg-surface border border-line px-3 py-2 text-[10px]"><p class="font-bold text-[11px]">Study</p><p class="text-faint">09:00 - 13:00 &middot; Mon-Fri &middot; Strict Mode protection</p></div>
-                            <p class="mt-4 text-center text-[9px] text-faint">Aegis Focus &bull; v1.5.0</p>
+                            <div class="flex items-center justify-between"><p class="text-[10px] font-bold text-muted mt-3">Scheduled Routines</p><button type="button" id="rt-add" class="mt-3 text-[9px] font-bold text-teal">+ Add schedule</button></div>
+                            <div id="rt-list"></div>
+                            <p class="text-[10px] font-bold text-muted mt-3">Appearance</p>
+                            <div class="mt-1 rounded-xl bg-surface border border-line px-3 py-2 text-[10px]"><p class="text-faint">Choose how Aegis Focus looks.</p>
+                                <div id="th-btns" class="mt-2 grid grid-cols-3 gap-1.5"><button type="button" class="tbtn" data-theme="phone" aria-pressed="false">Phone</button><button type="button" class="tbtn" data-theme="dark" aria-pressed="true">Dark</button><button type="button" class="tbtn" data-theme="light" aria-pressed="false">Light</button></div></div>
+                            <p class="text-[10px] font-bold text-muted mt-3">Security</p>
+                            <div class="mt-1 rounded-xl bg-surface border border-line px-3 py-2 text-[10px] flex items-center gap-2"><i data-lucide="lock" class="w-4 h-4 text-teal shrink-0"></i><div class="flex-1 min-w-0"><p class="font-bold text-[11px]">App PIN lock</p><p class="text-faint">Add a 4 digit PIN so limits can't be changed on impulse</p></div><button type="button" id="pin-toggle" class="tbtn" aria-pressed="false">OFF</button></div>
+                            <p class="text-[10px] font-bold text-muted mt-3">Cloud backup</p>
+                            <div class="mt-1 rounded-xl bg-surface border border-line px-3 py-2 text-[10px]"><p class="text-faint">Saves your habits, gates, limits, YouTube topics and routines to your account. It also runs by itself when you leave the app.</p>
+                                <p id="bk-status" class="mt-1.5 text-faint">No backup yet</p>
+                                <button type="button" id="bk-now" class="mt-2 w-full h-8 rounded-lg bg-sage text-bg text-[10px] font-bold">Back up now</button>
+                                <button type="button" id="bk-restore" class="mt-1.5 w-full h-8 rounded-lg border border-line text-[10px] font-bold">Restore from cloud</button>
+                                <p id="bk-msg" class="mt-1.5 min-h-[12px] text-teal"></p>
+                                <p class="text-faint text-[8px]">Demo: in the app you sign in first. Nothing is uploaded from this page.</p></div>
+                            <p class="mt-4 text-center text-[9px] text-faint">Aegis Focus &bull; <span id="demo-version">latest version</span></p>
                         </section>
                     </div>
 
@@ -566,7 +589,7 @@
             <article class="card card-hover p-6 reveal">
                 <div class="w-11 h-11 rounded-xl bg-teal/15 text-teal grid place-items-center"><i data-lucide="lock" class="w-5 h-5"></i></div>
                 <h3 class="mt-4 font-bold text-lg">Strict Mode</h3>
-                <p class="mt-2 text-sm text-muted leading-relaxed">Commit to a session and the rules lock. Blocked apps stay blocked, the list cannot be edited and the app cannot be removed until the timer ends. There is no emergency exit, so you pick your duration deliberately.</p>
+                <p class="mt-2 text-sm text-muted leading-relaxed">Commit to a session and the rules lock. Blocked apps stay blocked and the list cannot be edited. Aegis Focus itself is protected: it cannot be uninstalled, force stopped, cleared or switched off in Accessibility until the timer ends. Your phone stays usable, so Settings and installing apps still work. There is no emergency exit, so you pick your duration deliberately.</p>
             </article>
             <article class="card card-hover p-6 reveal">
                 <div class="w-11 h-11 rounded-xl bg-teal/15 text-teal grid place-items-center"><i data-lucide="ban" class="w-5 h-5"></i></div>
@@ -707,7 +730,7 @@
         <div class="reveal">
             <p class="font-display text-base text-teal">Privacy and permissions</p>
             <h2 class="mt-2 text-3xl sm:text-4xl font-extrabold tracking-tight">Your habits are your business</h2>
-            <p class="mt-4 text-muted leading-relaxed">Focus sessions, goals, reminders, streaks and usage stats are stored on your device. There are no ads and no analytics trackers in the app. An account is only needed if you want to redeem a Pro key, and then only to attach that key to you.</p>
+            <p class="mt-4 text-muted leading-relaxed">Focus sessions, goals, reminders, streaks and usage stats are stored on your device. There are no ads and no analytics trackers in the app. An account is only needed to redeem a Pro key or to use the optional Cloud backup. With Cloud backup, a small copy of your setup (habits, gates, limits, YouTube topics, routines and theme) is saved to your account. Your usage stats and focus sessions are never uploaded.</p>
             <p class="mt-4 text-muted leading-relaxed">Android asks for some powerful permissions to block apps. Here is exactly what each one is for:</p>
             <p class="mt-6"><a href="privacy.html" class="text-teal font-semibold hover:underline inline-flex items-center gap-1">Read the privacy policy <i data-lucide="arrow-right" class="w-4 h-4"></i></a></p>
         </div>
@@ -742,6 +765,9 @@
                     <span class="text-muted">Website blocking</span><span class="text-right">Basic</span><span class="text-right text-sage font-bold">Advanced</span>
                     <span class="text-muted">Notification shield</span><span class="text-right">No</span><span class="text-right text-sage font-bold">Yes</span>
                     <span class="text-muted">Routines</span><span class="text-right">1</span><span class="text-right text-sage font-bold">Unlimited</span>
+                    <span class="text-muted">Campfire sounds</span><span class="text-right">3 of 9</span><span class="text-right text-sage font-bold">All 9</span>
+                    <span class="text-muted">Campfire presets</span><span class="text-right">4 of 10</span><span class="text-right text-sage font-bold">All 10</span>
+                    <span class="text-muted">Saved Campfire mixes</span><span class="text-right">1</span><span class="text-right text-sage font-bold">Unlimited</span>
                     <span class="text-muted">Ad blocker, Shorts blocker, Clean Streak</span><span class="text-right text-sage font-bold">Included</span><span class="text-right text-sage font-bold">Included</span>
                 </div>
             </div>
@@ -820,8 +846,9 @@
     </div>
     <div class="mt-10 space-y-3 reveal">
         <details class="card p-5"><summary class="flex items-center justify-between gap-4 font-bold">Is Aegis Focus free?<i data-lucide="chevron-down" class="chev w-5 h-5 text-faint shrink-0"></i></summary><p class="mt-3 text-sm text-muted leading-relaxed">Yes. Focus sessions, app blocking (3 apps), Strict Mode up to 3 hours, the Shorts and Reels blocker, the ad blocker, goals, reminders and the Clean Streak are free. Pro lifts the limits and adds advanced tools.</p></details>
-        <details class="card p-5"><summary class="flex items-center justify-between gap-4 font-bold">Can I get out of Strict Mode early?<i data-lucide="chevron-down" class="chev w-5 h-5 text-faint shrink-0"></i></summary><p class="mt-3 text-sm text-muted leading-relaxed">No. Strict Mode has no emergency exit by design. While it runs, session rules and blocked apps are locked and the app cannot be uninstalled. Choose a duration you are comfortable committing to.</p></details>
-        <details class="card p-5"><summary class="flex items-center justify-between gap-4 font-bold">Does it upload my usage or habits?<i data-lucide="chevron-down" class="chev w-5 h-5 text-faint shrink-0"></i></summary><p class="mt-3 text-sm text-muted leading-relaxed">No. Your sessions, goals, reminders, usage stats and Clean Streak are stored on your phone. The only server involved is for Pro keys, which checks that a key is valid and unused.</p></details>
+        <details class="card p-5"><summary class="flex items-center justify-between gap-4 font-bold">Can I get out of Strict Mode early?<i data-lucide="chevron-down" class="chev w-5 h-5 text-faint shrink-0"></i></summary><p class="mt-3 text-sm text-muted leading-relaxed">No. Strict Mode has no emergency exit by design. While it runs, session rules and blocked apps are locked, and Aegis Focus cannot be uninstalled, force stopped, cleared or switched off in Accessibility. Choose a duration you are comfortable committing to.</p></details>
+        <details class="card p-5"><summary class="flex items-center justify-between gap-4 font-bold">Does Strict Mode lock my whole phone?<i data-lucide="chevron-down" class="chev w-5 h-5 text-faint shrink-0"></i></summary><p class="mt-3 text-sm text-muted leading-relaxed">No. Strict Mode only protects Aegis Focus and your blocked apps. Android Settings stays open, you can install and update apps, and you can uninstall other apps as usual. What it blocks is anything that would switch Aegis Focus off: uninstalling it, Force stop, Clear data or storage, turning off its Accessibility permission, and deactivating its Device admin.</p></details>
+        <details class="card p-5"><summary class="flex items-center justify-between gap-4 font-bold">Does it upload my usage or habits?<i data-lucide="chevron-down" class="chev w-5 h-5 text-faint shrink-0"></i></summary><p class="mt-3 text-sm text-muted leading-relaxed">No. Your focus sessions and usage stats stay on your phone and are never uploaded. A server is used in two cases: checking a Pro key, and the optional Cloud backup when you sign in, which saves a small copy of your setup (habits, gates, limits, YouTube topics, routines with their blocked app names, and your theme) to your account so it survives a new phone.</p></details>
         <details class="card p-5"><summary class="flex items-center justify-between gap-4 font-bold">Why does it need Accessibility and VPN permissions?<i data-lucide="chevron-down" class="chev w-5 h-5 text-faint shrink-0"></i></summary><p class="mt-3 text-sm text-muted leading-relaxed">Accessibility lets the app notice blocked apps and Shorts screens. The VPN permission is optional and only creates a local profile that filters DNS for the ad blocker. See the permission list in the Privacy section above.</p></details>
         <details class="card p-5"><summary class="flex items-center justify-between gap-4 font-bold">Does the 18+ block stop everything?<i data-lucide="chevron-down" class="chev w-5 h-5 text-faint shrink-0"></i></summary><p class="mt-3 text-sm text-muted leading-relaxed">It blocks a very large set of adult domains in every browser and app, but DNS filtering cannot catch everything, such as content inside some apps or a browser using its own secure DNS. Treat it as a strong first wall and combine it with Strict Mode.</p></details>
         <details class="card p-5"><summary class="flex items-center justify-between gap-4 font-bold">Will it drain my battery?<i data-lucide="chevron-down" class="chev w-5 h-5 text-faint shrink-0"></i></summary><p class="mt-3 text-sm text-muted leading-relaxed">The blocker reacts to events and sleeps otherwise. The optional ad blocker keeps a small local VPN profile running, which is light but not zero.</p></details>
@@ -1235,6 +1262,7 @@
             var latest = rels[0];
             var apk = (latest.assets || []).filter(function (a) { return /\.apk$/i.test(a.name); })[0];
             document.getElementById('hero-version').textContent = latest.tag_name ? '(' + latest.tag_name + ')' : '';
+            var dv = document.getElementById('demo-version'); if (dv && latest.tag_name) dv.textContent = latest.tag_name;
             if (apk) {
                 document.getElementById('hero-size').textContent = mb(apk.size) + ' download';
                 document.getElementById('fact-size').textContent = mb(apk.size);
@@ -1391,6 +1419,21 @@
         ];
         var st = { mode: 'sleep', levels: copy(PRESETS[0].l), playing: false, timerEnd: 0, timerTotal: 0, error: false };
         var ctx = null, master = null, buffers = {}, nodes = {}, tick = null;
+        var MIX_KEY = 'aegis-demo-mixes';
+        st.mixes = []; st.naming = false;
+        try { var mv = JSON.parse(localStorage.getItem(MIX_KEY) || '[]'); if (Array.isArray(mv)) st.mixes = mv.filter(function (m) { return m && MODES[m.mode] && m.levels; }).slice(0, 8); } catch (e) {}
+        function saveMixes() { try { localStorage.setItem(MIX_KEY, JSON.stringify(st.mixes)); } catch (e) {} }
+        function esc(t) { return String(t).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+        function mixesHtml(ac) {
+            var n = count();
+            var h = '<div class="mt-3 flex items-center justify-between"><p class="text-[11px] font-extrabold">My mixes</p>' + (n && !st.naming ? '<button type="button" data-cf="mixnew" class="text-[10px] font-bold text-teal">Save current</button>' : '') + '</div>';
+            if (st.naming) h += '<div class="mt-1.5 flex gap-1.5"><input id="cf-mixname" maxlength="24" placeholder="e.g. Exam night" class="flex-1 min-w-0 h-8 rounded-lg bg-surface border border-line px-2 text-[10px] text-text"><button type="button" data-cf="mixsave" class="h-8 px-3 rounded-lg text-[10px] font-bold" style="background:' + ac + ';color:#0E181D">Save</button></div>';
+            if (!st.mixes.length && !st.naming) h += '<p class="mt-1 text-[9px] text-faint">Dial in a mix you love, then tap Save current.</p>';
+            st.mixes.forEach(function (m, i) {
+                h += '<div class="mt-1.5 flex items-center gap-2 rounded-xl border border-line bg-surface px-3 py-2"><button type="button" data-cf="mixapply:' + i + '" class="flex-1 min-w-0 text-left"><span class="block text-[10px] font-bold truncate">' + esc(m.name) + '</span><span class="block text-[9px] text-faint">' + MODES[m.mode].label + ' &middot; ' + Object.keys(m.levels).length + ' sounds</span></button><button type="button" data-cf="mixdel:' + i + '" aria-label="Delete mix" class="text-faint"><i data-lucide="x" class="w-3.5 h-3.5"></i></button></div>';
+            });
+            return h;
+        }
 
         function copy(o) { var r = {}; Object.keys(o).forEach(function (k) { r[k] = o[k]; }); return r; }
         function count() { return Object.keys(st.levels).filter(function (k) { return st.levels[k] > 0.01; }).length; }
@@ -1510,7 +1553,8 @@
                      '<div class="flex-1 min-w-0"><p class="text-[10px] font-semibold flex items-center gap-1.5">' + S.label + (S.pro ? ' <span class="text-[7px] font-extrabold rounded-full px-1.5 py-px bg-elevated text-muted">PRO</span>' : '') + '</p>' +
                      '<input type="range" min="0" max="100" value="' + Math.round(v * 100) + '" data-snd="' + id + '" class="cf-range mt-1" style="accent-color:' + ac + '" aria-label="' + S.label + ' volume"></div></div>';
             });
-            h += '</div><p class="mt-2 text-[9px] text-faint leading-snug">Demo: Pro sounds are unlocked here. In the app, free has 3 sounds, Pro has all 9. Timers run 60x faster in this demo.</p></div><div class="h-3"></div>';
+            h += '</div>' + mixesHtml(ac);
+            h += '<p class="mt-3 text-[9px] text-faint leading-snug">Demo: Pro sounds are unlocked here. In the app, free has 3 sounds and 1 saved mix, Pro has all 9 and unlimited mixes. Timers run 60x faster in this demo.</p></div><div class="h-3"></div>';
             pane.innerHTML = h;
             icons();
         }
@@ -1528,6 +1572,15 @@
             else if (cmd === 'preset') { var pr = PRESETS[+arg]; st.mode = pr.m; st.levels = copy(pr.l); Object.keys(nodes).forEach(function (id) { if (!st.levels[id]) stopNode(id); }); render(); play(); }
             else if (cmd === 'timer') startTimer(+arg);
             else if (cmd === 'cancel') { cancelTimer(); render(); }
+            else if (cmd === 'mixnew') { st.naming = true; render(); var ni = document.getElementById('cf-mixname'); if (ni) ni.focus(); }
+            else if (cmd === 'mixsave') {
+                var nm = (document.getElementById('cf-mixname') || {}).value || '';
+                nm = nm.trim(); if (!nm) { var ni2 = document.getElementById('cf-mixname'); if (ni2) ni2.focus(); return; }
+                if (st.mixes.length >= 8) st.mixes.shift();
+                st.mixes.push({ name: nm.slice(0, 24), mode: st.mode, levels: copy(st.levels) }); saveMixes(); st.naming = false; render();
+            }
+            else if (cmd === 'mixapply') { var mx = st.mixes[+arg]; if (mx) { st.mode = mx.mode; st.levels = copy(mx.levels); Object.keys(nodes).forEach(function (id) { if (!st.levels[id]) stopNode(id); }); render(); play(); } }
+            else if (cmd === 'mixdel') { st.mixes.splice(+arg, 1); saveMixes(); render(); }
         });
         pane.addEventListener('input', function (e) {
             var id = e.target.getAttribute && e.target.getAttribute('data-snd'); if (!id) return;
@@ -1581,6 +1634,191 @@
             b.type = 'button'; b.className = 'tchip'; b.textContent = t[0];
             b.addEventListener('click', function () { go(t[1], t[2]); });
             box.appendChild(b);
+        });
+    })();
+</script>
+<script>
+    // Demo phone, Settings tab: working routines, Light/Dark theme, App PIN lock and Cloud backup (all simulated, nothing is stored or sent).
+    (function () {
+        var phone = document.getElementById('phone');
+        if (!phone || !document.getElementById('rt-list')) return;
+        var $ = function (id) { return document.getElementById(id); };
+        function esc(t) { return String(t).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+        function icons() { if (window.lucide) window.lucide.createIcons(); }
+        function pad2(n) { return ('0' + n).slice(-2); }
+
+        var toastEl = document.createElement('div');
+        toastEl.style.cssText = 'position:absolute;left:12px;right:12px;bottom:74px;z-index:70;display:none';
+        toastEl.className = 'rounded-xl bg-elevated border border-line text-text text-[10px] font-semibold px-3 py-2 text-center';
+        phone.appendChild(toastEl);
+        var toastT;
+        function toast(m) { toastEl.textContent = m; toastEl.style.display = 'block'; clearTimeout(toastT); toastT = setTimeout(function () { toastEl.style.display = 'none'; }, 2400); }
+
+        function overlay(html) {
+            var o = document.createElement('div');
+            o.setAttribute('data-ov', '1');
+            o.style.cssText = 'position:absolute;inset:0;z-index:60;background:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center;padding:10px';
+            o.innerHTML = '<div class="w-full max-h-full overflow-y-auto rounded-2xl bg-surface border border-line text-text p-3">' + html + '</div>';
+            phone.appendChild(o); icons(); return o;
+        }
+
+        // ---------- Appearance ----------
+        var THEME_KEY = 'aegis-demo-theme', theme = 'dark';
+        try { var tv = localStorage.getItem(THEME_KEY); if (tv === 'phone' || tv === 'dark' || tv === 'light') theme = tv; } catch (e) {}
+        var mq = window.matchMedia ? window.matchMedia('(prefers-color-scheme: light)') : null;
+        function applyTheme() {
+            var light = theme === 'light' || (theme === 'phone' && mq && mq.matches);
+            phone.classList.toggle('light', !!light);
+            [].forEach.call(document.querySelectorAll('#th-btns [data-theme]'), function (b) { b.setAttribute('aria-pressed', String(b.getAttribute('data-theme') === theme)); });
+        }
+        if (mq && mq.addEventListener) mq.addEventListener('change', applyTheme);
+        $('th-btns').addEventListener('click', function (e) {
+            var b = e.target.closest('[data-theme]'); if (!b) return;
+            theme = b.getAttribute('data-theme');
+            try { localStorage.setItem(THEME_KEY, theme); } catch (er) {}
+            applyTheme();
+        });
+        applyTheme();
+
+        // ---------- App PIN lock ----------
+        var pin = null, unlockedUntil = 0;
+        function syncPin() { var b = $('pin-toggle'); b.textContent = pin ? 'ON' : 'OFF'; b.setAttribute('aria-pressed', String(!!pin)); }
+        function pinPad(title, onEnter) {
+            var val = '';
+            var keys = '';
+            ['1', '2', '3', '4', '5', '6', '7', '8', '9', '', '0', 'del'].forEach(function (k) {
+                keys += k === '' ? '<span></span>' : '<button type="button" class="pbtn" data-k="' + k + '" aria-label="' + (k === 'del' ? 'Delete' : k) + '">' + (k === 'del' ? '&#9003;' : k) + '</button>';
+            });
+            var o = overlay('<p data-r="title" class="text-[11px] font-extrabold text-center"></p><p data-r="msg" class="mt-1 text-[9px] text-center text-teal min-h-[12px]"></p><div data-r="dots" class="mt-2 flex justify-center gap-2"></div><div class="mt-3 grid grid-cols-3 gap-2" style="grid-auto-rows:38px">' + keys + '</div><button type="button" data-r="cancel" class="mt-2 w-full text-[10px] font-bold text-faint">Cancel</button><p class="mt-1 text-[8px] text-center text-faint">Demo: this PIN is not saved anywhere.</p>');
+            var q = function (r) { return o.querySelector('[data-r="' + r + '"]'); };
+            function draw() { q('dots').innerHTML = [0, 1, 2, 3].map(function (i) { return '<span style="width:10px;height:10px;border-radius:9999px;border:1px solid rgb(var(--c-teal));background:' + (i < val.length ? 'rgb(var(--c-teal))' : 'transparent') + '"></span>'; }).join(''); }
+            q('title').textContent = title; draw();
+            o.addEventListener('click', function (e) {
+                if (e.target.closest('[data-r="cancel"]')) { o.remove(); return; }
+                var k = e.target.closest('[data-k]'); if (!k) return;
+                var key = k.getAttribute('data-k');
+                if (key === 'del') val = val.slice(0, -1); else if (val.length < 4) val += key;
+                draw();
+                if (val.length === 4) {
+                    var res = onEnter(val) || {}; val = '';
+                    if (res.close) { o.remove(); return; }
+                    if (res.title) q('title').textContent = res.title;
+                    q('msg').textContent = res.error || '';
+                    setTimeout(draw, 120);
+                }
+            });
+        }
+        function verifyPin(title, ok) { pinPad(title, function (v) { if (v === pin) { ok(); return { close: true }; } return { error: 'Wrong PIN, try again' }; }); }
+        $('pin-toggle').addEventListener('click', function () {
+            if (!pin) {
+                var first = null;
+                pinPad('Set a 4-digit PIN', function (v) {
+                    if (first === null) { first = v; return { title: 'Confirm your PIN' }; }
+                    if (v === first) { pin = v; syncPin(); toast('App PIN lock is on'); return { close: true }; }
+                    first = null; return { title: 'Set a 4-digit PIN', error: 'PINs did not match, start again' };
+                });
+            } else {
+                verifyPin('Enter PIN to turn it off', function () { pin = null; syncPin(); toast('App PIN lock is off'); });
+            }
+        });
+        // With a PIN on, changing guard rails and routines asks for it first (unlocks for 30 s).
+        phone.addEventListener('click', function (e) {
+            if (!pin || Date.now() < unlockedUntil) return;
+            var t = e.target.closest('#rt-add,.rt-del,.rt-sw,[role="switch"][data-key]'); if (!t) return;
+            e.stopPropagation(); e.stopImmediatePropagation(); e.preventDefault();
+            verifyPin('Enter PIN to change settings', function () { unlockedUntil = Date.now() + 30000; toast('Unlocked for 30 seconds. Tap again.'); });
+        }, true);
+        syncPin();
+
+        // ---------- Scheduled routines ----------
+        var DAYN = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'], DAYL = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
+        var routines = [{ name: 'Study', from: '09:00', to: '13:00', days: [1, 2, 3, 4, 5], apps: ['Instagram', 'YouTube'], strict: true, on: true }];
+        function fmt(t) { var p = t.split(':'), h = +p[0], ap = h >= 12 ? 'PM' : 'AM'; h = h % 12 || 12; return h + ':' + p[1] + ' ' + ap; }
+        function mins(f, t) { var a = f.split(':'), b = t.split(':'), x = (+b[0] * 60 + +b[1]) - (+a[0] * 60 + +a[1]); if (x < 0) x += 1440; return x; }
+        function dur(m) { var h = Math.floor(m / 60), r = m % 60; return h ? (r ? h + 'h ' + r + 'm' : h + 'h') : r + 'm'; }
+        function dayLabel(d) {
+            var k = d.slice().sort().join('');
+            if (k === '0123456') return 'Everyday'; if (k === '12345') return 'Mon-Fri'; if (k === '06') return 'Weekends';
+            return d.slice().sort().map(function (i) { return DAYN[i]; }).join(', ');
+        }
+        function renderRoutines() {
+            $('rt-list').innerHTML = routines.length ? routines.map(function (r, i) {
+                return '<div class="mt-1 rounded-xl bg-surface border border-line px-3 py-2 text-[10px] flex items-center gap-2"><div class="flex-1 min-w-0"><p class="font-bold text-[11px] flex items-center gap-1">' + esc(r.name) + (r.strict ? ' <i data-lucide="lock" class="w-3 h-3 text-alert"></i>' : '') + '</p><p class="text-teal font-bold">' + fmt(r.from) + ' - ' + fmt(r.to) + '</p><p class="text-faint">' + dayLabel(r.days) + ' &middot; ' + dur(mins(r.from, r.to)) + (r.strict ? ' &middot; Strict Mode protection' : '') + '</p></div>' +
+                    '<button type="button" class="rt-sw tbtn" data-i="' + i + '" aria-pressed="' + r.on + '">' + (r.on ? 'ON' : 'OFF') + '</button>' +
+                    '<button type="button" class="rt-del text-faint" data-i="' + i + '" aria-label="Delete routine"><i data-lucide="x" class="w-3.5 h-3.5"></i></button></div>';
+            }).join('') : '<p class="mt-1 text-[10px] text-faint">No routines yet. Tap + Add schedule.</p>';
+            icons();
+        }
+        $('rt-list').addEventListener('click', function (e) {
+            var sw = e.target.closest('.rt-sw'), del = e.target.closest('.rt-del');
+            if (sw) { var r = routines[+sw.getAttribute('data-i')]; r.on = !r.on; renderRoutines(); }
+            else if (del) { routines.splice(+del.getAttribute('data-i'), 1); renderRoutines(); }
+        });
+        $('rt-add').addEventListener('click', function () {
+            if (routines.length >= 6) { toast('Demo limit: 6 routines'); return; }
+            openRoutineDialog();
+        });
+        function openRoutineDialog() {
+            var APPS = ['Instagram', 'YouTube', 'TikTok', 'Facebook', 'Snapchat', 'Discord', 'Reddit', 'X'];
+            var d = { name: 'Daily Deep Work', from: '06:00', to: '11:00', days: [0, 1, 2, 3, 4, 5, 6], apps: ['Discord'], strict: true };
+            var inputCls = 'mt-1 w-full h-8 rounded-lg bg-elevated border border-line px-2 text-[11px] text-text';
+            var dots = DAYL.map(function (l, i) { return '<button type="button" class="rtdot" data-d="' + i + '" aria-pressed="true">' + l + '</button>'; }).join('');
+            var apps = APPS.map(function (a) { return '<button type="button" class="rtchip" data-a="' + a + '" aria-pressed="false">' + a + '</button>'; }).join('');
+            var o = overlay('<p class="text-[12px] font-extrabold">Create Recurring Routine</p><p class="text-[9px] text-faint">Runs automatically in background on scheduled days.</p>' +
+                '<label class="block mt-2 text-[9px] text-faint">Routine name<input data-f="name" maxlength="24" value="Daily Deep Work" class="' + inputCls + '"></label>' +
+                '<p class="mt-2 text-[9px] text-faint">Time</p><div class="grid grid-cols-2 gap-1.5"><label class="text-[9px] text-faint">From<input data-f="from" type="time" value="06:00" class="' + inputCls + '"></label><label class="text-[9px] text-faint">To<input data-f="to" type="time" value="11:00" class="' + inputCls + '"></label></div>' +
+                '<p data-r="runs" class="mt-1 text-[9px] text-faint"></p>' +
+                '<p class="mt-2 text-[9px] text-faint">Repeating days</p><div class="mt-1 grid grid-cols-3 gap-1.5"><button type="button" class="rtchip" data-p="all" aria-pressed="true">Everyday</button><button type="button" class="rtchip" data-p="wk" aria-pressed="false">Mon-Fri</button><button type="button" class="rtchip" data-p="we" aria-pressed="false">Weekends</button></div>' +
+                '<div class="mt-1.5 flex justify-between">' + dots + '</div>' +
+                '<p class="mt-2 text-[9px] text-faint">Blocked apps</p><div class="mt-1 flex flex-wrap gap-1.5">' + apps + '</div>' +
+                '<div class="mt-2 rounded-xl bg-elevated border border-line px-2.5 py-2 flex items-center gap-2"><div class="flex-1"><p class="text-[10px] font-bold">Strict Mode Protection</p><p class="text-[8px] text-faint">Automatically locks distracting apps and blocks cancellation during routine.</p></div><button type="button" class="tbtn" data-s="1" aria-pressed="true">ON</button></div>' +
+                '<div class="mt-3 grid grid-cols-2 gap-2"><button type="button" data-x="cancel" class="h-9 rounded-xl border border-line text-[10px] font-bold">Cancel</button><button type="button" data-x="save" class="h-9 rounded-xl bg-sage text-bg text-[10px] font-bold">Save Routine</button></div>');
+            var q = function (s) { return o.querySelector(s); };
+            function refresh() {
+                q('[data-r="runs"]').textContent = 'Runs for ' + dur(mins(d.from, d.to));
+                [].forEach.call(o.querySelectorAll('[data-d]'), function (b) { b.setAttribute('aria-pressed', String(d.days.indexOf(+b.getAttribute('data-d')) > -1)); });
+                [].forEach.call(o.querySelectorAll('[data-a]'), function (b) { b.setAttribute('aria-pressed', String(d.apps.indexOf(b.getAttribute('data-a')) > -1)); });
+                var k = d.days.slice().sort().join('');
+                q('[data-p="all"]').setAttribute('aria-pressed', String(k === '0123456'));
+                q('[data-p="wk"]').setAttribute('aria-pressed', String(k === '12345'));
+                q('[data-p="we"]').setAttribute('aria-pressed', String(k === '06'));
+                var s = q('[data-s]'); s.setAttribute('aria-pressed', String(d.strict)); s.textContent = d.strict ? 'ON' : 'OFF';
+            }
+            o.addEventListener('input', function (e) {
+                var f = e.target.getAttribute && e.target.getAttribute('data-f'); if (!f) return;
+                d[f] = e.target.value; if (f !== 'name') refresh();
+            });
+            o.addEventListener('click', function (e) {
+                var t;
+                if ((t = e.target.closest('[data-d]'))) { var i = +t.getAttribute('data-d'), at = d.days.indexOf(i); if (at > -1) d.days.splice(at, 1); else d.days.push(i); refresh(); }
+                else if ((t = e.target.closest('[data-p]'))) { var p = t.getAttribute('data-p'); d.days = p === 'all' ? [0, 1, 2, 3, 4, 5, 6] : p === 'wk' ? [1, 2, 3, 4, 5] : [0, 6]; refresh(); }
+                else if ((t = e.target.closest('[data-a]'))) { var a = t.getAttribute('data-a'), ai = d.apps.indexOf(a); if (ai > -1) d.apps.splice(ai, 1); else d.apps.push(a); refresh(); }
+                else if (e.target.closest('[data-s]')) { d.strict = !d.strict; refresh(); }
+                else if (e.target.closest('[data-x="cancel"]')) { o.remove(); }
+                else if (e.target.closest('[data-x="save"]')) {
+                    if (!d.days.length) { toast('Pick at least one day'); return; }
+                    if (!d.apps.length) { toast('Pick at least one app to block'); return; }
+                    if (!d.from || !d.to) { toast('Set a start and end time'); return; }
+                    routines.push({ name: (d.name || '').trim() || 'Routine', from: d.from, to: d.to, days: d.days.slice(), apps: d.apps.slice(), strict: d.strict, on: true });
+                    o.remove(); renderRoutines(); toast('Routine saved');
+                }
+            });
+            refresh();
+        }
+        renderRoutines();
+
+        // ---------- Cloud backup (simulated) ----------
+        var lastBk = 0;
+        $('bk-now').addEventListener('click', function () {
+            var b = this; b.disabled = true; $('bk-msg').textContent = 'Backing up...';
+            setTimeout(function () {
+                lastBk = Date.now(); var d = new Date(lastBk); b.disabled = false;
+                $('bk-status').textContent = 'Last backup: today ' + pad2(d.getHours()) + ':' + pad2(d.getMinutes());
+                $('bk-msg').textContent = 'Backed up.';
+            }, 900);
+        });
+        $('bk-restore').addEventListener('click', function () {
+            $('bk-msg').textContent = lastBk ? 'Restored. Some screens update after you reopen them.' : 'No backup found for this account yet.';
         });
     })();
 </script>
