@@ -17,11 +17,8 @@ class BlockedAppMatcher {
         "com.android.emergency"
     )
 
-    // Android Settings is not listed here: SettingsTamperGuard closes only its sensitive screens.
-    private val antiTamperProtectedPackages = setOf(
-        "com.google.android.packageinstaller",
-        "com.android.packageinstaller"
-    )
+    // Android Settings and the package installer are not blocked as whole apps during Strict Mode:
+    // SettingsTamperGuard closes only the screens that could switch Aegis Focus off.
 
     fun updateBlockedPackages(packages: Collection<String>, isStrict: Boolean = false) {
         blockedPackages.clear()
@@ -33,11 +30,6 @@ class BlockedAppMatcher {
         if (packageName.isBlank()) return false
         if (packageName == myPackageName) return false
         if (systemWhitelistedPackages.contains(packageName)) return false
-
-        // During Strict Mode, guard the package installer (uninstall dialog) from tampering
-        if (isStrictModeActive && antiTamperProtectedPackages.contains(packageName)) {
-            return true
-        }
 
         return blockedPackages.contains(packageName)
     }
