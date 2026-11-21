@@ -53,4 +53,11 @@ data class Schedule(
     }
 
     fun isActiveAt(nowMs: Long): Boolean = remainingMinutesAt(nowMs) > 0
+
+    /** The moment this routine's window closes, for a session that started at [startMs] inside it (else null). */
+    fun windowEndFor(startMs: Long): Long? {
+        val minutes = remainingMinutesAt(startMs)
+        if (minutes <= 0) return null
+        return startMs - startMs % 60_000L + minutes * 60_000L
+    }
 }
