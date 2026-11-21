@@ -38,6 +38,7 @@ class ScheduleCoordinator(
 
     /** Re-arms every enabled routine and starts the one that should be running now. */
     suspend fun syncAll(nowMs: Long = System.currentTimeMillis()) {
+        trimRoutineSessionToWindow()
         val enabled = scheduleRepository.getEnabledSchedules()
         enabled.forEach { ScheduleAlarmScheduler.scheduleNextAlarm(context, it) }
         // If two routines overlap, the strict one wins.
@@ -46,6 +47,32 @@ class ScheduleCoordinator(
             .sortedByDescending { it.isStrictMode }
             .firstOrNull() ?: return
         startIfInsideWindow(due, nowMs)
+    }
+
+    /**
+     * A routine's session must end when its window ends. Older versions started routine sessions with
+     * the routine's full length, so a routine begun mid-window could run for hours past its end time
+     * (Strict Mode cannot be cancelled). If the running session belongs to a routine and outlasts that
+     * routine's window, cut it back to the window end. Returns true when it was changed.
+     */
+    suspend fun trimRoutineSessionToWindow(): Boolean {
+        val active = focusSessionRepository.getActiveSession() ?: return false
+        if (active.status != SessionStatus.ACTIVE) return false
+
+        val windowEnd = scheduleRepository.getEnabledSchedules()
+            .filter { it.name.trim() == active.name && it.isStrictMode == active.isStrictMode }
+            .mapNotNull { it.windowEndFor(active.startEpochMs) }
+            .minOrNull() ?: return false
+
+        // one minute of slack for rounding
+        if (active.endEpochMs <= windowEnd + 60_000L) return false
+
+        val minutes = ((windowEnd - active.startEpochMs) / 60_000L).toInt().coerceAtLeast(1)
+        focusSessionRepository.updateSession(active.copy(endEpochMs = windowEnd, durationMinutes = minutes))
+        // Reloads the session: completes it right away if the window is already over, else restarts the timer
+        focusSessionManager.restoreActiveSession()
+        Log.i("ScheduleCoordinator", "Trimmed routine session \"${active.name}\" to its window end")
+        return true
     }
 
     /**

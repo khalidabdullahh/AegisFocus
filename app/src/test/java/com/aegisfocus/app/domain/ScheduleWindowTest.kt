@@ -84,4 +84,26 @@ class ScheduleWindowTest {
         val r = routine(9, 0, 9, 0, everyday)
         assertEquals(0, r.remainingMinutesAt(at(Calendar.MONDAY, 9, 0)))
     }
+
+    @Test
+    fun windowEnd_forLateStartIsTheRoutineEnd_notStartPlusFullLength() {
+        // The real bug: a 5 AM to 10 PM routine that began at 08:29:39 must end at 22:00, not 01:29 next day.
+        val r = routine(5, 0, 22, 0, everyday)
+        val c = Calendar.getInstance().apply { timeInMillis = at(Calendar.FRIDAY, 8, 29); set(Calendar.SECOND, 39) }
+        val end = r.windowEndFor(c.timeInMillis)
+        assertEquals(at(Calendar.FRIDAY, 22, 0), end)
+    }
+
+    @Test
+    fun windowEnd_isNullWhenStartedOutsideTheWindow() {
+        val r = routine(5, 0, 22, 0, everyday)
+        assertEquals(null, r.windowEndFor(at(Calendar.FRIDAY, 23, 30)))
+    }
+
+    @Test
+    fun windowEnd_overnightRoutineEndsNextMorning() {
+        val r = routine(23, 0, 7, 0, everyday)
+        val expected = Calendar.getInstance().apply { timeInMillis = at(Calendar.SATURDAY, 7, 0) }.timeInMillis
+        assertEquals(expected, r.windowEndFor(at(Calendar.FRIDAY, 23, 30)))
+    }
 }
