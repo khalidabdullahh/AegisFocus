@@ -38,7 +38,14 @@ object SettingsTamperGuard {
      * are English, so on a phone set to another language we cannot read them and stay strict instead:
      * any screen that shows the app's name is closed.
      */
-    fun isTamperScreen(texts: Collection<String>, englishUi: Boolean = true): Boolean {
+    fun isTamperScreen(
+        texts: Collection<String>,
+        englishUi: Boolean = true,
+        serviceDescription: String? = null
+    ): Boolean {
+        // The Accessibility settings page for our service always shows the service description we
+        // wrote, in every phone brand and language, so it is the most reliable way to spot that page.
+        if (showsServiceDescription(texts, serviceDescription)) return true
         if (!mentionsApp(texts)) return false
         if (!englishUi) return true
         return texts.any { text ->
@@ -46,6 +53,15 @@ object SettingsTamperGuard {
             DANGEROUS_ACTIONS.any { lower.contains(it) }
         }
     }
+
+    /** True when the screen shows our accessibility service description (the service's own settings page). */
+    fun showsServiceDescription(texts: Collection<String>, serviceDescription: String?): Boolean {
+        val marker = serviceDescription?.trim()?.take(DESCRIPTION_MARKER_LENGTH)?.lowercase()
+        if (marker.isNullOrBlank()) return false
+        return texts.any { it.lowercase().contains(marker) }
+    }
+
+    private const val DESCRIPTION_MARKER_LENGTH = 30
 
     /** Any package installer (Google, AOSP, MIUI, Samsung and others share this name). */
     fun isInstallerPackage(packageName: String): Boolean = packageName.contains("packageinstaller")
