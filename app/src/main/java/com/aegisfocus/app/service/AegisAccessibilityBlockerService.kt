@@ -80,7 +80,11 @@ class AegisAccessibilityBlockerService : AccessibilityService() {
                 lastSettingsGuardMs = now
                 val texts = readScreenTexts(rootInActiveWindow)
                 val englishUi = java.util.Locale.getDefault().language == "en"
-                if (com.aegisfocus.app.domain.blocker.SettingsTamperGuard.isTamperScreen(texts, englishUi)) {
+                if (com.aegisfocus.app.domain.blocker.SettingsTamperGuard.isTamperScreen(
+                        texts,
+                        englishUi,
+                        getString(com.aegisfocus.app.R.string.accessibility_service_description)
+                    )) {
                     performGlobalAction(GLOBAL_ACTION_BACK)
                     if (now - lastSettingsToastMs > 2500L) {
                         lastSettingsToastMs = now

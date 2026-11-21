@@ -67,4 +67,19 @@ class SettingsTamperGuardTest {
         assertTrue(SettingsTamperGuard.isInstallerPackage("com.samsung.android.packageinstaller"))
         assertFalse(SettingsTamperGuard.isInstallerPackage("com.android.settings"))
     }
+
+    @Test
+    fun guard_closesTheAccessibilityServicePageWhateverThePhoneCallsItsToggle() {
+        val description = "Aegis Focus uses accessibility events exclusively to detect when blocked distracting apps are opened."
+        // Some phones show only "On/Off" instead of "Use Aegis Focus"; the description is always shown
+        val page = listOf("Aegis Focus", "Off", description)
+        assertFalse(SettingsTamperGuard.isTamperScreen(page))
+        assertTrue(SettingsTamperGuard.isTamperScreen(page, serviceDescription = description))
+        // works even when the phone language is not English and the app name is not on screen
+        assertTrue(SettingsTamperGuard.isTamperScreen(listOf(description), englishUi = false, serviceDescription = description))
+        // the Accessibility list does not show the description
+        assertFalse(SettingsTamperGuard.isTamperScreen(listOf("Accessibility", "Installed apps", "Aegis Focus", "On"), serviceDescription = description))
+        assertFalse(SettingsTamperGuard.isTamperScreen(page, serviceDescription = null))
+    }
 }
+
